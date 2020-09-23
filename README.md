@@ -1,5 +1,5 @@
-pirep.io
-========
+pirep
+=====
 
 ## Development Setup
 
