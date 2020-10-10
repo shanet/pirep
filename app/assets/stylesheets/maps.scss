@@ -1,0 +1,26 @@
+@import 'animations';
+
+#map {
+  height: 100vh;
+  width: 100vw;
+}
+
+.drawer {
+  background: #7386D5;
+  color: #fff;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 500px;
+  z-index: 1;
+  transform: translateX(100vw);
+
+  &.slideIn {
+    animation: slideIn $animation-duration forwards;
+  }
+
+  &.slideOut {
+    animation: slideOut $animation-duration forwards;
+  }
+}
