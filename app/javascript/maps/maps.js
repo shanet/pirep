@@ -48,8 +48,8 @@ function fetchAirports() {
     }
   };
 
-  let airport_path = document.getElementById('map').dataset.airportsPath;
-  request.open('GET', airport_path);
+  let airportsPath = document.getElementById('map').dataset.airportsPath;
+  request.open('GET', airportsPath);
   request.send();
 }
 
@@ -80,7 +80,8 @@ function populateMap(airports) {
   });
 
   map.on('click', 'airports', function(event) {
-    openDrawer(event.features[0].properties['code']);
+    loadDrawer(event.features[0].properties['code']);
+    openDrawer();
   });
 
   // Show a pointer cursor when hovering over an airport on the map
@@ -92,13 +93,42 @@ function populateMap(airports) {
     map.getCanvas().style.cursor = ''
   });
 
-  document.querySelector('#airport-drawer .close').addEventListener("click", function() {
+  document.querySelector('#airport-drawer .handle button').addEventListener("click", function() {
     closeDrawer();
   });
+
+  loadDrawer('WN53');
+  openDrawer();
+}
+
+function loadDrawer(airportCode) {
+  document.getElementById('drawer-loading').style.display = 'block';
+  document.getElementById('airport-info').style.display = 'none';
+
+  let request = new XMLHttpRequest();
+
+  request.onload = function() {
+    if(request.status == 200) {
+      populateDrawer(request.response);
+    } else {
+      alert('fetching airport failed');
+    }
+  };
+
+  let airportPath = document.getElementById('map').dataset.airportPath
+  let placeholder = document.getElementById('map').dataset.placeholder;
+
+  request.open('GET', airportPath.replace(placeholder, airportCode));
+  request.send();
+}
+
+function populateDrawer(html) {
+  document.getElementById('drawer-loading').style.display = 'none';
+  document.getElementById('airport-info').innerHTML = html;
+  document.getElementById('airport-info').style.display = 'block';
 }
 
 function openDrawer(airportCode) {
-  document.querySelector('#airport-drawer .airport-code').innerText = airportCode;
   document.getElementById('airport-drawer').classList.remove('slideOut');
   document.getElementById('airport-drawer').classList.add('slideIn');
 }

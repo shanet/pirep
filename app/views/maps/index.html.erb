@@ -1,2 +1,12 @@
+<% placeholder = '_airport_code_' %>
+
+<%= render 'navigation' %>
 <%= render 'drawer' %>
-<div id="map" class="col" data-airports-path="<%= airports_path %>" data-marker-image-path="<%= image_path('marker') %>"></div>
+
+<div
+  id="map"
+  data-airports-path="<%= airports_path %>"
+  data-airport-path="<%= airport_path(placeholder, format: :drawer) %>"
+  data-placeholder="<%= placeholder %>"
+  data-marker-image-path="<%= image_path('marker') %>"
+></div>
