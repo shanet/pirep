@@ -7,13 +7,48 @@
 }
 
 .navigation {
-  background: $white;
   left: 0;
-  margin: 25px 0 0 25px;
+  margin: 10px 0 0 10px;
   position: fixed;
   top: 0;
-  width: 350px;
-  z-index: 1;
+  width: 340px;
+  z-index: $zindex-fixed;
+
+  > div {
+    background-color: $white;
+    border-radius: 6px;
+  }
+
+  .search {
+    // .search-icon {
+    //   font-size: 20px;
+    //   margin-top: 4px;
+    //   position: absolute;
+    //   right: 10px;
+    // }
+  }
+
+  .tags .card {
+    height: 80px;
+    overflow: hidden;
+
+    .tag-filter:hover {
+      cursor: pointer;
+    }
+
+    .icon {
+      border-radius: 50%;
+      color: $white;
+      font-size: 24px;
+      height: 50px;
+      padding-top: 5px;
+      width: 50px;
+    }
+
+    .label {
+      font-size: 14px;
+    }
+  }
 }
 
 .drawer {
@@ -25,7 +60,7 @@
   top: 0;
   transform: translateX(100vw);
   width: 500px;
-  z-index: 1;
+  z-index: $zindex-fixed;
 
   &.slideIn {
     animation: slideIn $animation-duration forwards;

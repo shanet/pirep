@@ -1,5 +1,13 @@
 let mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
+
 let map = null;
+let allAirports = [];
+
+let displayedAirports = {
+  'type': 'FeatureCollection',
+  'features': [],
+};
+let enabledTagFilters = new Set();
 
 const SECTIONAL_LAYERS = {
   'seattle': [-124.094901, 44.634929, -116.327513, 48.995149],
@@ -7,6 +15,35 @@ const SECTIONAL_LAYERS = {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  document.querySelector('#airport-drawer .handle button').addEventListener("click", function() {
+    closeDrawer();
+  });
+
+  let tagFilters = document.getElementsByClassName('tag-filter');
+  for(let i=0; i<tagFilters.length; i++) {
+    let tagFilter = tagFilters[i];
+    let tag = tagFilter.dataset.tag;
+    let icon = tagFilter.querySelector('.icon');
+
+    if(tagFilter.dataset.defaultTag === "true") {
+      enabledTagFilters.add(tag);
+    } else {
+      icon.style.backgroundColor = "black";
+    }
+
+    tagFilter.addEventListener("click", function(event) {
+      if(enabledTagFilters.has(tag)) {
+        enabledTagFilters.delete(tag);
+        icon.style.backgroundColor = "black";
+      } else {
+        enabledTagFilters.add(tag);
+        icon.style.backgroundColor = icon.dataset.color;
+      }
+
+      updateMapWithAirports();
+    });
+  }
+
   mapboxgl.accessToken = 'pk.eyJ1Ijoic2hhbmV0IiwiYSI6ImNpbXZnbnBhMjAydDl3a2x1ejNoNWoydHMifQ.WIi_Jv4TO3hOzj-E120rYg';
 
   map = new mapboxgl.Map({
@@ -42,7 +79,8 @@ function fetchAirports() {
 
   request.onload = function() {
     if(request.status == 200) {
-      populateMap(JSON.parse(request.response));
+      allAirports = JSON.parse(request.response);
+      populateMap();
     } else {
       alert('fetching airports failed');
     }
@@ -53,22 +91,35 @@ function fetchAirports() {
   request.send();
 }
 
+function updateMapWithAirports() {
+  displayedAirports.features.length = 0;
+
+  allAirports.forEach(airport => {
+    airport.properties.tags.forEach(tag => {
+      if(enabledTagFilters.has(tag)) {
+        displayedAirports.features.push(airport);
+      }
+    });
+  });
+
+  map.getSource('airports').setData(displayedAirports);
+}
+
 function populateMap(airports) {
   map.loadImage(document.getElementById('map').dataset.markerImagePath, function(error, image) {
     if (error) throw error;
 
     map.addImage('marker', image);
 
+    map.addSource('airports', {
+      'type': 'geojson',
+      'data': displayedAirports,
+    });
+
     map.addLayer({
       'id': 'airports',
       'type': 'symbol',
-      'source': {
-        'type': 'geojson',
-        'data': {
-          'type': 'FeatureCollection',
-          'features': airports,
-        },
-      },
+      'source': 'airports',
       'layout': {
         'icon-image': 'marker',
         // 'icon-size': 0.8,
@@ -77,6 +128,8 @@ function populateMap(airports) {
         'icon-allow-overlap': true,
       },
     });
+
+    updateMapWithAirports();
   });
 
   map.on('click', 'airports', function(event) {
@@ -92,13 +145,6 @@ function populateMap(airports) {
   map.on('mouseleave', 'airports', () => {
     map.getCanvas().style.cursor = ''
   });
-
-  document.querySelector('#airport-drawer .handle button').addEventListener("click", function() {
-    closeDrawer();
-  });
-
-  loadDrawer('WN53');
-  openDrawer();
 }
 
 function loadDrawer(airportCode) {

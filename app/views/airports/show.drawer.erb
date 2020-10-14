@@ -42,8 +42,10 @@
 </div>
 
 <div class="row">
-  <div class="icons col">
-    Icons&hellip;
+  <div class="tags col">
+    <% @airport.tags.each do |tag| %>
+      <%= tag.name %>
+    <% end %>
   </div>
 </div>
 
