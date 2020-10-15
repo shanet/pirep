@@ -1,1 +1,1 @@
-Mime::Type.register_alias "text/html", :drawer
+Mime::Type.register_alias 'text/html', :drawer

@@ -1,6 +1,6 @@
 $animation-duration: 1s;
 
-@keyframes slideIn {
+@keyframes slide-in {
   from {
     transform: translateX(100vw);
   }
@@ -10,7 +10,7 @@ $animation-duration: 1s;
   }
 }
 
-@keyframes slideOut {
+@keyframes slide-out {
   from {
     transform: translateX(0%);
   }

@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 
 ruby '2.7.1'
 
@@ -19,8 +19,13 @@ gem 'webpacker', '~> 4.0'
 # Third party gems
 gem 'amazing_print'
 gem 'bootstrap'
+gem 'brakeman'
+gem 'bundler-audit'
+gem 'erb_lint'
 gem 'faraday'
 gem 'font-awesome-sass'
+gem 'rubocop'
+gem 'rubocop-rails'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

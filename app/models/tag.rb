@@ -1,5 +1,5 @@
 class Tag < ApplicationRecord
-  has_many :taggings
+  has_many :taggings, dependent: :restrict_with_error
   has_many :airports, through: :taggings
 
   TAGS = {
@@ -46,5 +46,5 @@ class Tag < ApplicationRecord
     # },
   }
 
-  enum name: Tag::TAGS.reduce({}) {|hash, (key, _value)| hash[key] = key.to_s; hash}
+  enum name: Tag::TAGS.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
 end

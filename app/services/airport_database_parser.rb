@@ -66,7 +66,7 @@ private
           parse_runway(line)
         when :rmk
           parse_remark(line)
-        end
+      end
     end
   end
 
@@ -80,7 +80,7 @@ private
     airport[:latitude] = self.class.convert_degrees_minutes_seconds_to_decimal(airport[:latitude])
     airport[:longitude] = self.class.convert_degrees_minutes_seconds_to_decimal(airport[:longitude])
 
-    @airports[airport[:site_number]] = airport.tap {|airport| airport.delete(:site_number)}
+    @airports[airport[:site_number]] = airport.tap {|airport_| airport_.delete(:site_number)}
   end
 
   def parse_runway(line)
@@ -91,7 +91,7 @@ private
     end
 
     @airports[runway[:site_number]][:runways] ||= []
-    @airports[runway[:site_number]][:runways] << runway.tap {|runway| runway.delete(:site_number)}
+    @airports[runway[:site_number]][:runways] << runway.tap {|runway_| runway_.delete(:site_number)}
   end
 
   def parse_remark(line)
@@ -102,33 +102,30 @@ private
     end
 
     @airports[remark[:site_number]][:remarks] ||= []
-    @airports[remark[:site_number]][:remarks] << remark.tap {|remark| remark.delete(:site_number)}
+    @airports[remark[:site_number]][:remarks] << remark.tap {|remark_| remark_.delete(:site_number)}
   end
 
   def extract_value_from_line(line, start, length)
     return line[(start - 1)...(start + length - 1)].strip
   end
 
-
-  def self.convert_degrees_minutes_seconds_to_decimal(coordinate)
-    degrees, minutes, seconds = coordinate.split("-")
+  private_class_method def self.convert_degrees_minutes_seconds_to_decimal(coordinate)
+    degrees, minutes, seconds = coordinate.split('-')
     direction = seconds[-1]
 
     decimal = degrees.to_f + minutes.to_f / 60 + seconds.to_f / 3600
-    decimal *= -1 if ["W", "S"].include?(direction)
+    decimal *= -1 if ['W', 'S'].include?(direction)
     return decimal.round(7)
   end
 
-  def self.current_data_cycle
+  private_class_method def self.current_data_cycle
     # New data is available every 28 days
     cycle_length = 28.days
     next_cycle = Date.new(2020, 9, 10)
 
     # Iterate from the start cycle until we hit the current date than back up one cycle for the current one
-    while Date.current >= next_cycle
-      next_cycle += cycle_length
-    end
+    next_cycle += cycle_length while Date.current >= next_cycle
 
-    return next_cycle -= cycle_length
+    return next_cycle - cycle_length
   end
 end

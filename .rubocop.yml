@@ -1,0 +1,146 @@
+require:
+  - rubocop-rails
+
+AllCops:
+  Exclude:
+    - '**/config.ru'
+    - bin/**/*
+    - db/schema.rb
+    - node_modules/**/*
+  DisplayCopNames: true
+  NewCops: enable
+  TargetRubyVersion: 2.7.1
+
+Rails:
+  Enabled: true
+
+# --------------------------------------
+
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
+Layout/CaseIndentation:
+  IndentOneStep: true
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/LineLength:
+  Max: 200
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+Layout/SpaceAroundEqualsInParameterDefault:
+  EnforcedStyle: no_space
+
+Layout/SpaceInsideBlockBraces:
+  EnforcedStyle: no_space
+  SpaceBeforeBlockParameters: false
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
+# --------------------------------------
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+# --------------------------------------
+
+Naming/RescuedExceptionsVariableName:
+  PreferredName: error
+
+# --------------------------------------
+
+Rails/OutputSafety:
+  Enabled: false
+
+Rails/ReversibleMigration:
+  Enabled: false
+
+Rails/FilePath:
+  EnforcedStyle: arguments
+
+Rails/SaveBang:
+  Enabled: true
+
+Rails/SafeNavigation:
+  ConvertTry: true
+
+Rails/TimeZone:
+  EnforcedStyle: strict
+
+# --------------------------------------
+
+Style/ConditionalAssignment:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+
+Style/FormatString:
+  EnforcedStyle: percent
+
+Style/FormatStringToken:
+  EnforcedStyle: unannotated
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/MutableConstant:
+  Enabled: false
+
+Style/RedundantReturn:
+  Enabled: false
+
+Style/RegexpLiteral:
+  AllowInnerSlashes: true
+
+Style/RescueStandardError:
+  EnforcedStyle: implicit
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/WordArray:
+  EnforcedStyle: brackets

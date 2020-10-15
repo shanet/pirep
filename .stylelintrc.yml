@@ -1,0 +1,13 @@
+extends:
+  - stylelint-config-twbs-bootstrap/scss
+
+plugins:
+  - stylelint-order
+
+rules:
+  order/properties-alphabetical-order: true
+  order/properties-order: null
+  selector-max-id: null
+  string-quotes: single
+  value-list-comma-newline-after: always-multi-line
+  value-list-comma-space-after: always-single-line

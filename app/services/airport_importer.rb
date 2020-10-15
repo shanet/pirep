@@ -5,7 +5,7 @@ class AirportImporter
 
   def load_database
     @airports.each do |site_number, airport_data|
-      airport = update_airport(airport, site_number, airport_data)
+      airport = update_airport(site_number, airport_data)
 
       (airport_data[:runways] || []).each do |runway|
         update_runway(airport, runway)
@@ -19,7 +19,7 @@ class AirportImporter
 
 private
 
-  def update_airport(airport, site_number, airport_data)
+  def update_airport(site_number, airport_data)
     airport = Airport.find_by(site_number: site_number) || Airport.new(site_number: site_number)
 
     airport.update!({

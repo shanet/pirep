@@ -1,0 +1,40 @@
+env:
+  browser: true
+  commonjs: true
+  es2021: true
+
+extends:
+  - airbnb-base
+
+parserOptions:
+  ecmaVersion: 12
+
+rules:
+  import/no-unresolved: off
+  keyword-spacing:
+    - error
+    - after: false
+      overrides:
+        case:
+          after: true
+        const:
+          after: true
+        do:
+          after: true
+        else:
+          after: true
+        from:
+          after: true
+        import:
+          after: true
+        return:
+          after: true
+        try:
+          after: true
+  max-len:
+    - error
+    - code: 200
+  no-plusplus: off
+  no-use-before-define:
+    - error
+    - functions: false
