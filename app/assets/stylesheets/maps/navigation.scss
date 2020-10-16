@@ -1,16 +1,10 @@
 @import 'animations';
 @import 'variables';
 
-#map {
-  height: 100vh;
-  width: 100vw;
-}
-
 .navigation {
-  left: 0;
-  margin: 10px 0 0 10px;
+  left: $maps-fixed-offset;
   position: fixed;
-  top: 0;
+  top: $maps-fixed-offset;
   width: 340px;
   z-index: $zindex-fixed;
 

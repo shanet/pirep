@@ -14,4 +14,7 @@ require('channels');
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
+require('maps/drawer');
+require('maps/layer_switcher');
 require('maps/maps');
+require('maps/navigation');

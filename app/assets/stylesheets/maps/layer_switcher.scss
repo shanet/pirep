@@ -1,0 +1,11 @@
+@import 'variables';
+
+#layer-switcher {
+  position: fixed;
+  background-color: $white;
+  bottom: 40px;
+  width: 75px;
+  left: $maps-fixed-offset;
+  height: 75px;
+  z-index: $zindex-fixed;
+}

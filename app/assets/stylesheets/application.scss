@@ -3,5 +3,7 @@
 @import 'font-awesome';
 @import 'mapbox-gl/dist/mapbox-gl';
 
-@import 'maps';
-@import 'airports/drawer';
+@import 'maps/drawer';
+@import 'maps/layer_switcher';
+@import 'maps/maps';
+@import 'maps/navigation';
