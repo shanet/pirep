@@ -61,9 +61,15 @@ function addSectionalLayersToMap() {
 }
 
 function addEventHandlersToMap() {
-  // Open the drawer when clicking on an airport marker
   map.on('click', AIRPORT_LAYER, (event) => {
-    drawer.loadDrawer(event.features[0].properties.code);
+    let airport = event.features[0];
+
+    // Move to the clicked airport and set its icon as selected
+    map.setLayoutProperty(AIRPORT_LAYER, 'icon-image', ['match', ['id'], airport.id, 'marker_selected', 'marker']);
+    map.flyTo({center: airport.geometry.coordinates, padding: {right: 500}});
+
+    // Open the drawer for the clicked airport
+    drawer.loadDrawer(airport.properties.code);
     drawer.openDrawer();
   });
 
@@ -83,6 +89,7 @@ function fetchAirports() {
   request.onload = () => {
     if(request.status === 200) {
       allAirports = JSON.parse(request.response);
+      console.log(allAirports);
       addAirportsToMap();
     } else {
       // TODO: make this better
@@ -97,27 +104,32 @@ function fetchAirports() {
 
 function addAirportsToMap() {
   map.loadImage(document.getElementById('map').dataset.markerImagePath, (error, image) => {
+    // TODO: make this better
     if(error) throw error;
-
     map.addImage('marker', image);
 
-    map.addSource(AIRPORT_LAYER, {
-      type: 'geojson',
-      data: displayedAirports,
-    });
+    map.loadImage(document.getElementById('map').dataset.markerSelectedImagePath, (error, image) => {
+      if(error) throw error;
+      map.addImage('marker_selected', image);
 
-    map.addLayer({
-      id: AIRPORT_LAYER,
-      type: 'symbol',
-      source: AIRPORT_LAYER,
-      layout: {
-        'icon-allow-overlap': true,
-        'icon-image': 'marker',
-        'icon-size': 0.8,
-      },
-    });
+      map.addSource(AIRPORT_LAYER, {
+        type: 'geojson',
+        data: displayedAirports,
+      });
 
-    filterAirportsOnMap(navigation.enabledFilters());
+      map.addLayer({
+        id: AIRPORT_LAYER,
+        type: 'symbol',
+        source: AIRPORT_LAYER,
+        layout: {
+          'icon-allow-overlap': true,
+          'icon-image': 'marker',
+          'icon-size': 0.8,
+        },
+      });
+
+      filterAirportsOnMap(navigation.enabledFilters());
+    });
   });
 }
 

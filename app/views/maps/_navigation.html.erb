@@ -12,7 +12,7 @@
           <div class="col-3">
             <div class="card border-0">
               <% if name %>
-                <div class="tag-filter card-body p-0 pt-2 mx-auto text-center" data-tag="<%= name %>" data-default-tag="<%= Tag::TAGS[name.to_sym][:default] %>">
+                <div class="tag-filter card-body p-0 pt-2 mx-auto text-center disabled" data-tag="<%= name %>" data-default-tag="<%= Tag::TAGS[name.to_sym][:default] %>">
                   <div class="icon mx-auto" style="background-color: <%= Tag::TAGS[name.to_sym][:color] %>" data-color="<%= Tag::TAGS[name.to_sym][:color] %>">
                     <%= tag_icon(name) %>
                   </div>

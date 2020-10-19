@@ -14,6 +14,8 @@ require('channels');
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
+//=require boostrap-autocomplete
+
 require('maps/drawer');
 require('maps/layer_switcher');
 require('maps/maps');

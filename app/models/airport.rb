@@ -17,11 +17,13 @@ class Airport < ApplicationRecord
           coordinates: [airport.longitude, airport.latitude],
         },
         properties: {
-          name: airport.name,
           code: airport.code,
           # tags: airport.tags.pluck(:name),
-          tags: ['camping', 'golfing', 'hot springs', 'water', 'helipad', 'seaplane'].sample(3),
+          tags: Tag::TAGS.keys.sample(3),
         },
+        # Mapbox requires IDs to be integers (even though the RFC says strings are okay!)
+        # so we need a hash function that returns a 32bit number. CRC32 should do the job.
+        id: Zlib.crc32(airport.code),
       }
     end
   end
