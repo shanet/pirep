@@ -39,6 +39,7 @@ function initMap() {
     container: 'map',
     style: 'mapbox://styles/mapbox/satellite-streets-v11',
     zoom: 8,
+    maxZoom: 18,
   });
 }
 
@@ -102,6 +103,9 @@ function addAirportsToMap() {
       map.addSource(AIRPORT_LAYER, {
         type: 'geojson',
         data: displayedAirports,
+        buffer: 0,
+        maxzoom: 18,
+        tolerance: 3.5,
       });
 
       map.addLayer({
@@ -140,10 +144,14 @@ export function toggleSectionalLayers(show) {
   });
 }
 
-export function openAirport(code) {
+export function areSectionalLayersShown() {
+  return (map.getLayoutProperty(Object.keys(SECTIONAL_LAYERS)[0], 'visibility') !== 'none');
+}
+
+export function openAirport(airportCode) {
   // Find the feature for the given airport code
   for(let i=0; i<allAirports.length; i++) {
-    if(allAirports[i].properties.code === code) {
+    if(allAirports[i].properties.code === airportCode) {
       openAirportFeature(allAirports[i]);
       break;
     }
@@ -162,4 +170,12 @@ function openAirportFeature(airport) {
   // Open the drawer for the clicked airport
   drawer.loadDrawer(airport.properties.code);
   drawer.openDrawer();
+}
+
+export function setZoom(level) {
+  map.setZoom(level);
+}
+
+export function getZoom() {
+  return map.getZoom();
 }
