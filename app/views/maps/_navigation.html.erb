@@ -1,8 +1,10 @@
 <div class="navigation">
   <div class="search">
-    <form>
-      <input class="form-control" type="text" placeholder="Search">
-    </form>
+    <input id="search" class="form-control" type="text" autofocus placeholder="Search airports" data-search-endpoint="<%= airports_search_path %>">
+
+    <div class="search-results-parent">
+      <ul id="search-results" class="list-group"></ul>
+    </div>
   </div>
 
   <div class="tags mt-2">

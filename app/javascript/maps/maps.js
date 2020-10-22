@@ -1,5 +1,5 @@
 const drawer = require('./drawer');
-const navigation = require('./navigation');
+const filters = require('./filters');
 const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
 
 const SECTIONAL_LAYERS = {
@@ -61,16 +61,9 @@ function addSectionalLayersToMap() {
 }
 
 function addEventHandlersToMap() {
+  // Open the drawer for an airport when its marker is clicked
   map.on('click', AIRPORT_LAYER, (event) => {
-    let airport = event.features[0];
-
-    // Move to the clicked airport and set its icon as selected
-    map.setLayoutProperty(AIRPORT_LAYER, 'icon-image', ['match', ['id'], airport.id, 'marker_selected', 'marker']);
-    map.flyTo({center: airport.geometry.coordinates, padding: {right: 500}});
-
-    // Open the drawer for the clicked airport
-    drawer.loadDrawer(airport.properties.code);
-    drawer.openDrawer();
+    openAirportFeature(event.features[0]);
   });
 
   // Show a pointer cursor when hovering over an airport on the map
@@ -83,23 +76,17 @@ function addEventHandlersToMap() {
   });
 }
 
-function fetchAirports() {
-  const request = new XMLHttpRequest();
-
-  request.onload = () => {
-    if(request.status === 200) {
-      allAirports = JSON.parse(request.response);
-      console.log(allAirports);
-      addAirportsToMap();
-    } else {
-      // TODO: make this better
-      alert('fetching airports failed');
-    }
-  };
-
+async function fetchAirports() {
   const { airportsPath } = document.getElementById('map').dataset;
-  request.open('GET', airportsPath);
-  request.send();
+  const response = await fetch(airportsPath);
+
+  if(!response.ok) {
+    // TODO: make this better
+    return alert('fetching airports failed');
+  }
+
+  allAirports = await response.json();
+  addAirportsToMap();
 }
 
 function addAirportsToMap() {
@@ -128,7 +115,7 @@ function addAirportsToMap() {
         },
       });
 
-      filterAirportsOnMap(navigation.enabledFilters());
+      filterAirportsOnMap(filters.enabledFilters());
     });
   });
 }
@@ -151,4 +138,28 @@ export function toggleSectionalLayers(show) {
   Object.keys(SECTIONAL_LAYERS).forEach((id) => {
     map.setLayoutProperty(id, 'visibility', (show ? 'visible' : 'none'));
   });
+}
+
+export function openAirport(code) {
+  // Find the feature for the given airport code
+  for(let i=0; i<allAirports.length; i++) {
+    if(allAirports[i].properties.code === code) {
+      openAirportFeature(allAirports[i]);
+      break;
+    }
+  }
+}
+
+function openAirportFeature(airport) {
+  // Set the airport's marker as selected
+  map.setLayoutProperty(AIRPORT_LAYER, 'icon-image', ['match', ['id'], airport.id, 'marker_selected', 'marker']);
+
+  // Delay moving to the airport if the drawer is closed so the map doesn't move before the drawer is finished animating
+  setTimeout(() => {
+    map.flyTo({center: airport.geometry.coordinates, padding: {right: 500}})
+  }, (drawer.isDrawerOpen() ? 0 : 500));
+
+  // Open the drawer for the clicked airport
+  drawer.loadDrawer(airport.properties.code);
+  drawer.openDrawer();
 }

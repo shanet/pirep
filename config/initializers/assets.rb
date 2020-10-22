@@ -8,8 +8,5 @@ Rails.application.config.assets.paths += [
 ]
 
 Rails.configuration.assets.precompile += [
-  'leaflet.css',
-  'MarkerCluster.css',
-  'MarkerCluster.Default.css',
   'mapbox.css',
 ]

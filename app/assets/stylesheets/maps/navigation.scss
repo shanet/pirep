@@ -13,13 +13,30 @@
     border-radius: 6px;
   }
 
-  .search {
+  #search {
     // .search-icon {
     //   font-size: 20px;
     //   margin-top: 4px;
     //   position: absolute;
     //   right: 10px;
     // }
+  }
+
+  .search-results-parent {
+    position: relative;
+
+    #search-results {
+      display: none;
+      position: absolute;
+      width: 100%;
+      z-index: $zindex-fixed;
+
+      li.selected {
+        background-color: $primary;
+        color: $white;
+        cursor: pointer;
+      }
+    }
   }
 
   .tags .card {

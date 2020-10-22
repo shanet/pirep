@@ -6,4 +6,8 @@ Rails.application.routes.draw do
 
   resources :airports do
   end
+
+  namespace :airports do
+    get 'search(/:query)', action: :search, as: :search
+  end
 end
