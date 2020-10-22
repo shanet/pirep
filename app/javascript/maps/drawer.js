@@ -1,3 +1,8 @@
+const maps = require('./maps');
+
+let previousZoomLevel;
+let wereSectionalLayersShown;
+
 document.addEventListener('DOMContentLoaded', () => {
   // Close the drawer when clicking the drawer handle
   document.querySelector('#airport-drawer .handle button').addEventListener('click', () => {
@@ -22,10 +27,10 @@ export async function loadDrawer(airportCode) {
     return alert('fetching airport failed');
   }
 
-  setDrawerContent(await response.text());
+  setDrawerContent(airportCode, await response.text());
 }
 
-function setDrawerContent(body) {
+function setDrawerContent(airportCode, body) {
   // Hide the loading icon
   document.getElementById('drawer-loading').style.display = 'none';
 
@@ -33,6 +38,32 @@ function setDrawerContent(body) {
   let drawerInfo = document.getElementById('airport-info');
   drawerInfo.innerHTML = body;
   drawerInfo.style.display = 'block';
+
+  // Zoom out/in
+  document.querySelector('.zoom-btn').addEventListener('click', zoomAirport);
+}
+
+function zoomAirport(event) {
+  let button = event.target;
+
+  if(button.dataset.zoomedIn === 'true') {
+    // Go back to the previous zoom level and show the sectional layers if they were previously shown
+    maps.setZoom(previousZoomLevel);
+    if(wereSectionalLayersShown) maps.toggleSectionalLayers(true);
+
+    button.innerText = 'Zoom In';
+    button.dataset.zoomedIn = 'false';
+  } else {
+    // Save the previous state to restore when zooming back out
+    previousZoomLevel = maps.getZoom();
+    wereSectionalLayersShown = maps.areSectionalLayersShown();
+
+    maps.setZoom(15);
+    maps.toggleSectionalLayers(false);
+
+    button.innerText = 'Zoom Out';
+    button.dataset.zoomedIn = 'true';
+  }
 }
 
 export function openDrawer() {
