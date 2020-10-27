@@ -7,7 +7,10 @@ plugins:
 rules:
   order/properties-alphabetical-order: true
   order/properties-order: null
+  selector-max-class: 8
+  selector-max-compound-selectors: 8
   selector-max-id: null
+  selector-no-qualifying-type: null
   string-quotes: single
   value-list-comma-newline-after: always-multi-line
   value-list-comma-space-after: always-single-line

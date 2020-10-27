@@ -15,19 +15,19 @@ end
 
 namespace :lint do
   task ruby: :environment do
-    sh 'bundle exec rubocop --parallel', verbose: false
+    sh 'bundle exec rubocop %s' % [(autocorrect? ? '--auto-correct' : '--parallel')], verbose: false
   end
 
   task html: :environment do
-    sh 'bundle exec erblint "app/views/**/*.*.erb"', verbose: false
+    sh 'bundle exec erblint %s "app/views/**/*.*.erb"' % [(autocorrect? ? '--autocorrect' : '')], verbose: false
   end
 
   task css: :environment do
-    sh 'yarn run stylelint "**/*.{css,scss}"', verbose: false
+    sh 'yarn run stylelint %s "**/*.{css,scss}"' % [(autocorrect? ? '--fix' : '')], verbose: false
   end
 
   task js: :environment do
-    sh 'yarn run eslint "app/javascript/**/*.js"', verbose: false
+    sh 'yarn run eslint %s "app/javascript/**/*.js"' % [(autocorrect? ? '--fix' : '')], verbose: false
   end
 
   task security: :environment do
@@ -39,4 +39,12 @@ namespace :lint do
     # https://github.com/presidentbeef/brakeman/blob/master/lib/brakeman/report/pager.rb#L71
     sh 'CI=true bundle exec brakeman', verbose: false
   end
+
+  def autocorrect?
+    return ARGV&.second == 'fix'
+  end
+end
+
+task fix: :environment do
+  # Dummy task for the `fix` argument
 end

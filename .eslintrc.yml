@@ -10,7 +10,9 @@ parserOptions:
   ecmaVersion: 12
 
 rules:
+  consistent-return: off
   import/no-unresolved: off
+  import/prefer-default-export: off
   keyword-spacing:
     - error
     - after: false
@@ -38,3 +40,7 @@ rules:
   no-use-before-define:
     - error
     - functions: false
+  no-shadow: off
+  object-curly-spacing:
+    - error
+    - never
