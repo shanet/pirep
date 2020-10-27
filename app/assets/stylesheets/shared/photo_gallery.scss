@@ -1,0 +1,48 @@
+.photo-gallery {
+  position: relative;
+
+  .img-thumbnail {
+    display: none;
+    height: 300px;
+    object-fit: cover;
+    width: 100%;
+
+    &.active {
+      display: block;
+    }
+  }
+
+  .previous,
+  .next {
+    cursor: pointer;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 200px;
+
+    &:hover a {
+      background-color: rgba(0, 0, 0, .8);
+    }
+
+    a {
+      border-radius: 0 3px 3px 0;
+      color: $white;
+      font-size: 18px;
+      margin: -20px 5px 0;
+      padding: 10px;
+      position: absolute;
+      top: 50%;
+      transition: .6s ease;
+      width: auto;
+    }
+  }
+
+  .next {
+    border-radius: 3px 0 0 3px;
+    right: 0;
+
+    a {
+      right: 0;
+    }
+  }
+}

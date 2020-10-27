@@ -1,4 +1,5 @@
 const maps = require('./maps');
+const photoGallery = require('../shared/photo_gallery');
 
 let previousZoomLevel;
 let wereSectionalLayersShown;
@@ -12,13 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 export async function loadDrawer(airportCode) {
   // Hide the drawer content and show the loading icon
-  document.getElementById('drawer-loading').style.display = 'block';
+  document.getElementById('drawer-loading').style.display = 'flex';
   document.getElementById('airport-info').style.display = 'none';
 
   // Get the path to request airport info from dynamically
   // Tthis means swapping out a placeholder value with the airport code we want to get
-  const { airportPath } = document.getElementById('map').dataset;
-  const { placeholder } = document.getElementById('map').dataset;
+  const {airportPath} = document.getElementById('map').dataset;
+  const {placeholder} = document.getElementById('map').dataset;
 
   const response = await fetch(airportPath.replace(placeholder, airportCode));
 
@@ -35,20 +36,27 @@ function setDrawerContent(airportCode, body) {
   document.getElementById('drawer-loading').style.display = 'none';
 
   // Set the drawer's content to the given body
-  let drawerInfo = document.getElementById('airport-info');
+  const drawerInfo = document.getElementById('airport-info');
   drawerInfo.innerHTML = body;
   drawerInfo.style.display = 'block';
 
+  // Set necessary event handlers on the drawer elements
+  initializeDrawer();
+}
+
+function initializeDrawer() {
   // Zoom out/in
   document.querySelector('.zoom-btn').addEventListener('click', zoomAirport);
+
+  photoGallery.initializePhotoGallery();
 }
 
 function zoomAirport(event) {
-  let button = event.target;
+  const button = event.target;
 
   if(button.dataset.zoomedIn === 'true') {
     // Go back to the previous zoom level and show the sectional layers if they were previously shown
-    maps.setZoom(previousZoomLevel);
+    maps.flyTo(button.dataset.latitude, button.dataset.longitude, previousZoomLevel);
     if(wereSectionalLayersShown) maps.toggleSectionalLayers(true);
 
     button.innerText = 'Zoom In';
@@ -58,7 +66,7 @@ function zoomAirport(event) {
     previousZoomLevel = maps.getZoom();
     wereSectionalLayersShown = maps.areSectionalLayersShown();
 
-    maps.setZoom(15);
+    maps.flyTo(button.dataset.latitude, button.dataset.longitude, 15);
     maps.toggleSectionalLayers(false);
 
     button.innerText = 'Zoom Out';
@@ -67,13 +75,13 @@ function zoomAirport(event) {
 }
 
 export function openDrawer() {
-  let drawer = document.getElementById('airport-drawer');
+  const drawer = document.getElementById('airport-drawer');
   drawer.classList.remove('slide-out');
   drawer.classList.add('slide-in');
 }
 
 function closeDrawer() {
-  let drawer = document.getElementById('airport-drawer');
+  const drawer = document.getElementById('airport-drawer');
   drawer.classList.remove('slide-in');
   drawer.classList.add('slide-out');
 }

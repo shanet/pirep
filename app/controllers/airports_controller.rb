@@ -1,3 +1,5 @@
+require 'google/google_api'
+
 class AirportsController < ApplicationController
   def index
     render json: Airport.geojson.to_json
@@ -5,6 +7,7 @@ class AirportsController < ApplicationController
 
   def show
     @airport = Airport.find_by(code: params[:id])
+    @photos = GoogleApi.client.place_photos('%s - %s Airport' % [@airport.code, @airport.name], @airport.latitude, @airport.longitude)
     return not_found(request.format.symbol) unless @airport
   end
 

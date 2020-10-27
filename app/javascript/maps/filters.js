@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   for(let i = 0; i < tagFilters.length; i++) {
     const tagFilter = tagFilters[i];
-    const { tag } = tagFilter.dataset;
+    const {tag} = tagFilter.dataset;
 
     allTagFilters.add(tag);
 

@@ -1,6 +1,6 @@
+const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
 const drawer = require('./drawer');
 const filters = require('./filters');
-const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
 
 const SECTIONAL_LAYERS = {
   seattle: [-124.094901, 44.634929, -116.327513, 48.995149],
@@ -78,7 +78,7 @@ function addEventHandlersToMap() {
 }
 
 async function fetchAirports() {
-  const { airportsPath } = document.getElementById('map').dataset;
+  const {airportsPath} = document.getElementById('map').dataset;
   const response = await fetch(airportsPath);
 
   if(!response.ok) {
@@ -150,7 +150,7 @@ export function areSectionalLayersShown() {
 
 export function openAirport(airportCode) {
   // Find the feature for the given airport code
-  for(let i=0; i<allAirports.length; i++) {
+  for(let i = 0; i < allAirports.length; i++) {
     if(allAirports[i].properties.code === airportCode) {
       openAirportFeature(allAirports[i]);
       break;
@@ -164,7 +164,7 @@ function openAirportFeature(airport) {
 
   // Delay moving to the airport if the drawer is closed so the map doesn't move before the drawer is finished animating
   setTimeout(() => {
-    map.flyTo({center: airport.geometry.coordinates, padding: {right: 500}})
+    map.flyTo({center: airport.geometry.coordinates, padding: {right: 500}});
   }, (drawer.isDrawerOpen() ? 0 : 500));
 
   // Open the drawer for the clicked airport
@@ -172,8 +172,8 @@ function openAirportFeature(airport) {
   drawer.openDrawer();
 }
 
-export function setZoom(level) {
-  map.setZoom(level);
+export function flyTo(latitude, longitude, zoom) {
+  map.flyTo({center: [longitude, latitude], zoom});
 }
 
 export function getZoom() {

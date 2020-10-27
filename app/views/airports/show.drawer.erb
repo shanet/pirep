@@ -11,13 +11,13 @@
 <div class="row">
   <div class="coordinates col border-bottom">
     <%= @airport.latitude %>, <%= @airport.longitude %>
-    <button type="button" class="btn btn-secondary btn-sm float-right zoom-btn">Zoom In</button>
+    <button type="button" class="btn btn-secondary btn-sm float-right zoom-btn" data-latitude="<%= @airport.latitude %>" data-longitude="<%= @airport.longitude %>">Zoom In</button>
   </div>
 </div>
 
 <div class="row mt-3">
   <div class="photo col">
-    <img class="img-thumbnail" src="<%= image_path('wn53') %>">
+    <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @photos} %>
   </div>
 </div>
 

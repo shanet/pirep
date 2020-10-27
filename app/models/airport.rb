@@ -18,7 +18,7 @@ class Airport < ApplicationRecord
         },
         properties: {
           code: airport.code,
-          #tags: airport.tags.pluck(:name),
+          # tags: airport.tags.pluck(:name),
           tags: Tag::TAGS.keys.sample(3),
         },
         # Mapbox requires IDs to be integers (even though the RFC says strings are okay!)

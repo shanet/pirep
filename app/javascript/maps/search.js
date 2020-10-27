@@ -1,26 +1,26 @@
 const maps = require('./maps');
-const shared = require('../shared/shared');
+const utils = require('../shared/utils');
 
 let selectedSearchResultIndex = -1;
 
 document.addEventListener('DOMContentLoaded', () => {
-  let search = document.getElementById('search');
-  let searchEndpoint = search.dataset.searchEndpoint;
+  const search = document.getElementById('search');
+  const {searchEndpoint} = search.dataset;
 
-  const inputEventHandler = shared.debounce(async() => {
-    let query = search.value;
+  const inputEventHandler = utils.debounce(async () => {
+    const query = search.value;
 
     // Only start searching if three or more characters have been entered
     if(query.length < 3) return;
 
-    let response = await fetch(`${searchEndpoint}/${query}`);
+    const response = await fetch(`${searchEndpoint}/${query}`);
 
     if(!response.ok) {
       // TODO: make this better
-      return alert("search request failed");
+      return alert('search request failed');
     }
 
-    let results = await response.json();
+    const results = await response.json();
 
     if(results.length === 0) {
       return showNoSearchResults();
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   search.addEventListener('keydown', (event) => {
     const UP_ARROW = 38;
     const DOWN_ARROW = 40;
-    let resultsList = document.getElementById('search-results');
+    const resultsList = document.getElementById('search-results');
 
     // Ignore everything if the results list is not displayed
     if(resultsList.style.display === 'none') return;
@@ -73,16 +73,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function showSearchResults(results) {
-  let resultsList = document.getElementById('search-results');
+  const resultsList = document.getElementById('search-results');
   selectedSearchResultIndex = -1;
 
   clearSearchResultsList();
 
   // Add new search results to the result list
-  for(let i=0; i<results.length; i++) {
-    let result = results[i];
+  for(let i = 0; i < results.length; i++) {
+    const result = results[i];
 
-    let node = document.createElement('li');
+    const node = document.createElement('li');
     node.classList.add('list-group-item');
     node.innerText = `${result.code} - ${result.label}`;
     node.dataset.airportCode = result.code;
@@ -93,10 +93,12 @@ function showSearchResults(results) {
       maps.openAirport(result.code);
     });
 
+    /* eslint-disable no-loop-func */
     node.addEventListener('mouseenter', () => {
       selectedSearchResultIndex = i;
       selectSearchResult(selectedSearchResultIndex);
     });
+    /* eslint-enable no-loop-func */
   }
 
   resultsList.style.display = 'block';
@@ -107,9 +109,9 @@ function hideSearchResults() {
 }
 
 function selectSearchResult(selectedSearchResultIndex) {
-  let resultsList = document.getElementById('search-results');
+  const resultsList = document.getElementById('search-results');
 
-  for(let i=0; i<resultsList.childNodes.length; i++) {
+  for(let i = 0; i < resultsList.childNodes.length; i++) {
     if(i === selectedSearchResultIndex) {
       resultsList.childNodes[i].classList.add('selected');
     } else {
@@ -120,9 +122,9 @@ function selectSearchResult(selectedSearchResultIndex) {
 
 function showNoSearchResults() {
   clearSearchResultsList();
-  let resultsList = document.getElementById('search-results');
+  const resultsList = document.getElementById('search-results');
 
-  let node = document.createElement('li');
+  const node = document.createElement('li');
   node.classList.add('list-group-item');
   node.innerText = 'No airports found';
   resultsList.appendChild(node);
@@ -131,7 +133,7 @@ function showNoSearchResults() {
 }
 
 function clearSearchResultsList() {
-  let resultsList = document.getElementById('search-results');
+  const resultsList = document.getElementById('search-results');
 
   // Remove old search results from the result list
   while(resultsList.firstChild) {
