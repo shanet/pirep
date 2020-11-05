@@ -1,0 +1,17 @@
+<div class="row no-gutters">
+  <% filters.keys.in_groups_of(4) do |grouped_filters| %>
+    <% grouped_filters.each do |filter| %>
+      <div class="col-3">
+        <div class="card border-0">
+          <% if filter %>
+            <%= render partial: 'maps/filter', locals: {filter_group: filter_group, filter: filter, configuration: filters[filter]} %>
+          <% else %>
+            <div class="card-body"></div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="w-100"></div>
+  <% end %>
+</div>

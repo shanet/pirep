@@ -1,50 +1,47 @@
 class Tag < ApplicationRecord
-  has_many :taggings, dependent: :restrict_with_error
-  has_many :airports, through: :taggings
+  belongs_to :airport
+
+  validates_uniqueness_of :name, scope: :airport
+  validates :airport, presence: true
+  validates :name, presence: true
 
   TAGS = {
     camping: {
       label: 'Camping',
       icon: 'campground',
-      color: 'green',
-      default: true,
+      color: 'red',
     },
     golfing: {
       label: 'Golfing',
       icon: 'golf-ball',
-      color: 'blue',
-      default: true,
+      color: 'orange',
     },
     hot_springs: {
       label: 'Hot Springs',
       icon: 'hot-tub',
-      color: 'red',
-      default: true,
+      color: 'yellow',
     },
     water: {
       label: 'Water',
       icon: 'umbrella-beach',
-      color: 'yellow',
-      default: true,
+      color: 'green',
     },
-    helipad: {
-      label: 'Helipads',
-      icon: 'helicopter',
+    public_: {
+      label: 'Public',
+      icon: 'lock-open',
+      color: 'blue',
+    },
+    private_: {
+      label: 'Private',
+      icon: 'lock',
       color: 'purple',
-      default: false,
     },
-    seaplane: {
-      label: 'Seaplane',
-      icon: 'water',
-      color: 'pink',
-      default: false,
+    empty: {
+      label: 'Empty',
+      icon: 'question',
+      color: 'brown',
     },
-    # private: {
-    #   label: 'Private',
-    #   icon: 'lock',
-    #   color: '',
-    # },
   }
 
-  enum name: Tag::TAGS.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
+  enum name: TAGS.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
 end

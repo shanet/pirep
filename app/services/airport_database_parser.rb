@@ -1,4 +1,7 @@
 class AirportDatabaseParser
+  # These are the ranges for column data as documented in the README at:
+  #   * https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/
+  #   * Specifically: https://nfdc.faa.gov/webContent/28DaySub/[year]-[month]-[day]/Layout_Data/apt_rf.txt
   VALUE_RANGES = {
     airport: {
       site_number: [4, 11],
@@ -12,7 +15,7 @@ class AirportDatabaseParser
       latitude: [524, 15],
       longitude: [551, 15],
       elevation: [579, 7],
-      fuel: [901, 40],
+      fuel_type: [901, 40],
     },
     runway: {
       site_number: [4, 11],
@@ -44,7 +47,7 @@ class AirportDatabaseParser
 private
 
   def download_archive(directory)
-    response = Faraday.get('https://nfdc.faa.gov/webContent/28DaySub/%s/APT.zip' % self.class.current_data_cycle)
+    response = Faraday.get('https://nfdc.faa.gov/webContent/28DaySub/%s/APT.zip' % current_data_cycle)
     raise Excpetions::AirportDatabaseDownloadFailed unless response.success?
 
     archive_path = File.join(directory, 'archive.zip')
@@ -77,8 +80,8 @@ private
       airport[key] = extract_value_from_line(line, range.first, range.last)
     end
 
-    airport[:latitude] = self.class.convert_degrees_minutes_seconds_to_decimal(airport[:latitude])
-    airport[:longitude] = self.class.convert_degrees_minutes_seconds_to_decimal(airport[:longitude])
+    airport[:latitude] = convert_degrees_minutes_seconds_to_decimal(airport[:latitude])
+    airport[:longitude] = convert_degrees_minutes_seconds_to_decimal(airport[:longitude])
 
     @airports[airport[:site_number]] = airport.tap {|airport_| airport_.delete(:site_number)}
   end
@@ -109,7 +112,7 @@ private
     return line[(start - 1)...(start + length - 1)].strip
   end
 
-  private_class_method def self.convert_degrees_minutes_seconds_to_decimal(coordinate)
+  def convert_degrees_minutes_seconds_to_decimal(coordinate)
     degrees, minutes, seconds = coordinate.split('-')
     direction = seconds[-1]
 
@@ -118,7 +121,7 @@ private
     return decimal.round(7)
   end
 
-  private_class_method def self.current_data_cycle
+  def current_data_cycle
     # New data is available every 28 days
     cycle_length = 28.days
     next_cycle = Date.new(2020, 9, 10)

@@ -11,8 +11,16 @@ class CreateAirports < ActiveRecord::Migration[6.0]
       table.string :ownership_type
       table.string :owner_name
       table.string :owner_phone
+      table.text :description
+      table.text :transient_parking
+      table.text :fuel_location
+      table.text :crew_car
+      table.text :landing_fees
+      table.text :wifi
+      table.text :passport_location
       table.integer :elevation, null: false
-      table.string :fuel
+      table.string :fuel_type
+      table.string :gate_code
 
       table.timestamps
     end

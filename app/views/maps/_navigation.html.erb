@@ -7,31 +7,8 @@
     </div>
   </div>
 
-  <div class="tags mt-2">
-    <div class="row no-gutters">
-      <% Tag.names.keys.in_groups_of(4) do |tags| %>
-        <% tags.each do |name| %>
-          <div class="col-3">
-            <div class="card border-0">
-              <% if name %>
-                <div class="tag-filter card-body p-0 pt-2 mx-auto text-center disabled" data-tag="<%= name %>" data-default-tag="<%= Tag::TAGS[name.to_sym][:default] %>">
-                  <div class="icon mx-auto" style="background-color: <%= Tag::TAGS[name.to_sym][:color] %>" data-color="<%= Tag::TAGS[name.to_sym][:color] %>">
-                    <%= tag_icon(name) %>
-                  </div>
-
-                  <div class="label">
-                    <%= Tag.names[name].titleize %>
-                  </div>
-                </div>
-              <% else %>
-                <div class="card-body"></div>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-
-        <div class="w-100"></div>
-      <% end %>
-    </div>
+  <div class="filters mt-2">
+    <%= render partial: 'maps/filter_group', locals: {filter_group: :tags, filters: Tag::TAGS} %>
+    <%= render partial: 'maps/filter_group', locals: {filter_group: :facility_types, filters: Airport::facility_types} %>
   </div>
 </div>

@@ -1,4 +1,6 @@
 class AirportImporter
+  MILITARY_OWNERSHIP_TYPES = ['MA', 'MN', 'MR', 'CG']
+
   def initialize(airports)
     @airports = airports
   end
@@ -6,6 +8,8 @@ class AirportImporter
   def load_database
     @airports.each do |site_number, airport_data|
       airport = update_airport(site_number, airport_data)
+
+      update_tags(airport)
 
       (airport_data[:runways] || []).each do |runway|
         update_runway(airport, runway)
@@ -22,6 +26,13 @@ private
   def update_airport(site_number, airport_data)
     airport = Airport.find_by(site_number: site_number) || Airport.new(site_number: site_number)
 
+    # Normalize the facility type to the options we use for filtering
+    if airport_data[:ownership_type].in?(MILITARY_OWNERSHIP_TYPES)
+      airport_data[:facility_type] = :military
+    else
+      airport_data[:facility_type] = airport_data[:facility_type].parameterize.underscore
+    end
+
     airport.update!({
       code: airport_data[:airport_code],
       name: airport_data[:airport_name],
@@ -33,10 +44,23 @@ private
       latitude: airport_data[:latitude],
       longitude: airport_data[:longitude],
       elevation: airport_data[:elevation],
-      fuel: airport_data[:fuel],
+      fuel_type: airport_data[:fuel_type],
     })
 
     return airport
+  end
+
+  def update_tags(airport)
+    # Tag public and private airports
+    unless airport.ownership_type.in?(MILITARY_OWNERSHIP_TYPES)
+      tag = (airport.facility_use == 'PR' ? :private_ : :public_)
+      airport.tags << Tag.new(name: tag)
+    end
+
+    # Tag airports without any user contributed data yet
+    if airport.empty?
+      airport.tags << Tag.new(name: :empty)
+    end
   end
 
   def update_runway(airport, runway_data)

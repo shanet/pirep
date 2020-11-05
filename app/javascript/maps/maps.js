@@ -119,20 +119,18 @@ function addAirportsToMap() {
         },
       });
 
-      filterAirportsOnMap(filters.enabledFilters());
+      filterAirportsOnMap();
     });
   });
 }
 
-export function filterAirportsOnMap(filters) {
+export function filterAirportsOnMap() {
   displayedAirports.features.length = 0;
 
   allAirports.forEach((airport) => {
-    airport.properties.tags.forEach((tag) => {
-      if(filters.has(tag)) {
-        displayedAirports.features.push(airport);
-      }
-    });
+    if(filters.showAirport(airport)) {
+      displayedAirports.features.push(airport);
+    }
   });
 
   map.getSource(AIRPORT_LAYER).setData(displayedAirports);

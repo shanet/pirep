@@ -39,11 +39,11 @@
     }
   }
 
-  .tags .card {
+  .filters .card {
     height: 80px;
     overflow: hidden;
 
-    .tag-filter {
+    .filter {
       &.disabled .icon {
         background-color: $black !important;
       }

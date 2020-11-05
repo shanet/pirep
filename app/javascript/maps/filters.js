@@ -1,39 +1,49 @@
 const maps = require('./maps');
 
-const enabledTagFilters = new Set();
-const allTagFilters = new Set();
+const enabledFilters = {};
 
 document.addEventListener('DOMContentLoaded', () => {
-  const tagFilters = document.getElementsByClassName('tag-filter');
+  const filters = document.getElementsByClassName('filter');
 
-  for(let i = 0; i < tagFilters.length; i++) {
-    const tagFilter = tagFilters[i];
-    const {tag} = tagFilter.dataset;
+  for(let i = 0; i < filters.length; i++) {
+    const filter = filters[i];
+    const {filterName, filterGroup, defaultFilter} = filter.dataset;
 
-    allTagFilters.add(tag);
+    enabledFilters[filterGroup] ||= new Set();
 
-    // Set default filters as enabled (not used yet)
-    // if(tagFilter.dataset.defaultTag === 'true') {
-    //   enabledTagFilters.add(tag);
-    //   tagFilter.classList.remove('disabled');
-    // }
+    if(defaultFilter === 'true') {
+      enabledFilters[filterGroup].add(filterName);
+      filter.classList.remove('disabled');
+    }
 
-    tagFilter.addEventListener('click', () => {
-      if(enabledTagFilters.has(tag)) {
-        enabledTagFilters.delete(tag);
-        tagFilter.classList.add('disabled');
+    filter.addEventListener('click', () => {
+      if(enabledFilters[filterGroup].has(filterName)) {
+        enabledFilters[filterGroup].delete(filterName);
+        filter.classList.add('disabled');
       } else {
-        enabledTagFilters.add(tag);
-        tagFilter.classList.remove('disabled');
+        enabledFilters[filterGroup].add(filterName);
+        filter.classList.remove('disabled');
       }
 
       // Update the map with the new filter state
-      maps.filterAirportsOnMap(enabledFilters());
+      maps.filterAirportsOnMap();
     });
   }
 });
 
-export function enabledFilters() {
-  // Default to showing all airports if no filters are enabled
-  return (enabledTagFilters.size === 0 ? allTagFilters : enabledTagFilters);
+export function showAirport(airport) {
+  // Filter by facility type
+  if(!enabledFilters['facility_types'].has(airport.properties.facility_type)) return false;
+
+  // Show all airports if no filters are selected
+  if(enabledFilters['tags'].size === 0) return true;
+
+  // Filter by tag
+  for(let i=0; i<airport.properties.tags.length; i++) {
+    if(enabledFilters['tags'].has(airport.properties.tags[i])) {
+      return true;
+    }
+  }
+
+  return false;
 }

@@ -1,0 +1,14 @@
+<div
+  class="filter card-body p-0 pt-2 mx-auto text-center disabled"
+  data-filter-name="<%= filter %>"
+  data-filter-group="<%= filter_group %>"
+  data-default-filter="<%= configuration[:default] %>"
+  >
+  <div class="icon mx-auto" style="background-color: <%= configuration[:color] %>" data-color="<%= configuration[:color] %>">
+    <%= filter_icon(configuration[:icon]) %>
+  </div>
+
+  <div class="label">
+    <%= configuration[:label] %>
+  </div>
+</div>
