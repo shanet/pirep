@@ -1,0 +1,9 @@
+Remarks
+
+<% if @airport.remarks.any? %>
+  <ul>
+    <% @airport.remarks.each do |remark| %>
+      <li><%= remark.text %></li>
+    <% end %>
+  </ul>
+<% end %>

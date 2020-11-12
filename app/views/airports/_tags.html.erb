@@ -1,0 +1,33 @@
+<% @airport.tags.each do |tag| %>
+  <% tag_configuration = Tag::TAGS[tag.name.to_sym] %>
+
+  <div class="tag-square card p-0">
+    <div class="card-body">
+      <div class="icon">
+        <%= filter_icon(tag_configuration[:icon]) %>
+      </div>
+
+      <div class="label">
+        <%= tag_configuration[:label] %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="tag-square add card p-0">
+  <div class="card-body">
+    <div class="icon">
+      <%= filter_icon('plus') %>
+    </div>
+
+    <div class="label">
+      Add
+    </div>
+  </div>
+</div>
+
+<%= form_with model: Tag.new, local: true do |form| %>
+  <%= form.select :name, options_for_tag_select(@airport) %>
+  <%= form.hidden_field :airport_id, value: @airport.id %>
+  <%= form.submit %>
+<% end %>

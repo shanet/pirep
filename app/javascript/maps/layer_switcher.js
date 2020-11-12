@@ -1,7 +1,10 @@
 const maps = require('./maps');
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('layer-switcher').addEventListener('click', () => {
+  let layerSwitcher = document.getElementById('layer-switcher');
+  if(!layerSwitcher) return;
+
+  layerSwitcher.addEventListener('click', () => {
     maps.toggleSectionalLayers(!maps.areSectionalLayersShown());
   });
 });

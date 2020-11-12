@@ -1,1 +1,104 @@
-TODO
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <h3><%= @airport.code %> - <%= @airport.name.titleize %></h3>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm">
+      <%= @airport.latitude %>, <%= @airport.longitude %>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <div class="row">
+        <div class="col-sm">
+          <%= render 'airports/tags' %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          Stats
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          Description
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          Transient parking
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          Fuel Type & Location
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          Crew Car
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          Landing & Tie-down fees
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          Gate Code
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          WiFi
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          Passport Location
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          Comments
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm">
+      <div class="row">
+        <div class="col-sm">
+          Photo gallery
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          Taxi diagram
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          <%= render 'airports/remarks' %>
+        </div>
+      </div>
+  </div>
+</div>

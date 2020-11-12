@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   resources :airports do
   end
 
+  resources :tags, only: :create
+
   namespace :airports do
     get 'search(/:query)', action: :search, as: :search
   end

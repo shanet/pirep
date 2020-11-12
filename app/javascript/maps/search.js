@@ -5,6 +5,7 @@ let selectedSearchResultIndex = -1;
 
 document.addEventListener('DOMContentLoaded', () => {
   const search = document.getElementById('search');
+  if(!search) return;
   const {searchEndpoint} = search.dataset;
 
   const inputEventHandler = utils.debounce(async () => {

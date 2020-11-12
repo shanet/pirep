@@ -6,25 +6,35 @@ class Tag < ApplicationRecord
   validates :name, presence: true
 
   TAGS = {
+    food: {
+      label: 'Food',
+      icon: 'hamburger',
+      color: 'pink',
+      addable: true,
+    },
     camping: {
       label: 'Camping',
       icon: 'campground',
       color: 'red',
+      addable: true,
     },
     golfing: {
       label: 'Golfing',
       icon: 'golf-ball',
       color: 'orange',
+      addable: true,
     },
     hot_springs: {
       label: 'Hot Springs',
       icon: 'hot-tub',
       color: 'yellow',
+      addable: true,
     },
     water: {
       label: 'Water',
       icon: 'umbrella-beach',
       color: 'green',
+      addable: true,
     },
     public_: {
       label: 'Public',
@@ -44,4 +54,8 @@ class Tag < ApplicationRecord
   }
 
   enum name: TAGS.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
+
+  def self.addable_tags
+    return TAGS.select {|key, value| value[:addable]}
+  end
 end

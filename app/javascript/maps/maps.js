@@ -22,6 +22,8 @@ const displayedAirports = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+  if(!document.getElementById('map')) return;
+
   initMap();
 
   map.on('load', () => {

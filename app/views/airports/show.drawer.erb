@@ -4,7 +4,7 @@
   </div>
 
   <div class="col-2">
-    <button type="button" class="btn btn-primary btn-sm float-right">More &gt;</button>
+    <%= link_to 'More &gt;'.html_safe, airport_path(@airport.code), class: 'btn btn-primary btn-sm float-right' %>
   </div>
 </div>
 

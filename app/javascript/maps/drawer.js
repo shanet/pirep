@@ -6,7 +6,10 @@ let wereSectionalLayersShown;
 
 document.addEventListener('DOMContentLoaded', () => {
   // Close the drawer when clicking the drawer handle
-  document.querySelector('#airport-drawer .handle button').addEventListener('click', () => {
+  let drawerHandle = document.querySelector('#airport-drawer .handle button');
+  if(!drawerHandle) return;
+
+  drawerHandle.addEventListener('click', () => {
     closeDrawer();
   });
 });
