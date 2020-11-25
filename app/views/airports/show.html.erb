@@ -30,48 +30,56 @@
       <div class="row">
         <div class="col-sm">
           Description
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :description} %>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm">
           Transient parking
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :transient_parking, height: :small} %>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm">
           Fuel Type & Location
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :fuel_location, height: :small} %>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm">
           Crew Car
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :crew_car, height: :small} %>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm">
           Landing & Tie-down fees
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :landing_fees, height: :small} %>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm">
           Gate Code
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :gate_code, height: :small} %>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm">
           WiFi
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :wifi, height: :small} %>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm">
           Passport Location
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :passport_location, height: :small} %>
         </div>
       </div>
 

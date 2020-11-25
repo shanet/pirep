@@ -46,6 +46,11 @@ class Tag < ApplicationRecord
       icon: 'lock',
       color: 'purple',
     },
+    unmapped: {
+      label: 'Unmapped',
+      icon: 'map-marked-alt',
+      color: 'purple',
+    },
     empty: {
       label: 'Empty',
       icon: 'question',

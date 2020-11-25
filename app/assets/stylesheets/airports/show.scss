@@ -23,3 +23,13 @@
     font-size: 14px;
   }
 }
+
+.EasyMDEContainer {
+  .editor-toolbar {
+    display: none;
+  }
+
+  &.editing .editor-toolbar {
+    display: block;
+  }
+}

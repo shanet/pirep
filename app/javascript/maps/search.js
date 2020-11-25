@@ -69,8 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
   search.addEventListener('blur', () => {
     hideSearchResults();
   });
-
-  // TODO: debounce input
 });
 
 function showSearchResults(results) {

@@ -8,5 +8,6 @@ Rails.application.config.assets.paths += [
 ]
 
 Rails.configuration.assets.precompile += [
+  'easymde.min.css',
   'mapbox.css',
 ]
