@@ -7,3 +7,14 @@ export function debounce(callback, delay) {
     timeout = setTimeout(() => callback.apply(context, args), delay);
   };
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  let collapsibleToggles = document.querySelectorAll('[data-toggle="collapse"]');
+
+  for(let i=0; i<collapsibleToggles.length; i++) {
+    collapsibleToggles[i].addEventListener('click', () => {
+      let target = document.getElementById(collapsibleToggles[i].dataset.target);
+      target.classList.toggle('show');
+    });
+  }
+});

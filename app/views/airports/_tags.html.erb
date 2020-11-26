@@ -14,7 +14,7 @@
   </div>
 <% end %>
 
-<div class="tag-square add card p-0">
+<div class="tag-square add card p-0" data-toggle="collapse" data-target="add-tag-form">
   <div class="card-body">
     <div class="icon">
       <%= filter_icon('plus') %>
@@ -26,8 +26,10 @@
   </div>
 </div>
 
-<%= form_with model: Tag.new, local: true do |form| %>
-  <%= form.select :name, options_for_tag_select(@airport) %>
-  <%= form.hidden_field :airport_id, value: @airport.id %>
-  <%= form.submit %>
-<% end %>
+<div id="add-tag-form" class="collapsible">
+  <%= form_with model: Tag.new, local: true do |form| %>
+    <%= form.select :name, options_for_tag_select(@airport) %>
+    <%= form.hidden_field :airport_id, value: @airport.id %>
+    <%= form.submit %>
+  <% end %>
+</div>
