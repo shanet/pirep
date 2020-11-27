@@ -21,11 +21,12 @@ gem 'amazing_print'
 gem 'bootstrap'
 gem 'brakeman'
 gem 'bundler-audit'
-gem 'erb_lint'
+gem 'erb_lint', '>= 0.0.35'
 gem 'faraday'
 gem 'font-awesome-sass'
 gem 'rubocop'
 gem 'rubocop-rails'
+gem 'rubyzip'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

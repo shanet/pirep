@@ -1,3 +1,5 @@
+require 'zip'
+
 class AirportDatabaseParser
   # These are the ranges for column data as documented in the README at:
   #   * https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/
@@ -50,9 +52,17 @@ private
     response = Faraday.get('https://nfdc.faa.gov/webContent/28DaySub/%s/APT.zip' % current_data_cycle)
     raise Excpetions::AirportDatabaseDownloadFailed unless response.success?
 
+    # Write archive to disk
     archive_path = File.join(directory, 'archive.zip')
     File.open(archive_path, 'wb') {|file| file.write(response.body)}
-    `unzip -o -d #{directory} #{archive_path}`
+
+    Zip::File.open(archive_path) do |archive|
+      # Extract each file in the archive
+      archive.each do |file|
+        path = File.join(directory, file.name)
+        archive.extract(file, path)
+      end
+    end
   end
 
   def parse_file(path)
