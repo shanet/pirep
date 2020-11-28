@@ -1,0 +1,16 @@
+<div id="landing-rights-form" class="collapsible">
+  Some privately owned airports are actually open to the public. Or the owners are happy to have pilots stop by with prior permission given. If this is the case for this airport enter it as such!
+
+  <%= form_with model: @airport, local: true do |form| %>
+    <%= render partial: 'airports/statistics/landing_rights_field', locals: {form: form, type: :public_} %>
+    <%= render partial: 'airports/statistics/landing_rights_field', locals: {form: form, type: :restrictions} %>
+    <%= render partial: 'airports/statistics/landing_rights_field', locals: {form: form, type: :permission} %>
+
+    <div>
+      <%= form.radio_button(:landing_rights, :private_) %>
+      <%= form.label(:landing_rights_private_, Airport::LANDING_RIGHTS_TYPES[:private_][:description]) %>
+    </div>
+
+    <%= form.submit %>
+  <% end %>
+</div>

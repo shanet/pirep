@@ -8,7 +8,7 @@ class AirportsController < ApplicationController
   end
 
   def show
-    @airport = Airport.find_by(code: params[:id].upcase)
+    @airport = Airport.find_by(code: params[:id].upcase) || Airport.find(params[:id])
     return not_found(request.format.symbol) unless @airport
 
     @photos = GoogleApi.client.place_photos('%s - %s Airport' % [@airport.code, @airport.name], @airport.latitude, @airport.longitude)
@@ -16,7 +16,11 @@ class AirportsController < ApplicationController
 
   def update
     if @airport.update(airport_params)
-      head :ok
+      if request.xhr?
+        head :ok
+      else
+        redirect_to airport_path(@airport.code)
+      end
     else
       # TODO: error handle
     end
@@ -35,9 +39,14 @@ private
   end
 
   def airport_params
+    # The landing requirements field may be split over multiple text fields for each landing right type so we need to find the one for the selected landing right type
+    params[:airport][:landing_requirements] ||= params[:airport]["landing_requirements_#{params[:airport][:landing_rights]}"]
+
     params.require(:airport).permit(
       :description,
       :transient_parking,
+      :landing_rights,
+      :landing_requirements
     )
   end
 end

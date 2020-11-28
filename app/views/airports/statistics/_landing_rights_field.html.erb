@@ -1,0 +1,8 @@
+<div>
+  <%= form.radio_button(:landing_rights, type) %>
+  <%= form.label("landing_rights_#{type}", Airport::LANDING_RIGHTS_TYPES[type][:description]) %>
+  <br>
+  <%= Airport::LANDING_RIGHTS_TYPES[type][:requirements_label] %>
+  <br>
+  <%= form.text_field("landing_requirements_#{type}", value: (@airport.landing_rights == type ? @airport.landing_requirements : '')) %>
+</div>

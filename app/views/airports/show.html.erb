@@ -23,27 +23,7 @@
 
       <div class="row">
         <div class="col-sm">
-          Stats
-          <div>
-            Elevation: <%= @airport.elevation %>ft
-          </div>
-
-          <div>
-            <%= @airport.facility_use %>
-
-            <% if @airport.facility_use == 'PR' %>
-              <a href="#" data-toggle="collapse" data-target="private-airport-form">Is this airport open to the public?</a>
-              <div id="private-airport-form" class="collapsible">
-                form here!
-              </div>
-            <% end %>
-          </div>
-
-          <% @airport.runways.each do |runway| %>
-            <div>
-              <%= runway.number %>: <%= number_with_delimiter(runway.length, delimiter: ',') %>ft
-            </div>
-          <% end %>
+          <%= render 'airports/statistics/statistics' %>
         </div>
       </div>
 

@@ -39,7 +39,26 @@ class Airport < ApplicationRecord
     },
   }
 
+  LANDING_RIGHTS_TYPES = {
+    public_: {
+      requirements_label: 'Notes:',
+      description: 'Open to public',
+    },
+    restrictions: {
+      requirements_label: 'Requirements for landing:',
+      description: 'Allowed with restrictions',
+    },
+    permission: {
+      requirements_label: 'Contact info for landing permission:',
+      description: 'Allowed with prior permission',
+    },
+    private_: {
+      description: 'Private to everyone :(',
+    },
+  }
+
   enum facility_type: FACILITY_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
+  enum landing_rights: LANDING_RIGHTS_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
 
   def self.geojson
     return Airport.includes(:tags).map {|airport| airport.to_geojson}
@@ -79,5 +98,13 @@ class Airport < ApplicationRecord
       :transient_parking,
       :wifi,
     ].map {|column| send(column).present?}.any?
+  end
+
+  def private?
+    return facility_use == 'PR'
+  end
+
+  def landing_rights
+    return self[:landing_rights].to_sym
   end
 end

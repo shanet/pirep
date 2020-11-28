@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_12_071431) do
+ActiveRecord::Schema.define(version: 2020_11_27_003707) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -39,6 +39,8 @@ ActiveRecord::Schema.define(version: 2020_10_12_071431) do
     t.string "gate_code"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "landing_rights"
+    t.string "landing_requirements"
     t.index ["code"], name: "index_airports_on_code", unique: true
     t.index ["site_number"], name: "index_airports_on_site_number", unique: true
   end
