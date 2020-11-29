@@ -30,6 +30,12 @@ class Tag < ApplicationRecord
       color: 'yellow',
       addable: true,
     },
+    lodging: {
+      label: 'Lodging',
+      icon: 'bed',
+      color: 'yellow',
+      addable: true,
+    },
     water: {
       label: 'Water',
       icon: 'umbrella-beach',
