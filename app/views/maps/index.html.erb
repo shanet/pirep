@@ -9,7 +9,8 @@
   data-airport-path="<%= airport_path(placeholder, format: :drawer) %>"
   data-placeholder="<%= placeholder %>"
   data-marker-image-path="<%= image_path('marker') %>"
-  data-marker-selected-image-path="<%= image_path('marker_selected') %>">
+  data-marker-selected-image-path="<%= image_path('marker_selected') %>"
+  data-mapbox-api-key="<%= Rails.configuration.mapbox_api_key %>">
 </div>
 
 <%= render 'layer_switcher' %>

@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initMap() {
-  mapboxgl.accessToken = 'pk.eyJ1Ijoic2hhbmV0IiwiYSI6ImNpbXZnbnBhMjAydDl3a2x1ejNoNWoydHMifQ.WIi_Jv4TO3hOzj-E120rYg';
+  mapboxgl.accessToken = document.getElementById('map').dataset.mapboxApiKey;
 
   map = new mapboxgl.Map({
     center: [-122.06, 48.11],

@@ -1,4 +1,4 @@
-class AirportImporter
+class AirportDatabaseImporter
   MILITARY_OWNERSHIP_TYPES = ['MA', 'MN', 'MR', 'CG']
 
   def initialize(airports)

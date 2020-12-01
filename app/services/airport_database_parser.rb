@@ -1,3 +1,4 @@
+require 'exceptions'
 require 'zip'
 
 class AirportDatabaseParser
@@ -50,7 +51,7 @@ private
 
   def download_archive(directory)
     response = Faraday.get('https://nfdc.faa.gov/webContent/28DaySub/%s/APT.zip' % current_data_cycle)
-    raise Excpetions::AirportDatabaseDownloadFailed unless response.success?
+    raise Exceptions::AirportDatabaseDownloadFailed unless response.success?
 
     # Write archive to disk
     archive_path = File.join(directory, 'archive.zip')
@@ -66,7 +67,7 @@ private
   end
 
   def parse_file(path)
-    # The provided file is annoying encoded with latin1 (iso-8859-1) so read it as that and then convert each line to utf-8
+    # The provided file is annoyingly encoded with latin1 (iso-8859-1) so read it as that and then convert each line to utf-8
     File.foreach(path, encoding: 'iso-8859-1') do |line|
       line.encode!('utf-8')
 

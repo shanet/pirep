@@ -3,6 +3,8 @@ class AirportImporterJob < ApplicationJob
 
   def perform(*_args)
     airports = AirportDatabaseParser.new.download_and_parse
-    AirportImporter.new(airports).load_database
+    AirportDatabaseImporter.new(airports).load_database
+
+    AirportDiagramDownloader.new.download_and_convert
   end
 end
