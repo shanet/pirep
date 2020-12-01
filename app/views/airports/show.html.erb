@@ -82,18 +82,13 @@
           <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :passport_location, height: :small} %>
         </div>
       </div>
-
-      <div class="row">
-        <div class="col-sm">
-          Comments
-        </div>
-      </div>
     </div>
 
     <div class="col-sm">
       <div class="row">
         <div class="col-sm">
-          Photo gallery
+          <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @photos} %>
+          <%= render 'airports/upload_photo_form' %>
         </div>
       </div>
 
@@ -113,5 +108,13 @@
           <%= render 'airports/remarks' %>
         </div>
       </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      Comments
+    </div>
   </div>
 </div>
