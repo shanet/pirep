@@ -4,8 +4,8 @@ Remarks
 
 <% if @airport.remarks.any? %>
   <ul>
-    <% @airport.remarks.limit(show_limit).each do |remark| %>
-      <li><%= remark.text %></li>
+    <% @airport.remarks.order(:created_at).limit(show_limit).each do |remark| %>
+      <li><%= remark.text.downcase.capitalize %></li>
     <% end %>
   </ul>
 
@@ -14,8 +14,8 @@ Remarks
 
     <div id="remaining-remarks" class="collapsible">
       <ul>
-        <% @airport.remarks.offset(show_limit).each do |remark| %>
-          <li><%= remark.text %></li>
+        <% @airport.remarks.order(:created_at).offset(show_limit).each do |remark| %>
+          <li><%= remark.text.downcase.capitalize %></li>
         <% end %>
       </ul>
     </div>
