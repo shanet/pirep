@@ -8,7 +8,7 @@ class AirportsController < ApplicationController
   end
 
   def show
-    @airport = Airport.find_by(code: params[:id].upcase) || Airport.find(params[:id])
+    @airport = Airport.find_by(code: params[:id].upcase) || Airport.find_by(code: params[:id].upcase.gsub(/^K/, '')) || Airport.find(params[:id])
     return not_found(request.format.symbol) unless @airport
 
     @photos = GoogleApi.client.place_photos('%s - %s Airport' % [@airport.code, @airport.name], @airport.latitude, @airport.longitude)
