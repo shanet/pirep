@@ -1,3 +1,5 @@
+require 'google/google_api'
+
 class Airport < ApplicationRecord
   has_many :runways, dependent: :destroy
   has_many :remarks, dependent: :destroy
@@ -60,6 +62,8 @@ class Airport < ApplicationRecord
   enum facility_type: FACILITY_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
   enum landing_rights: LANDING_RIGHTS_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
 
+  has_many_attached :photos
+
   def self.geojson
     return Airport.includes(:tags).map {|airport| airport.to_geojson}
   end
@@ -106,5 +110,9 @@ class Airport < ApplicationRecord
 
   def landing_rights
     return self[:landing_rights].to_sym
+  end
+
+  def all_photos
+    return photos.order(created_at: :desc) + GoogleApi.client.place_photos('%s - %s Airport' % [code, name], latitude, longitude)
   end
 end

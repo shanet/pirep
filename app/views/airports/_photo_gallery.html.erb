@@ -1,6 +1,6 @@
 <div class="photo-gallery">
   <% photos.each_with_index do |photo, index| %>
-    <img class="img-thumbnail <%= index.zero? ? 'active' : '' %>" src="<%= photo[:url] %>">
+    <img class="img-thumbnail <%= index.zero? ? 'active' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? url_for(photo) : photo[:url] %>">
   <% end %>
 
   <%# Don't show the previous and next controls if there's only one image %>

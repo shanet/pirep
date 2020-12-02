@@ -87,7 +87,7 @@
     <div class="col-sm">
       <div class="row">
         <div class="col-sm">
-          <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @photos} %>
+          <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @airport.all_photos} %>
           <%= render 'airports/upload_photo_form' %>
         </div>
       </div>

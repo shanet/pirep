@@ -1,5 +1,3 @@
-require 'google/google_api'
-
 class AirportsController < ApplicationController
   before_action :set_airport, only: :update
 
@@ -10,8 +8,6 @@ class AirportsController < ApplicationController
   def show
     @airport = Airport.find_by(code: params[:id].upcase) || Airport.find_by(code: params[:id].upcase.gsub(/^K/, '')) || Airport.find(params[:id])
     return not_found(request.format.symbol) unless @airport
-
-    @photos = GoogleApi.client.place_photos('%s - %s Airport' % [@airport.code, @airport.name], @airport.latitude, @airport.longitude)
   end
 
   def update
@@ -46,7 +42,8 @@ private
       :description,
       :transient_parking,
       :landing_rights,
-      :landing_requirements
+      :landing_requirements,
+      photos: [],
     )
   end
 end
