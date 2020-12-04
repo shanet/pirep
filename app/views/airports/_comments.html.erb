@@ -1,0 +1,29 @@
+<% @airport.comments.each do |comment| %>
+  <div>
+    <%= comment.body %>
+    <br>
+    <%= comment.created_at %>
+    <br>
+    Helpful count: <%= comment.helpful_count %>
+    <br>
+    Flagged as outdated at: <%= comment.outdated_at %>
+    <br>
+
+    <%= form_with url: helpful_comment_path(comment) do |form| %>
+      <%= form.submit '+1 Helpful' %>
+    <% end %>
+
+    <%= form_with url: flag_outdated_comment_path(comment) do |form| %>
+      <%= form.submit 'Flag as outdated' %>
+    <% end %>
+  </div>
+<% end %>
+
+Add Comment
+
+<%= form_with model: Comment.new, local: true do |form| %>
+  <%= form.text_area :body %>
+  <%= form.hidden_field :airport_id, value: @airport.id %>
+  <br>
+  <%= form.submit %>
+<% end %>

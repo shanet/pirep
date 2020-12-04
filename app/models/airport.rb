@@ -4,6 +4,7 @@ class Airport < ApplicationRecord
   has_many :runways, dependent: :destroy
   has_many :remarks, dependent: :destroy
   has_many :tags, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   validates :code, uniqueness: true
   validates :site_number, uniqueness: true

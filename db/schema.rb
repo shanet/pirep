@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_01_052808) do
+ActiveRecord::Schema.define(version: 2020_12_04_062443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -67,6 +67,16 @@ ActiveRecord::Schema.define(version: 2020_12_01_052808) do
     t.index ["site_number"], name: "index_airports_on_site_number", unique: true
   end
 
+  create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "airport_id", null: false
+    t.text "body"
+    t.integer "helpful_count", default: 0
+    t.datetime "outdated_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["airport_id"], name: "index_comments_on_airport_id"
+  end
+
   create_table "remarks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "element", null: false
     t.text "text", null: false
@@ -96,6 +106,7 @@ ActiveRecord::Schema.define(version: 2020_12_01_052808) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "comments", "airports"
   add_foreign_key "remarks", "airports"
   add_foreign_key "runways", "airports"
   add_foreign_key "tags", "airports"
