@@ -6,6 +6,8 @@ class Airport < ApplicationRecord
   has_many :tags, dependent: :destroy
   has_many :comments, dependent: :destroy
 
+  accepts_nested_attributes_for :tags
+
   validates :code, uniqueness: true
   validates :site_number, uniqueness: true
 
@@ -88,7 +90,7 @@ class Airport < ApplicationRecord
       },
       # Mapbox requires IDs to be integers (even though the RFC says strings are okay!)
       # so we need a hash function that returns a 32bit number. CRC32 should do the job.
-      id: Zlib.crc32(code),
+      id: code_digest,
     }
   end
 
@@ -115,5 +117,40 @@ class Airport < ApplicationRecord
 
   def all_photos
     return photos.order(created_at: :desc) + GoogleApi.client.place_photos('%s - %s Airport' % [code, name], latitude, longitude)
+  end
+
+  def unselected_tag_names
+    # Remove already added tags on the airport from the full set of tags
+    return (Tag.addable_tags.keys - tags.pluck(:name).map(&:to_sym))
+  end
+
+  def theme
+    # These match the themes defined in the themes CSS file
+    themes = [
+      'red',
+      'pink',
+      'purple',
+      'deep-purple',
+      'indigo',
+      'blue',
+      'light-blue',
+      'cyan',
+      'teal',
+      'green',
+      'light-green',
+      'lime',
+      'yellow',
+      'amber',
+      'orange',
+      'deep-orange',
+      'brown',
+      'blue-grey',
+    ]
+
+    return themes[code_digest % themes.count]
+  end
+
+  def code_digest
+    return Zlib.crc32(code)
   end
 end

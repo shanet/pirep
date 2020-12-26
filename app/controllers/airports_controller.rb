@@ -38,12 +38,16 @@ private
     # The landing requirements field may be split over multiple text fields for each landing right type so we need to find the one for the selected landing right type
     params[:airport][:landing_requirements] ||= params[:airport]["landing_requirements_#{params[:airport][:landing_rights]}"]
 
+    # Filter out any tags that are not selected since the UI shows all tags as options to add
+    params['airport']['tags_attributes'].select! {|index, tag| tag['selected'] == 'true'}
+
     params.require(:airport).permit(
       :description,
       :transient_parking,
       :landing_rights,
       :landing_requirements,
       photos: [],
+      tags_attributes: [:name],
     )
   end
 end

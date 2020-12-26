@@ -1,0 +1,17 @@
+<% tag_configuration = Tag::TAGS[(defined?(tag_record) ? tag_record.name.to_sym : tag_name)] %>
+
+<div class="tag-square card p-0 mr-1 mb-1 theme-<%= tag_configuration[:theme] %> <%= defined?(editing) ? 'editing unselected' : '' %>">
+  <div class="card-body text-center">
+    <% if defined?(tag_record) %>
+      <%= link_to '<i class="fas fa-times"></i>'.html_safe, tag_record, method: :delete, class: :delete %>
+    <% end %>
+
+    <div class="icon">
+      <%= filter_icon(tag_configuration[:icon]) %>
+    </div>
+
+    <div class="label">
+      <%= tag_configuration[:label] %>
+    </div>
+  </div>
+</div>

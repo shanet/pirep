@@ -1,8 +1,8 @@
 class TagsController < ApplicationController
-  def create
-    tag = Tag.new(tag_params)
+  def destroy
+    tag = Tag.find(params[:id])
 
-    if tag.save
+    if tag.destroy
       redirect_to airport_path(tag.airport.code)
     else
       # TODO: error handle
@@ -12,6 +12,6 @@ class TagsController < ApplicationController
 private
 
   def tag_params
-    params.require(:tag).permit(:name, :airport_id)
+    params.require(:tag).permit(:id)
   end
 end

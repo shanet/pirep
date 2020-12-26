@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     get 'search(/:query)', action: :search, as: :search, on: :collection
   end
 
-  resources :tags, only: :create
+  resources :tags, only: :destroy
 
   resources :comments, only: :create do
     member do

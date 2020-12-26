@@ -1,0 +1,31 @@
+<% @airport.tags.each do |tag| %>
+  <%= render partial: 'airports/tags/tag', locals: {tag_record: tag} %>
+<% end %>
+
+<div class="tag-square add card p-0 mb-1 text-dark" data-toggle="collapse" data-target="add-tag-form">
+  <div class="card-body text-center">
+    <div class="icon">
+      <%= filter_icon('plus') %>
+    </div>
+
+    <div class="label">
+      Edit Tags
+    </div>
+  </div>
+</div>
+
+<% content_for :collapsible_content, flush: true do %>
+  <%= form_with model: @airport, local: true do |form| %>
+    <%= form.fields_for :tags, @airport.unselected_tag_names.map {|tag_name| Tag.new(name: tag_name)} do |builder| %>
+      <%= render partial: 'airports/tags/tag', locals: {tag_name: builder.object.name.to_sym, editing: true} %>
+      <%= builder.hidden_field :selected, value: false %>
+      <%= builder.hidden_field :name, value: builder.object.name %>
+    <% end %>
+
+    <div class="text-center mt-1">
+      <%= form.submit 'Add Tags', class: 'btn btn-primary px-3' %>
+    </div>
+  <% end %>
+<% end %>
+
+<%= render 'shared/collapsible', id: 'add-tag-form' %>

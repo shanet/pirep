@@ -1,0 +1,46 @@
+// Material UI design colors taken from https://www.materialui.co/colors
+
+$themes: (
+  "red":         ("primary": #EF5350, "dark": #E53935, "light": #EF9A9A),
+  "pink":        ("primary": #EC407A, "dark": #D81B60, "light": #F48FB1),
+  "purple":      ("primary": #AB47BC, "dark": #8E24AA, "light": #CE93D8),
+  "deep-purple": ("primary": #7E57C2, "dark": #5E35B1, "light": #B39DDB),
+  "indigo":      ("primary": #5C6BC0, "dark": #3949AB, "light": #9FA8DA),
+  "blue":        ("primary": #42A5F5, "dark": #1E88E5, "light": #90CAF9),
+  "light-blue":  ("primary": #29B6F6, "dark": #039BE5, "light": #81D4FA),
+  "cyan":        ("primary": #26C6DA, "dark": #00ACC1, "light": #80DEEA),
+  "teal":        ("primary": #26A69A, "dark": #00897B, "light": #80CBC4),
+  "green":       ("primary": #66BB6A, "dark": #43A047, "light": #A5D6A7),
+  "light-green": ("primary": #9CCC65, "dark": #7CB342, "light": #C5E1A5),
+  "lime":        ("primary": #D4E157, "dark": #C0CA33, "light": #E6EE9C),
+  "yellow":      ("primary": #FFEE58, "dark": #FDD835, "light": #FFF59D),
+  "amber":       ("primary": #FFCA28, "dark": #FFB300, "light": #FFE082),
+  "orange":      ("primary": #FFA726, "dark": #FB8C00, "light": #FFCC80),
+  "deep-orange": ("primary": #FF7043, "dark": #F4511E, "light": #FFAB91),
+  "brown":       ("primary": #8D6E63, "dark": #6D4C41, "light": #BCAAA4),
+  "blue-grey":   ("primary": #78909C, "dark": #546E7A, "light": #B0BEC5),
+);
+
+@each $name, $colors in $themes {
+  .airport-header.theme-#{$name} {
+    .row:first-child {
+      background-color: map-get($colors, "primary");
+    }
+
+    .row:last-child {
+      background-color: map-get($colors, "dark");
+    }
+  }
+
+  .tag-square.theme-#{$name} {
+    background-color: map-get($colors, "primary");
+
+    &.editing.unselected {
+      background-color: map-get($colors, "light");
+
+      &:hover {
+        background-color: map-get($colors, "primary");
+      }
+    }
+  }
+}

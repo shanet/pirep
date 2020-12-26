@@ -1,27 +1,5 @@
-.tag-square {
-  width: 75px;
-  height: 75px;
-  display: inline-block;
-  background-color: green;
-  border-radius: 5px;
-  color: $white;
-  overflow: hidden;
-
-  &.add {
-    background-color: black;
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  .icon {
-    font-size: 24px;
-  }
-
-  .label {
-    font-size: 14px;
-  }
+.airport-header {
+  max-width: 100%;
 }
 
 .EasyMDEContainer {

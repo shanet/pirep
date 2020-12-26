@@ -1,12 +1,12 @@
-<div class="container">
+<div class="container airport-header text-center mb-3 theme-<%= @airport.theme %>">
   <div class="row">
-    <div class="col-sm">
+    <div class="col-sm p-3">
       <h3><%= @airport.code %> - <%= @airport.name.titleize %></h3>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-sm">
+    <div class="col-sm p-2">
       <%= @airport.latitude %>, <%= @airport.longitude %>
     </div>
   </div>
@@ -17,7 +17,7 @@
     <div class="col-sm">
       <div class="row">
         <div class="col-sm">
-          <%= render 'airports/tags' %>
+          <%= render 'airports/tags/tags' %>
         </div>
       </div>
 
