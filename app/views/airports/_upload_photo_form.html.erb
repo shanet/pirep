@@ -1,9 +1,16 @@
-<a href="javascript:void(0)" data-toggle="collapse" data-target="upload-photo-form">Add Photo</a>
-
-<div id="upload-photo-form" class="collapsible">
-  <%= form_with model: @airport, local: true do |form| %>
-    Uploaded photos will be licensed under CC-something. Please only upload photos you have the rights to use.
-    <%= form.file_field :photos, multiple: true %>
-    <%= form.submit %>
-  <% end %>
+<div class="text-right">
+  <a href="javascript:void(0)" data-toggle="collapse" data-target="upload-photo-form" class="btn btn-outline-primary btn-sm my-2">Add Photo</a>
 </div>
+
+<% content_for :collapsible_content, flush: true do %>
+  <%= form_with model: @airport, local: true do |form| %>
+    <%= form.file_field :photos, multiple: true %>
+    <%= form.submit value: 'Upload Photo', class: 'btn btn-primary float-right' %>
+
+    <div class="alert alert-warning mt-3 mb-0">
+      Uploaded photos will be licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a> license. Please only upload photos you have the rights to use.
+    </div>
+  <% end %>
+<% end %>
+
+<%= render 'shared/collapsible', id: 'upload-photo-form', classes: 'mb-2' %>
