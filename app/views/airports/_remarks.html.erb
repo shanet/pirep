@@ -1,23 +1,25 @@
 <% show_limit = 5 %>
 
-Remarks
-
 <% if @airport.remarks.any? %>
-  <ul>
-    <% @airport.remarks.order(:created_at).limit(show_limit).each do |remark| %>
-      <li><%= remark.text.downcase.capitalize %></li>
-    <% end %>
-  </ul>
+  <div class="card my-3">
+    <div class="card-header">
+      Remarks
+    </div>
+
+    <ul class="list-group list-group-flush">
+      <% @airport.remarks.order(:created_at).limit(show_limit).each do |remark| %>
+        <li class="list-group-item"><%= remark.to_human_readable %></li>
+      <% end %>
+
+      <% @airport.remarks.order(:created_at).offset(show_limit).each do |remark| %>
+        <li class="list-group-item extra-remark hidden"><%= remark.to_human_readable %></li>
+      <% end %>
+    </ul>
+  </div>
 
   <% if @airport.remarks.count > show_limit %>
-    <a href="javascript:void(0)" data-toggle="collapse" data-target="remaining-remarks">Show More</a>
-
-    <div id="remaining-remarks" class="collapsible">
-      <ul>
-        <% @airport.remarks.order(:created_at).offset(show_limit).each do |remark| %>
-          <li><%= remark.text.downcase.capitalize %></li>
-        <% end %>
-      </ul>
-    </div>
+    <div class="text-right">
+      <button id="show-extra-remarks" class="btn btn-outline-primary btn-sm">Show More</a>
+    </button>
   <% end %>
 <% end %>
