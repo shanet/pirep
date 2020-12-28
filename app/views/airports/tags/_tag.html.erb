@@ -2,7 +2,7 @@
 
 <div class="tag-square card p-0 mr-1 mb-1 theme-<%= tag_configuration[:theme] %> <%= defined?(editing) ? 'editing unselected' : '' %>">
   <div class="card-body text-center">
-    <% if defined?(tag_record) %>
+    <% if defined?(tag_record) && tag_configuration[:addable] %>
       <%= link_to '<i class="fas fa-times"></i>'.html_safe, tag_record, method: :delete, class: :delete %>
     <% end %>
 
