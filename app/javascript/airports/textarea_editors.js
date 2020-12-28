@@ -1,13 +1,31 @@
 const Rails = require('@rails/ujs');
 const EasyMDE = require('easymde/dist/easymde.min.js');
 
+let editors = [];
+
 document.addEventListener('DOMContentLoaded', () => {
+  initEditorEditIcons();
+  initEditors();
+});
+
+function initEditorEditIcons() {
+  let editIcons = document.querySelectorAll('.editor-edit-icon');
+
+  for(let i=0; i<editIcons.length; i++) {
+    editIcons[i].addEventListener('click', () => {
+      editMode(editors[i]);
+    });
+  }
+}
+
+function initEditors() {
   let textareas = document.querySelectorAll('textarea[data-editor="true"]');
 
   for(let i=0; i<textareas.length; i++) {
-    initEditor(textareas[i]);
+    let editor = initEditor(textareas[i]);
+    editors[i] = editor;
   }
-});
+}
 
 function initEditor(textarea) {
   let editor = new EasyMDE({
@@ -35,11 +53,11 @@ function initEditor(textarea) {
 
   // Exit editing mode when clicking off of the editor
   document.addEventListener('click', (event) => {
-    // Ignore clicks that happen within the editor or while the editor is not editing
+    // Ignore clicks that happen within the editor / the edit icon or while the editor is not editing
     // Also ignore elements without parent nodes as there is a race condition when switching from
     // reading to editing mode where the preview elements will be detacted from the DOM causing the
     // `contains` call to return false and then re-enter read mode.
-    if(container.contains(event.target) || !isEditing(editor) || !event.target.parentNode) return;
+    if(container.contains(event.target) || !isEditing(editor) || event.target.classList.contains('editor-edit-icon') || !event.target.parentNode) return;
 
     readMode(editor);
 
@@ -54,6 +72,8 @@ function initEditor(textarea) {
   editor.codemirror.on('change', () => {
     dirty = true;
   });
+
+  return editor;
 };
 
 function isEditing(editor) {
@@ -61,12 +81,14 @@ function isEditing(editor) {
 }
 
 function editMode(editor) {
+  editorCardHeader(editor).style.display = 'none';
   editor.togglePreview();
   editorContainer(editor).classList.add('editing');
   editor.codemirror.focus();
 }
 
 function readMode(editor) {
+  editorCardHeader(editor).style.display = 'block';
   editor.togglePreview();
   editorContainer(editor).classList.remove('editing');
 }
@@ -80,4 +102,8 @@ function writeEditorChanges(editor) {
 
 function editorContainer(editor) {
   return editor.codemirror.getWrapperElement().parentNode;
+}
+
+function editorCardHeader(editor) {
+  return editor.element.parentNode.parentNode.querySelector('.card-header');
 }
