@@ -1,3 +1,5 @@
+@import 'variables';
+
 .airport-header {
   max-width: 100%;
 }
@@ -20,6 +22,34 @@
   width: 100%;
 }
 
-.extra-remark.hidden {
-  display: none;
+.remark {
+  &.extra-remark.hidden {
+    display: none;
+  }
+
+  &.list-group-item:hover {
+    background-color: $light-grey;
+  }
+}
+
+.comment {
+  .comment-body {
+    border-left: 3px solid $primary;
+  }
+
+  .comment-actions {
+    float: right;
+
+    form {
+      display: inline-block;
+    }
+  }
+
+  .helpful-count.hidden {
+    display: none;
+  }
+}
+
+.comment-textarea {
+  height: 150px !important;
 }

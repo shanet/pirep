@@ -15,7 +15,7 @@ class CommentsController < ApplicationController
     @comment.helpful_count += 1
 
     if @comment.save
-      head :ok
+      render :helpful
     else
       # TODO: error handle
     end

@@ -1,0 +1,10 @@
+response = () => {
+  let helpfulCount = document.querySelector('.comment[data-comment-id="<%= @comment.id %>"] .helpful-count');
+  let count = helpfulCount.querySelector('.count');
+
+  // Update the count and show the wrapper element
+  count.innerText = parseInt(count.innerText) + 1;
+  helpfulCount.classList.remove('hidden');
+};
+
+response();

@@ -42,7 +42,7 @@ function initExtraRemarks() {
 
   showExtraRemarks.addEventListener('click', () => {
     // Update the button text accordingly
-    showExtraRemarks.innerText = (extraRemarks[0].classList.contains('hidden') ? 'Hide More' : 'Show More');
+    showExtraRemarks.innerText = (extraRemarks[0].classList.contains('hidden') ? 'Show Less' : 'Show More');
 
     // Show/hide the extra remarks
     for(let i=0; i<extraRemarks.length; i++) {

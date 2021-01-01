@@ -1,34 +1,38 @@
-Stats
+<div class="card my-2">
+  <div class="card-header">
+    Stats
+  </div>
 
-<div>
-  Elevation: <%= @airport.elevation %>ft
-</div>
+  <div>
+    Elevation: <%= @airport.elevation %>ft
+  </div>
 
-<div>
-  <% if @airport.private? %>
-    <%= landing_rights_info(@airport) %>
-    <br>
+  <div>
+    <% if @airport.private? %>
+      <%= landing_rights_info(@airport) %>
+      <br>
 
-    <% unless @airport.landing_rights == :private_ %>
-      <%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:requirements_label] %> <%= @airport.landing_requirements %>
-    <% end %>
-
-    <br>
-    <a href="javascript:void(0)" data-toggle="collapse" data-target="landing-rights-form">
-      <% if @airport.landing_rights == :private_ %>
-        Is this airport open to the public?
-      <% else %>
-        Update info
+      <% unless @airport.landing_rights == :private_ %>
+        <%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:requirements_label] %> <%= @airport.landing_requirements %>
       <% end %>
-    </a>
-    <%= render 'airports/statistics/landing_rights_form' %>
-  <% else %>
-    Public
+
+      <br>
+      <a href="javascript:void(0)" data-toggle="collapse" data-target="landing-rights-form">
+        <% if @airport.landing_rights == :private_ %>
+          Is this airport open to the public?
+        <% else %>
+          Update info
+        <% end %>
+      </a>
+      <%= render 'airports/statistics/landing_rights_form' %>
+    <% else %>
+      Public
+    <% end %>
+  </div>
+
+  <% @airport.runways.each do |runway| %>
+    <div>
+      <%= runway.number %>: <%= number_with_delimiter(runway.length, delimiter: ',') %>ft
+    </div>
   <% end %>
 </div>
-
-<% @airport.runways.each do |runway| %>
-  <div>
-    <%= runway.number %>: <%= number_with_delimiter(runway.length, delimiter: ',') %>ft
-  </div>
-<% end %>

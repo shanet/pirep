@@ -1,29 +1,50 @@
-<% @airport.comments.each do |comment| %>
-  <div>
-    <%= comment.body %>
-    <br>
-    <%= comment.created_at %>
-    <br>
-    Helpful count: <%= comment.helpful_count %>
-    <br>
-    Flagged as outdated at: <%= comment.outdated_at %>
-    <br>
-
-    <%= form_with url: helpful_comment_path(comment) do |form| %>
-      <%= form.submit '+1 Helpful' %>
-    <% end %>
-
-    <%= form_with url: flag_outdated_comment_path(comment) do |form| %>
-      <%= form.submit 'Flag as outdated' %>
-    <% end %>
+<div class="card my-3">
+  <div class="card-header">
+    <i class="fas fa-comments"></i> Comments
   </div>
-<% end %>
 
-Add Comment
+  <ul class="list-group list-group-flush">
+    <% @airport.comments.order(:created_at).each do |comment| %>
+      <li class="comment list-group-item" data-comment-id="<%= comment.id %>">
+        <% if comment.outdated_at %>
+          <div class="alert alert-warning">
+            This comment was flagged as outdated on <%= comment.outdated_at.strftime('%B %-d, %Y') %>.
+          </div>
+        <% end %>
 
-<%= form_with model: Comment.new, local: true do |form| %>
-  <%= form.text_area :body %>
-  <%= form.hidden_field :airport_id, value: @airport.id %>
-  <br>
-  <%= form.submit %>
-<% end %>
+        <div class="comment-actions text-right ml-1">
+          <%= button_to [:helpful, comment], remote: true, class: 'btn btn-outline-primary btn-sm' do %>
+            +1 Helpful
+          <% end %>
+
+          <% unless comment.outdated_at %>
+            <%= button_to [:flag_outdated, comment], remote: true, class: 'btn btn-outline-warning btn-sm' do %>
+              <i class="fas fa-flag"></i> Flag as outdated
+            <% end %>
+          <% end %>
+        </div>
+
+        <div class="comment-body pl-1 my-1">
+          <%= comment.body %>
+        </div>
+
+        <div class="small text-muted">
+          Created <%= time_ago_in_words comment.created_at %> ago (<%= comment.created_at.strftime('%B %-d, %Y') %>)
+          <div class="helpful-count <%= comment.helpful_count.zero? ? 'hidden' : '' %>">
+            Helpful count: <span class="count"><%= comment.helpful_count %></span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= form_with model: Comment.new, local: true do |form| %>
+    <div class="form-group p-3">
+      <i class="fas fa-comment"></i> Leave a comment
+
+      <%= form.text_area :body, class: 'form-control comment-textarea my-3' %>
+      <%= form.hidden_field :airport_id, value: @airport.id %>
+      <%= form.submit 'Add Comment', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>

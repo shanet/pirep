@@ -29,51 +29,51 @@
 
       <div class="row">
         <div class="col-sm">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :description, title: 'Description'} %>
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :description, title: '<span><i class="fas fa-book-open"></i> Description</span>'.html_safe} %>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :transient_parking, height: :small, title: 'Transient Parking'} %>
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :transient_parking, height: :small, title: '<span><i class="fas fa-parking"></i> Transient Parking</span>'.html_safe} %>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :fuel_location, height: :small, title: 'Fuel Location'} %>
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :fuel_location, height: :small, title: '<span><i class="fas fa-gas-pump"></i> Fuel Location</span>'.html_safe} %>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :crew_car, height: :small, title: 'Crew Car'} %>
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :crew_car, height: :small, title: '<span><i class="fas fa-car"></i> Crew Car</span>'.html_safe} %>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :landing_fees, height: :small, title: 'Landing &amp; Tie-down Fees'.html_safe} %>
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :landing_fees, height: :small, title: '<span><i class="fas fa-dollar-sign"></i> Landing &amp; Tie-down Fees</span>'.html_safe} %>
         </div>
       </div>
 
-      <div class="row">
+      <!--<div class="row">
         <div class="col-sm">
           <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :gate_code, height: :small, title: 'Gate Code'} %>
         </div>
-      </div>
+      </div>-->
 
       <div class="row">
         <div class="col-sm">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :wifi, height: :small, title: 'WiFi Access'} %>
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :wifi, height: :small, title: '<span><i class="fas fa-wifi"></i> WiFi Access</span>'.html_safe} %>
         </div>
       </div>
 
-      <div class="row">
+      <!--<div class="row">
         <div class="col-sm">
           <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :passport_location, height: :small, title: 'Passport Location'} %>
         </div>
-      </div>
+      </div>-->
     </div>
 
     <div class="col-sm">
@@ -100,13 +100,13 @@
           <%= render 'airports/remarks' %>
         </div>
       </div>
+    </div>
   </div>
 </div>
 
 <div class="container">
   <div class="row">
     <div class="col-sm">
-      Comments
       <%= render 'airports/comments' %>
     </div>
   </div>

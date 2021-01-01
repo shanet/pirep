@@ -3,16 +3,16 @@
 <% if @airport.remarks.any? %>
   <div class="card my-3">
     <div class="card-header">
-      Remarks
+      <i class="fas fa-file-alt"></i> Remarks
     </div>
 
     <ul class="list-group list-group-flush">
       <% @airport.remarks.order(:created_at).limit(show_limit).each do |remark| %>
-        <li class="list-group-item"><%= remark.to_human_readable %></li>
+        <li class="remark list-group-item"><%= remark.to_human_readable %></li>
       <% end %>
 
       <% @airport.remarks.order(:created_at).offset(show_limit).each do |remark| %>
-        <li class="list-group-item extra-remark hidden"><%= remark.to_human_readable %></li>
+        <li class="remark list-group-item extra-remark hidden"><%= remark.to_human_readable %></li>
       <% end %>
     </ul>
   </div>
