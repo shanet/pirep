@@ -13,13 +13,11 @@
 
         <div class="comment-actions text-right ml-2">
           <%= button_to [:helpful, comment], remote: true, class: 'btn btn-outline-primary btn-sm' do %>
-            +1 Helpful
+            <i class="fas fa-thumbs-up"></i> Helpful
           <% end %>
 
-          <% unless comment.outdated_at %>
-            <%= button_to [:flag_outdated, comment], remote: true, class: 'btn btn-outline-warning btn-sm flag-outdated' do %>
-              <i class="fas fa-flag"></i> Flag as outdated
-            <% end %>
+          <%= button_to [:flag_outdated, comment], remote: true, class: 'btn btn-outline-warning btn-sm flag-outdated' + (comment.outdated_at ? ' d-none' : '') do %>
+            <i class="fas fa-flag"></i> Flag as outdated
           <% end %>
         </div>
 
@@ -30,7 +28,7 @@
         <div class="small text-muted">
           Created <%= time_ago_in_words comment.created_at %> ago (<%= comment.created_at.strftime('%B %-d, %Y') %>)
           <div class="helpful-count <%= comment.helpful_count.zero? ? 'd-none' : '' %>">
-            Helpful count: <span class="count"><%= comment.helpful_count %></span>
+            Helpful count: <span class="count"><%= comment.helpful_count %></span> <i class="fas fa-thumbs-up"></i>
           </div>
         </div>
       </li>

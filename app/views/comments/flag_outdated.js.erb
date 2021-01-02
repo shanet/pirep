@@ -3,7 +3,7 @@ response = () => {
   let flagOutdated = document.querySelector('.comment[data-comment-id="<%= @comment.id %>"] .flag-outdated');
   let date = outdatedAt.querySelector('.date');
 
-  // Update the outdated at date and show the wrapper element
+  // Update the outdated at date, show the outdated at alert, and hide the flag button
   date.innerText = "<%= @comment.outdated_at.strftime('%B %-d, %Y') %>";
   outdatedAt.classList.remove('d-none');
   flagOutdated.classList.add('d-none');
