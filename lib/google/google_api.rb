@@ -46,7 +46,7 @@ module GoogleApi
 
   class Stub
     def place_photos(*)
-      return 'Stub'
+      return []
     end
   end
 end
