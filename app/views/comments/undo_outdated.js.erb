@@ -1,0 +1,10 @@
+response = () => {
+  let outdatedAt = document.querySelector('.comment[data-comment-id="<%= @comment.id %>"] .outdated-at');
+  let flagOutdated = document.querySelector('.comment[data-comment-id="<%= @comment.id %>"] .flag-outdated');
+
+  // Update the outdated at date and show the wrapper element
+  outdatedAt.classList.add('d-none');
+  flagOutdated.classList.remove('d-none');
+};
+
+response();

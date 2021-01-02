@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     member do
       post 'helpful', action: :helpful, as: :helpful
       post 'flag', action: :flag_outdated, as: :flag_outdated
+      post 'undo_outdated', action: :undo_outdated, as: :undo_outdated
     end
   end
 end

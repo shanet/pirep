@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_action :set_comment, only: [:helpful, :flag_outdated]
+  before_action :set_comment, only: [:helpful, :flag_outdated, :undo_outdated]
 
   def create
     comment = Comment.new(comment_params)
@@ -25,7 +25,17 @@ class CommentsController < ApplicationController
     @comment.outdated_at = Time.zone.now
 
     if @comment.save
-      head :ok
+      render :flag_outdated
+    else
+      # TODO: error handle
+    end
+  end
+
+  def undo_outdated
+    @comment.outdated_at = nil
+
+    if @comment.save
+      render :undo_outdated
     else
       # TODO: error handle
     end
