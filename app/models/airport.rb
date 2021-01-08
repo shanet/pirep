@@ -127,7 +127,7 @@ class Airport < ApplicationRecord
   end
 
   def landing_rights
-    return self[:landing_rights].to_sym
+    return self[:landing_rights]&.to_sym || :public_
   end
 
   def all_photos
