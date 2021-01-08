@@ -78,7 +78,7 @@
             <img class="airport-diagram img-thumbnail" src="<%= '/assets/diagrams/%s' % @airport.diagram %>">
           <% else %>
             <%# Fallback to a satellite image if we don't have an airport diagram %>
-            <img class="airport-diagram" src='https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/<%= @airport.longitude %>,<%= @airport.latitude %>,16/1076x1280@2x?access_token=<%= Rails.configuration.mapbox_api_key %>'>
+            <img class="airport-diagram img-thumbnail" src='https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/<%= @airport.longitude %>,<%= @airport.latitude %>,16/1076x1280@2x?access_token=<%= Rails.configuration.mapbox_api_key %>'>
           <% end %>
         </div>
       </div>

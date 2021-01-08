@@ -1,9 +1,9 @@
 class TagsController < ApplicationController
   def destroy
-    tag = Tag.find(params[:id])
+    @tag = Tag.find(params[:id])
 
-    if tag.destroy
-      redirect_to airport_path(tag.airport.code)
+    if @tag.destroy
+      render :destroy
     else
       # TODO: error handle
     end
