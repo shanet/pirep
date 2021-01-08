@@ -7,10 +7,10 @@
   </div>
 
   <div>
-  <%= text_area_tag nil, model.send(column), data: {editor: true, height: textarea_editor_height(defined?(height) ? height : :large)}.compact %>
+    <%= text_area_tag nil, model.send(column), data: {editor: true, height: textarea_editor_height(defined?(height) ? height : :large)}.compact %>
 
-  <%= form_with model: model do |form| %>
-    <%= form.hidden_field column, {'data-column-field': true} %>
-  <% end %>
+    <%= form_with model: model do |form| %>
+      <%= form.hidden_field column, {'data-column-field': true} %>
+    <% end %>
   </div>
 </div>

@@ -41,7 +41,13 @@
 
       <div class="row">
         <div class="col-sm">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :fuel_location, height: :small, title: '<span><i class="fas fa-gas-pump"></i> Fuel Location</span>'.html_safe} %>
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :landing_fees, height: :small, title: '<span><i class="fas fa-dollar-sign"></i> Landing &amp; Tie-down Fees</span>'.html_safe} %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm">
+          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :fuel_location, height: :small, title: '<span><i class="fas fa-gas-pump"></i> Fuel Availability</span>'.html_safe} %>
         </div>
       </div>
 
@@ -53,27 +59,9 @@
 
       <div class="row">
         <div class="col-sm">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :landing_fees, height: :small, title: '<span><i class="fas fa-dollar-sign"></i> Landing &amp; Tie-down Fees</span>'.html_safe} %>
-        </div>
-      </div>
-
-      <!--<div class="row">
-        <div class="col-sm">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :gate_code, height: :small, title: 'Gate Code'} %>
-        </div>
-      </div>-->
-
-      <div class="row">
-        <div class="col-sm">
           <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :wifi, height: :small, title: '<span><i class="fas fa-wifi"></i> WiFi Access</span>'.html_safe} %>
         </div>
       </div>
-
-      <!--<div class="row">
-        <div class="col-sm">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :passport_location, height: :small, title: 'Passport Location'} %>
-        </div>
-      </div>-->
     </div>
 
     <div class="col-sm">
@@ -87,7 +75,7 @@
       <div class="row">
         <div class="col-sm">
           <% if @airport.diagram %>
-            <img class="airport-diagram" src="<%= '/assets/diagrams/%s' % @airport.diagram %>">
+            <img class="airport-diagram img-thumbnail" src="<%= '/assets/diagrams/%s' % @airport.diagram %>">
           <% else %>
             <%# Fallback to a satellite image if we don't have an airport diagram %>
             <img class="airport-diagram" src='https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/<%= @airport.longitude %>,<%= @airport.latitude %>,16/1076x1280@2x?access_token=<%= Rails.configuration.mapbox_api_key %>'>

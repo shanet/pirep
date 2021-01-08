@@ -34,6 +34,7 @@ $themes: (
 
   .tag-square.theme-#{$name} {
     background-color: map-get($colors, "primary");
+    border: 2px solid map-get($colors, "dark");
 
     &.editing.unselected {
       background-color: map-get($colors, "light");
@@ -42,5 +43,16 @@ $themes: (
         background-color: map-get($colors, "primary");
       }
     }
+  }
+
+  .statistics-box.theme-#{$name} {
+    background-color: map-get($colors, "primary");
+    border: 1px solid map-get($colors, "dark");
+  }
+
+  .landing-rights .icon.theme-#{$name} {
+    border: 2px solid map-get($colors, "dark");
+    border-right: none;
+    background-color: map-get($colors, "primary");
   }
 }

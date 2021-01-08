@@ -46,19 +46,34 @@ class Airport < ApplicationRecord
 
   LANDING_RIGHTS_TYPES = {
     public_: {
-      requirements_label: 'Notes:',
-      description: 'Open to public',
+      short_requirements_label: 'Landing Notes',
+      long_requirements_label: 'Notes',
+      short_description: 'Open to public',
+      long_description: 'Open to public',
+      color: 'green',
+      icon: 'lock-open',
     },
     restrictions: {
-      requirements_label: 'Requirements for landing:',
-      description: 'Allowed with restrictions',
+      short_requirements_label: 'Restrictions',
+      long_requirements_label: 'Requirements for landing',
+      short_description: 'Allowed with restrictions',
+      long_description: 'Private, but open to public with restrictions',
+      color: 'orange',
+      icon: 'key',
     },
     permission: {
-      requirements_label: 'Contact info for landing permission:',
-      description: 'Allowed with prior permission',
+      short_requirements_label: 'Contact info',
+      long_requirements_label: 'Contact info for landing permission (this will be public!)',
+      short_description: 'Allowed with prior permission',
+      long_description: 'Private, but landing allowed with prior permission',
+      color: 'orange',
+      icon: 'key',
     },
     private_: {
-      description: 'Private to everyone :(',
+      short_description: 'Private to everyone',
+      long_description: 'Private to everyone <i class="far fa-frown-open"></i>'.html_safe,
+      color: 'red',
+      icon: 'lock',
     },
   }
 
@@ -122,6 +137,19 @@ class Airport < ApplicationRecord
   def unselected_tag_names
     # Remove already added tags on the airport from the full set of tags
     return (Tag.addable_tags.keys - tags.pluck(:name).map(&:to_sym))
+  end
+
+  def elevation_threat_level
+    case elevation
+      when -Float::INFINITY..2999
+        return 'green'
+      when 3000...4999
+        return 'orange'
+      when 5000..Float::INFINITY
+        return 'red'
+      else
+        return 'green'
+    end
   end
 
   def theme

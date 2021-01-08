@@ -1,16 +1,30 @@
-<div id="landing-rights-form" class="collapsible">
-  Some privately owned airports are actually open to the public. Or the owners are happy to have pilots stop by with prior permission given. If this is the case for this airport enter it as such!
+<%= form_with model: @airport, local: true do |form| %>
+  <div class="d-flex justify-content-between form-group">
+    <% Airport::LANDING_RIGHTS_TYPES.each_with_index do |(key, configuration), index| %>
+      <div class="landing-rights-box text-center btn btn-sm d-flex flex-column justify-content-center align-items-center
+        <%= @airport.landing_rights == key ? 'btn-primary' : 'btn-outline-primary' %> <%= index.zero? ? '' : 'ml-2' %>"
+        data-landing-rights-type="<%= key %>">
+        <div class="icon">
+          <i class="fas fa-<%= configuration[:icon] %>"></i>
+        </div>
 
-  <%= form_with model: @airport, local: true do |form| %>
-    <%= render partial: 'airports/statistics/landing_rights_field', locals: {form: form, type: :public_} %>
-    <%= render partial: 'airports/statistics/landing_rights_field', locals: {form: form, type: :restrictions} %>
-    <%= render partial: 'airports/statistics/landing_rights_field', locals: {form: form, type: :permission} %>
+        <div class="label">
+          <%= configuration[:short_description] %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 
-    <div>
-      <%= form.radio_button(:landing_rights, :private_) %>
-      <%= form.label(:landing_rights_private_, Airport::LANDING_RIGHTS_TYPES[:private_][:description]) %>
-    </div>
+  <div class="form-group">
+    <% Airport::LANDING_RIGHTS_TYPES.each do |key, configuration| %>
+      <%= form.label :landing_requirements, configuration[:long_requirements_label], data: {landing_rights_type: key}, class: (@airport.landing_rights == key ? '' : 'd-none') %>
+    <% end %>
 
-    <%= form.submit %>
-  <% end %>
-</div>
+    <%= form.hidden_field :landing_rights %>
+    <%= form.text_area :landing_requirements, class: 'form-control' %>
+  </div>
+
+  <div class="text-center">
+    <%= form.submit 'Update Airport Access', class: 'btn btn-primary' %>
+  </div>
+<% end %>
