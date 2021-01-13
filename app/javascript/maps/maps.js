@@ -122,6 +122,9 @@ function addAirportsToMap() {
       });
 
       filterAirportsOnMap();
+
+          drawer.loadDrawer('WN53');
+    drawer.openDrawer();
     });
   });
 }

@@ -18,7 +18,7 @@ function initEditorEditIcons() {
   }
 }
 
-function initEditors() {
+export function initEditors() {
   let textareas = document.querySelectorAll('textarea[data-editor="true"]');
 
   for(let i=0; i<textareas.length; i++) {
@@ -32,7 +32,7 @@ function initEditor(textarea) {
     autoDownloadFontAwesome: false,
     element: textarea,
     status: false,
-    maxHeight: (textarea.dataset.height || undefined),
+    minHeight: (textarea.dataset.height || undefined),
     hideIcons: ['image'],
     showIcons: ['code', 'table', 'horizontal-rule'],
   });
@@ -81,6 +81,9 @@ function isEditing(editor) {
 }
 
 function editMode(editor) {
+  // Don't enter edit mode if the editor is marked as read only
+  if(editor.element.dataset.readOnly === "true") return;
+
   editorCardHeader(editor).style.display = 'none';
   editor.togglePreview();
   editorContainer(editor).classList.add('editing');

@@ -3,6 +3,8 @@ module AirportsHelper
     case size
       when :large
         return '300px'
+      when :medium
+        return '150px'
       when :small
         return '75px'
       else

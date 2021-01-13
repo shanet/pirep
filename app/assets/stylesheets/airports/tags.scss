@@ -7,6 +7,11 @@
   height: 90px;
   width: 90px;
 
+  &.small {
+    height: 60px;
+    width: 60px;
+  }
+
   .card-body {
     padding-left: 0;
     padding-right: 0;

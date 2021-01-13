@@ -1,57 +1,46 @@
-<div class="row no-gutters">
-  <div class="col-10">
-    <h3><%= @airport.code %> - <%= @airport.name.titleize %></h3>
+<div class="airport-drawer-header theme-<%= @airport.theme %>">
+  <div class="row">
+    <div class="col-sm pt-3 pb-2 d-flex">
+      <h3 class="flex-fill"><%= @airport.code %> - <%= @airport.name.titleize %></h3>
+      <span class="flex-shrink-0"><%= link_to 'More &gt;'.html_safe, airport_path(@airport.code), class: 'btn btn-primary btn-sm' %></span>
+    </div>
   </div>
 
-  <div class="col-2">
-    <%= link_to 'More &gt;'.html_safe, airport_path(@airport.code), class: 'btn btn-primary btn-sm float-right' %>
+  <div class="row">
+    <div class="col-sm py-2 d-flex">
+      <span class="flex-fill"><%= @airport.latitude %>, <%= @airport.longitude %></span>
+      <button type="button" class="btn btn-secondary btn-sm zoom-btn" data-latitude="<%= @airport.latitude %>" data-longitude="<%= @airport.longitude %>">Zoom In</button>
+    </div>
   </div>
 </div>
 
-<div class="row">
-  <div class="coordinates col border-bottom">
-    <%= @airport.latitude %>, <%= @airport.longitude %>
-    <button type="button" class="btn btn-secondary btn-sm float-right zoom-btn" data-latitude="<%= @airport.latitude %>" data-longitude="<%= @airport.longitude %>">Zoom In</button>
-  </div>
-</div>
-
-<div class="row mt-3">
+<div class="row my-2">
   <div class="photo col">
     <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @airport.all_photos} %>
   </div>
 </div>
 
-<div class="row mt-3">
-  <div class="stats col">
-    <ul class="list-unstyled">
-      <li><i class="fas fa-mountain"></i> Elevation: <%= @airport.elevation.to_s(:delimited) %>ft</li>
-      <li><i class="fas fa-unlock"></i> Public: <%= @airport.ownership_type %></li>
-    </ul>
-  </div>
-</div>
-
-<div class="row">
-  <div class="runways col">
-    Runways:
-
-    <ul>
-      <% @airport.runways.each do |runway| %>
-        <li><%= runway.number %>: <%= runway.length.to_s(:delimited) %>ft</li>
-      <% end %>
-    </ul>
-  </div>
-</div>
-
-<div class="row">
-  <div class="tags col">
+<div class="row mb-2">
+  <div class="col-sm tags">
     <% @airport.tags.each do |tag| %>
-      <%= tag.name %>
+      <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag, size: :small} %>
     <% end %>
   </div>
 </div>
 
+<%= render partial: 'airports/statistics/statistics_boxes', formats: :html, locals: {runways_limit: 3} %>
+<%= render partial: 'airports/statistics/landing_rights', formats: :html %>
+
 <div class="row">
-  <div class="description col">
-    Description&hellip;
+  <div class="col-sm">
+    <%= render partial: 'airports/textarea_editor', formats: :html, locals: {
+      model: @airport, column: :description, height: :medium, read_only: true, title: '<span><i class="fas fa-book-open"></i> Description</span>'.html_safe
+    } %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm mb-2 text-center">
+    <%= link_to 'More Info &gt;'.html_safe, airport_path(@airport.code), class: 'btn btn-primary btn' %></span>
   </div>
 </div>

@@ -1,0 +1,33 @@
+<div class="landing-rights d-flex mb-2">
+  <div class="icon text-center d-flex justify-content-center align-items-center theme-<%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:color] %>">
+    <i class="fas fa-<%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:icon] %>"></i>
+  </div>
+
+  <div class="label flex-fill p-2">
+    <div>
+      Access: <%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:long_description] %>
+    </div>
+
+    <% if defined? show_edit_form %>
+      <div class="small my-1">
+        <% if @airport.landing_rights == :private_ %>
+          Some privately owned airports are actually open to the public or the owners are happy to have pilots stop by with prior permission given. If this is the case for this airport enter it as such!
+        <% elsif @airport.landing_requirements.present? %>
+          <%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:short_requirements_label] %>: <%= @airport.landing_requirements %>
+       <% end %>
+      </div>
+
+      <div>
+        <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="collapse" data-target="landing-rights-form">Edit Airport Access</button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if defined? show_edit_form %>
+  <% content_for :collapsible_content, flush: true do %>
+    <%= render 'airports/statistics/landing_rights_form' %>
+  <% end %>
+
+  <%= render 'shared/collapsible', id: 'landing-rights-form' %>
+<% end %>

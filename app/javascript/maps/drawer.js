@@ -1,5 +1,6 @@
 const maps = require('./maps');
 const photoGallery = require('../shared/photo_gallery');
+const textareaEditors = require('../shared/textarea_editors');
 
 let previousZoomLevel;
 let wereSectionalLayersShown;
@@ -52,6 +53,7 @@ function initializeDrawer() {
   document.querySelector('.zoom-btn').addEventListener('click', zoomAirport);
 
   photoGallery.initializePhotoGallery();
+  textareaEditors.initEditors();
 }
 
 function zoomAirport(event) {

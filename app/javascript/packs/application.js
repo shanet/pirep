@@ -21,4 +21,6 @@ require('maps/maps');
 require('maps/search');
 
 require('airports/airports');
-require('airports/textarea_editors');
+
+require('shared/photo_gallery');
+require('shared/textarea_editors');

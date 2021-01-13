@@ -45,7 +45,7 @@ private
       longitude: airport_data[:longitude],
       elevation: airport_data[:elevation],
       fuel_type: airport_data[:fuel_type],
-      landing_rights: (airport_data[:facility_type] == 'PR' ? :public : nil),
+      landing_rights: (airport_data[:facility_use] == 'PR' ? :private_ : :public_),
     })
 
     return airport

@@ -22,6 +22,18 @@ $themes: (
 );
 
 @each $name, $colors in $themes {
+  // Airport show.drawer page
+  .airport-drawer-header.theme-#{$name} {
+    .row:first-child {
+      background-color: map-get($colors, "primary");
+    }
+
+    .row:last-child {
+      background-color: map-get($colors, "dark");
+    }
+  }
+
+  // Airport show.html page
   .airport-header.theme-#{$name} {
     .row:first-child {
       background-color: map-get($colors, "primary");
