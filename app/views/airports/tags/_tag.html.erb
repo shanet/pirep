@@ -1,4 +1,3 @@
-<% p tag_record.name %>
 <% tag_configuration = Tag::TAGS[(defined?(tag_record) ? tag_record.name.to_sym : tag_name)] %>
 
 <div class="tag-square card p-0 mr-1 mb-1 theme-<%= tag_configuration[:theme] %>

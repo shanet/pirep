@@ -11,6 +11,8 @@ class Airport < ApplicationRecord
   validates :code, uniqueness: true
   validates :site_number, uniqueness: true
 
+  after_save :remove_empty_tag!
+
   FACILITY_TYPES = {
     airport: {
       label: 'Airports',
@@ -110,6 +112,12 @@ class Airport < ApplicationRecord
   end
 
   def empty?
+    # Return if the airport is tagged with a user-addable tag
+    return false if tags.map {|tag| Tag::TAGS[tag.name.to_sym][:addable]}.any?
+
+    # Return if landing rights/requirements are set
+    return false if [:restrictions, :permission].include?(landing_rights) || landing_requirements.present?
+
     # Return if the airport has some user contributed info filled out for it
     return ![
       :crew_car,
@@ -122,6 +130,13 @@ class Airport < ApplicationRecord
     ].map {|column| send(column).present?}.any?
   end
 
+  def remove_empty_tag!
+    # Remove the empty tag if the airport is no longer empty
+    return if empty?
+
+    tags.where(name: :empty).destroy_all
+  end
+
   def private?
     return facility_use == 'PR'
   end
@@ -131,7 +146,7 @@ class Airport < ApplicationRecord
   end
 
   def all_photos
-    return photos.order(created_at: :desc) + GoogleApi.client.place_photos('%s - %s Airport' % [code, name], latitude, longitude)
+    return @all_photos ||= photos.order(created_at: :desc) + GoogleApi.client.place_photos('%s - %s Airport' % [code, name], latitude, longitude)
   end
 
   def unselected_tag_names

@@ -12,6 +12,16 @@
   </div>
 </div>
 
+<% if @airport.empty? %>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm mb-2">
+        <%= render 'airports/empty_notice' %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
 <div class="container">
   <div class="row">
     <div class="col-sm">

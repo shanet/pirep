@@ -14,14 +14,24 @@
   </div>
 </div>
 
-<div class="row my-2">
-  <div class="photo col">
-    <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @airport.all_photos} %>
+<% if @airport.empty? %>
+  <div class="row my-2">
+    <div class="col-sm">
+      <%= render partial: 'airports/empty_notice', formats: :html, locals: {show_link: true} %>
+    </div>
   </div>
-</div>
+<% end %>
 
-<div class="row mb-2">
-  <div class="col-sm tags">
+<% if @airport.all_photos.any? %>
+  <div class="row my-2">
+    <div class="col-sm">
+      <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @airport.all_photos} %>
+    </div>
+  </div>
+<% end %>
+
+<div class="row mb-1">
+  <div class="col-sm d-flex flex-wrap">
     <% @airport.tags.each do |tag| %>
       <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag, size: :small} %>
     <% end %>
@@ -40,7 +50,7 @@
 </div>
 
 <div class="row">
-  <div class="col-sm mb-2 text-center">
+  <div class="col-sm mb-1 text-center">
     <%= link_to 'More Info &gt;'.html_safe, airport_path(@airport.code), class: 'btn btn-primary btn' %></span>
   </div>
 </div>

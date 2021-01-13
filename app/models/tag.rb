@@ -5,6 +5,8 @@ class Tag < ApplicationRecord
   validates :airport, presence: true
   validates :name, presence: true
 
+  after_save :remove_empty_tag!
+
   TAGS = {
     food: {
       label: 'Food',
@@ -85,5 +87,11 @@ class Tag < ApplicationRecord
 
   def self.addable_tags
     return TAGS.select {|key, value| value[:addable]}
+  end
+
+private
+
+  def remove_empty_tag!
+    airport.remove_empty_tag!
   end
 end
