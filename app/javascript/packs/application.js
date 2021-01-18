@@ -19,6 +19,7 @@ require('maps/filters');
 require('maps/layer_switcher');
 require('maps/maps');
 require('maps/search');
+require('maps/url_search_params');
 
 require('airports/airports');
 

@@ -1,6 +1,8 @@
 const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
 const drawer = require('./drawer');
 const filters = require('./filters');
+const layerSwitcher = require('./layer_switcher');
+const urlSearchParams = require('./url_search_params');
 
 const SECTIONAL_LAYERS = {
   seattle: [-124.094901, 44.634929, -116.327513, 48.995149],
@@ -36,13 +38,22 @@ document.addEventListener('DOMContentLoaded', () => {
 function initMap() {
   mapboxgl.accessToken = document.getElementById('map').dataset.mapboxApiKey;
 
+  let [coordinates, zoomLevel] = initialMapCenter();
+
   map = new mapboxgl.Map({
-    center: [-122.06, 48.11],
+    center: coordinates.reverse(),
     container: 'map',
     style: 'mapbox://styles/mapbox/satellite-streets-v11',
-    zoom: 8,
+    zoom: zoomLevel,
     maxZoom: 18,
   });
+}
+
+function initialMapCenter() {
+  let coordinates = urlSearchParams.getCoordinates() || [48.11, -122.06];
+  let zoomLevel = urlSearchParams.getZoomLevel() || 8;
+
+  return [coordinates, zoomLevel];
 }
 
 function addSectionalLayersToMap() {
@@ -58,6 +69,9 @@ function addSectionalLayersToMap() {
         tiles: [`http://localhost:3000/assets/tiles/${id}/{z}/{x}/{y}.png`],
         tileSize: 256,
         type: 'raster',
+      },
+      layout: {
+        visibility: (urlSearchParams.getLayer() === layerSwitcher.LAYER_SATELLITE ? 'none' : 'visible'),
       },
     });
   });
@@ -76,6 +90,16 @@ function addEventHandlersToMap() {
 
   map.on('mouseleave', AIRPORT_LAYER, () => {
     map.getCanvas().style.cursor = '';
+  });
+
+  // Update the URL search params after dragging the map with the current position
+  map.on('moveend', () => {
+    let center = map.getCenter();
+    urlSearchParams.setCoordinates(center['lat'].toFixed(7), center['lng'].toFixed(7));
+  });
+
+  map.on('zoomend', () => {
+    urlSearchParams.setZoomLevel(map.getZoom().toFixed(5));
   });
 }
 
@@ -121,10 +145,9 @@ function addAirportsToMap() {
         },
       });
 
+      // The map is fully loaded, start manipulating it
+      applyUrlSearchParamsOnMap();
       filterAirportsOnMap();
-
-          drawer.loadDrawer('WN53');
-    drawer.openDrawer();
     });
   });
 }
@@ -138,7 +161,17 @@ export function filterAirportsOnMap() {
     }
   });
 
-  map.getSource(AIRPORT_LAYER).setData(displayedAirports);
+  // If a filter is clicked before the airport layer is ready it may be null
+  let layer = map.getSource(AIRPORT_LAYER)
+  if(layer) layer.setData(displayedAirports);
+}
+
+function applyUrlSearchParamsOnMap() {
+  let airport = urlSearchParams.getAirport();
+
+  if(airport) {
+    openAirport(airport);
+  }
 }
 
 export function toggleSectionalLayers(show) {
@@ -161,9 +194,14 @@ export function openAirport(airportCode) {
   }
 }
 
+export function closeAirport() {
+  urlSearchParams.clearAirport();
+  setAirportMarkerSelected('');
+}
+
 function openAirportFeature(airport) {
   // Set the airport's marker as selected
-  map.setLayoutProperty(AIRPORT_LAYER, 'icon-image', ['match', ['id'], airport.id, 'marker_selected', 'marker']);
+  setAirportMarkerSelected(airport.id);
 
   // Delay moving to the airport if the drawer is closed so the map doesn't move before the drawer is finished animating
   setTimeout(() => {
@@ -173,6 +211,12 @@ function openAirportFeature(airport) {
   // Open the drawer for the clicked airport
   drawer.loadDrawer(airport.properties.code);
   drawer.openDrawer();
+
+  urlSearchParams.setAirport(airport.properties.code);
+}
+
+function setAirportMarkerSelected(airportCode) {
+  map.setLayoutProperty(AIRPORT_LAYER, 'icon-image', ['match', ['id'], airportCode, 'marker_selected', 'marker']);
 }
 
 export function flyTo(latitude, longitude, zoom) {

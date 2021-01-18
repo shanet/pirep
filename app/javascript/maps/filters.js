@@ -1,4 +1,5 @@
 const maps = require('./maps');
+const urlSearchParams = require('./url_search_params');
 
 const enabledFilters = {};
 
@@ -11,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     enabledFilters[filterGroup] ||= new Set();
 
-    if(defaultFilter === 'true') {
+    if(defaultFilter === 'true' || urlSearchParams.hasFilter(filterGroup, filterName)) {
       enabledFilters[filterGroup].add(filterName);
       filter.classList.remove('disabled');
     }
@@ -20,9 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if(enabledFilters[filterGroup].has(filterName)) {
         enabledFilters[filterGroup].delete(filterName);
         filter.classList.add('disabled');
+        urlSearchParams.removeFilter(filterGroup, filterName);
       } else {
         enabledFilters[filterGroup].add(filterName);
         filter.classList.remove('disabled');
+        urlSearchParams.addFilter(filterGroup, filterName);
       }
 
       // Update the map with the new filter state

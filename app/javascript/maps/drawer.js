@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   drawerHandle.addEventListener('click', () => {
     closeDrawer();
+    maps.closeAirport();
   });
 });
 
