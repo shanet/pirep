@@ -1,17 +1,16 @@
-<div class="row no-gutters">
-  <% filters.keys.in_groups_of(4) do |grouped_filters| %>
-    <% grouped_filters.each do |filter| %>
-      <div class="col-3">
-        <div class="card border-0">
-          <% if filter %>
-            <%= render partial: 'maps/filter', locals: {filter_group: filter_group, filter: filter, configuration: filters[filter]} %>
-          <% else %>
-            <div class="card-body"></div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
+<a class="filter-group p-2 theme-red disabled" data-label="<%= title %>" data-filter-name="<%= filter_group %>" data-theme="red">
+  <%= filter_icon('times') %>
+</a>
 
-    <div class="w-100"></div>
-  <% end %>
-</div>
+<% filters.each do |filter_name, configuration| %>
+  <a
+    class="filter p-2 theme-<%= configuration[:theme] %>"
+    data-label="<%= configuration[:label] %>"
+    data-filter-name="<%= filter_name %>"
+    data-filter-group="<%= filter_group %>"
+    data-default-filter="<%= configuration[:default] %>"
+    data-theme="<%= configuration[:theme] %>"
+    >
+      <%= filter_icon(configuration[:icon]) %>
+    </a>
+<% end %>

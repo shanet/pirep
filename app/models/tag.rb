@@ -20,10 +20,16 @@ class Tag < ApplicationRecord
       theme: 'green',
       addable: true,
     },
-    golfing: {
-      label: 'Golfing',
-      icon: 'golf-ball',
-      theme: 'light-green',
+    lodging: {
+      label: 'Lodging',
+      icon: 'bed',
+      theme: 'brown',
+      addable: true,
+    },
+    swimming: {
+      label: 'Swimming',
+      icon: 'umbrella-beach',
+      theme: 'blue',
       addable: true,
     },
     hot_springs: {
@@ -32,37 +38,11 @@ class Tag < ApplicationRecord
       theme: 'orange',
       addable: true,
     },
-    lodging: {
-      label: 'Lodging',
-      icon: 'bed',
-      theme: 'brown',
+    golfing: {
+      label: 'Golfing',
+      icon: 'golf-ball',
+      theme: 'light-green',
       addable: true,
-    },
-    water: {
-      label: 'Water',
-      icon: 'umbrella-beach',
-      theme: 'blue',
-      addable: true,
-    },
-    public_: {
-      label: 'Public',
-      icon: 'lock-open',
-      theme: 'teal',
-    },
-    private_: {
-      label: 'Private',
-      icon: 'lock',
-      theme: 'deep-orange',
-    },
-    unmapped: {
-      label: 'Unmapped',
-      icon: 'map-marked-alt',
-      theme: 'blue-grey',
-    },
-    closed: {
-      label: 'Closed',
-      icon: 'times-circle',
-      theme: 'brown',
     },
     fishing: {
       label: 'Fishing',
@@ -75,6 +55,26 @@ class Tag < ApplicationRecord
       icon: 'landmark',
       theme: 'indigo',
       addable: true,
+    },
+    unmapped: {
+      label: 'Unmapped',
+      icon: 'map-marked-alt',
+      theme: 'blue-grey',
+    },
+    public_: {
+      label: 'Public',
+      icon: 'lock-open',
+      theme: 'teal',
+    },
+    private_: {
+      label: 'Private',
+      icon: 'lock',
+      theme: 'deep-orange',
+    },
+    closed: {
+      label: 'Closed',
+      icon: 'times-circle',
+      theme: 'brown',
     },
     empty: {
       label: 'Empty',

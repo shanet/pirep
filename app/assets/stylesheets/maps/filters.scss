@@ -1,0 +1,87 @@
+@import 'animations';
+
+#filters {
+  display: grid;
+  grid-template-areas: 'header' 'filters' 'footer';
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  left: $maps-fixed-offset;
+  max-height: 87vh;
+  position: fixed;
+  top: 50px;
+  width: 36px;
+  z-index: $zindex-fixed;
+
+  #filters-header,
+  #filters-footer {
+    background-color: $filters-background;
+    color: $white;
+    width: 100%;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  #filters-header {
+    border-bottom: 1px solid $white;
+    grid-area: header;
+  }
+
+  #filters-footer {
+    border-top: 1px solid $white;
+    grid-area: footer;
+  }
+
+  > nav {
+    grid-area: filters;
+    overflow-y: auto;
+    overflow-x: visible;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      background: transparent;
+      width: 0px;
+    }
+
+    > a {
+      background-color: $filters-background;
+    }
+
+    .filter-group,
+    .filter {
+      transition: 0.3s;
+
+      &.disabled {
+        color: $white;
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.filter-label {
+  color: $white;
+  font-size: 13px;
+  inset: 0px auto auto 0px;
+  padding: 10px 0;
+  position: absolute;
+
+  > span {
+    background-color: $filters-background;
+    border-radius: 0 5px 5px 0;
+    padding: $spacer * .35;
+    transition: 0.3s;
+  }
+
+  &.disabled {
+    color: $white;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}

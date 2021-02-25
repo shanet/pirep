@@ -1,16 +1,16 @@
 <div class="photo-gallery">
   <% photos.each_with_index do |photo, index| %>
-    <img class="img-thumbnail <%= index.zero? ? 'active' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? url_for(photo) : photo[:url] %>">
+    <img class="image <%= index.zero? ? 'active' : '' %> <%= defined?(border) ? 'img-thumbnail' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? url_for(photo) : photo[:url] %>">
   <% end %>
 
   <%# Don't show the previous and next controls if there's only one image %>
   <% if photos.count > 1 %>
     <div class="previous">
-      <a><i class="fas fa-chevron-left"></i></a>
+      <a class="<%= defined?(border) ? '' : 'mx-0' %>"><i class="fas fa-chevron-left"></i></a>
     </div>
 
     <div class="next">
-      <a><i class="fas fa-chevron-right"></i></a>
+      <a class="<%= defined?(border) ? '' : 'mx-0' %>"><i class="fas fa-chevron-right"></i></a>
     </div>
   <% end %>
 </div>

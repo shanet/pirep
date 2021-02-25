@@ -47,6 +47,10 @@ export function clearLayer() {
   updateUrl(LAYER_KEY, null);
 }
 
+export function hasFilterGroup(filterGroup) {
+  return searchParams().has(`${FILTERS_KEY}_${filterGroup}`);
+}
+
 export function hasFilter(filterGroup, filterName) {
   let key = `${FILTERS_KEY}_${filterGroup}`;
   return getFilters(key).has(filterName);

@@ -1,7 +1,7 @@
 .photo-gallery {
   position: relative;
 
-  .img-thumbnail {
+  .image {
     display: none;
     height: 300px;
     object-fit: cover;
@@ -28,7 +28,7 @@
       border-radius: 0 3px 3px 0;
       color: $white;
       font-size: 18px;
-      margin: -20px 5px 0;
+      margin: -20px 5px;
       padding: 10px;
       position: absolute;
       top: 50%;

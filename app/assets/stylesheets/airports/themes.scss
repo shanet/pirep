@@ -67,4 +67,21 @@ $themes: (
     border-right: none;
     background-color: map-get($colors, "primary");
   }
+
+  // Map filters
+  .filter.theme-#{$name},
+  .filter-group.theme-#{$name},
+  .filter-label.theme-#{$name} {
+    color: map-get($colors, "primary");
+
+    &.hover,
+    &:hover {
+      color: map-get($colors, "dark");
+    }
+
+    &.disabled.hover,
+    &.disabled:hover {
+      color: map-get($colors, "light") !important;
+    }
+  }
 }

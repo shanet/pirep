@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 export function initializePhotoGallery() {
   if(!document.querySelector('.photo-gallery .next')) return;
 
-  const images = document.querySelectorAll('.photo-gallery .img-thumbnail');
+  const images = document.querySelectorAll('.photo-gallery .image');
 
   document.querySelector('.photo-gallery .next').addEventListener('click', () => {
     currentImageIndex = (currentImageIndex === images.length - 1 ? 0 : currentImageIndex + 1);
@@ -21,7 +21,7 @@ export function initializePhotoGallery() {
 }
 
 function showImage() {
-  const images = document.querySelectorAll('.photo-gallery .img-thumbnail');
+  const images = document.querySelectorAll('.photo-gallery .image');
 
   for(let i = 0; i < images.length; i++) {
     if(i !== currentImageIndex) {

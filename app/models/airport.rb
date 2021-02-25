@@ -17,23 +17,23 @@ class Airport < ApplicationRecord
     airport: {
       label: 'Airports',
       icon: 'plane',
-      color: 'red',
+      theme: 'green',
       default: true,
     },
     heliport: {
       label: 'Heliports',
       icon: 'helicopter',
-      color: 'orange',
+      theme: 'orange',
     },
     seaplane_base: {
       label: 'Seaplane Bases',
       icon: 'water',
-      color: 'yellow',
+      theme: 'blue',
     },
     military: {
       label: 'Military',
       icon: 'crosshairs',
-      color: 'green',
+      theme: 'red',
     },
     balloonport: {
       hidden: true,

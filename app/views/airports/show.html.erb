@@ -1,12 +1,12 @@
 <div class="container airport-header text-center mb-3 theme-<%= @airport.theme %>">
   <div class="row">
-    <div class="col-sm p-3">
+    <div class="col p-3">
       <h3><%= @airport.code %> - <%= @airport.name.titleize %></h3>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-sm p-2">
+    <div class="col p-2">
       <%= @airport.latitude %>, <%= @airport.longitude %>
     </div>
   </div>
@@ -15,7 +15,7 @@
 <% if @airport.empty? %>
   <div class="container">
     <div class="row">
-      <div class="col-sm mb-2">
+      <div class="col mb-2">
         <%= render 'airports/empty_notice' %>
       </div>
     </div>
@@ -24,66 +24,66 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-sm">
+    <div class="col-12 col-lg-6">
       <div class="row">
-        <div class="col-sm">
+        <div class="col">
           <%= render 'airports/tags/tags' %>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-sm">
+        <div class="col">
           <%= render 'airports/statistics/statistics' %>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-sm">
+        <div class="col">
           <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :description, title: '<span><i class="fas fa-book-open"></i> Description</span>'.html_safe} %>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-sm">
+        <div class="col">
           <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :transient_parking, height: :small, title: '<span><i class="fas fa-parking"></i> Transient Parking</span>'.html_safe} %>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-sm">
+        <div class="col">
           <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :landing_fees, height: :small, title: '<span><i class="fas fa-dollar-sign"></i> Landing &amp; Tie-down Fees</span>'.html_safe} %>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-sm">
+        <div class="col">
           <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :fuel_location, height: :small, title: '<span><i class="fas fa-gas-pump"></i> Fuel Availability</span>'.html_safe} %>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-sm">
+        <div class="col">
           <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :crew_car, height: :small, title: '<span><i class="fas fa-car"></i> Crew Car</span>'.html_safe} %>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-sm">
+        <div class="col">
           <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :wifi, height: :small, title: '<span><i class="fas fa-wifi"></i> WiFi Access</span>'.html_safe} %>
         </div>
       </div>
     </div>
 
-    <div class="col-sm">
+    <div class="col-12 col-lg-6">
       <div class="row">
-        <div class="col-sm">
-          <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @airport.all_photos} %>
+        <div class="col">
+          <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @airport.all_photos, border: true} %>
           <%= render 'airports/upload_photo_form' %>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-sm">
+        <div class="col">
           <% if @airport.diagram %>
             <img class="airport-diagram img-thumbnail" src="<%= '/assets/diagrams/%s' % @airport.diagram %>">
           <% else %>
@@ -94,7 +94,7 @@
       </div>
 
       <div class="row">
-        <div class="col-sm">
+        <div class="col">
           <%= render 'airports/remarks' %>
         </div>
       </div>
@@ -104,7 +104,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-sm">
+    <div class="col">
       <%= render 'airports/comments' %>
     </div>
   </div>

@@ -14,6 +14,14 @@
   </div>
 </div>
 
+<% if @airport.all_photos.any? %>
+  <div class="row">
+    <div class="col-sm p-0">
+      <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @airport.all_photos} %>
+    </div>
+  </div>
+<% end %>
+
 <% if @airport.empty? %>
   <div class="row my-2">
     <div class="col-sm">
@@ -22,15 +30,7 @@
   </div>
 <% end %>
 
-<% if @airport.all_photos.any? %>
-  <div class="row my-2">
-    <div class="col-sm">
-      <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @airport.all_photos} %>
-    </div>
-  </div>
-<% end %>
-
-<div class="row mb-1">
+<div class="row my-2">
   <div class="col-sm d-flex flex-wrap">
     <% @airport.tags.each do |tag| %>
       <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag, size: :small} %>
