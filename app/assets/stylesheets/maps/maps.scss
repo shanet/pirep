@@ -2,3 +2,16 @@
   height: 100vh;
   width: 100vw;
 }
+
+// Refloat the map attribution so it's horizontal and aligned to the bottom of the page
+.mapboxgl-ctrl-bottom-left {
+  display: flex;
+
+  .mapboxgl-ctrl-attrib {
+    margin-top: auto;
+  }
+
+  .mapboxgl-ctrl:not(.mapboxgl-ctrl-attrib) {
+    margin-bottom: 3px;
+  }
+}

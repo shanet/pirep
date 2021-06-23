@@ -1,6 +1,7 @@
 <%
   runways = @airport.runways.order(length: :desc)
   runways = runways.limit(runways_limit - 1) if defined?(runways_limit)
+  ap runways
 %>
 
 <div class="row">
@@ -9,7 +10,9 @@
   </div>
 
   <div class="col-sm mb-2 pl-1">
-    <%= render partial: 'airports/statistics/statistics_box', locals: {label: 'Runway %s' % runways.first.number, value: runways.first.length, units: :ft, icon: :road, theme: runways.first.length_threat_level} %>
+    <% if runways.any? %>
+      <%= render partial: 'airports/statistics/statistics_box', locals: {label: 'Runway %s' % runways.first.number, value: runways.first.length, units: :ft, icon: :road, theme: runways.first.length_threat_level} %>
+    <% end %>
   </div>
 
   <div class="w-100"></div>

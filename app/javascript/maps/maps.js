@@ -46,7 +46,10 @@ function initMap() {
     style: 'mapbox://styles/mapbox/satellite-streets-v11',
     zoom: zoomLevel,
     maxZoom: 18,
+    attributionControl: false,
   });
+
+  map.addControl(new mapboxgl.AttributionControl(), 'bottom-left');
 }
 
 function initialMapCenter() {
@@ -70,17 +73,23 @@ function addSectionalLayersToMap() {
         tileSize: 256,
         type: 'raster',
       },
-      layout: {
-        visibility: (urlSearchParams.getLayer() === layerSwitcher.LAYER_SATELLITE ? 'none' : 'visible'),
+      paint: {
+        'raster-opacity': (urlSearchParams.getLayer() === layerSwitcher.LAYER_SATELLITE ? 0 : 1),
+        'raster-fade-duration': 300,
       },
     });
   });
 }
 
 function addEventHandlersToMap() {
-  // Open the drawer for an airport when its marker is clicked
+  // Open the drawer for an airport when its marker is clicked or close if the already open airport is clicked
   map.on('click', AIRPORT_LAYER, (event) => {
-    openAirportFeature(event.features[0]);
+    if(event.features[0].id == getSelectedAirportMarker()) {
+      drawer.closeDrawer();
+      closeAirport();
+    } else {
+      openAirportFeature(event.features[0]);
+    }
   });
 
   // Show a pointer cursor when hovering over an airport on the map
@@ -148,6 +157,7 @@ function addAirportsToMap() {
       // The map is fully loaded, start manipulating it
       applyUrlSearchParamsOnMap();
       filterAirportsOnMap();
+      exposeObjectsForTesting();
     });
   });
 }
@@ -176,12 +186,13 @@ function applyUrlSearchParamsOnMap() {
 
 export function toggleSectionalLayers(show) {
   Object.keys(SECTIONAL_LAYERS).forEach((id) => {
-    map.setLayoutProperty(id, 'visibility', (show ? 'visible' : 'none'));
+    // map.setLayoutProperty(id, 'visibility', (show ? 'visible' : 'none'));
+    map.setPaintProperty(id, 'raster-opacity', (show ? 1 : 0));
   });
 }
 
 export function areSectionalLayersShown() {
-  return (map.getLayoutProperty(Object.keys(SECTIONAL_LAYERS)[0], 'visibility') !== 'none');
+  return (map.getPaintProperty(Object.keys(SECTIONAL_LAYERS)[0], 'raster-opacity') === 1);
 }
 
 export function openAirport(airportCode) {
@@ -219,10 +230,22 @@ function setAirportMarkerSelected(airportCode) {
   map.setLayoutProperty(AIRPORT_LAYER, 'icon-image', ['match', ['id'], airportCode, 'marker_selected', 'marker']);
 }
 
+function getSelectedAirportMarker(airportCode) {
+  return map.getLayoutProperty(AIRPORT_LAYER, 'icon-image')[2];
+}
+
 export function flyTo(latitude, longitude, zoom) {
   map.flyTo({center: [longitude, latitude], zoom});
 }
 
 export function getZoom() {
   return map.getZoom();
+}
+
+function exposeObjectsForTesting() {
+  // Don't expose anything if not running tests
+  if(!document.getElementById('map').dataset.isTest) return;
+
+  // This is yucky, but we need the map object at global scope so we can access it in Capybara tests
+  window.mapbox = map;
 }

@@ -1,0 +1,19 @@
+.action-buttons {
+  left: -85px;
+  position: absolute;
+  bottom: $maps-fixed-offset;
+  z-index: $zindex-fixed;
+
+  > * {
+    border-radius: 50%;
+    box-shadow: $gray-800 0px 5px 15px;
+    color: $white;
+    font-size: 30px;
+    height: 60px;
+    width: 60px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

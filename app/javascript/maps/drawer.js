@@ -1,6 +1,8 @@
+const layerSwitcher = require('./layer_switcher');
 const maps = require('./maps');
 const photoGallery = require('../shared/photo_gallery');
 const textareaEditors = require('../shared/textarea_editors');
+const urlSearchParams = require('./url_search_params');
 
 let previousZoomLevel;
 let wereSectionalLayersShown;
@@ -63,7 +65,12 @@ function zoomAirport(event) {
   if(button.dataset.zoomedIn === 'true') {
     // Go back to the previous zoom level and show the sectional layers if they were previously shown
     maps.flyTo(button.dataset.latitude, button.dataset.longitude, previousZoomLevel);
-    if(wereSectionalLayersShown) maps.toggleSectionalLayers(true);
+
+    if(wereSectionalLayersShown) {
+      layerSwitcher.updateLayerSwitcherIcon(layerSwitcher.LAYER_SATELLITE);
+      maps.toggleSectionalLayers(true);
+      urlSearchParams.clearLayer();
+    }
 
     button.innerText = 'Zoom In';
     button.dataset.zoomedIn = 'false';
@@ -74,9 +81,12 @@ function zoomAirport(event) {
 
     maps.flyTo(button.dataset.latitude, button.dataset.longitude, 15);
     maps.toggleSectionalLayers(false);
+    layerSwitcher.updateLayerSwitcherIcon(layerSwitcher.LAYER_MAP);
 
     button.innerText = 'Zoom Out';
     button.dataset.zoomedIn = 'true';
+
+    urlSearchParams.setLayer(layerSwitcher.LAYER_SATELLITE);
   }
 }
 
@@ -86,7 +96,7 @@ export function openDrawer() {
   drawer.classList.add('slide-in');
 }
 
-function closeDrawer() {
+export function closeDrawer() {
   const drawer = document.getElementById('airport-drawer');
   drawer.classList.remove('slide-in');
   drawer.classList.add('slide-out');

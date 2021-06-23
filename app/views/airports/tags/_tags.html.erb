@@ -20,7 +20,7 @@
   <%= form_with model: @airport, local: true do |form| %>
     <div class="d-flex flex-wrap">
       <%= form.fields_for :tags, @airport.unselected_tag_names.map {|tag_name| Tag.new(name: tag_name)} do |builder| %>
-        <%= render partial: 'airports/tags/tag', locals: {tag_name: builder.object.name.to_sym, editing: true} %>
+        <%= render partial: 'airports/tags/tag', locals: {tag_name: builder.object.name, editing: true} %>
         <%= builder.hidden_field :selected, value: false %>
         <%= builder.hidden_field :name, value: builder.object.name %>
       <% end %>

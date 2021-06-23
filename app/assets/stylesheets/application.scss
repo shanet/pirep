@@ -4,14 +4,16 @@
 @import 'mapbox-gl/dist/mapbox-gl';
 @import 'easymde/dist/easymde.min';
 
+@import 'themes';
+
 @import 'airports/show';
 @import 'airports/statistics';
 @import 'airports/tags';
-@import 'airports/themes';
 
+@import 'maps/action_buttons';
 @import 'maps/drawer';
 @import 'maps/filters';
-@import 'maps/layer_switcher';
+@import 'maps/header';
 @import 'maps/maps';
 @import 'maps/search';
 

@@ -113,7 +113,7 @@ class Airport < ApplicationRecord
 
   def empty?
     # Return if the airport is tagged with a user-addable tag
-    return false if tags.map {|tag| Tag::TAGS[tag.name.to_sym][:addable]}.any?
+    return false if tags.map {|tag| Tag::TAGS[tag.name][:addable]}.any?
 
     # Return if landing rights/requirements are set
     return false if [:restrictions, :permission].include?(landing_rights) || landing_requirements.present?
@@ -124,7 +124,6 @@ class Airport < ApplicationRecord
       :description,
       :fuel_location,
       :landing_fees,
-      :passport_location,
       :transient_parking,
       :wifi,
     ].map {|column| send(column).present?}.any?
@@ -158,7 +157,7 @@ class Airport < ApplicationRecord
     case elevation
       when -Float::INFINITY..2999
         return 'green'
-      when 3000...4999
+      when 3000..4999
         return 'orange'
       when 5000..Float::INFINITY
         return 'red'

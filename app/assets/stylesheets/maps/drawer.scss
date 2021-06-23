@@ -1,4 +1,7 @@
-@import 'animations';
+$animation-duration: 1s;
+$drawer-width: "min(33vw, 450px)";
+$handle-size: 25px;
+$drawer-translate-length: calc(#{$drawer-width} + #{$handle-size} / 2 + 3px);
 
 .drawer {
   background: $white;
@@ -7,8 +10,8 @@
   position: fixed;
   right: 0;
   top: 0;
-  transform: translateX(100vw);
-  width: 500px;
+  transform: translateX($drawer-translate-length);
+  width: calc(#{$drawer-width});
   z-index: $zindex-fixed;
 
   &.slide-in {
@@ -19,24 +22,42 @@
     animation: slide-out $animation-duration forwards;
   }
 
+  @keyframes slide-in {
+    from {
+      transform: translateX($drawer-translate-length);
+    }
+
+    to {
+      transform: translateX(0%);
+    }
+  }
+
+  @keyframes slide-out {
+    from {
+      transform: translateX(0%);
+    }
+
+    to {
+      transform: translateX($drawer-translate-length);
+    }
+  }
+
   .handle {
-    background-color: $primary;
-    border-radius: 5px 0 0 5px;
-    // box-shadow: 0px 4px 3px $gray-800, -4px 4px 3px gray, 0px -4px 3px gray;
-    height: 50px;
-    left: -30px;
-    line-height: 50px;
-    padding-right: 5px;
+    background-color: $white;
+    border-radius: 100%;
+    box-shadow: $gray-800 0px 5px 15px;
+    height: $handle-size;
+    left: -#{$handle-size / 2 + 3};
+    line-height: $handle-size;
     position: absolute;
     top: 50px;
-    width: 30px;
+    width: $handle-size;
 
     button {
-      color: $white;
-      font-size: 24px;
+      color: $black;
+      font-size: 14px;
       height: 100%;
-      padding: 0;
-      padding-left: 7px;
+      padding: 0 5px 0 7px;
       width: 100%;
     }
   }

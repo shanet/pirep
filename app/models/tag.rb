@@ -76,6 +76,12 @@ class Tag < ApplicationRecord
       icon: 'times-circle',
       theme: 'brown',
     },
+    airpark: {
+      label: 'Airpark',
+      icon: 'home',
+      theme: 'orange',
+      addable: true,
+    },
     empty: {
       label: 'Empty',
       icon: 'question',
@@ -87,6 +93,10 @@ class Tag < ApplicationRecord
 
   def self.addable_tags
     return TAGS.select {|key, value| value[:addable]}
+  end
+
+  def name
+    return self[:name].to_sym
   end
 
 private
