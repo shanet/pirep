@@ -37,7 +37,7 @@
 
   <%= form_with model: Comment.new, local: true do |form| %>
     <div class="form-group p-3">
-      <i class="fas fa-comment"></i> Leave a comment
+      <%= form.label :body, '<i class="fas fa-comment"></i> Leave a comment'.html_safe %>
 
       <%= form.text_area :body, class: 'form-control comment-textarea my-3' %>
       <%= form.hidden_field :airport_id, value: @airport.id %>

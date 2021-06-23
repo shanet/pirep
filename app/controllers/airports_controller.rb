@@ -41,6 +41,10 @@ private
     params.require(:airport).permit(
       :description,
       :transient_parking,
+      :fuel_location,
+      :landing_fees,
+      :crew_car,
+      :wifi,
       :landing_rights,
       :landing_requirements,
       photos: [],

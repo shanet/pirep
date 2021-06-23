@@ -17,7 +17,7 @@
 
   <div class="form-group">
     <% Airport::LANDING_RIGHTS_TYPES.each do |key, configuration| %>
-      <%= form.label :landing_requirements, configuration[:long_requirements_label], data: {landing_rights_type: key}, class: (@airport.landing_rights == key ? '' : 'd-none') %>
+      <%= form.label :landing_requirements, "#{configuration[:long_requirements_label]}:", data: {landing_rights_type: key}, class: (@airport.landing_rights == key ? '' : 'd-none') %>
     <% end %>
 
     <%= form.hidden_field :landing_rights %>

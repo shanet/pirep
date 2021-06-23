@@ -46,7 +46,10 @@ module GoogleApi
 
   class Stub
     def place_photos(*)
-      return []
+      return [
+        {url: 'https://example.com/image1.jpg', attribution: 'John Doe'},
+        {url: 'https://example.com/image2.jpg', attribution: 'Jane Doe'},
+      ]
     end
   end
 end
