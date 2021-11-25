@@ -9,7 +9,7 @@ AllCops:
     - node_modules/**/*
   DisplayCopNames: true
   NewCops: enable
-  TargetRubyVersion: 2.7.1
+  TargetRubyVersion: 3.0.3
 
 Rails:
   Enabled: true
