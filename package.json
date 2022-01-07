@@ -8,10 +8,10 @@
   "version": "0.1.0",
   "devDependencies": {
     "eslint": "^8.9.0",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
     "stylelint": "^14.5.1",
-    "stylelint-config-twbs-bootstrap": "^2.1.0",
-    "stylelint-order": "^4.1.0"
+    "stylelint-config-twbs-bootstrap": "^3.0.1",
+    "stylelint-order": "^5.0.0"
   }
 }

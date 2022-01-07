@@ -1,0 +1,49 @@
+name: CI
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14-alpine
+        env:
+          POSTGRES_USER: pirep
+          POSTGRES_DB: pirep_test
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Ruby & Gems
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0.4
+          bundler-cache: true
+
+      - name: Install Yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+          cache: yarn
+
+      - name: Install Yarn Packages
+        run: yarn install --pure-lockfile
+
+      # - name: Setup test database
+      #   env:
+      #     RAILS_ENV: test
+      #     DATABASE_URL: postgres://pirep:postgres@localhost/pirep_test
+      #   run: bin/rails db:setup
+
+      - name: Run lint
+        run: bin/rails lint
+
+      - name: Run Tests
+        run: bin/rails test:all
+        env:
+          DATABASE_URL: postgres://pirep:postgres@localhost/pirep_test
