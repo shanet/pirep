@@ -1,5 +1,4 @@
-require 'exceptions'
-require 'zip'
+require 'faa/faa_api'
 
 class AirportDatabaseParser
   # These are the ranges for column data as documented in the README at:
@@ -39,32 +38,13 @@ class AirportDatabaseParser
   end
 
   def download_and_parse
-    Dir.mktmpdir do |directory|
-      download_archive(directory)
-      parse_file(File.join(directory, 'APT.txt'))
+    Dir.mktmpdir do |tmp_directory|
+      parse_file(FaaApi.client.airport_data(tmp_directory))
+      return @airports
     end
-
-    return @airports
   end
 
 private
-
-  def download_archive(directory)
-    response = Faraday.get('https://nfdc.faa.gov/webContent/28DaySub/%s/APT.zip' % current_data_cycle)
-    raise Exceptions::AirportDatabaseDownloadFailed unless response.success?
-
-    # Write archive to disk
-    archive_path = File.join(directory, 'archive.zip')
-    File.open(archive_path, 'wb') {|file| file.write(response.body)}
-
-    Zip::File.open(archive_path) do |archive|
-      # Extract each file in the archive
-      archive.each do |file|
-        path = File.join(directory, file.name)
-        archive.extract(file, path)
-      end
-    end
-  end
 
   def parse_file(path)
     # The provided file is annoyingly encoded with latin1 (iso-8859-1) so read it as that and then convert each line to utf-8
@@ -130,16 +110,5 @@ private
     decimal = degrees.to_f + minutes.to_f / 60 + seconds.to_f / 3600
     decimal *= -1 if ['W', 'S'].include?(direction)
     return decimal.round(7)
-  end
-
-  def current_data_cycle
-    # New data is available every 28 days
-    cycle_length = 28.days
-    next_cycle = Date.new(2020, 9, 10)
-
-    # Iterate from the start cycle until we hit the current date than back up one cycle for the current one
-    next_cycle += cycle_length while Date.current >= next_cycle
-
-    return next_cycle - cycle_length
   end
 end

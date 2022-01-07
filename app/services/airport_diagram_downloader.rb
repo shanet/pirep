@@ -1,21 +1,14 @@
-require 'exceptions'
-require 'zip'
+require 'faa/faa_api'
 
 class AirportDiagramDownloader
-  # There are five archive files to download from the FAA containing all airport diagrams and procedures
-  # https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/
-  ARCHIVES = ['A', 'B', 'C', 'D', 'E']
-
   def initialize
   end
 
   def download_and_convert
     Dir.mktmpdir do |directory|
-      ARCHIVES.each do |archive|
-        download_archive(archive, directory)
-      end
+      metadata_path = FaaApi.client.airport_diagrams(directory)
 
-      diagrams = parse_archives(directory)
+      diagrams = parse_archives(metadata_path)
       convert_diagrams_to_images(directory, diagrams)
       copy_diagrams(directory, diagrams)
     end
@@ -25,34 +18,9 @@ class AirportDiagramDownloader
 
 private
 
-  def download_archive(archive, directory)
-    # url = 'https://aeronav.faa.gov/upload_313-d/terminal/DDTPP%s_%s.zip' % [archive, current_data_cycle.strftime('%y%m%d')])
-    url = 'http://localhost:3000/assets/archives/DDTPP%s_%s.zip' % [archive, current_data_cycle.strftime('%y%m%d')]
-
-    Rails.logger.info('Downloading archive %s to %s ' % [url, directory])
-    response = Faraday.get(url)
-    raise Exceptions::AirportDatabaseDownloadFailed unless response.success?
-
-    # Write archive to disk
-    archive_path = File.join(directory, 'archive_%s.zip' % archive)
-    File.open(archive_path, 'wb') {|file| file.write(response.body)}
-
-    Rails.logger.info('Extracting archive %s to %s ' % [url, directory])
-
-    Zip::File.open(archive_path) do |archive|
-      # Extract each file in the archive
-      archive.each do |file|
-        path = File.join(directory, file.name)
-        archive.extract(file, path)
-      end
-    end
-  end
-
-  def parse_archives(directory)
+  def parse_archives(metadata_path)
     # Parse the metadata file which contains the filenames for each airport's diagram
-    metadata = File.join(directory, 'd-TPP_Metafile.xml')
-
-    xml = Nokogiri::XML(File.open(metadata)) do |config|
+    xml = Nokogiri::XML(File.open(metadata_path)) do |config|
       config.strict
     end
 
@@ -102,16 +70,5 @@ private
 
   def converted_diagram_filename(file)
     return file.gsub(/\.PDF$/, '.png')
-  end
-
-  def current_data_cycle
-    # New data is available every 28 days
-    cycle_length = 28.days
-    next_cycle = Date.new(2020, 9, 10)
-
-    # Iterate from the start cycle until we hit the current date than back up one cycle for the current one
-    next_cycle += cycle_length while Date.current >= next_cycle
-
-    return next_cycle - cycle_length
   end
 end

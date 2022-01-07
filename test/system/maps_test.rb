@@ -179,21 +179,32 @@ class AirportsTest < ApplicationSystemTestCase
 
   test 'sets state from URL parameters' do
     zoom_level = 15
+    latitude = 47.9073174
+    longitude = -122.2820940
+    filter_facility_types = ['heliport', 'seaplane_base']
+    filter_tags = ['food', 'camping']
 
     visit maps_path(
       layer: :satellite,
       airport: @airport.code,
       zoom: zoom_level,
-      coordinates: '47.9073174,-122.2820940',
-      filters: '',
+      coordinates: "#{latitude},#{longitude}",
+      filters_facility_types: filter_facility_types.join(','),
+      filters_tags: filter_tags.join(','),
     )
 
     wait_for_map_ready
 
     assert_equal zoom_level, map_zoom_level, 'Zoom level not set from URL parameter'
     assert_not sectional_layer_shown?, 'Satellite layer not shown from URL parameter'
+    assert_selector '#airport-info .airport-drawer-header', text: "#{@airport.code} - #{@airport.name.titleize}"
 
-    sleep 1111
+    assert_in_delta latitude, map_location['lat'], 0.01, 'Map not centered at given URL parameter latitude'
+    assert_in_delta longitude, map_location['lng'], 0.01, 'Map not centered at given URL parameter longitude'
+
+    (filter_facility_types + filter_tags).each do |filter|
+      assert filter_enabled?(filter), "Filter #{filter} not enabled from URL parameter"
+    end
   end
 
 private
@@ -207,6 +218,10 @@ private
     find("a[data-filter-name=\"#{filter_name}\"]").click
   end
 
+  def filter_enabled?(filter_name)
+    return !has_css?("a[data-filter-name=\"#{filter_name}\"].disabled")
+  end
+
   def displayed_airports
     return evaluate_script("mapbox.getSource('airports')._data.features").map {|airport| airport['properties']}
   end
@@ -217,6 +232,10 @@ private
 
   def map_zoom_level
     return evaluate_script('mapbox.getZoom()')
+  end
+
+  def map_location
+    return evaluate_script('mapbox.getCenter()')
   end
 
   def wait_for_zoom_animation
