@@ -9,7 +9,7 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     get airports_path
 
     assert_response :success
-    assert_equal JSON.parse(response.body).first['properties']['code'], @airport.code, 'Airport not included in airports index'
+    assert_equal @airport.code, JSON.parse(response.body).first['properties']['code'], 'Airport not included in airports index'
   end
 
   test 'shows airport' do
@@ -26,7 +26,15 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success, 'Failed to get airport by ICAO code'
   end
 
-  test 'cannot add non-addable tag' do
-    # TODO
+  test 'updates airport' do
+    patch airport_path(@airport), params: {airport: {description: 'description'}}
+    assert_response :redirect
+  end
+
+  test 'searches airports' do
+    get search_airports_path(query: @airport.code)
+
+    assert_response :success
+    assert_equal @airport.code, JSON.parse(response.body).first['code'], 'Airport not returned from search'
   end
 end

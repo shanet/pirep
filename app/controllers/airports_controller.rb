@@ -36,7 +36,7 @@ private
 
   def airport_params
     # Filter out any tags that are not selected since the UI shows all tags as options to add
-    params['airport']['tags_attributes']&.select! {|index, tag| tag['selected'] == 'true'}
+    params['airport']&.[]('tags_attributes')&.select! {|index, tag| tag['selected'] == 'true'}
 
     params.require(:airport).permit(
       :description,
