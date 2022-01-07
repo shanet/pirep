@@ -7,9 +7,10 @@ AllCops:
     - bin/**/*
     - db/schema.rb
     - node_modules/**/*
+    - vendor/bundle/**/*
   DisplayCopNames: true
   NewCops: enable
-  TargetRubyVersion: 3.0.3
+  TargetRubyVersion: 3.0.4
 
 Rails:
   Enabled: true

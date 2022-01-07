@@ -26,6 +26,12 @@ class Tag < ApplicationRecord
       theme: 'brown',
       addable: true,
     },
+    car: {
+      label: 'Car Rental',
+      icon: 'car',
+      theme: 'orange',
+      addable: true,
+    },
     swimming: {
       label: 'Swimming',
       icon: 'umbrella-beach',
