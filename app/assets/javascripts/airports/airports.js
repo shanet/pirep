@@ -1,4 +1,9 @@
+let initialized = false;
+
 document.addEventListener('DOMContentLoaded', () => {
+  if(initialized) return;
+  initialized = true;
+
   initEditingTags();
   initTagDeleteIcons();
   initLandingRightsForm();

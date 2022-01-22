@@ -1,5 +1,5 @@
-const maps = require('./maps');
-const utils = require('../shared/utils');
+import * as maps from 'maps/maps';
+import * as utils from 'shared/utils';
 
 let selectedSearchResultIndex = -1;
 

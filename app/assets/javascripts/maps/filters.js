@@ -1,14 +1,17 @@
-const maps = require('./maps');
-const urlSearchParams = require('./url_search_params');
-const utils = require('../shared/utils');
+import * as maps from 'maps/maps';
+import * as urlSearchParams from 'maps/url_search_params';
+import * as utils from 'shared/utils';
 
 const FILTER_GROUP_HOVER_TEXT = ' (remove all)';
 
 const enabledFilters = {};
 const filterLabels = {};
 
+let initialized = false;
+
 document.addEventListener('DOMContentLoaded', () => {
-  if(!document.getElementById('filters')) return;
+  if(!document.getElementById('filters') || initialized) return;
+  initialized = true;
 
   initFilterHandles();
   initFilterLabels();

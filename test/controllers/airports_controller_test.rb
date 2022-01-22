@@ -31,6 +31,13 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :redirect
   end
 
+  test 'updates airport photos' do
+    assert_difference('@airport.photos.count', 1) do
+      patch airport_path(@airport), params: {airport: {photos: [Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png')]}}
+      assert_response :redirect
+    end
+  end
+
   test 'searches airports' do
     get search_airports_path(query: @airport.code)
 

@@ -1,9 +1,13 @@
-const Rails = require('@rails/ujs');
-const EasyMDE = require('easymde/dist/easymde.min.js');
+import Rails from '@rails/ujs';
+import 'easymde';
 
 let editors = [];
+let initialized = false;
 
 document.addEventListener('DOMContentLoaded', () => {
+  if(initialized) return;
+  initialized = true;
+
   initEditorEditIcons();
   initEditors();
 });

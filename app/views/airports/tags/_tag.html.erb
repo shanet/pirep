@@ -1,6 +1,6 @@
 <% tag_configuration = Tag::TAGS[(defined?(tag_record) ? tag_record.name : tag_name)] %>
 
-<div class="tag-square card p-0 mr-1 mb-1 theme-<%= tag_configuration[:theme] %>
+<div class="tag-square card p-0 me-1 mb-1 theme-<%= tag_configuration[:theme] %>
   <%= defined?(editing) ? 'editing unselected' : '' %>
   <%= defined?(size) ? size : '' %>"
   data-tag-id="<%= defined?(tag_record) ? tag_record.id : '' %>">

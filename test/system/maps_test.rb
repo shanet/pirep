@@ -243,17 +243,7 @@ private
   end
 
   def wait_for_map_ready
-    Timeout::timeout(30) do
-      loop do
-        type = evaluate_script('typeof(mapbox)')
-        break unless type == 'undefined'
-        sleep 0.1
-      end
-
-      # Once the map is ready give it another second to put the airport markers on the map (is there really not a callback for this?!)
-      sleep 1
-    end
-  rescue Timeout::Error
-    fail 'Timeout waiting for map to be ready'
+    # Once the map is fully ready to use it will populate a data attribute
+    find('#map[data-ready="true"]', wait: 10)
   end
 end

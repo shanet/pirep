@@ -1,12 +1,15 @@
-const maps = require('./maps');
-const urlSearchParams = require('./url_search_params');
+import * as maps from 'maps/maps';
+import * as urlSearchParams from 'maps/url_search_params';
 
 export const LAYER_SATELLITE = 'satellite';
 export const LAYER_MAP = 'map';
 
+let initialized = false;
+
 document.addEventListener('DOMContentLoaded', () => {
   let layerSwitcher = document.getElementById('layer-switcher');
-  if(!layerSwitcher) return;
+  if(!layerSwitcher || initialized) return;
+  initialized = true;
 
   // Set the layer switcher icon to map by default if the URL params are set to show the satellite layer
   updateLayerSwitcherIcon((urlSearchParams.getLayer() === LAYER_SATELLITE ? LAYER_MAP : LAYER_SATELLITE));

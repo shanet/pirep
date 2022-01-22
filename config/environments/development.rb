@@ -53,6 +53,9 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
+  # Watch for changes to the JavaScript assets in development
+  config.importmap.cache_sweepers << Rails.root.join('app/assets/javascripts')
+
   # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
 

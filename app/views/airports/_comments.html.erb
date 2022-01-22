@@ -11,7 +11,7 @@
           <%= button_to [:undo_outdated, comment], remote: true, class: 'btn btn-link btn-sm p-0', form: {class: 'd-inline-block'} do %>(undo)<% end %>
         </div>
 
-        <div class="comment-actions text-right ml-2">
+        <div class="comment-actions text-end ms-2">
           <%= button_to [:helpful, comment], remote: true, class: 'btn btn-outline-primary btn-sm' do %>
             <i class="fas fa-thumbs-up"></i> Helpful
           <% end %>
@@ -21,7 +21,7 @@
           <% end %>
         </div>
 
-        <div class="comment-body pl-2 my-1">
+        <div class="comment-body ps-2 my-1">
           <%= comment.body %>
         </div>
 

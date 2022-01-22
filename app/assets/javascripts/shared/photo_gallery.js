@@ -1,6 +1,10 @@
 let currentImageIndex = 0;
+let initialized = false;
 
 document.addEventListener('DOMContentLoaded', () => {
+  if(initialized) return;
+  initialized = true;
+
   initializePhotoGallery();
 });
 

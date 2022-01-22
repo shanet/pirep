@@ -5,11 +5,11 @@
 %>
 
 <div class="row">
-  <div class="col-sm mb-2 pr-1">
+  <div class="col-sm mb-2 pe-1">
     <%= render partial: 'airports/statistics/statistics_box', locals: {label: 'Elevation', value: @airport.elevation, units: :ft, icon: :mountain, theme: @airport.elevation_threat_level} %>
   </div>
 
-  <div class="col-sm mb-2 pl-1">
+  <div class="col-sm mb-2 ps-1">
     <% if runways.any? %>
       <%= render partial: 'airports/statistics/statistics_box', locals: {label: 'Runway %s' % runways.first.number, value: runways.first.length, units: :ft, icon: :road, theme: runways.first.length_threat_level} %>
     <% end %>
@@ -21,7 +21,7 @@
     <% grouped_runways.each_with_index do |runway, index| %>
       <% next unless runway %>
 
-      <div class="col-sm mb-2 <%= grouped_runways.compact.count == 2 ? (index == 0 ? 'pr-1' : 'pl-1') : '' %>">
+      <div class="col-sm mb-2 <%= grouped_runways.compact.count == 2 ? (index == 0 ? 'pe-1' : 'ps-1') : '' %>">
         <%= render partial: 'airports/statistics/statistics_box', locals: {label: 'Runway %s' % runway.number, value: runway.length, units: :ft, icon: :road, theme: runway.length_threat_level} %>
       </div>
     <% end %>

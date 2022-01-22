@@ -1,16 +1,18 @@
-const layerSwitcher = require('./layer_switcher');
-const maps = require('./maps');
-const photoGallery = require('../shared/photo_gallery');
-const textareaEditors = require('../shared/textarea_editors');
-const urlSearchParams = require('./url_search_params');
+import * as layerSwitcher from 'maps/layer_switcher';
+import * as maps from 'maps/maps';
+import * as photoGallery from 'shared/photo_gallery';
+import * as textareaEditors from 'shared/textarea_editors';
+import * as urlSearchParams from 'maps/url_search_params';
 
 let previousZoomLevel;
 let wereSectionalLayersShown;
+let initialized = false;
 
 document.addEventListener('DOMContentLoaded', () => {
   // Close the drawer when clicking the drawer handle
   let drawerHandle = document.querySelector('#airport-drawer .handle button');
-  if(!drawerHandle) return;
+  if(!drawerHandle || initialized) return;
+  initialized = true;
 
   drawerHandle.addEventListener('click', () => {
     closeDrawer();

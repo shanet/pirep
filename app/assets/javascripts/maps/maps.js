@@ -1,8 +1,9 @@
-const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
-const drawer = require('./drawer');
-const filters = require('./filters');
-const layerSwitcher = require('./layer_switcher');
-const urlSearchParams = require('./url_search_params');
+import 'mapbox-gl';
+
+import * as drawer from 'maps/drawer';
+import * as filters from 'maps/filters';
+import * as layerSwitcher from 'maps/layer_switcher';
+import * as urlSearchParams from 'maps/url_search_params';
 
 const SECTIONAL_LAYERS = {
   seattle: [-124.094901, 44.634929, -116.327513, 48.995149],
@@ -11,20 +12,21 @@ const SECTIONAL_LAYERS = {
 
 const AIRPORT_LAYER = 'airports';
 
-// Da map!
-let map = null;
-
-// All airports without filters
-let allAirports = [];
-
 // Airports currently displayed on the map (with filters applied)
 const displayedAirports = {
   type: 'FeatureCollection',
   features: [],
 };
 
+let map = null;
+let initialized = false;
+
+// All airports without filters
+let allAirports = [];
+
 document.addEventListener('DOMContentLoaded', () => {
-  if(!document.getElementById('map')) return;
+  if(!document.getElementById('map') || initialized) return;
+  initialized = true;
 
   initMap();
 
@@ -47,9 +49,17 @@ function initMap() {
     zoom: zoomLevel,
     maxZoom: 18,
     attributionControl: false,
+    preserveDrawingBuffer: true,
   });
 
   map.addControl(new mapboxgl.AttributionControl(), 'bottom-left');
+
+  // Let the tests know that the map is fully ready to use (once we have the airports layer shown)
+  map.on('idle', () => {
+    if(map.getLayer(AIRPORT_LAYER)) {
+      document.getElementById('map').dataset.ready = true;
+    }
+  });
 }
 
 function initialMapCenter() {

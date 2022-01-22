@@ -11,7 +11,7 @@ class AirportsController < ApplicationController
   end
 
   def update
-    if @airport.update(airport_params)
+    if @airport.update(airport_params) && @airport.photos.attach(params[:airport][:photos] || [])
       if request.xhr?
         head :ok
       else
@@ -47,7 +47,6 @@ private
       :wifi,
       :landing_rights,
       :landing_requirements,
-      photos: [],
       tags_attributes: [:name],
     )
   end
