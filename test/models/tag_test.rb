@@ -2,7 +2,7 @@ require 'test_helper'
 
 class TagTest < ActiveSupport::TestCase
   test 'does not have addable tags' do
-    nonaddable_tag = Tag::TAGS.find {|key, value| !value[:addable]}.first
+    nonaddable_tag = Tag::TAGS.find {|_key, value| !value[:addable]}.first
     assert_not Tag.addable_tags[nonaddable_tag], 'Nonaddable tag included in addable tags list'
   end
 

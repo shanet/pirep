@@ -16,7 +16,7 @@
             <i class="fas fa-thumbs-up"></i> Helpful
           <% end %>
 
-          <%= button_to [:flag_outdated, comment], remote: true, class: 'btn btn-outline-warning btn-sm flag-outdated' + (comment.outdated_at ? ' d-none' : '') do %>
+          <%= button_to [:flag_outdated, comment], remote: true, class: "btn btn-outline-warning btn-sm flag-outdated #{comment.outdated_at ? ' d-none' : ''}" do %>
             <i class="fas fa-flag"></i> Flag as outdated
           <% end %>
         </div>

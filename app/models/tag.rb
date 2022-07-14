@@ -1,8 +1,7 @@
 class Tag < ApplicationRecord
   belongs_to :airport
 
-  validates_uniqueness_of :name, scope: :airport
-  validates :airport, presence: true
+  validates :name, uniqueness: {scope: :airport}
   validates :name, presence: true
 
   after_save :remove_empty_tag!
@@ -98,7 +97,7 @@ class Tag < ApplicationRecord
   enum name: TAGS.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
 
   def self.addable_tags
-    return TAGS.select {|key, value| value[:addable]}
+    return TAGS.select {|_key, value| value[:addable]}
   end
 
   def name

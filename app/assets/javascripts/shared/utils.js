@@ -8,11 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function addCollapseListeners() {
-  let collapsibleToggles = document.querySelectorAll('[data-bs-toggle="collapse"]');
+  const collapsibleToggles = document.querySelectorAll('[data-bs-toggle="collapse"]');
 
   for(let i=0; i<collapsibleToggles.length; i++) {
     collapsibleToggles[i].addEventListener('click', () => {
-      let target = document.getElementById(collapsibleToggles[i].dataset.bsTarget);
+      const target = document.getElementById(collapsibleToggles[i].dataset.bsTarget);
       target.classList.toggle('show');
     });
   }

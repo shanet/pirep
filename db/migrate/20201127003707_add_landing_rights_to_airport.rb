@@ -1,6 +1,8 @@
 class AddLandingRightsToAirport < ActiveRecord::Migration[6.0]
   def change
-  	add_column :airports, :landing_rights, :string
-  	add_column :airports, :landing_requirements, :string
+    change_table :airports, bulk: true do |table|
+      table.string :landing_rights
+      table.string :landing_requirements
+    end
   end
 end

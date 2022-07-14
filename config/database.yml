@@ -7,10 +7,12 @@ default: &default
 development:
   <<: *default
   database: pirep_development
+  host: localhost
 
 test:
   <<: *default
   database: pirep_test
+  host: localhost
 
 production:
   <<: *default

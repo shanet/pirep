@@ -1,29 +1,29 @@
 .statistics-box {
-  border-radius: calc(0.25rem - 1px);
+  border-radius: calc(.25rem - 1px);
   color: $white;
 }
 
 .landing-rights {
   .icon {
-    border-radius: calc(0.25rem - 1px) 0 0 calc(0.25rem - 1px);
+    border-radius: calc(.25rem - 1px) 0 0 calc(.25rem - 1px);
     color: $white;
     font-size: 24px;
-    min-width: 40px;
     max-width: 40px;
+    min-width: 40px;
   }
 
   .label {
-    border-radius: 0 calc(0.25rem - 1px) calc(0.25rem - 1px) 0;
-    background-color: rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    background-color: rgba(0, 0, 0, .03);
+    border: 1px solid rgba(0, 0, 0, .125);
     border-left: none;
+    border-radius: 0 calc(.25rem - 1px) calc(.25rem - 1px) 0;
   }
 }
 
 .landing-rights-box {
+  flex-basis: 0;
   flex-grow: 1;
   flex-shrink: 1;
-  flex-basis: 0px;
   height: 100px;
 
   &:hover {

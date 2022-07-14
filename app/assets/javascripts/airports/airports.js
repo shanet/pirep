@@ -11,24 +11,24 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initEditingTags() {
-  let tags = document.querySelectorAll('.tag-square.editing');
+  const tags = document.querySelectorAll('.tag-square.editing');
 
   for(let i=0; i<tags.length; i++) {
-    let tag = tags[i];
+    const tag = tags[i];
 
     tag.addEventListener('click', () => {
       tag.classList.toggle('unselected');
 
       // When a tag is selected set its associated form field as selected too
-      let selectedFormField = document.getElementById(`airport_tags_attributes_${i}_selected`);
+      const selectedFormField = document.getElementById(`airport_tags_attributes_${i}_selected`);
       selectedFormField.value = (selectedFormField.value === 'true' ? 'false' : 'true');
     });
   }
 }
 
 function initTagDeleteIcons() {
-  let addTags = document.querySelector('.tag-square.add');
-  let deleteIcons = document.querySelectorAll('.tag-square .delete');
+  const addTags = document.querySelector('.tag-square.add');
+  const deleteIcons = document.querySelectorAll('.tag-square .delete');
 
   if(!addTags) return;
 
@@ -41,11 +41,11 @@ function initTagDeleteIcons() {
 }
 
 function initLandingRightsForm() {
-  let landingRightsBoxes = document.querySelectorAll('.landing-rights-box');
+  const landingRightsBoxes = document.querySelectorAll('.landing-rights-box');
 
   for(let i=0; i<landingRightsBoxes.length; i++) {
-    let landingRightsBox = landingRightsBoxes[i];
-    let landingRightsType = landingRightsBox.dataset.landingRightsType;
+    const landingRightsBox = landingRightsBoxes[i];
+    const {landingRightsType} = landingRightsBox.dataset;
 
     landingRightsBox.addEventListener('click', () => {
       // Deselect all landing rights boxes
@@ -58,15 +58,15 @@ function initLandingRightsForm() {
       landingRightsBox.classList.add('btn-primary');
       landingRightsBox.classList.remove('btn-outline-primary');
 
-      let landingRestrictionsLabels = document.querySelectorAll('label[data-landing-rights-type]');
+      const landingRestrictionsLabels = document.querySelectorAll('label[data-landing-rights-type]');
 
       // Hide all landing restrictions labels for the textarea
       for(let j=0; j<landingRestrictionsLabels.length; j++) {
         landingRestrictionsLabels[j].classList.add('d-none');
       }
 
-      let label = document.querySelector(`label[data-landing-rights-type="${landingRightsType}"]`);
-      let textarea = document.getElementById('airport_landing_requirements');
+      const label = document.querySelector(`label[data-landing-rights-type="${landingRightsType}"]`);
+      const textarea = document.getElementById('airport_landing_requirements');
 
       // If private selected don't show the textarea & label. Otherwise, show them.
       if(landingRightsType === 'private_') {
@@ -84,8 +84,8 @@ function initLandingRightsForm() {
 }
 
 function initExtraRemarks() {
-  let showExtraRemarks = document.getElementById('show-extra-remarks');
-  let extraRemarks = document.querySelectorAll('.extra-remark');
+  const showExtraRemarks = document.getElementById('show-extra-remarks');
+  const extraRemarks = document.querySelectorAll('.extra-remark');
 
   if(!showExtraRemarks) return;
 

@@ -83,7 +83,7 @@ private
           length: 9010,
           surface: 'ASPH-CONC-G',
           lights: 'HIGH',
-        }
+        },
       ],
       remarks: [
         {

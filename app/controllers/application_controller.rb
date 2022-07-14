@@ -23,7 +23,7 @@ private
       when :json
         render json: {error: status.to_s, message: message}, status: status
       else
-        render file: Rails.root.join('public', 'errors', "#{status_code}.html"), formats: [:html], status: status, layout: false
+        render file: Rails.public_path.join('errors', "#{status_code}.html"), formats: [:html], status: status, layout: false
     end
   end
 end

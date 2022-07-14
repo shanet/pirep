@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
 
     if comment.save
       redirect_to airport_path(comment.airport.code)
-    else
+    else # rubocop:disable Style/EmptyElse
       # TODO: error handle
     end
   end
@@ -16,7 +16,7 @@ class CommentsController < ApplicationController
 
     if @comment.save
       render :helpful
-    else
+    else # rubocop:disable Style/EmptyElse
       # TODO: error handle
     end
   end
@@ -26,7 +26,7 @@ class CommentsController < ApplicationController
 
     if @comment.save
       render :flag_outdated
-    else
+    else # rubocop:disable Style/EmptyElse
       # TODO: error handle
     end
   end
@@ -36,7 +36,7 @@ class CommentsController < ApplicationController
 
     if @comment.save
       render :undo_outdated
-    else
+    else # rubocop:disable Style/EmptyElse
       # TODO: error handle
     end
   end

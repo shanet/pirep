@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_07_074958) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_07_13_082952) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -21,7 +20,7 @@ ActiveRecord::Schema.define(version: 2022_01_07_074958) do
     t.string "record_type", null: false
     t.uuid "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -33,7 +32,7 @@ ActiveRecord::Schema.define(version: 2022_01_07_074958) do
     t.text "metadata"
     t.bigint "byte_size", null: false
     t.string "checksum"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
@@ -65,8 +64,8 @@ ActiveRecord::Schema.define(version: 2022_01_07_074958) do
     t.integer "elevation", null: false
     t.string "fuel_type"
     t.string "gate_code"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "landing_rights"
     t.string "landing_requirements"
     t.string "diagram"
@@ -78,9 +77,9 @@ ActiveRecord::Schema.define(version: 2022_01_07_074958) do
     t.uuid "airport_id", null: false
     t.text "body"
     t.integer "helpful_count", default: 0
-    t.datetime "outdated_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "outdated_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["airport_id"], name: "index_comments_on_airport_id"
   end
 
@@ -88,8 +87,8 @@ ActiveRecord::Schema.define(version: 2022_01_07_074958) do
     t.string "element", null: false
     t.text "text", null: false
     t.uuid "airport_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["airport_id"], name: "index_remarks_on_airport_id"
   end
 
@@ -99,17 +98,18 @@ ActiveRecord::Schema.define(version: 2022_01_07_074958) do
     t.string "surface"
     t.string "lights"
     t.uuid "airport_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["airport_id"], name: "index_runways_on_airport_id"
   end
 
   create_table "tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.uuid "airport_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["airport_id"], name: "index_tags_on_airport_id"
+    t.index ["name", "airport_id"], name: "index_tags_on_name_and_airport_id", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

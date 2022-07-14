@@ -84,9 +84,6 @@ Rails/OutputSafety:
 Rails/ReversibleMigration:
   Enabled: false
 
-Rails/FilePath:
-  EnforcedStyle: arguments
-
 Rails/SaveBang:
   Enabled: true
 

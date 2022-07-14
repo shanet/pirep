@@ -8,7 +8,7 @@
   cursor: pointer;
 }
 
-.EasyMDEContainer {
+.EasyMDEContainer { // stylelint-disable-line selector-class-pattern
   .editor-toolbar {
     display: none;
   }
@@ -47,5 +47,5 @@
 }
 
 .comment-textarea {
-  height: 150px !important;
+  height: 150px !important; // stylelint-disable-line declaration-no-important
 }

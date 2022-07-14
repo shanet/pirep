@@ -21,6 +21,10 @@ linters:
       Lint/UselessAssignment:
         Enabled: false
 
+      Style/FormatString:
+        EnforcedStyle: percent
+      Style/FormatStringToken:
+        Enabled: false
       Style/FrozenStringLiteralComment:
         Enabled: false
 

@@ -4,14 +4,14 @@ git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 ruby '3.0.4'
 
 # Core Rails gems
-gem 'rails', '7.0.2.2'
+gem 'rails', '7.0.3.1'
 
 gem 'bootsnap', '>= 1.4.2', require: false
+gem 'importmap-rails'
 gem 'jbuilder', '~> 2.7'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.1'
 gem 'sass-rails', '>= 6'
-gem 'importmap-rails'
 
 # Third party gems
 gem 'amazing_print'

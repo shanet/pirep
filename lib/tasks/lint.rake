@@ -27,7 +27,7 @@ namespace :lint do
   end
 
   task js: :environment do
-    sh 'yarn run eslint %s "app/javascript/**/*.js"' % [(autocorrect? ? '--fix' : '')], verbose: false
+    sh 'yarn run eslint %s "app/assets/javascripts/**/*.js"' % [(autocorrect? ? '--fix' : '')], verbose: false
   end
 
   task security: :environment do
@@ -41,7 +41,7 @@ namespace :lint do
   end
 
   def autocorrect?
-    return ARGV&.second == 'fix'
+    return ARGV&.first == 'fix'
   end
 end
 

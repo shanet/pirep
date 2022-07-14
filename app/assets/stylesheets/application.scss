@@ -1,8 +1,7 @@
 @import 'bootstrap';
-@import 'font-awesome-sprockets';
 @import 'font-awesome';
 @import 'mapbox-gl';
-@import 'easymde.min';
+@import 'easymde.min'; // stylelint-disable-line scss/at-import-partial-extension
 
 @import 'themes';
 

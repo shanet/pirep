@@ -33,13 +33,13 @@
 
   > nav {
     grid-area: filters;
-    overflow-y: auto;
     overflow-x: visible;
+    overflow-y: auto;
     scrollbar-width: none;
 
     &::-webkit-scrollbar {
       background: transparent;
-      width: 0px;
+      width: 0;
     }
 
     > a {
@@ -48,7 +48,7 @@
 
     .filter-group,
     .filter {
-      transition: 0.3s;
+      transition: .3s;
 
       &.disabled {
         color: $white;
@@ -64,7 +64,7 @@
 .filter-label {
   color: $white;
   font-size: 13px;
-  inset: 0px auto auto 0px;
+  inset: 0 auto auto 0;
   padding: 10px 0;
   position: absolute;
 
@@ -72,7 +72,7 @@
     background-color: $filters-background;
     border-radius: 0 5px 5px 0;
     padding: $spacer * .35;
-    transition: 0.3s;
+    transition: .3s;
   }
 
   &.disabled {

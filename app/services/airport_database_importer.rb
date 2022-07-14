@@ -59,7 +59,7 @@ private
     end
 
     # Tag airports without any user contributed data yet
-    if airport.empty?
+    if airport.empty? # rubocop:disable Style/GuardClause
       airport.tags << Tag.new(name: :empty)
     end
   end
