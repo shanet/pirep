@@ -1,9 +1,6 @@
 require 'faa/faa_api'
 
 class AirportDiagramDownloader
-  def initialize
-  end
-
   def download_and_convert
     Dir.mktmpdir do |directory|
       metadata_path = FaaApi.client.airport_diagrams(directory)
@@ -20,7 +17,7 @@ private
 
   def parse_archives(metadata_path)
     # Parse the metadata file which contains the filenames for each airport's diagram
-    xml = Nokogiri::XML(File.open(metadata_path)) do |config|
+    xml = Nokogiri::XML(File.open(metadata_path)) do |config| # rubocop:disable Style/SymbolProc
       config.strict
     end
 
@@ -39,7 +36,7 @@ private
       airport = Airport.find_by(code: airport_code)
       next Rails.logger.error('Airport not found: %s' % airport_code) unless airport
 
-      airport.update(diagram: converted_diagram_filename(diagram_filename))
+      airport.update!(diagram: converted_diagram_filename(diagram_filename))
       diagram_filenames << diagram_filename
     end
 
@@ -51,7 +48,7 @@ private
     diagrams.each do |file|
       path = File.join(directory, file)
       Rails.logger.info('Converting airport diagram %s' % path)
-      `convert -flatten -density 200 #{path} #{converted_diagram_filename(path)}`
+      system('convert', '-flatten', '-density', '200', path, converted_diagram_filename(path))
     end
   end
 
@@ -63,7 +60,7 @@ private
       if Rails.env.production?
         # TODO: upload to s3
       else
-        FileUtils.mv(path, Rails.root.join('public/assets/diagrams/', filename))
+        FileUtils.mv(path, Rails.public_path.join('assets/diagrams/', filename))
       end
     end
   end

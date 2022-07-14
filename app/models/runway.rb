@@ -9,7 +9,7 @@ class Runway < ApplicationRecord
         return 'orange'
       when 3000..Float::INFINITY
         return 'green'
-      else
+      else # rubocop:disable Lint/DuplicateBranch
         return 'green'
     end
   end

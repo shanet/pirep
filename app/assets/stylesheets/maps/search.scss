@@ -4,8 +4,8 @@
   left: $maps-fixed-offset;
   position: fixed;
   top: $maps-fixed-offset;
-  z-index: $zindex-fixed + 1; // +1 so that the search results display on top of the filters
   width: 340px;
+  z-index: $zindex-fixed + 1; // +1 so that the search results display on top of the filters
 
   // .search-icon {
   //   font-size: 20px;

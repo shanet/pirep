@@ -1,5 +1,5 @@
 <div class="search">
-  <input id="search" class="form-control" type="text" autofocus placeholder="Search airports" data-search-endpoint="<%= search_airports_path %>">
+  <input id="search" class="form-control" type="text" autofocus autocomplete="off" placeholder="Search airports" data-search-endpoint="<%= search_airports_path %>">
 
   <div class="search-results-parent">
     <ul id="search-results" class="list-group"></ul>
@@ -12,7 +12,7 @@
   </div>
 
   <nav class="d-flex flex-column text-center">
-    <%= render partial: 'maps/filter_group', locals: {filter_group: :facility_types, filters: Airport::facility_types, title: 'Filter by type'} %>
+    <%= render partial: 'maps/filter_group', locals: {filter_group: :facility_types, filters: Airport.facility_types, title: 'Filter by type'} %>
     <a>&nbsp;</a>
     <%= render partial: 'maps/filter_group', locals: {filter_group: :tags, filters: Tag::TAGS, title: 'Filter by tag'} %>
   </nav>

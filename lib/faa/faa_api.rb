@@ -22,8 +22,8 @@ module FaaApi
     end
 
     def airport_diagrams(destination_directory)
-      AIRPORT_DIAGRAM_ARCHIVES.each do |archive|
-        archive_path = download_airport_diagram_archive(archive, destination_directory)
+      AIRPORT_DIAGRAM_ARCHIVES.each do |archive_index| # rubocop:disable Lint/UnreachableLoop
+        archive_path = download_airport_diagram_archive(archive_index, destination_directory)
 
         Zip::File.open(archive_path) do |archive|
           # Extract each file in the archive
@@ -69,18 +69,18 @@ module FaaApi
 
       # Write archive to disk
       archive_path = File.join(destination_directory, 'archive.zip')
-      File.open(archive_path, 'wb') {|file| file.write(response.body)}
+      File.binwrite(archive_path, response.body)
 
       return archive_path
     end
 
-    def download_airport_diagram_archive(archive, destination_directory)
+    def download_airport_diagram_archive(archive, _destination_directory)
       response = Faraday.get('https://aeronav.faa.gov/upload_313-d/terminal/DDTPP%s_%s.zip' % [archive, current_data_cycle.strftime('%y%m%d')])
       raise Exceptions::AirportDatabaseDownloadFailed unless response.success?
 
       # Write archive to disk
       archive_path = File.join(directory, 'archive_%s.zip' % archive)
-      File.open(archive_path, 'wb') {|file| file.write(response.body)}
+      File.binwrite(archive_path, response.body)
 
       return archive_path
     end
@@ -90,11 +90,11 @@ module FaaApi
     include Base
 
     def download_airport_data_archive(*)
-      return Rails.root.join('test', 'fixtures', 'airport_data.zip')
+      return Rails.root.join('test/fixtures/airport_data.zip')
     end
 
     def download_airport_diagram_archive(*)
-      return Rails.root.join('test', 'fixtures', 'airport_diagrams.zip')
+      return Rails.root.join('test/fixtures/airport_diagrams.zip')
     end
   end
 end

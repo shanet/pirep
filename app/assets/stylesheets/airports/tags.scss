@@ -18,8 +18,8 @@
 
     .delete {
       background-color: $white;
-      border-radius: 50%;
       border: 2px solid $black;
+      border-radius: 50%;
       color: $black;
       display: none;
       height: 26px;
@@ -39,7 +39,7 @@
 
   &.add {
     border: #343a40 dashed 3px;
-    transition: 0.3s;
+    transition: .3s;
 
     &:hover {
       background-color: $light-grey;
@@ -48,7 +48,7 @@
   }
 
   &.editing {
-    transition: 0.3s;
+    transition: .3s;
 
     &:hover {
       cursor: pointer;

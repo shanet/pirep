@@ -73,7 +73,7 @@ class AirportTest < ActiveSupport::TestCase
       [3000, 'orange'],
       [4999, 'orange'],
       [5000, 'red'],
-      [10000, 'red'],
+      [10_000, 'red'],
     ]
 
     elevations.each do |elevation|

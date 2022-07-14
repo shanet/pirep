@@ -4,7 +4,7 @@ class TagsController < ApplicationController
 
     if @tag.destroy
       render :destroy
-    else
+    else # rubocop:disable Style/EmptyElse
       # TODO: error handle
     end
   end

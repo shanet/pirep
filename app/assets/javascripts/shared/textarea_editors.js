@@ -1,7 +1,7 @@
 import Rails from '@rails/ujs';
 import 'easymde';
 
-let editors = [];
+const editors = [];
 let initialized = false;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initEditorEditIcons() {
-  let editIcons = document.querySelectorAll('.editor-edit-icon');
+  const editIcons = document.querySelectorAll('.editor-edit-icon');
 
   for(let i=0; i<editIcons.length; i++) {
     editIcons[i].addEventListener('click', () => {
@@ -23,16 +23,16 @@ function initEditorEditIcons() {
 }
 
 export function initEditors() {
-  let textareas = document.querySelectorAll('textarea[data-editor="true"]');
+  const textareas = document.querySelectorAll('textarea[data-editor="true"]');
 
   for(let i=0; i<textareas.length; i++) {
-    let editor = initEditor(textareas[i]);
+    const editor = initEditor(textareas[i]);
     editors[i] = editor;
   }
 }
 
 function initEditor(textarea) {
-  let editor = new EasyMDE({
+  const editor = new EasyMDE({ // eslint-disable-line no-undef
     autoDownloadFontAwesome: false,
     element: textarea,
     status: false,
@@ -41,7 +41,7 @@ function initEditor(textarea) {
     showIcons: ['code', 'table', 'horizontal-rule'],
   });
 
-  let container = editorContainer(editor);
+  const container = editorContainer(editor);
   let dirty = false;
 
   // Set read mode by default
@@ -78,7 +78,7 @@ function initEditor(textarea) {
   });
 
   return editor;
-};
+}
 
 function isEditing(editor) {
   return !editor.isPreviewActive();
@@ -86,7 +86,7 @@ function isEditing(editor) {
 
 function editMode(editor) {
   // Don't enter edit mode if the editor is marked as read only
-  if(editor.element.dataset.readOnly === "true") return;
+  if(editor.element.dataset.readOnly === 'true') return;
 
   editorCardHeader(editor).style.display = 'none';
   editor.togglePreview();
@@ -102,7 +102,7 @@ function readMode(editor) {
 
 function writeEditorChanges(editor) {
   // Get the hidden form field, update its value with the current editor value, and submit the form
-  let formField = editorContainer(editor).parentNode.querySelector('input[data-column-field="true"]');
+  const formField = editorContainer(editor).parentNode.querySelector('input[data-column-field="true"]');
   formField.value = editor.codemirror.getValue();
   Rails.fire(formField.parentNode, 'submit');
 }

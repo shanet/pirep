@@ -38,11 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initMap() {
-  mapboxgl.accessToken = document.getElementById('map').dataset.mapboxApiKey;
+  mapboxgl.accessToken = document.getElementById('map').dataset.mapboxApiKey; // eslint-disable-line no-undef
 
-  let [coordinates, zoomLevel] = initialMapCenter();
+  const [coordinates, zoomLevel] = initialMapCenter();
 
-  map = new mapboxgl.Map({
+  map = new mapboxgl.Map({ // eslint-disable-line no-undef
     center: coordinates.reverse(),
     container: 'map',
     style: 'mapbox://styles/mapbox/satellite-streets-v11',
@@ -52,7 +52,7 @@ function initMap() {
     preserveDrawingBuffer: true,
   });
 
-  map.addControl(new mapboxgl.AttributionControl(), 'bottom-left');
+  map.addControl(new mapboxgl.AttributionControl(), 'bottom-left'); // eslint-disable-line no-undef
 
   // Let the tests know that the map is fully ready to use (once we have the airports layer shown)
   map.on('idle', () => {
@@ -63,8 +63,8 @@ function initMap() {
 }
 
 function initialMapCenter() {
-  let coordinates = urlSearchParams.getCoordinates() || [48.11, -122.06];
-  let zoomLevel = urlSearchParams.getZoomLevel() || 8;
+  const coordinates = urlSearchParams.getCoordinates() || [48.11, -122.06];
+  const zoomLevel = urlSearchParams.getZoomLevel() || 8;
 
   return [coordinates, zoomLevel];
 }
@@ -94,7 +94,7 @@ function addSectionalLayersToMap() {
 function addEventHandlersToMap() {
   // Open the drawer for an airport when its marker is clicked or close if the already open airport is clicked
   map.on('click', AIRPORT_LAYER, (event) => {
-    if(event.features[0].id == getSelectedAirportMarker()) {
+    if(event.features[0].id === getSelectedAirportMarker()) {
       drawer.closeDrawer();
       closeAirport();
     } else {
@@ -113,8 +113,8 @@ function addEventHandlersToMap() {
 
   // Update the URL search params after dragging the map with the current position
   map.on('moveend', () => {
-    let center = map.getCenter();
-    urlSearchParams.setCoordinates(center['lat'].toFixed(7), center['lng'].toFixed(7));
+    const center = map.getCenter();
+    urlSearchParams.setCoordinates(center.lat.toFixed(7), center.lng.toFixed(7));
   });
 
   map.on('zoomend', () => {
@@ -128,7 +128,7 @@ async function fetchAirports() {
 
   if(!response.ok) {
     // TODO: make this better
-    return alert('fetching airports failed');
+    return alert('fetching airports failed'); // eslint-disable-line no-alert
   }
 
   allAirports = await response.json();
@@ -182,12 +182,12 @@ export function filterAirportsOnMap() {
   });
 
   // If a filter is clicked before the airport layer is ready it may be null
-  let layer = map.getSource(AIRPORT_LAYER)
+  const layer = map.getSource(AIRPORT_LAYER);
   if(layer) layer.setData(displayedAirports);
 }
 
 function applyUrlSearchParamsOnMap() {
-  let airport = urlSearchParams.getAirport();
+  const airport = urlSearchParams.getAirport();
 
   if(airport) {
     openAirport(airport);
@@ -240,7 +240,7 @@ function setAirportMarkerSelected(airportCode) {
   map.setLayoutProperty(AIRPORT_LAYER, 'icon-image', ['match', ['id'], airportCode, 'marker_selected', 'marker']);
 }
 
-function getSelectedAirportMarker(airportCode) {
+function getSelectedAirportMarker() {
   return map.getLayoutProperty(AIRPORT_LAYER, 'icon-image')[2];
 }
 

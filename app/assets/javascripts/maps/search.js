@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if(!response.ok) {
       // TODO: make this better
-      return alert('search request failed');
+      return alert('search request failed'); // eslint-disable-line no-alert
     }
 
     const results = await response.json();

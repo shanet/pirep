@@ -190,7 +190,7 @@ class AirportsTest < ApplicationSystemTestCase
       zoom: zoom_level,
       coordinates: "#{latitude},#{longitude}",
       filters_facility_types: filter_facility_types.join(','),
-      filters_tags: filter_tags.join(','),
+      filters_tags: filter_tags.join(',')
     )
 
     wait_for_map_ready

@@ -12,7 +12,7 @@ class RunwayTest < ActiveSupport::TestCase
       [2000, 'orange'],
       [2999, 'orange'],
       [3000, 'green'],
-      [10000, 'green'],
+      [10_000, 'green'],
     ]
 
     lengths.each do |length|

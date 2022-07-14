@@ -1,5 +1,5 @@
 .collapsible {
-  max-height: 0px;
+  max-height: 0;
   overflow: hidden;
   transition: max-height .5s cubic-bezier(0, 1, 0, 1);
 
@@ -9,13 +9,13 @@
   }
 
   > .content {
-    padding: 10px;
     background-color: #eee;
+    padding: 10px;
   }
 
   .notch {
-    width: 100%;
     text-align: center;
+    width: 100%;
 
     > div {
       background-color: #eee;

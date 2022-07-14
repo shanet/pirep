@@ -10,7 +10,7 @@ let initialized = false;
 
 document.addEventListener('DOMContentLoaded', () => {
   // Close the drawer when clicking the drawer handle
-  let drawerHandle = document.querySelector('#airport-drawer .handle button');
+  const drawerHandle = document.querySelector('#airport-drawer .handle button');
   if(!drawerHandle || initialized) return;
   initialized = true;
 
@@ -34,7 +34,7 @@ export async function loadDrawer(airportCode) {
 
   if(!response.ok) {
     // TODO: make this better
-    return alert('fetching airport failed');
+    return alert('fetching airport failed'); // eslint-disable-line no-alert
   }
 
   setDrawerContent(airportCode, await response.text());

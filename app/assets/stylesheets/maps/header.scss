@@ -1,12 +1,12 @@
 @import 'variables';
 
-$header-height: calc(1.5em + 0.75rem + 2px);
+$header-height: calc(1.5em + .75rem + 2px);
 
 .header {
   background-clip: padding-box;
   background-color: $white;
-  border-radius: 0.25rem;
   border: 1px solid #ced4da;
+  border-radius: .25rem;
   color: #495057;
   height: $header-height;
   left: -325px;

@@ -85,12 +85,12 @@ class Airport < ApplicationRecord
   has_many_attached :photos
 
   def self.geojson
-    return Airport.includes(:tags).map {|airport| airport.to_geojson}
+    return Airport.includes(:tags).map(&:to_geojson)
   end
 
   def self.facility_types
     # Don't show hidden facility types in the UI
-    return FACILITY_TYPES.reject {|key, value| value[:hidden]}
+    return FACILITY_TYPES.reject {|_key, value| value[:hidden]}
   end
 
   def to_geojson
@@ -119,14 +119,14 @@ class Airport < ApplicationRecord
     return false if [:restrictions, :permission].include?(landing_rights) || landing_requirements.present?
 
     # Return if the airport has some user contributed info filled out for it
-    return ![
+    return [
       :crew_car,
       :description,
       :fuel_location,
       :landing_fees,
       :transient_parking,
       :wifi,
-    ].map {|column| send(column).present?}.any?
+    ].map {|column| send(column).present?}.none?
   end
 
   def remove_empty_tag!
@@ -161,7 +161,7 @@ class Airport < ApplicationRecord
         return 'orange'
       when 5000..Float::INFINITY
         return 'red'
-      else
+      else # rubocop:disable Lint/DuplicateBranch
         return 'green'
     end
   end

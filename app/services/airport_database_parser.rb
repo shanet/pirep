@@ -107,7 +107,7 @@ private
     degrees, minutes, seconds = coordinate.split('-')
     direction = seconds[-1]
 
-    decimal = degrees.to_f + minutes.to_f / 60 + seconds.to_f / 3600
+    decimal = degrees.to_f + (minutes.to_f / 60) + (seconds.to_f / 3600)
     decimal *= -1 if ['W', 'S'].include?(direction)
     return decimal.round(7)
   end

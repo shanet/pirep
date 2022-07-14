@@ -161,7 +161,7 @@ class AirportsTest < ApplicationSystemTestCase
 
     assert_difference -> {all('.photo-gallery img', visible: false).count} do
       click_on 'Add Photo'
-      find('#upload-photo-form input[type="file"]').set(Rails.root.join('test', 'fixtures', 'files', 'image.png'))
+      find('#upload-photo-form input[type="file"]').set(Rails.root.join('test/fixtures/files/image.png'))
       click_on 'Upload Photo'
     end
   end

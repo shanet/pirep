@@ -17,7 +17,7 @@ export function clearAirport() {
 }
 
 export function getCoordinates() {
-  let coordinates = searchParams().get(COORDINATES_KEY);
+  const coordinates = searchParams().get(COORDINATES_KEY);
   if(!coordinates) return coordinates;
 
   return coordinates.split(',');
@@ -52,7 +52,7 @@ export function hasFilterGroup(filterGroup) {
 }
 
 export function hasFilter(filterGroup, filterName) {
-  let key = `${FILTERS_KEY}_${filterGroup}`;
+  const key = `${FILTERS_KEY}_${filterGroup}`;
   return getFilters(key).has(filterName);
 }
 
@@ -69,19 +69,19 @@ export function removeFilter(filterGroup, filterName) {
 }
 
 function updateFilters(filterGroup, filterName, callback) {
-  let key = `${FILTERS_KEY}_${filterGroup}`;
-  let filters = getFilters(key);
+  const key = `${FILTERS_KEY}_${filterGroup}`;
+  const filters = getFilters(key);
   callback(filters);
   updateUrl(key, Array.from(filters).join(','));
 }
 
 function getFilters(key) {
-  let filters = searchParams().get(key);
+  const filters = searchParams().get(key);
   return new Set(filters ? filters.split(',') : []);
 }
 
 function updateUrl(key, value) {
-  let params = searchParams();
+  const params = searchParams();
 
   // If a null value was given clear its respective key rather than trying to set it
   if(value === null) {
@@ -90,7 +90,7 @@ function updateUrl(key, value) {
     params.set(key, value);
   }
 
-  window.history.replaceState({}, '', '/?' + params);
+  window.history.replaceState({}, '', `/?${params}`);
 }
 
 function searchParams() {
@@ -100,12 +100,12 @@ function searchParams() {
 function normalizeAirportCode(airportCode) {
   if(!airportCode) return airportCode;
 
-  airportCode = airportCode.toUpperCase();
+  let normalizedAirportCode = airportCode.toUpperCase();
 
   // Remove leading K, eg KPAE -> PAE
-  if(airportCode.length === 4 && airportCode[0] === 'K') {
-    airportCode = airportCode.substring(1);
+  if(normalizedAirportCode.length === 4 && normalizedAirportCode[0] === 'K') {
+    normalizedAirportCode = normalizedAirportCode.substring(1);
   }
 
-  return airportCode;
+  return normalizedAirportCode;
 }

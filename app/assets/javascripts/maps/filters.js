@@ -1,6 +1,5 @@
 import * as maps from 'maps/maps';
 import * as urlSearchParams from 'maps/url_search_params';
-import * as utils from 'shared/utils';
 
 const FILTER_GROUP_HOVER_TEXT = ' (remove all)';
 
@@ -25,7 +24,7 @@ function initFilters() {
   for(let i = 0; i < filters.length; i++) {
     const filter = filters[i];
     const {filterName, filterGroup, defaultFilter} = filter.dataset;
-    const filterLabel = filterLabels[filterName]['filterLabel'];
+    const {filterLabel} = filterLabels[filterName];
 
     enabledFilters[filterGroup] ||= new Set();
 
@@ -40,7 +39,7 @@ function initFilters() {
 
     filter.addEventListener('click', () => {
       if(enabledFilters[filterGroup].has(filterName)) {
-        disableFilter(filter)
+        disableFilter(filter);
       } else {
         enableFilter(filter);
       }
@@ -50,14 +49,14 @@ function initFilters() {
     });
 
     // Change the color of the filter label as well when hovering over the filter
-    filter.addEventListener('mouseenter', () => {filterLabel.classList.add('hover')});
-    filter.addEventListener('mouseleave', () => {filterLabel.classList.remove('hover')});
+    filter.addEventListener('mouseenter', () => {filterLabel.classList.add('hover');});
+    filter.addEventListener('mouseleave', () => {filterLabel.classList.remove('hover');});
   }
 }
 
 function enableFilter(filter) {
-  const {filterName, filterGroup, defaultFilter} = filter.dataset;
-  const filterLabel = filterLabels[filterName]['filterLabel'];
+  const {filterName, filterGroup} = filter.dataset;
+  const {filterLabel} = filterLabels[filterName];
 
   enabledFilters[filterGroup].add(filterName);
 
@@ -68,8 +67,8 @@ function enableFilter(filter) {
 }
 
 function disableFilter(filter) {
-  const {filterName, filterGroup, defaultFilter} = filter.dataset;
-  const filterLabel = filterLabels[filterName]['filterLabel'];
+  const {filterName, filterGroup} = filter.dataset;
+  const {filterLabel} = filterLabels[filterName];
 
   enabledFilters[filterGroup].delete(filterName);
 
@@ -83,10 +82,10 @@ function initFilterGroupLabels() {
   const filterGroups = document.getElementsByClassName('filter-group');
 
   for(let i=0; i<filterGroups.length; i++) {
-    let filterGroup = filterGroups[i];
-    let filterGroupName = filterGroup.dataset.filterName;
+    const filterGroup = filterGroups[i];
+    const filterGroupName = filterGroup.dataset.filterName;
 
-    let filterLabel = initFilterLabel(filterGroup);
+    const filterLabel = initFilterLabel(filterGroup);
 
     // Kind of hacky, but "disable" the filter label so it's text shows up as white since it doesn't have a theme color and can't be "enabled"
     filterLabel.classList.add('disabled');
@@ -94,7 +93,7 @@ function initFilterGroupLabels() {
     // Clear all filters in the group when clicked
     filterGroup.addEventListener('click', () => {
       Object.keys(filterLabels).forEach((filterName) => {
-        let filter = filterLabels[filterName]['filter'];
+        const {filter} = filterLabels[filterName];
 
         if(enabledFilters[filterGroupName].has(filterName) && filter.dataset.filterGroup === filterGroupName) {
           disableFilter(filter);
@@ -106,23 +105,23 @@ function initFilterGroupLabels() {
     });
 
     // Show/hide the hover text when hovering over the filter group icon/label
-    filterGroup.addEventListener('mouseenter', () => {showFilterGroupHoverText(filterLabel)});
-    filterLabel.addEventListener('mouseenter', () => {showFilterGroupHoverText(filterLabel)});
-    filterGroup.addEventListener('mouseleave', () => {hideFilterGroupHoverText(filterLabel)});
-    filterLabel.addEventListener('mouseleave', () => {hideFilterGroupHoverText(filterLabel)});
+    filterGroup.addEventListener('mouseenter', () => {showFilterGroupHoverText(filterLabel);});
+    filterLabel.addEventListener('mouseenter', () => {showFilterGroupHoverText(filterLabel);});
+    filterGroup.addEventListener('mouseleave', () => {hideFilterGroupHoverText(filterLabel);});
+    filterLabel.addEventListener('mouseleave', () => {hideFilterGroupHoverText(filterLabel);});
 
     // Change the color of the filter label as well when hovering over the filter
-    filterGroup.addEventListener('mouseenter', () => {filterLabel.classList.add('hover')});
-    filterGroup.addEventListener('mouseleave', () => {filterLabel.classList.remove('hover')});
+    filterGroup.addEventListener('mouseenter', () => {filterLabel.classList.add('hover');});
+    filterGroup.addEventListener('mouseleave', () => {filterLabel.classList.remove('hover');});
   }
 }
 
 function showFilterGroupHoverText(filterLabel) {
-  filterLabel.querySelector('span').innerText += FILTER_GROUP_HOVER_TEXT;
+  filterLabel.querySelector('span').innerText += FILTER_GROUP_HOVER_TEXT; // eslint-disable-line no-param-reassign
 }
 
 function hideFilterGroupHoverText(filterLabel) {
-  let span = filterLabel.querySelector('span');
+  const span = filterLabel.querySelector('span');
   span.innerText = span.innerText.substring(0, FILTER_GROUP_HOVER_TEXT.length + 1);
 }
 
@@ -136,7 +135,7 @@ function initFilterLabels() {
   // Scroll the filter labels when the nav is scrolled
   document.querySelector('#filters > nav').addEventListener('scroll', () => {
     Object.keys(filterLabels).forEach((filterName) => {
-      updateFilterLabel(filterLabels[filterName]['filterLabel'], filterLabels[filterName]['filter']);
+      updateFilterLabel(filterLabels[filterName].filterLabel, filterLabels[filterName].filter);
     });
   });
 
@@ -145,22 +144,22 @@ function initFilterLabels() {
     Object.keys(filterLabels).forEach((filterName) => {
       // This is kind of hacky, but the usual trick of setting `translate` to redraw an element won't work here since we're actually
       // using `translate` to position these elements. Instead if we move them by 1 pixel and then back again they get redrawn as expected.
-      updateFilterLabel(filterLabels[filterName]['filterLabel'], filterLabels[filterName]['filter'], 1);
-      updateFilterLabel(filterLabels[filterName]['filterLabel'], filterLabels[filterName]['filter']);
+      updateFilterLabel(filterLabels[filterName].filterLabel, filterLabels[filterName].filter, 1);
+      updateFilterLabel(filterLabels[filterName].filterLabel, filterLabels[filterName].filter);
     });
   });
 }
 
 function initFilterLabel(filter) {
-  let filterLabel = createFilterLabel(filter);
-  filterLabels[filter.dataset.filterName] = {filter: filter, filterLabel: filterLabel};
+  const filterLabel = createFilterLabel(filter);
+  filterLabels[filter.dataset.filterName] = {filter, filterLabel};
 
   // Clicking on a filter label should apply the filter
-  filterLabel.addEventListener('click', () => {filter.click()});
+  filterLabel.addEventListener('click', () => {filter.click();});
 
   // Change the color of the filter as well when hovering over the filter label
-  filterLabel.addEventListener('mouseenter', () => {filter.classList.add('hover')});
-  filterLabel.addEventListener('mouseleave', () => {filter.classList.remove('hover')});
+  filterLabel.addEventListener('mouseenter', () => {filter.classList.add('hover');});
+  filterLabel.addEventListener('mouseleave', () => {filter.classList.remove('hover');});
 
   return filterLabel;
 }
@@ -186,27 +185,27 @@ function createFilterLabel(filter) {
 }
 
 function updateFilterLabel(filterLabel, filter, delta) {
-  let position = updateFilterLabelPosition(filterLabel, filter, delta);
+  const position = updateFilterLabelPosition(filterLabel, filter, delta);
   updateFilterLabelOpacity(filterLabel);
   updateFilterLabelDisplay(filterLabel, position);
 }
 
 function updateFilterLabelPosition(filterLabel, filter, delta) {
-  let filterBounds = filter.getBoundingClientRect();
+  const filterBounds = filter.getBoundingClientRect();
   let y = filterBounds.top + (filterBounds.height / 2) - (filterLabel.getBoundingClientRect().height / 2);
-  let x = filterBounds.left + filterBounds.width;
+  const x = filterBounds.left + filterBounds.width;
 
   if(delta) y += delta;
 
-  filterLabel.style.transform = `translate(${x}px, ${y}px)`;
+  filterLabel.style.transform = `translate(${x}px, ${y}px)`; // eslint-disable-line no-param-reassign
 
-  return {x: x, y: y};
+  return {x, y};
 }
 
 function updateFilterLabelOpacity(filterLabel) {
-  let filterLabelBounds = filterLabel.getBoundingClientRect();
-  let header = document.getElementById('filters-header').getBoundingClientRect();
-  let footer = document.getElementById('filters-footer').getBoundingClientRect();
+  const filterLabelBounds = filterLabel.getBoundingClientRect();
+  const header = document.getElementById('filters-header').getBoundingClientRect();
+  const footer = document.getElementById('filters-footer').getBoundingClientRect();
   let opacity;
 
   if(filterLabelBounds.top <= header.top) {
@@ -226,27 +225,26 @@ function updateFilterLabelOpacity(filterLabel) {
     opacity = 1;
   }
 
-  filterLabel.style.opacity = opacity;
+  filterLabel.style.opacity = opacity; // eslint-disable-line no-param-reassign
 }
 
 function updateFilterLabelDisplay(filterLabel, filterLabelPosition) {
-  let filtersBounds = document.getElementById('filters').getBoundingClientRect();
-  let filterLabelBounds = filterLabel.getBoundingClientRect();
+  const filtersBounds = document.getElementById('filters').getBoundingClientRect();
 
   if(filterLabelPosition.y <= filtersBounds.top) {
-    filterLabel.style.display = "none";
+    filterLabel.style.display = 'none'; // eslint-disable-line no-param-reassign
   } else if(filterLabelPosition.y >= filtersBounds.bottom) {
-    filterLabel.style.display = "none";
+    filterLabel.style.display = 'none'; // eslint-disable-line no-param-reassign
   } else {
-    filterLabel.style.display = "block";
+    filterLabel.style.display = 'block'; // eslint-disable-line no-param-reassign
   }
 }
 
 function initFilterHandles() {
-  let header = document.getElementById('filters-header');
-  let footer = document.getElementById('filters-footer');
-  let filters = document.querySelector('#filters > nav');
-  let scrollDelta = document.querySelector('.filter').offsetHeight;
+  const header = document.getElementById('filters-header');
+  const footer = document.getElementById('filters-footer');
+  const filters = document.querySelector('#filters > nav');
+  const scrollDelta = document.querySelector('.filter').offsetHeight;
 
   // Scroll up/down when clicking on the filter header/footer
   header.addEventListener('click', () => {
@@ -261,14 +259,14 @@ function initFilterHandles() {
 // Called by the map to determine if a specific airport should be shown given the current filter selections
 export function showAirport(airport) {
   // Filter by facility type
-  if(!enabledFilters['facility_types'].has(airport.properties.facility_type)) return false;
+  if(!enabledFilters.facility_types.has(airport.properties.facility_type)) return false;
 
   // Show all airports if no filters are selected
-  if(enabledFilters['tags'].size === 0) return true;
+  if(enabledFilters.tags.size === 0) return true;
 
   // Filter by tag
   for(let i=0; i<airport.properties.tags.length; i++) {
-    if(enabledFilters['tags'].has(airport.properties.tags[i])) {
+    if(enabledFilters.tags.has(airport.properties.tags[i])) {
       return true;
     }
   }

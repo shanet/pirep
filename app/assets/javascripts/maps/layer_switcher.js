@@ -7,7 +7,7 @@ export const LAYER_MAP = 'map';
 let initialized = false;
 
 document.addEventListener('DOMContentLoaded', () => {
-  let layerSwitcher = document.getElementById('layer-switcher');
+  const layerSwitcher = document.getElementById('layer-switcher');
   if(!layerSwitcher || initialized) return;
   initialized = true;
 
@@ -28,11 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 export function updateLayerSwitcherIcon(shownIcon) {
-  let layerSwitcher = document.getElementById('layer-switcher');
-  let satelliteIcon = layerSwitcher.querySelector('.satellite-icon');
-  let mapIcon = layerSwitcher.querySelector('.map-icon');
+  const layerSwitcher = document.getElementById('layer-switcher');
+  const satelliteIcon = layerSwitcher.querySelector('.satellite-icon');
+  const mapIcon = layerSwitcher.querySelector('.map-icon');
 
-  if(shownIcon == LAYER_SATELLITE) {
+  if(shownIcon === LAYER_SATELLITE) {
     satelliteIcon.classList.remove('d-none');
     mapIcon.classList.add('d-none');
   } else {

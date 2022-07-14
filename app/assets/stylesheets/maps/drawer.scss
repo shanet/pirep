@@ -1,5 +1,5 @@
 $animation-duration: 1s;
-$drawer-width: "min(33vw, 450px)";
+$drawer-width: 'min(33vw, 450px)';
 $handle-size: 25px;
 $drawer-translate-length: calc(#{$drawer-width} + #{$handle-size} / 2 + 3px);
 
@@ -45,7 +45,7 @@ $drawer-translate-length: calc(#{$drawer-width} + #{$handle-size} / 2 + 3px);
   .handle {
     background-color: $white;
     border-radius: 100%;
-    box-shadow: $gray-800 0px 5px 15px;
+    box-shadow: $gray-800 0 5px 15px;
     height: $handle-size;
     left: -#{$handle-size / 2 + 3};
     line-height: $handle-size;

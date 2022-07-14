@@ -1,8 +1,12 @@
 extends:
-  - stylelint-config-twbs-bootstrap/scss
+  - stylelint-config-twbs-bootstrap
 
 plugins:
   - stylelint-order
+
+ignoreFiles:
+  - vendor/**/*.css
+  - vendor/**/*.scss
 
 rules:
   order/properties-alphabetical-order: true

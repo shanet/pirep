@@ -21,7 +21,11 @@
     <% grouped_runways.each_with_index do |runway, index| %>
       <% next unless runway %>
 
-      <div class="col-sm mb-2 <%= grouped_runways.compact.count == 2 ? (index == 0 ? 'pe-1' : 'ps-1') : '' %>">
+      <div class="col-sm mb-2 <%= if grouped_runways.compact.count == 2
+                                    index.zero? ? 'pe-1' : 'ps-1'
+                                  else
+                                    ''
+                                  end %>">
         <%= render partial: 'airports/statistics/statistics_box', locals: {label: 'Runway %s' % runway.number, value: runway.length, units: :ft, icon: :road, theme: runway.length_threat_level} %>
       </div>
     <% end %>
