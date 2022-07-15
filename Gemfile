@@ -38,6 +38,6 @@ end
 group :test do
   gem 'capybara', '>= 2.15'
   gem 'factory_bot_rails'
-  gem 'selenium-webdriver', '>= 4.1.0'
+  gem 'selenium-webdriver', '>= 4.3.0'
   gem 'webdrivers'
 end

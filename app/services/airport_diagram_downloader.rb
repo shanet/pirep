@@ -60,7 +60,9 @@ private
       if Rails.env.production?
         # TODO: upload to s3
       else
-        FileUtils.mv(path, Rails.public_path.join('assets/diagrams/', filename))
+        diagrams_path = Rails.public_path.join('assets/diagrams/')
+        FileUtils.mkdir_p(diagrams_path)
+        FileUtils.mv(path, File.join(diagrams_path, filename))
       end
     end
   end

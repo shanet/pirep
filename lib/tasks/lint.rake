@@ -1,7 +1,7 @@
 namespace :test do
-  task all: :environment do
+  task full: :environment do
     sh 'rails lint', verbose: false
-    sh 'rails test', verbose: false
+    sh 'rails test:all', verbose: false
   end
 end
 
