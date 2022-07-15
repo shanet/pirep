@@ -20,7 +20,6 @@ FactoryBot.define do
     fuel_type {'100LLA'}
     gate_code {'123.0'}
     landing_rights {:public_}
-    diagram {'00142AD.png'}
     photos {[Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png')]}
 
     after(:create) do |airport, _evaluator|

@@ -8,6 +8,6 @@ class AirportDiagramDownloaderTest < ActiveSupport::TestCase
 
   test 'parses airport diagram archive from FAA' do
     AirportDiagramDownloader.new.download_and_convert
-    assert_equal '00142AD.png', @airport.diagram, 'Airport diagram not set'
+    assert_equal '00142AD.png', @airport.reload.diagram, 'Airport diagram not set'
   end
 end

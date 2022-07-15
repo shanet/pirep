@@ -1,6 +1,6 @@
 require 'application_system_test_case'
 
-class AirportsTest < ApplicationSystemTestCase
+class MapsTest < ApplicationSystemTestCase
   include ActionView::Helpers::NumberHelper
 
   setup do
@@ -172,7 +172,7 @@ class AirportsTest < ApplicationSystemTestCase
     wait_for_zoom_animation
 
     # Going back to the map should return to the same state
-    assert_selector '#airport-info'
+    assert_selector '.airport-drawer-header'
     assert_not_equal default_zoom_level, map_zoom_level, 'Map did not preserve zoom level'
     assert_not sectional_layer_shown?, 'Map did not preserve layer'
   end
@@ -211,6 +211,13 @@ private
 
   def open_airport(airport)
     coordinates = evaluate_script("mapbox.project([#{airport.longitude}, #{airport.latitude}])")
+
+    # Selenium uses the in-view center point of the element as the origin but the values from Mapbox are based
+    # on the origin at the top-left so we need to adjust by subtracting the radius to the center of the element
+    size = find('#map').native.size
+    coordinates['x'] -= size[:width] / 2
+    coordinates['y'] -= size[:height] / 2
+
     find('#map').click(x: coordinates['x'].to_i, y: coordinates['y'].to_i)
   end
 
@@ -239,11 +246,16 @@ private
   end
 
   def wait_for_zoom_animation
+    # This isn't ideal, but given that the animation is happening within WebGL there's not really a good way to wait for the zoom to finish programmatically
     sleep 3
   end
 
   def wait_for_map_ready
     # Once the map is fully ready to use it will populate a data attribute
-    find('#map[data-ready="true"]', wait: 10)
+    find('#map[data-ready="true"]', wait: 30)
+  rescue Capybara::ElementNotFound => error
+    # Something may have prevented Mapbox from initalizing, it would he helpful to print the browser logs in this case
+    warn page.driver.browser.logs.get(:browser)
+    raise error
   end
 end
