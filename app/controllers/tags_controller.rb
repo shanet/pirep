@@ -1,6 +1,7 @@
 class TagsController < ApplicationController
   def destroy
     @tag = Tag.find(params[:id])
+    authorize @tag
 
     if @tag.destroy
       render :destroy

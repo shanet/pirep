@@ -1,0 +1,15 @@
+<div class="header">
+  <span class="ps-2"><%= image_tag 'logo.png' %></span> |
+
+  <% if current_user %>
+    <span><%= link_to '<i class="fas fa-user me-1"></i>'.html_safe + current_user.email, user_path %></span> |
+  <% else %>
+    <span><a href="#" id="about-link"><i class="fas fa-question-circle me-1"></i>About</a></span> |
+  <% end %>
+
+  <% if current_user %>
+    <span class="pe-2"><%= link_to '<i class="fas fa-right-from-bracket me-1"></i>Logout'.html_safe, destroy_user_session_path, method: :delete %></span>
+  <% else %>
+    <span class="pe-2"><a href="#" id="login-link"><i class="fas fa-right-to-bracket me-1"></i>Log In</a></span>
+  <% end %>
+</div>

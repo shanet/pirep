@@ -1,0 +1,32 @@
+@import 'variables';
+
+.search {
+  margin-left: $map-fixed-offset;
+  // position: fixed;
+  margin-top: $map-fixed-offset;
+  width: 340px;
+  z-index: $zindex-fixed + 1; // +1 so that the search results display on top of the filters
+
+  // .search-icon {
+  //   font-size: 20px;
+  //   margin-top: 4px;
+  //   position: absolute;
+  //   right: 10px;
+  // }
+
+  .search-results-parent {
+    position: relative;
+
+    #search-results {
+      display: none;
+      position: absolute;
+      width: 100%;
+
+      li.selected {
+        background-color: $primary;
+        color: $white;
+        cursor: pointer;
+      }
+    }
+  }
+}

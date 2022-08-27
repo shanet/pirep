@@ -1,0 +1,20 @@
+<%
+  is_manage = controller.class.name.start_with? 'Manage::'
+%>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <%= link_to 'Pirep', (is_manage ? manage_root_path : root_path), class: 'navbar-brand' %>
+
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <% if is_manage %>
+          <li class="nav-item"><%= link_to 'Airports', manage_airports_path, class: 'nav-link' %></li>
+          <li class="nav-item"><%= link_to 'Users', manage_users_path, class: 'nav-link' %></li>
+        <% end %>
+      </ul>
+
+      <span class="float-end"><%= link_to '<i class="fa-solid fa-right-from-bracket"></i> Logout'.html_safe, destroy_user_session_path, method: :delete, class: 'nav-link d-inline text-light' %></span>
+    </div>
+  </div>
+</nav>

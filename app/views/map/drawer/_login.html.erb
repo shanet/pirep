@@ -1,0 +1,11 @@
+<ul id="login-tabs" class="nav nav-tabs nav-fill mt-3">
+  <li class="nav-item">
+    <a id="login-tab" class="nav-link active" href="#" data-target="login-form">Log In</a>
+  </li>
+  <li class="nav-item">
+    <a id="registration-tab" class="nav-link" href="#" data-target="registration-form">Register</a>
+  </li>
+</ul>
+
+<%= render 'devise/sessions/new', parent: :map %>
+<%= render 'devise/registrations/new', parent: :map %>

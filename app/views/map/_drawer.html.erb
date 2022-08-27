@@ -1,0 +1,17 @@
+<div id="airport-drawer" class="drawer">
+  <div class="overflow-auto h-100">
+    <div id="drawer-loading" class="flex-row justify-content-center align-items-center h-100">
+      <div class="spinner-border"></div>
+    </div>
+
+    <div id="drawer-content" class="container">
+      <div id="drawer-airport" class="drawer-content"></div>
+      <div id="drawer-about" class="drawer-content"><%= render 'map/drawer/about' %></div>
+      <div id="drawer-login" class="drawer-content"><%= render 'map/drawer/login' %></div>
+    </div>
+  </div>
+
+  <div class="handle">
+    <button type="button" class="btn"><i class="fas fa-chevron-right"></i></button>
+  </div>
+</div>

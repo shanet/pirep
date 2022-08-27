@@ -1,0 +1,29 @@
+<% @breadcrumbs = [['Users', manage_users_path]] %>
+
+<h1 class="display-6">All Users</h1>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email Address</th>
+      <th>User Type</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td class="col"><%= link_to user.short_id, manage_user_path(user) %></td>
+        <td class="col"><%= user.name %></td>
+        <td class="col"><%= user.email %></td>
+        <td class="col"><%= user.type %></td>
+        <td class="col"><%= link_to 'Edit', edit_manage_user_path(user) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render 'shared/pagination', records: @users, path: :manage_users_path %>

@@ -2,15 +2,11 @@ import Rails from '@rails/ujs';
 import 'easymde';
 
 const editors = [];
-let initialized = false;
 
 document.addEventListener('DOMContentLoaded', () => {
-  if(initialized) return;
-  initialized = true;
-
   initEditorEditIcons();
   initEditors();
-});
+}, {once: true});
 
 function initEditorEditIcons() {
   const editIcons = document.querySelectorAll('.editor-edit-icon');

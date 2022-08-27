@@ -1,0 +1,16 @@
+<% return if record.errors.empty? %>
+
+<div class="alert alert-<%= flash_to_class('error')[:class] %> mt-3 p-2">
+  <%# Just render the errors directly if they are a plain string and not backed by a model object %>
+  <% if record.errors.is_a? String %>
+    <i class="fa-solid <%= flash_to_class('error')[:icon] %>"></i> <%= record.errors %>
+  <% else %>
+    <i class="fa-solid <%= flash_to_class('error')[:icon] %>"></i> <%= pluralize(record.errors.count, 'error') %> prevented this <%= record.class.model_name.human.downcase %> from being submitted:
+
+    <ul class="mb-0">
+      <% record.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

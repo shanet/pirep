@@ -1,0 +1,5 @@
+<% flash.each do |type, message| %>
+  <div class="alert alert-<%= flash_to_class(type)[:class] %> mt-3">
+    <i class="fa-solid <%= flash_to_class(type)[:icon] %>"></i> <%= message %>
+  </div>
+<% end %>

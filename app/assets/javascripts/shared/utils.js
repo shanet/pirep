@@ -1,11 +1,6 @@
-let initialized = false;
-
 document.addEventListener('DOMContentLoaded', () => {
-  if(initialized) return;
-  initialized = true;
-
   addCollapseListeners();
-});
+}, {once: true});
 
 function addCollapseListeners() {
   const collapsibleToggles = document.querySelectorAll('[data-bs-toggle="collapse"]');

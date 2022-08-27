@@ -1,12 +1,8 @@
 let currentImageIndex = 0;
-let initialized = false;
 
 document.addEventListener('DOMContentLoaded', () => {
-  if(initialized) return;
-  initialized = true;
-
   initializePhotoGallery();
-});
+}, {once: true});
 
 export function initializePhotoGallery() {
   if(!document.querySelector('.photo-gallery .next')) return;

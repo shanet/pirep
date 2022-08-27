@@ -1,0 +1,7 @@
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    <% flash.each do |type, message| %>
+      window.showFlash("<%= flash_to_class(type)[:class] %>", "<%= message %>");
+    <% end %>
+  }, {once: true});
+</script>

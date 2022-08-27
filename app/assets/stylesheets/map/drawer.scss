@@ -1,0 +1,51 @@
+$drawer-width: 'min(33vw, 450px)';
+$handle-size: 25px;
+
+.drawer {
+  background: $white;
+  box-shadow: -3px 1px 4px 0 $gray-800;
+  height: 100vh;
+  margin-left: $handle-size;
+  pointer-events: auto;
+  position: relative;
+  white-space: normal;
+  width: calc(#{$drawer-width});
+
+  .handle {
+    background-color: $white;
+    border-radius: 100%;
+    box-shadow: $gray-800 0 5px 15px;
+    height: $handle-size;
+    left: -#{$handle-size / 2 + 3};
+    line-height: $handle-size;
+    position: absolute;
+    top: 50px;
+    width: $handle-size;
+
+    button {
+      color: $black;
+      font-size: 14px;
+      height: 100%;
+      padding: 0 5px 0 7px;
+      width: 100%;
+    }
+  }
+
+  #drawer-loading {
+    display: flex;
+
+    .spinner-border {
+      height: 75px;
+      width: 75px;
+    }
+  }
+
+  .drawer-content {
+    display: none;
+  }
+
+  // Hide the registration form until it's tab is clicked
+  #registration-form {
+    display: none;
+  }
+}

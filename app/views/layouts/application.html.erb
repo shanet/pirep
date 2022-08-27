@@ -2,16 +2,34 @@
 
 <html>
   <head>
-    <title>Pirep</title>
-
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-
-    <%= stylesheet_link_tag 'application', media: 'all' %>
-    <%= javascript_importmap_tags %>
+    <%= render 'layouts/head' %>
   </head>
 
   <body>
-    <%= yield %>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <%= render 'layouts/header' %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <%= render 'layouts/breadcrumbs' %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <%= render 'layouts/flashes' %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

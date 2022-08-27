@@ -1,6 +1,10 @@
 class ApplicationController < ActionController::Base
+  include Pundit::Authorization
+  after_action :verify_authorized
+
   rescue_from ActionController::RoutingError, with: :render_not_found
   rescue_from ActionController::BadRequest, with: :render_bad_request
+  rescue_from Pundit::NotAuthorizedError, with: :forbidden
 
 private
 

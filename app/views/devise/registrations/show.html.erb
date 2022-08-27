@@ -1,0 +1,14 @@
+<h1 class="display-6">Account</h1>
+
+<div class="row">
+  <div class="col-8">
+    <%= @user.name %>
+    <%= @user.email %>
+    <%= @user.confirmed_at ? 'Confirmed email' : 'Email unconfirmed' %>
+    <%= link_to 'Edit', edit_user_registration_path(@user) %>
+  </div>
+
+  <div class="col-4 text-center">
+    <%= image_tag gravatar_url(@user.email, size: 300), class: 'img-thumbnail' %>
+  </div>
+</div>

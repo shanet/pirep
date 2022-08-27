@@ -1,14 +1,9 @@
-let initialized = false;
-
 document.addEventListener('DOMContentLoaded', () => {
-  if(initialized) return;
-  initialized = true;
-
   initEditingTags();
   initTagDeleteIcons();
   initLandingRightsForm();
   initExtraRemarks();
-});
+}, {once: true});
 
 function initEditingTags() {
   const tags = document.querySelectorAll('.tag-square.editing');

@@ -1,0 +1,11 @@
+{
+  <%# Remove an existing errors element %>
+  let oldErrors = document.querySelector("#<%= form_element_id %> .ajax-errors");
+  if(oldErrors) oldErrors.remove();
+
+  let errors = document.createElement('div');
+  errors.classList.add('ajax-errors');
+  errors.innerHTML = `<%= render 'shared/record_errors', record: record %>`;
+
+  document.getElementById("<%= form_element_id %>").prepend(errors);
+}

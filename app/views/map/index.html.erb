@@ -1,0 +1,30 @@
+<% placeholder = '_airport_code_' %>
+
+<div id="ui">
+  <div id="controls">
+    <div class="columns">
+      <div><%= render 'navigation' %></div>
+
+      <div>
+        <div id="flashes"></div>
+      </div>
+
+      <div class="right">
+        <%= render 'header' %>
+        <%= render 'action_buttons' %>
+      </div>
+    </div>
+  </div>
+
+  <%= render 'drawer' %>
+</div>
+
+<div
+  id="map"
+  data-airports-path="<%= airports_path %>"
+  data-airport-path="<%= airport_path(placeholder, format: :drawer) %>"
+  data-placeholder="<%= placeholder %>"
+  data-marker-image-path="<%= image_path('marker') %>"
+  data-marker-selected-image-path="<%= image_path('marker_selected') %>"
+  data-mapbox-api-key="<%= Rails.application.credentials.mapbox_api_key %>"
+  data-is-test="<%= Rails.env.test? %>"></div>

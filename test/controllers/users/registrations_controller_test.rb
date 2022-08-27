@@ -1,0 +1,97 @@
+require 'test_helper'
+
+class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
+  test 'new' do
+    get new_user_registration_path
+    assert_response :success
+  end
+
+  test 'create, known' do
+    user_attributes = attributes_for(:known)
+
+    assert_difference('Users::User.count') do
+      post user_registration_path, params: {user: {email: user_attributes[:email], password: 'battery', password_confirmation: 'battery'}}
+      assert_redirected_to root_path
+    end
+
+    user = Users::User.last
+
+    assert_equal user_attributes[:email], user.email, 'Incorrect email for new user'
+    assert user.is_a?(Users::Known), 'Incorrect type for new user'
+    assert_not_nil user.confirmation_token, 'Confirmation token not set for new user'
+  end
+
+  test 'create, known, failed' do
+    user_attributes = attributes_for(:known)
+
+    assert_difference('Users::User.count', 0) do
+      post user_registration_path, params: {user: {email: user_attributes[:email], password: 'battery', password_confirmation: 'different'}}
+      assert_response :success
+    end
+  end
+
+  # Admins should not be able to be created by explicitly specifying a user type
+  test 'create, admin' do
+    assert_difference('Users::User.count') do
+      post user_registration_path, params: {user: {email: 'bob@example.com', password: 'battery', password_confirmation: 'battery', type: 'Users::Admin'}}
+      assert_redirected_to root_path
+      assert Users::User.last.is_a?(Users::Known), 'Admin created through registation form'
+    end
+  end
+
+  test 'create, xhr' do
+    user_attributes = attributes_for(:known)
+
+    assert_difference('Users::User.count') do
+      post user_registration_path, xhr: true, params: {user: {email: user_attributes[:email], password: 'battery', password_confirmation: 'battery'}}
+      assert_response :success
+    end
+  end
+
+  test 'create, xhr, failed' do
+    user_attributes = attributes_for(:known)
+
+    assert_difference('Users::User.count', 0) do
+      post user_registration_path, xhr: true, params: {user: {email: user_attributes[:email], password: 'battery', password_confirmation: 'different'}}
+      assert_response :success
+    end
+  end
+
+  test 'show' do
+    user = create(:known)
+    sign_in(user)
+
+    get user_path
+    assert_response :success
+  end
+
+  test 'edit' do
+    user = create(:known)
+    sign_in(user)
+
+    get edit_user_registration_path
+    assert_response :success
+  end
+
+  test 'update' do
+    user = create(:known)
+    sign_in(user)
+
+    new_name = 'Bob Hoover'
+    patch user_registration_path, params: {user: {name: new_name}}
+
+    assert_redirected_to user_path
+    assert_equal new_name, user.reload.name, 'User name not updated'
+  end
+
+  test 'destroy' do
+    user = create(:known)
+    sign_in(user)
+
+    assert_difference('Users::User.count', -1) do
+      delete user_registration_path
+    end
+  end
+end

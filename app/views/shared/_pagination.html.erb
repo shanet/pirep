@@ -1,0 +1,24 @@
+<%
+  page = (params[:page] || 0).to_i
+  total_pages = (records.klass.count / Rails.configuration.pagination_page_size.to_f).ceil
+
+  if (page - 2).negative?
+    start_range = [page - 2, 0].max
+    end_range = [start_range + 4, total_pages - 1].min
+  else
+    end_range = [page + 2, total_pages - 1].min
+    start_range = [end_range - 4, 0].max
+  end
+%>
+
+<nav>
+  <ul class="pagination justify-content-center">
+    <li class="page-item"><a class="page-link <%= page.positive? ? '' : 'disabled' %>" href="<%= send(path, page: 0) %>">First</a></li>
+
+    <% (start_range..end_range).each do |label| %>
+      <li class="page-item"><a class="page-link <%= label == page ? 'active' : '' %>" href="<%= send(path, page: label) %>"><%= label + 1 %></a></li>
+    <% end %>
+
+    <li class="page-item"><a class="page-link <%= page < (total_pages - 1) ? '' : 'disabled' %>" href="<%= send(path, page: total_pages - 1) %>">Last</a></li>
+  </ul>
+</nav>

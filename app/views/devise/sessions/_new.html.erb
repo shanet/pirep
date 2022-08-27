@@ -1,0 +1,21 @@
+<%= form_with(model: (defined?(resource) ? resource : Users::User.new), scope: :user, url: new_user_session_path, html: {id: 'login-form'}, local: !(defined?(parent) && parent == :map)) do |form| %>
+  <%= render 'shared/record_errors', record: form.object %>
+
+  <div class="mb-3">
+    <%= form.label :email, class: 'form-label' %>
+    <%= form.email_field :email, autofocus: true, autocomplete: 'email', id: 'login-email', class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :password, class: 'form-label' %>
+    <%= form.password_field :password, autocomplete: 'current-password', id: 'login-password', class: 'form-control' %>
+  </div>
+
+  <div class="text-center mb-3">
+    <%= form.submit 'Log in', class: 'btn btn-primary' %>
+  </div>
+
+  <div class="text-center">
+    <%= render 'devise/shared/links', parent: (defined?(parent) ? parent : nil) %>
+  </div>
+<% end %>

@@ -1,0 +1,39 @@
+$animation-duration: .2s;
+
+#flashes {
+  margin-top: 40%;
+
+  .toast {
+    animation: fade-in-down $animation-duration ease-in forwards;
+    opacity: 0;
+
+    &.hide {
+      animation: fade-out-down $animation-duration ease-in forwards;
+      opacity: 0;
+    }
+  }
+}
+
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -25%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fade-out-down {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, 25%, 0);
+  }
+}

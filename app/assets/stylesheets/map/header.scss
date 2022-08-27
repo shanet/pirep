@@ -1,0 +1,19 @@
+@import 'variables';
+
+$header-height: calc(1.5em + .75rem + 2px);
+
+.header {
+  background-clip: padding-box;
+  background-color: $white;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  color: #495057;
+  height: $header-height;
+  line-height: $header-height;
+  margin-right: $map-fixed-offset;
+  margin-top: $map-fixed-offset;
+
+  img {
+    height: 45%;
+  }
+}

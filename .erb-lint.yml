@@ -27,10 +27,8 @@ linters:
         Enabled: false
       Style/FrozenStringLiteralComment:
         Enabled: false
-
-  AllowedScriptType:
-    enabled: true
-    disallow_inline_scripts: true
+      Style/IfUnlessModifier:
+        Enabled: false
 
   NoJavascriptTagHelper:
     enabled: false

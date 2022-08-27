@@ -1,0 +1,31 @@
+<%= form_with(model: (defined?(resource) ? resource : Users::User.new), scope: :user, url: registration_path('user'), html: {id: 'registration-form'}, local: !(defined?(parent) && parent == :map)) do |form| %>
+  <%= render 'shared/record_errors', record: form.object %>
+
+  <div class="mb-3">
+    <%= form.label :email, class: 'form-label' %>
+    <%= form.email_field :email, autofocus: true, autocomplete: 'email', id: 'registration-email', class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :password, class: 'form-label' %>
+
+    <% if @minimum_password_length %>
+      <small><em>(<%= @minimum_password_length %> characters minimum)</em></small>
+    <% end %>
+
+    <%= form.password_field :password, autocomplete: 'new-password', id: 'registration-password', class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :password_confirmation, class: 'form-label' %>
+    <%= form.password_field :password_confirmation, autocomplete: 'new-password', class: 'form-control' %>
+  </div>
+
+  <div class="text-center mb-3">
+    <%= form.submit 'Sign up', class: 'btn btn-primary' %>
+  </div>
+
+  <div class="text-center">
+    <%= render 'devise/shared/links', parent: (defined?(parent) ? parent : nil) %>
+  </div>
+<% end %>

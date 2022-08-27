@@ -1,0 +1,7 @@
+<p>Hello <%= @resource.email %>!</p>
+
+<p>Your account has been locked due to an excessive number of unsuccessful sign in attempts.</p>
+
+<p>You must reset your password to unlock your account using the link below:</p>
+
+<p><%= link_to 'Reset password', new_user_password_url %></p>

@@ -1,0 +1,5 @@
+<% @breadcrumbs = [['Airports', manage_airports_path], [@airport.code]] %>
+
+<%= @airport.code %>
+<%= @airport.name %>
+<%= link_to 'Edit', edit_manage_airport_path(@airport) %>

@@ -1,0 +1,76 @@
+@import 'drawer';
+
+$animation-duration: 1s;
+$drawer-translate-length: calc(100% - (#{$drawer-width} + #{$handle-size}));
+
+#ui {
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  white-space: nowrap;
+  width: 100vw;
+  z-index: $zindex-fixed;
+
+  > #controls {
+    height: 100%;
+    vertical-align: top;
+    width: 100%;
+
+    &.slide-in-drawer {
+      animation: slide-in-drawer $animation-duration forwards;
+    }
+
+    // Provide an option to show the drawer immediately (useful for default drawer opens on page load)
+    &.slide-in-drawer-instant {
+      animation: slide-in-drawer 0s forwards;
+    }
+
+    &.slide-out-drawer {
+      animation: slide-out-drawer $animation-duration forwards;
+    }
+  }
+
+  // Put the drawer off screen to the left after the controls div
+  > div {
+    display: inline-block;
+  }
+
+  .columns {
+    display: flex;
+    height: 100%;
+    justify-content: space-between;
+
+    > div * {
+      pointer-events: auto;
+      white-space: normal;
+    }
+
+    .right {
+      align-items: flex-end;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+}
+
+@keyframes slide-in-drawer {
+  from {
+    width: 100%;
+  }
+
+  to {
+    width: $drawer-translate-length;
+  }
+}
+
+@keyframes slide-out-drawer {
+  from {
+    width: $drawer-translate-length;
+  }
+
+  to {
+    width: 100%;
+  }
+}

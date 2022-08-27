@@ -1,0 +1,14 @@
+<% @breadcrumbs = [['Airports', manage_airports_path], [@airport.code, manage_airport_path(@airport)], ['Edit']] %>
+
+<h1 class="display-6">Edit <%= @airport.code %></h1>
+
+<%= form_with(model: @airport, url: manage_airport_path(@airport), html: {method: :patch}) do |form| %>
+  <div class="my-1">
+    <%= form.label :name, class: 'form-label' %>
+    <%= form.text_field :name, class: 'form-control' %>
+  </div>
+
+  <div class="my-3">
+    <%= form.submit 'Submit', class: 'btn btn-primary' %>
+  </div>
+<% end %>

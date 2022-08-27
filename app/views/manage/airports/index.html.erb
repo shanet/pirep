@@ -1,0 +1,27 @@
+<% @breadcrumbs = [['Airports', manage_airports_path]] %>
+
+<h1 class="display-6">All Airports</h1>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @airports.each do |airport| %>
+      <tr>
+        <td class="col"><%= link_to airport.short_id, manage_airport_path(airport) %></td>
+        <td class="col"><%= airport.code %></td>
+        <td class="col"><%= airport.name %></td>
+        <td class="col"><%= link_to 'Edit', edit_manage_airport_path(airport) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render 'shared/pagination', records: @airports, path: :manage_airports_path %>

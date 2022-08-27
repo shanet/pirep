@@ -1,0 +1,25 @@
+<%
+  unless defined?(parent)
+    parent = nil
+  end
+
+  links = []
+
+  if controller_name != 'sessions' && parent != :map
+    links << link_to('Log in', new_user_session_path)
+  end
+
+  if Devise.mappings[:user].registerable? && controller_name != 'registrations' && parent != :map
+    links << link_to('Register Account', new_user_registration_path)
+  end
+
+  if Devise.mappings[:user].recoverable? && controller_name != 'passwords'
+    links << link_to('Reset Password', new_user_password_path)
+  end
+
+  if Devise.mappings[:user].confirmable? && controller_name != 'confirmations'
+    links << link_to('Confirm Account', new_user_confirmation_path)
+  end
+%>
+
+<%= links.join(' | ').html_safe %>

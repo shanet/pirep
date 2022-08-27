@@ -9,12 +9,16 @@
 @import 'airports/statistics';
 @import 'airports/tags';
 
-@import 'maps/action_buttons';
-@import 'maps/drawer';
-@import 'maps/filters';
-@import 'maps/header';
-@import 'maps/maps';
-@import 'maps/search';
+@import 'devise/registrations';
+
+@import 'map/action_buttons';
+@import 'map/controls';
+@import 'map/drawer';
+@import 'map/filters';
+@import 'map/flashes';
+@import 'map/header';
+@import 'map/map';
+@import 'map/search';
 
 @import 'shared/collapsible';
 @import 'shared/photo_gallery';

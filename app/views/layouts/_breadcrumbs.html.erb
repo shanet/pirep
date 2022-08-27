@@ -1,0 +1,15 @@
+<% return unless defined? @breadcrumbs %>
+
+<nav>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><small><%= link_to 'Manage', manage_root_path %></small></li>
+
+    <% @breadcrumbs.each_with_index do |breadcrumb, index| %>
+      <% if index == @breadcrumbs.count - 1 %>
+        <li class="breadcrumb-item active"><small class="text-muted"><%= breadcrumb.first %></small></li>
+      <% else %>
+        <li class="breadcrumb-item"><small><%= link_to breadcrumb.first, breadcrumb.second %></small></li>
+      <% end %>
+    <% end %>
+  </ol>
+</nav>

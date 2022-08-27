@@ -3,6 +3,7 @@ class CommentsController < ApplicationController
 
   def create
     comment = Comment.new(comment_params)
+    authorize comment
 
     if comment.save
       redirect_to airport_path(comment.airport.code)
@@ -45,6 +46,7 @@ private
 
   def set_comment
     @comment = Comment.find(params[:id])
+    authorize @comment
   end
 
   def comment_params

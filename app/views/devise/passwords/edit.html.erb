@@ -1,0 +1,31 @@
+<%= render 'devise/shared/header', text: 'Change Password' %>
+<%= render 'devise/shared/flashes' %>
+
+<%= form_with(model: resource, scope: :user, url: user_password_path, html: {method: :put}) do |form| %>
+  <%= render 'shared/record_errors', record: form.object %>
+
+  <%= form.hidden_field :reset_password_token %>
+
+  <div class="mb-3">
+    <%= form.label :password, 'New password', class: 'form-label' %>
+
+    <% if @minimum_password_length %>
+      <em>(<%= @minimum_password_length %> characters minimum)</em>
+    <% end %>
+
+    <%= form.password_field :password, autofocus: true, autocomplete: 'new-password', class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :password_confirmation, 'Confirm new password', class: 'form-label' %>
+    <%= form.password_field :password_confirmation, autocomplete: 'new-password', class: 'form-control' %>
+  </div>
+
+  <div class="mb-3 text-center">
+    <%= form.submit 'Change password', class: 'btn btn-primary' %>
+  </div>
+
+  <div class="text-center">
+    <%= render 'devise/shared/links' %>
+  </div>
+<% end %>

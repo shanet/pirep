@@ -1,0 +1,19 @@
+<%= render 'devise/shared/header', text: 'Reset Password' %>
+<%= render 'devise/shared/flashes' %>
+
+<%= form_with(model: resource, scope: :user, url: user_password_path) do |form| %>
+  <%= render 'shared/record_errors', record: form.object %>
+
+  <div class="mb-3">
+    <%= form.label :email, class: 'form-label' %>
+    <%= form.email_field :email, autofocus: true, autocomplete: 'email', class: 'form-control' %>
+  </div>
+
+  <div class="mb-3 text-center">
+    <%= form.submit 'Send password reset email', class: 'btn btn-primary' %>
+  </div>
+
+  <div class="text-center">
+    <%= render 'devise/shared/links' %>
+  </div>
+<% end %>

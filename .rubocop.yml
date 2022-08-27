@@ -78,6 +78,9 @@ Naming/RescuedExceptionsVariableName:
 
 # --------------------------------------
 
+Rails/I18nLocaleTexts:
+  Enabled: false
+
 Rails/OutputSafety:
   Enabled: false
 
@@ -121,6 +124,9 @@ Style/IfUnlessModifier:
 
 Style/MutableConstant:
   Enabled: false
+
+Style/NumericPredicate:
+  EnforcedStyle: comparison
 
 Style/RedundantReturn:
   Enabled: false
