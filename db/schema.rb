@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_22_072840) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_08_064310) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -37,13 +37,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_22_072840) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "active_storage_variant_records", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "airports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "airports", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "code", null: false
     t.float "latitude", null: false
@@ -73,7 +73,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_22_072840) do
     t.index ["site_number"], name: "index_airports_on_site_number", unique: true
   end
 
-  create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "comments", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "airport_id", null: false
     t.text "body"
     t.integer "helpful_count", default: 0
@@ -83,7 +83,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_22_072840) do
     t.index ["airport_id"], name: "index_comments_on_airport_id"
   end
 
-  create_table "remarks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "remarks", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "element", null: false
     t.text "text", null: false
     t.uuid "airport_id", null: false
@@ -92,7 +92,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_22_072840) do
     t.index ["airport_id"], name: "index_remarks_on_airport_id"
   end
 
-  create_table "runways", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "runways", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "number", null: false
     t.integer "length", null: false
     t.string "surface"
@@ -103,7 +103,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_22_072840) do
     t.index ["airport_id"], name: "index_runways_on_airport_id"
   end
 
-  create_table "tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "tags", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.uuid "airport_id", null: false
     t.datetime "created_at", null: false
@@ -112,7 +112,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_22_072840) do
     t.index ["name", "airport_id"], name: "index_tags_on_name_and_airport_id", unique: true
   end
 
-  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "type", null: false
     t.string "email", default: "", null: false
@@ -134,10 +134,25 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_22_072840) do
     t.datetime "locked_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "ip_address"
+    t.datetime "last_edit_at", precision: nil
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["ip_address"], name: "index_users_on_ip_address", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
+  end
+
+  create_table "versions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "item_type", null: false
+    t.string "item_id", null: false
+    t.string "event", null: false
+    t.string "airport_id"
+    t.string "whodunnit"
+    t.jsonb "object"
+    t.jsonb "object_changes"
+    t.datetime "created_at"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

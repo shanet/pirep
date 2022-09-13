@@ -120,7 +120,7 @@ class AirportsTest < ApplicationSystemTestCase
     visit airport_path(@airport.code)
 
     assert_editor_has_text('Description', :description, 'Description edit')
-    assert_editor_has_text('Transient Parking Location', :transient_parking, 'Transient parking edit')
+    assert_editor_has_text('Transient Parking', :transient_parking, 'Transient parking edit')
     assert_editor_has_text('Fuel Location', :fuel_location, 'Fuel location edit')
     assert_editor_has_text('Landing & Tie-down Fees', :landing_fees, 'Landing fee edit')
     assert_editor_has_text('Crew Car Availability', :crew_car, 'Crew car edit')
@@ -170,7 +170,7 @@ class AirportsTest < ApplicationSystemTestCase
     visit airport_path(@airport.code)
     comment = 'I am a comment'
 
-    fill_in 'Leave a comment', with: comment
+    find('#comment_body').fill_in with: comment
     click_on 'Add Comment'
 
     assert_equal comment, all('.comment-body').last.text, 'New comment not on page'

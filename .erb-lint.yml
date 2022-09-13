@@ -29,6 +29,8 @@ linters:
         Enabled: false
       Style/IfUnlessModifier:
         Enabled: false
+      Style/TrailingCommaInArrayLiteral:
+        EnforcedStyleForMultiline: comma
 
   NoJavascriptTagHelper:
     enabled: false

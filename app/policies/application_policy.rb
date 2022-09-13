@@ -54,6 +54,6 @@ class ApplicationPolicy
 private
 
   def admin?
-    return @user.is_a? Users::Admin
+    return @user&.admin?
   end
 end

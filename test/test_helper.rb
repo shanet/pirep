@@ -8,6 +8,18 @@ class ActiveSupport::TestCase
 
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)
+
+  def with_versioning
+    was_enabled = PaperTrail.enabled?
+    was_enabled_for_request = PaperTrail.request.enabled?
+    PaperTrail.enabled = true
+    PaperTrail.request.enabled = true
+
+    yield
+  ensure
+    PaperTrail.enabled = was_enabled
+    PaperTrail.request.enabled = was_enabled_for_request
+  end
 end
 
 # Include Devise helpers for signing in/out users

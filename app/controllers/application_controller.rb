@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
+
   after_action :verify_authorized
+  before_action :set_paper_trail_whodunnit
 
   rescue_from ActionController::RoutingError, with: :render_not_found
   rescue_from ActionController::BadRequest, with: :render_bad_request

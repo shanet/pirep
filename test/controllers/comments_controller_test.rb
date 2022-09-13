@@ -23,4 +23,12 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     patch undo_outdated_comment_path(comment, format: :js)
     assert_response :success
   end
+
+  test 'destroy' do
+    sign_in create(:admin)
+    comment = create(:comment)
+
+    delete comment_path(comment)
+    assert_response :redirect
+  end
 end

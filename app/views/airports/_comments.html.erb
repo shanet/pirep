@@ -6,8 +6,8 @@
   <ul class="list-group list-group-flush">
     <% @airport.comments.order(:created_at).each do |comment| %>
       <li class="comment list-group-item" data-comment-id="<%= comment.id %>">
-        <div class="alert alert-warning outdated-at <%= comment.outdated_at ? '' : 'd-none' %>">
-          This comment was flagged as outdated on <span class="date"><%= comment.outdated_at&.strftime('%B %-d, %Y') %></span>.
+        <div class="alert alert-warning py-1 outdated-at <%= comment.outdated_at ? '' : 'd-none' %>">
+          <i class="fas fa-flag"></i> This comment was flagged as outdated on <span class="date"><%= comment.outdated_at&.strftime('%B %-d, %Y') %></span>.
           <%= button_to [:undo_outdated, comment], remote: true, class: 'btn btn-link btn-sm p-0', form: {class: 'd-inline-block'} do %>(undo)<% end %>
         </div>
 
@@ -18,6 +18,12 @@
 
           <%= button_to [:flag_outdated, comment], remote: true, class: "btn btn-outline-warning btn-sm flag-outdated #{comment.outdated_at ? ' d-none' : ''}" do %>
             <i class="fas fa-flag"></i> Flag as outdated
+          <% end %>
+
+          <% if CommentPolicy.new(current_user, comment).destroy? %>
+            <%= button_to comment, method: :delete, data: {confirm: 'Are you sure you want to permanently delete this comment?'}, class: 'btn btn-outline-danger btn-sm' do %>
+              <i class="fas fa-trash"></i> Delete
+            <% end %>
           <% end %>
         </div>
 
@@ -37,7 +43,7 @@
 
   <%= form_with model: Comment.new, local: true do |form| %>
     <div class="form-group p-3">
-      <%= form.label :body, '<i class="fas fa-comment"></i> Leave a comment'.html_safe %>
+      <i class="fas fa-comment"></i> Leave a comment <span class="text-muted">&mdash; <em>What was your experience like at this airport?</em></span>
 
       <%= form.text_area :body, class: 'form-control comment-textarea my-3' %>
       <%= form.hidden_field :airport_id, value: @airport.id %>

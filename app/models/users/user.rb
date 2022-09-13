@@ -4,4 +4,8 @@ class Users::User < ApplicationRecord
   def first_name
     return name&.split(' ')&.first
   end
+
+  def admin?
+    return type == Users::Admin.name
+  end
 end

@@ -14,4 +14,16 @@ class AirportPolicy < ApplicationPolicy
   def search?
     return true
   end
+
+  def history?
+    return true
+  end
+
+  def preview?
+    return true
+  end
+
+  def revert?
+    return admin?
+  end
 end

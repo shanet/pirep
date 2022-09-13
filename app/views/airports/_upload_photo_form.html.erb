@@ -4,10 +4,12 @@
 
 <% content_for :collapsible_content, flush: true do %>
   <%= form_with model: @airport, local: true do |form| %>
-    <%= form.file_field :photos, multiple: true %>
-    <%= form.submit value: 'Upload Photo', class: 'btn btn-primary float-end' %>
+    <div class="input-group mb-3">
+      <%= form.file_field :photos, multiple: true, class: 'form-control' %>
+      <%= form.submit value: 'Upload Photo', class: 'btn btn-primary' %>
+    </div>
 
-    <div class="alert alert-warning mt-3 mb-0">
+    <div class="alert alert-warning mt-3 mb-0 py-2">
       Uploaded photos will be licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a> license. Please only upload photos you have the rights to use.
     </div>
   <% end %>
