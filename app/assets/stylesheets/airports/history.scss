@@ -1,0 +1,56 @@
+$diff-removed-background: #e8b3b3;
+$diff-removed-inline: #d17777;
+$diff-added-background: #a2dba2;
+$diff-added-inline: #57ab57;
+$circle-diameter: 16px;
+
+.revision {
+  .timeline-circle {
+    height: $circle-diameter;
+    left: -#{$circle-diameter / 2};
+    position: absolute;
+    top: #{$circle-diameter / 2};
+    width: $circle-diameter;
+  }
+
+  .diff {
+    height: 100%;
+
+    ul {
+      padding-left: 0;
+    }
+
+    li {
+      list-style: none;
+    }
+
+    ins,
+    del {
+      text-decoration: none;
+
+      strong {
+        font-weight: 400;
+      }
+    }
+
+    del strong {
+      background-color: $diff-removed-inline;
+    }
+
+    ins strong {
+      background-color: $diff-added-inline;
+    }
+  }
+
+  .diff-removed {
+    background-color: $diff-removed-background;
+  }
+
+  .diff-added {
+    background-color: $diff-added-background;
+  }
+
+  form {
+    display: inline-block;
+  }
+}

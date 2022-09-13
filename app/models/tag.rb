@@ -6,6 +6,8 @@ class Tag < ApplicationRecord
 
   after_save :remove_empty_tag!
 
+  has_paper_trail meta: {airport_id: :airport_id}
+
   TAGS = {
     food: {
       label: 'Food',

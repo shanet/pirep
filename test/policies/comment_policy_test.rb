@@ -6,4 +6,8 @@ class CommentPolicyTest < PolicyTest
       assert_allows_all :comment, action
     end
   end
+
+  test 'destroy' do
+    assert_allows_admin(create(:comment), :destroy)
+  end
 end

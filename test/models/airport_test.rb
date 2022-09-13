@@ -93,4 +93,19 @@ class AirportTest < ActiveSupport::TestCase
 
     assert_equal 'green', @airport.theme, 'Unexpected theme color for airport'
   end
+
+  test 'has all relevant versions' do
+    with_versioning do
+      # The airport should have versions for its associated tags so create & destroy one to create some versions
+      @airport.update!(description: 'updated')
+      tag = create(:tag, airport: @airport)
+      tag.destroy!
+
+      assert_equal 3, @airport.all_versions.count, 'Airport does not have own versions and associated tag versions'
+
+      tag.versions.each do |version|
+        assert version.in?(@airport.all_versions), 'Tag versions not included with airport versions'
+      end
+    end
+  end
 end

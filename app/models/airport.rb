@@ -79,6 +79,21 @@ class Airport < ApplicationRecord
     },
   }
 
+  # Only keep versions for changes to these columns
+  HISTORY_COLUMNS = {
+    description: 'Description',
+    transient_parking: 'Transient Parking',
+    fuel_location: 'Fuel location',
+    landing_fees: 'Landing Fees',
+    crew_car: 'Crew Car',
+    wifi: 'WiFi',
+    landing_rights: 'Landing rights',
+    landing_requirements: 'Landing requirements',
+  }
+
+  # Only create versions when there's a change to one of the columns listed above
+  has_paper_trail only: self::HISTORY_COLUMNS.keys
+
   enum facility_type: FACILITY_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
   enum landing_rights: LANDING_RIGHTS_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
 
@@ -194,5 +209,10 @@ class Airport < ApplicationRecord
 
   def code_digest
     return Zlib.crc32(code)
+  end
+
+  def all_versions
+    # Return versions of the airport and associated tags as well
+    return versions.or(PaperTrail::Version.where(item_type: 'Tag', airport_id: id)).reorder(created_at: :desc)
   end
 end

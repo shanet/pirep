@@ -1,110 +1,56 @@
-<div class="container airport-header text-center mb-3 theme-<%= @airport.theme %>">
+<%= render 'header' %>
+
+<div class="container">
   <div class="row">
-    <div class="col p-3">
-      <h3><%= @airport.code %> - <%= @airport.name.titleize %></h3>
+    <div class="col-12">
+      <%= render 'layouts/flashes' %>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col p-2">
-      <%= @airport.latitude %>, <%= @airport.longitude %>
-    </div>
-  </div>
-</div>
-
-<% if @airport.empty? %>
-  <div class="container">
+  <% if @airport.empty? %>
     <div class="row">
-      <div class="col mb-2">
+      <div class="col-12 mb-2">
         <%= render 'airports/empty_notice' %>
       </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
 
-<div class="container">
   <div class="row">
-    <div class="col-12 col-lg-6">
-      <div class="row">
-        <div class="col">
-          <%= render 'airports/tags/tags' %>
-        </div>
-      </div>
+    <div class="col-12 col-md-6">
+      <%= render 'airports/tags/tags' %>
+      <%= render 'airports/statistics/statistics' %>
 
-      <div class="row">
-        <div class="col">
-          <%= render 'airports/statistics/statistics' %>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :description, title: '<span><i class="fas fa-book-open"></i> Description</span>'.html_safe} %>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :transient_parking, height: :small, title: '<span><i class="fas fa-parking"></i> Transient Parking Location</span>'.html_safe} %>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :fuel_location, height: :small, title: '<span><i class="fas fa-gas-pump"></i> Fuel Location</span>'.html_safe} %>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :landing_fees, height: :small, title: '<span><i class="fas fa-dollar-sign"></i> Landing &amp; Tie-down Fees</span>'.html_safe} %>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :crew_car, height: :small, title: '<span><i class="fas fa-car"></i> Crew Car Availability</span>'.html_safe} %>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <%= render partial: 'airports/textarea_editor', locals: {model: @airport, column: :wifi, height: :small, title: '<span><i class="fas fa-wifi"></i> WiFi Access</span>'.html_safe} %>
-        </div>
-      </div>
+      <%
+        [
+          {column: :description, icon: 'fa-book-open', title: 'Description'},
+          {column: :transient_parking, icon: 'fa-parking', title: 'Transient Parking'},
+          {column: :fuel_location, icon: 'fa-gas-pump', title: 'Fuel Location'},
+          {column: :landing_fees, icon: 'fa-dollar-sign', title: 'Landing &amp; Tie-down Fees'},
+          {column: :crew_car, icon: 'fa-car', title: 'Crew Car Availability'},
+          {column: :wifi, icon: 'fa-wifi', title: 'WiFi Access'},
+        ].each do |textarea|
+      %>
+        <%= render 'airports/textarea_editor', model: @airport, column: textarea[:column], icon: textarea[:icon], title: textarea[:title] %>
+      <% end %>
     </div>
 
-    <div class="col-12 col-lg-6">
-      <div class="row">
-        <div class="col">
-          <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @airport.all_photos, border: true} %>
-          <%= render 'airports/upload_photo_form' %>
-        </div>
-      </div>
+    <div class="col-12 col-md-6">
+      <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @airport.all_photos, border: true} %>
+      <%= render 'airports/upload_photo_form' %>
 
-      <div class="row">
-        <div class="col">
-          <% if @airport.diagram %>
-            <img class="airport-diagram img-thumbnail" src="<%= '/assets/diagrams/%s' % @airport.diagram %>">
-          <% else %>
-            <%# Fallback to a satellite image if we don't have an airport diagram %>
-            <img class="airport-diagram img-thumbnail" src='https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/<%= @airport.longitude %>,<%= @airport.latitude %>,16/1076x1280@2x?access_token=<%= Rails.application.credentials.mapbox_api_key %>'>
-          <% end %>
-        </div>
-      </div>
+      <% if @airport.diagram %>
+        <img class="airport-diagram img-thumbnail" src="<%= '/assets/diagrams/%s' % @airport.diagram %>">
+      <% else %>
+        <%# Fallback to a satellite image if we don't have an airport diagram %>
+        <img class="airport-diagram img-thumbnail" src='https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/<%= @airport.longitude %>,<%= @airport.latitude %>,16/1076x1280@2x?access_token=<%= Rails.application.credentials.mapbox_api_key %>'>
+      <% end %>
 
-      <div class="row">
-        <div class="col">
-          <%= render 'airports/remarks' %>
-        </div>
-      </div>
+      <%= render 'airports/remarks' %>
     </div>
   </div>
-</div>
 
-<div class="container">
   <div class="row">
-    <div class="col">
+    <div class="col-12">
       <%= render 'airports/comments' %>
     </div>
   </div>

@@ -3,7 +3,7 @@
 <div class="card my-2">
   <div class="card-header">
     <div class="d-flex justify-content-between align-items-center">
-      <%= title %>
+      <span><i class="fas <%= icon %> me-2"></i><%= title.html_safe %></span>
 
       <% unless read_only %>
         <i class="fas fa-edit editor-edit-icon"></i>

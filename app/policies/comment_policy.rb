@@ -14,4 +14,8 @@ class CommentPolicy < ApplicationPolicy
   def undo_outdated?
     return true
   end
+
+  def destroy?
+    return admin?
+  end
 end

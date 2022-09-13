@@ -35,13 +35,11 @@ $themes: (
 
   // Airport show.html page
   .airport-header.theme-#{$name} {
-    .row:first-child {
-      background-color: map-get($colors, 'primary');
-    }
+    background-color: map-get($colors, 'primary');
+  }
 
-    .row:last-child {
-      background-color: map-get($colors, 'dark');
-    }
+  .airport-subheader.theme-#{$name} {
+    background-color: map-get($colors, 'dark');
   }
 
   .tag-square.theme-#{$name} {

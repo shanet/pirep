@@ -2,7 +2,13 @@
 
 <nav>
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><small><%= link_to 'Manage', manage_root_path %></small></li>
+    <li class="breadcrumb-item"><small>
+      <% if controller.class.name.start_with? 'Manage::' %>
+        <%= link_to 'Manage', manage_root_path %>
+      <% else %>
+        <%= link_to 'Home', root_path %>
+      <% end %>
+    </small></li>
 
     <% @breadcrumbs.each_with_index do |breadcrumb, index| %>
       <% if index == @breadcrumbs.count - 1 %>

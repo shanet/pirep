@@ -1,7 +1,18 @@
 @import 'variables';
 
-.airport-header {
-  max-width: 100%;
+.airport-subheader > .container {
+  row-gap: $spacer;
+
+  div:first-child,
+  div:last-child {
+    flex-basis: 0;
+    flex-grow: 1;
+    white-space: nowrap;
+  }
+
+  div:last-child {
+    text-align: right;
+  }
 }
 
 .editor-edit-icon:hover {

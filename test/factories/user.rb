@@ -5,7 +5,8 @@ FactoryBot.define do
     password        {'R_2?pg"Qi`3;J~v+>(qHz#*Fm'}
     confirmed_at    {Time.zone.now}
 
-    factory :known, class: Users::Known
     factory :admin, class: Users::Admin
+    factory :known, class: Users::Known
+    factory :unknown, class: Users::Unknown
   end
 end

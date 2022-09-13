@@ -1,5 +1,6 @@
 class AirportsController < ApplicationController
-  before_action :set_airport, only: :update
+  layout 'blank'
+  before_action :set_airport, only: [:update, :history]
 
   def index
     authorize :airport, :index?
@@ -14,7 +15,7 @@ class AirportsController < ApplicationController
   end
 
   def update
-    if @airport.update(airport_params) && @airport.photos.attach(params[:airport][:photos] || [])
+    if @airport.update(airport_params) && @airport.photos.attach(params[:airport][:photos] || []) && touch_author
       if request.xhr?
         head :ok
       else
@@ -32,6 +33,26 @@ class AirportsController < ApplicationController
     results = Airport.where('code LIKE ?', params[:query].upcase).pluck(:code, :name)
 
     render json: results.map {|airport| {code: airport.first, label: airport.last}}
+  end
+
+  def history
+  end
+
+  def preview
+    @airport = PaperTrail::Version.find(params[:version_id]).reify
+    authorize @airport
+    render :show
+  end
+
+  def revert
+    @airport = PaperTrail::Version.find(params[:version_id]).reify
+    authorize @airport
+
+    if @airport.save
+      redirect_to airport_path(@airport.code), notice: 'Airport reverted to previous version'
+    else # rubocop:disable Style/EmptyElse
+      # TODO: error handle
+    end
   end
 
 private
@@ -56,5 +77,17 @@ private
       :landing_requirements,
       tags_attributes: [:name]
     )
+  end
+
+  def user_for_paper_trail
+    return current_user.id if current_user
+    return nil unless action_name == 'update'
+
+    return Users::Unknown.create_or_find_by!(ip_address: request.ip).id
+  end
+
+  def touch_author
+    # Keep track of when a user last made an edit
+    return (current_user || Users::Unknown.create_or_find_by(ip_address: request.ip))&.update(last_edit_at: Time.zone.now) # rubocop:disable Rails/SaveBang
   end
 end

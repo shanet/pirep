@@ -13,6 +13,10 @@ module ApplicationHelper
     }[flash_type]
   end
 
+  def format_timestamp(timestamp)
+    return timestamp.strftime('%F %T')
+  end
+
   def gravatar_url(email_address, size: nil)
     hash = Digest::MD5.hexdigest(email_address.downcase)
     return "https://www.gravatar.com/avatar/#{hash}#{size ? "?s=#{size}" : ''}"
