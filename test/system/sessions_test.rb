@@ -7,7 +7,7 @@ class SessionsTest < ApplicationSystemTestCase
       sign_in user
 
       click_on 'Logout'
-      assert_selector '.header', text: 'Log In'
+      assert_selector '.map-header', text: 'Log In'
     end
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_08_064310) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_16_041048) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -69,6 +69,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_08_064310) do
     t.string "landing_rights"
     t.string "landing_requirements"
     t.string "diagram"
+    t.datetime "reviewed_at", precision: nil
     t.index ["code"], name: "index_airports_on_code", unique: true
     t.index ["site_number"], name: "index_airports_on_site_number", unique: true
   end
@@ -80,7 +81,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_08_064310) do
     t.datetime "outdated_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.datetime "reviewed_at", precision: nil
     t.index ["airport_id"], name: "index_comments_on_airport_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "remarks", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
@@ -136,6 +140,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_08_064310) do
     t.datetime "updated_at", null: false
     t.string "ip_address"
     t.datetime "last_edit_at", precision: nil
+    t.datetime "last_seen_at", precision: nil
+    t.datetime "reviewed_at", precision: nil
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["ip_address"], name: "index_users_on_ip_address", unique: true
@@ -152,12 +158,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_08_064310) do
     t.jsonb "object"
     t.jsonb "object_changes"
     t.datetime "created_at"
+    t.datetime "reviewed_at", precision: nil
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "airports"
+  add_foreign_key "comments", "users"
   add_foreign_key "remarks", "airports"
   add_foreign_key "runways", "airports"
   add_foreign_key "tags", "airports"

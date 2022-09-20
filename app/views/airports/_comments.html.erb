@@ -27,13 +27,13 @@
           <% end %>
         </div>
 
-        <div class="comment-body ps-2 my-1">
-          <%= comment.body %>
+        <div class="border-start border-primary border-3 ps-2 my-1">
+          <%= render_markdown comment.body %>
         </div>
 
         <div class="small text-muted">
           Created <%= time_ago_in_words comment.created_at %> ago (<%= comment.created_at.strftime('%B %-d, %Y') %>)
-          <div class="helpful-count <%= comment.helpful_count.zero? ? 'd-none' : '' %>">
+          <div class="helpful-count <%= comment.helpful_count == 0 ? 'd-none' : '' %>">
             Helpful count: <span class="count"><%= comment.helpful_count %></span> <i class="fas fa-thumbs-up"></i>
           </div>
         </div>

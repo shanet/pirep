@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   after_action :verify_authorized
   before_action :set_paper_trail_whodunnit
+  before_action :touch_user
 
   rescue_from ActionController::RoutingError, with: :render_not_found
   rescue_from ActionController::BadRequest, with: :render_bad_request
@@ -31,5 +32,15 @@ private
       else
         render file: Rails.public_path.join('errors', "#{status_code}.html"), formats: [:html], status: status, layout: false
     end
+  end
+
+  def active_user
+    return current_user || Users::Unknown.create_or_find_by!(ip_address: request.ip)
+  end
+
+  def touch_user
+    return unless active_user
+
+    active_user.touch :last_seen_at # rubocop:disable Rails/SkipsModelValidations
   end
 end

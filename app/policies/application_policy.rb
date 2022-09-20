@@ -56,4 +56,8 @@ private
   def admin?
     return @user&.admin?
   end
+
+  def unknown?
+    return @user&.unknown?
+  end
 end

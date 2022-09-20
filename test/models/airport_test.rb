@@ -108,4 +108,24 @@ class AirportTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test 'has created by user' do
+    # Check we handle nil whodunnit values for the version since nearly all airports won't have a created by user
+    assert_nil @airport.created_by
+
+    with_versioning do
+      user = create(:unknown)
+      airport = create(:airport)
+      airport.versions.first.update!(whodunnit: user.id)
+
+      assert_equal user, airport.created_by, 'Wrong user created airport'
+    end
+  end
+
+  test 'is unmapped' do
+    assert_not @airport.unmapped?, 'Mapped airport considered unmapped'
+
+    create(:tag, name: :unmapped, airport: @airport)
+    assert @airport.reload.unmapped?, 'Unmapped airport not considered unmapped'
+  end
 end

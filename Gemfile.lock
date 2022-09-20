@@ -155,6 +155,8 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     json (2.6.2)
+    kramdown (2.4.0)
+      rexml
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -328,6 +330,7 @@ DEPENDENCIES
   font-awesome-sass
   importmap-rails
   jbuilder (~> 2.7)
+  kramdown
   listen (~> 3.2)
   paper_trail
   pg (>= 0.18, < 2.0)

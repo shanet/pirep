@@ -1,0 +1,11 @@
+response = () => {
+  let comment = document.querySelector('.review-record[data-record-id="<%= @record_id %>"]');
+  comment.classList.add('fade-out');
+
+  // Remove the record once the fade out animation is complete
+  comment.addEventListener('animationend', () => {
+    comment.remove();
+  });
+};
+
+response();

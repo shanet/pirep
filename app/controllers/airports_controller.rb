@@ -1,5 +1,6 @@
 class AirportsController < ApplicationController
   layout 'blank'
+
   before_action :set_airport, only: [:update, :history]
 
   def index
@@ -15,7 +16,9 @@ class AirportsController < ApplicationController
   end
 
   def update
-    if @airport.update(airport_params) && @airport.photos.attach(params[:airport][:photos] || []) && touch_author
+    if @airport.update(airport_params) && @airport.photos.attach(params[:airport][:photos] || [])
+      touch_author
+
       if request.xhr?
         head :ok
       else
@@ -36,6 +39,7 @@ class AirportsController < ApplicationController
   end
 
   def history
+    @versions = @airport.all_versions.page(params[:page])
   end
 
   def preview
@@ -79,15 +83,12 @@ private
     )
   end
 
-  def user_for_paper_trail
-    return current_user.id if current_user
-    return nil unless action_name == 'update'
-
-    return Users::Unknown.create_or_find_by!(ip_address: request.ip).id
-  end
-
   def touch_author
     # Keep track of when a user last made an edit
-    return (current_user || Users::Unknown.create_or_find_by(ip_address: request.ip))&.update(last_edit_at: Time.zone.now) # rubocop:disable Rails/SaveBang
+    active_user&.touch(:last_edit_at) # rubocop:disable Rails/SkipsModelValidations
+  end
+
+  def user_for_paper_trail
+    return active_user.id
   end
 end

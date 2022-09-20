@@ -1,0 +1,21 @@
+<div class="review-record list-group-item" data-record-id="<%= airport.id %>">
+  <div class="d-flex justify-content-between">
+    <div>
+      <%= link_to airport.code, manage_airport_path(airport) %> |
+
+      <% if airport.created_by&.unknown? %>
+        <%= link_to airport.created_by.ip_address, manage_user_path(airport.created_by) %> |
+      <% elsif airport.created_by %>
+        <%= link_to airport.created_by.email, manage_user_path(airport.created_by) %> |
+      <% else %>
+        <%# No record for who created this airport %>
+        System
+      <% end %>
+
+      <br><small class="text-muted"><%= time_ago_in_words(airport.created_at).capitalize %> ago</small>
+    </div>
+
+    <%= button_to '<i class="fa-solid fa-square-check text-success"></i>'.html_safe, manage_airport_path(airport),
+      class: 'border-0 bg-transparent', method: :patch, remote: true, params: {airport: {reviewed_at: Time.zone.now}} %>
+  </div>
+</div>

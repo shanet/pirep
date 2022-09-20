@@ -14,4 +14,16 @@ class Users::UserTest < ActiveSupport::TestCase
     assert_not create(:known).admin?
     assert_not create(:unknown).admin?
   end
+
+  test 'is known?' do
+    assert_not create(:admin).known?
+    assert create(:known).known?
+    assert_not create(:unknown).known?
+  end
+
+  test 'is unknown?' do
+    assert_not create(:admin).unknown?
+    assert_not create(:known).unknown?
+    assert create(:unknown).unknown?
+  end
 end

@@ -1,24 +1,64 @@
-<% @breadcrumbs = [['Users', manage_users_path], [@user.email, manage_user_path(@user)], ['Edit']] %>
+<%
+  @breadcrumbs = [['Users', manage_users_path], [user_label(@user), manage_user_path(@user)], ['Edit']]
 
-<h1 class="display-6">Edit <%= @user.email %></h1>
+  user_types = [
+    ['Unknown', Users::Unknown.name],
+    ['Known', Users::Known.name],
+    ['Admin', Users::Admin.name],
+  ]
+%>
+
+<h1 class="display-6">Edit <%= user_label(@user) %></h1>
 
 <%= form_with(model: @user, url: manage_user_path(@user), html: {method: :patch}) do |form| %>
-  <div class="my-1">
-    <%= form.label :name, class: 'form-label' %>
-    <%= form.text_field :name, class: 'form-control' %>
+  <%= render 'shared/record_errors', record: form.object %>
+
+  <div class="row">
+    <div class="col-4 my-2">
+      <%= form.label :type, class: 'form-label' %>
+      <%= form.select :type, options_for_select(user_types, selected: @user.type), {}, {class: 'form-select'} %>
+    </div>
   </div>
 
-  <div class="my-1">
-    <%= form.label :email, class: 'form-label' %>
-    <%= form.email_field :email, autocomplete: 'email', class: 'form-control' %>
+  <div class="row">
+    <div class="col-12 col-md-4 my-2">
+      <%= form.label :name, class: 'form-label' %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+
+    <div class="col-12 col-md-4 my-2">
+      <%= form.label :email, class: 'form-label' %>
+      <%= form.email_field :email, autocomplete: 'email', class: 'form-control' %>
+    </div>
+
+  <div class="row">
+    <div class="col-12 col-md-4 my-2">
+      <%= form.label :ip_address, 'IP address', class: 'form-label' %>
+      <%= form.text_field :ip_address, class: 'form-control' %>
+    </div>
   </div>
 
-  <div class="my-1">
-    <%= form.label :type, class: 'form-label' %>
-    <%= form.select :type, options_for_select([['Known', Users::Known.name.to_s], ['Admin', Users::Admin.name.to_s]], selected: @user.type), {}, {class: 'form-control'} %>
+  <div class="row">
+    <div class="col-12 col-md-4 my-2">
+      <%= form.label :locked_at, class: 'form-label' %>
+      <div class="input-group">
+        <%= form.text_field :locked_at, class: 'form-control' %>
+        <a href="#" class="input-group-text" onclick="document.querySelector('#users_user_locked_at').value=new Date(Date.now()).toISOString()">Now</a>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4 my-2">
+      <%= form.label :confirmed_at, class: 'form-label' %>
+      <div class="input-group">
+        <%= form.text_field :confirmed_at, class: 'form-control' %>
+        <a href="#" class="input-group-text" onclick="document.querySelector('#users_user_confirmed_at').value=new Date(Date.now()).toISOString()">Now</a>
+      </div>
+    </div>
   </div>
 
-  <div class="my-3">
-    <%= form.submit 'Submit', class: 'btn btn-primary' %>
+  <div class="row">
+    <div class="col-12 my-3">
+      <%= form.submit 'Submit', class: 'btn btn-primary' %>
+    </div>
   </div>
 <% end %>

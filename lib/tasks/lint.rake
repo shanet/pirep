@@ -7,7 +7,7 @@ end
 
 task lint: :environment do
   sh 'rails lint:ruby', verbose: false
-  sh 'rails lint:html', verbose: false
+  sh 'rails lint:erb', verbose: false
   sh 'rails lint:css', verbose: false
   sh 'rails lint:js', verbose: false
   sh 'rails lint:security', verbose: false
@@ -18,7 +18,7 @@ namespace :lint do
     sh 'bundle exec rubocop %s' % [(autocorrect? ? '--auto-correct' : '--parallel')], verbose: false
   end
 
-  task html: :environment do
+  task erb: :environment do
     sh 'bundle exec erblint %s "app/views/**/*.*.erb"' % [(autocorrect? ? '--autocorrect' : '')], verbose: false
   end
 

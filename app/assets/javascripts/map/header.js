@@ -1,7 +1,7 @@
 import * as drawer from 'map/drawer';
 
 document.addEventListener('DOMContentLoaded', () => {
-  if(!document.getElementsByClassName('header')) return;
+  if(!document.getElementsByClassName('map-header').length) return;
 
   initHeaderLinks();
 }, {once: true});

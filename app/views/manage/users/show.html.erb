@@ -1,6 +1,55 @@
-<% @breadcrumbs = [['Users', manage_users_path], [@user.email]] %>
+<% @breadcrumbs = [['Users', manage_users_path], [user_label(@user)]] %>
 
-<%= @user.email %>
-<%= @user.type %>
-<%= link_to 'Edit', edit_manage_user_path(@user) %>
-<%= button_to 'Delete', manage_user_path(@user), data: {confirm: 'Are you sure you want to permanently delete this user?'}, method: :delete, class: 'btn btn-danger' %>
+<div class="row">
+  <div class="col-12 col-md-4">
+    <div class="text-center mb-3">
+      <%= image_tag gravatar_url(@user.email, size: 300), class: 'img-thumbnail' %>
+    </div>
+
+    <ul class="list-group">
+      <% if @user.unknown? %>
+        <li class="list-group-item"><strong>IP Address:</strong> <%= @user.ip_address %></li>
+      <% else %>
+        <li class="list-group-item"><strong>Name:</strong> <%= @user.name %></li>
+        <li class="list-group-item"><strong>Email Address:</strong> <%= @user.email %></li>
+        <li class="list-group-item"><strong>Email Confirmed:</strong> <i class="fa-solid fa-<%= @user.confirmed_at ? 'square-check' : 'square-xmark' %>"></i></li>
+        <li class="list-group-item"><strong>Locked:</strong> <i class="fa-solid fa-<%= @user.locked_at ? 'square-check' : 'square-xmark' %>"></i></li>
+      <% end %>
+
+      <li class="list-group-item"><strong>Type:</strong> <%= @user.type.demodulize %></li>
+      <li class="list-group-item"><strong>Last edit:</strong> <%= @user.last_edit_at || 'None' %></li>
+
+      <% unless @user.unknown? %>
+        <li class="list-group-item"><strong>Last seen:</strong> <%= @user.last_seen_at %></li>
+      <% end %>
+
+      <% unless @user.unknown? %>
+        <li class="list-group-item">
+          <% if @user.reviewed_at.present? %>
+            <strong>Reviewed:</strong> <%= time_ago_in_words(@user.reviewed_at).capitalize %> ago
+            <small class="text-muted">(<%= format_timestamp @user.reviewed_at %>)</small>
+          <% else %>
+            <strong>State:</strong> Unreviewed
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="col-12 col-md-8">
+    <div class="d-flex justify-content-end mb-3">
+      <div class="btn-group">
+        <%= button_to (@user.reviewed_at.present? ? 'Unapprove' : 'Approve'), manage_user_path(@user),
+          class: 'btn btn-success rounded-0 rounded-start', method: :patch, params: {users_user: {reviewed_at: (@user.reviewed_at.present? ? nil : Time.zone.now)}} %>
+
+        <%= link_to 'Edit', edit_manage_user_path(@user), class: 'btn btn-primary' %>
+
+        <%= button_to 'Delete', manage_user_path(@user), method: :delete, class: 'btn btn-danger rounded-0 rounded-end',
+          data: {confirm: 'Are you sure you want to permanently delete this user?'} %>
+      </div>
+    </div>
+
+    <%= render 'shared/users/statistics', user: @user %>
+    <%= render 'shared/users/activity_timeline', user: @user %>
+  </div>
+</div>

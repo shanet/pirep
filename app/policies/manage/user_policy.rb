@@ -18,4 +18,8 @@ class Manage::UserPolicy < ApplicationPolicy
   def destroy?
     return admin?
   end
+
+  def activity?
+    return admin?
+  end
 end

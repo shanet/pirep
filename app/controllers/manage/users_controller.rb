@@ -1,5 +1,5 @@
 class Manage::UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :activity]
 
   def index
     @users = Users::User.order(:updated_at).page(params[:page])
@@ -14,9 +14,16 @@ class Manage::UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
-      redirect_to manage_user_path(@user), notice: 'User updated successfully'
+      if request.xhr?
+        @record_id = @user.id
+        render 'shared/manage/remove_review_record'
+      else
+        redirect_to manage_user_path(@user), notice: 'User updated successfully'
+      end
+    elsif request.xhr?
+      render 'shared/manage/remove_review_record_error'
     else
-      redirect_to edit_manage_user_path(@user)
+      render :edit
     end
   end
 
@@ -28,6 +35,9 @@ class Manage::UsersController < ApplicationController
     end
   end
 
+  def activity
+  end
+
 private
 
   def set_user
@@ -36,6 +46,6 @@ private
   end
 
   def user_params
-    return params.require(:users_user).permit(:name, :email, :type)
+    return params.require(:users_user).permit(:name, :email, :ip_address, :type, :reviewed_at, :locked_at, :confirmed_at)
   end
 end

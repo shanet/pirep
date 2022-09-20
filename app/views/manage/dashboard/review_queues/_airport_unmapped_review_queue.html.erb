@@ -1,0 +1,23 @@
+<%
+  queue_limit = 10
+  airports = Airport.joins(:tags).where(reviewed_at: nil, 'tags.name': :unmapped).order(created_at: :desc)
+%>
+
+<div class="card mt-3">
+  <div class="card-header d-flex justify-content-between">
+    <span>Unmapped Airports Review Queue</span>
+    <span><span class="badge bg-primary rounded-pill"><%= number_with_delimiter airports.count %></span></span>
+  </div>
+
+  <div class="list-group list-group-flush">
+    <% if airports.any? %>
+      <% airports.limit(queue_limit).each do |airport| %>
+        <%= render 'manage/dashboard/review_queues/airport_unmapped_row', airport: airport %>
+      <% end %>
+
+      <%= render 'manage/dashboard/review_queues/oversize_queue', records: airports, queue_limit: queue_limit %>
+    <% else %>
+      <%= render 'manage/dashboard/review_queues/empty_queue' %>
+    <% end %>
+  </div>
+</div>

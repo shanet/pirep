@@ -1,3 +1,5 @@
+<% @breadcrumbs = [['Users', manage_users_path], [@user.email, user_path], ['Edit']] %>
+
 <h1 class="display-6">Edit Account</h1>
 
 <div class="row">
@@ -18,7 +20,7 @@
       <div class="mb-3 border rounded p-3">
         <div class="mb-2">
           <h5>Change Password</h5>
-          <small><em>Leave blank to skip password change</em></small>
+          <small class="fst-italic">Leave blank to skip password change</small>
         </div>
 
         <div class="mb-3">
@@ -30,7 +32,7 @@
           <%= form.label :password, value: 'New password', class: 'form-label' %>
 
           <% if @minimum_password_length %>
-            <small><em>(<%= @minimum_password_length %> characters minimum)</em></small>
+            <small class="fst-italic">(<%= @minimum_password_length %> characters minimum)</small>
           <% end %>
 
           <%= form.password_field :password, autocomplete: 'new-password', class: 'form-control' %>

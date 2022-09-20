@@ -4,13 +4,17 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <%= link_to 'Pirep', (is_manage ? manage_root_path : root_path), class: 'navbar-brand' %>
+    <%= link_to 'Pirep', root_path, class: 'navbar-brand' %>
 
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <% if is_manage %>
+          <li class="nav-item"><%= link_to 'Activity', manage_activity_path, class: 'nav-link' %></li>
           <li class="nav-item"><%= link_to 'Airports', manage_airports_path, class: 'nav-link' %></li>
+          <li class="nav-item"><%= link_to 'Comments', manage_comments_path, class: 'nav-link' %></li>
           <li class="nav-item"><%= link_to 'Users', manage_users_path, class: 'nav-link' %></li>
+        <% elsif Manage::DashboardPolicy.new(current_user, nil).index? %>
+          <li class="nav-item"><%= link_to 'Manage', manage_root_path, class: 'nav-link' %></li>
         <% end %>
       </ul>
 

@@ -173,7 +173,7 @@ class AirportsTest < ApplicationSystemTestCase
     find('#comment_body').fill_in with: comment
     click_on 'Add Comment'
 
-    assert_equal comment, all('.comment-body').last.text, 'New comment not on page'
+    assert_equal comment, all('.comment p').last.text, 'New comment not on page'
   end
 
   test 'helpful comment' do

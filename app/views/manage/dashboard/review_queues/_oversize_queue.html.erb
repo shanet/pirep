@@ -1,0 +1,6 @@
+<%# Show a warning if there are more record than the queue limit %>
+<% if records.count > queue_limit %>
+  <div class="list-group-item">
+    <small class="fst-italic text-muted">Showing first <%= pluralize queue_limit, 'item' %> only, reload page to see next batch.</small>
+  </div>
+<% end %>

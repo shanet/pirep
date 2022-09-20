@@ -10,7 +10,7 @@
     <%= form.label :password, class: 'form-label' %>
 
     <% if @minimum_password_length %>
-      <small><em>(<%= @minimum_password_length %> characters minimum)</em></small>
+      <small class="fst-italic">(<%= @minimum_password_length %> characters minimum)</small>
     <% end %>
 
     <%= form.password_field :password, autocomplete: 'new-password', id: 'registration-password', class: 'form-control' %>

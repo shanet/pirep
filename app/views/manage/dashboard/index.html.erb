@@ -1,1 +1,18 @@
-Index
+<div class="row">
+  <div class="col-6 col-md-3"><%= render 'meter', label: 'Total Airports', value: Airport.count %></div>
+  <div class="col-6 col-md-3"><%= render 'meter', label: 'Contributed Airports', value: Airport.count - Airport.joins(:tags).where('tags.name': :empty).count %></div>
+  <div class="col-6 col-md-3"><%= render 'meter', label: 'Users', value: Users::User.count %></div>
+  <div class="col-6 col-md-3"><%= render 'meter', label: 'Comments', value: Comment.count %></div>
+</div>
+
+<div class="row mb-3">
+  <div class="col-12 col-md-6">
+    <%= render 'manage/dashboard/review_queues/airport_edits_review_queue' %>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <%= render 'manage/dashboard/review_queues/users_review_queue' %>
+    <%= render 'manage/dashboard/review_queues/airport_unmapped_review_queue' %>
+    <%= render 'manage/dashboard/review_queues/comments_review_queue' %>
+  </div>
+</div>

@@ -9,4 +9,9 @@ class Manage::DashboardControllerTest < ActionDispatch::IntegrationTest
     get manage_root_path
     assert_response :success
   end
+
+  test 'activity' do
+    get manage_activity_path
+    assert_response :success
+  end
 end

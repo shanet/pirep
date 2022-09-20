@@ -1,0 +1,62 @@
+<% @breadcrumbs = [['Comments', manage_comments_path], [@comment.short_id]] %>
+
+<div class="row">
+  <div class="col-8">
+    <h1 class="display-6">Comment <%= @comment.short_id %></h1>
+  </div>
+
+  <div class="col-4">
+    <div class="d-flex justify-content-end mb-3">
+      <div class="btn-group">
+        <%= button_to (@comment.reviewed_at.present? ? 'Unapprove' : 'Approve'), manage_comment_path(@comment),
+          class: 'btn btn-success rounded-0 rounded-start', method: :patch, params: {comment: {reviewed_at: (@comment.reviewed_at.present? ? nil : Time.zone.now)}} %>
+
+        <%= link_to 'Edit', edit_manage_comment_path(@comment), class: 'btn btn-primary' %>
+
+        <%= button_to 'Delete', manage_comment_path(@comment), method: :delete, class: 'btn btn-danger rounded-0 rounded-end',
+          data: {confirm: 'Are you sure you want to permanently delete this comment?'} %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-5 mb-3">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <%= link_to @comment.airport.code, manage_airport_path(@comment.airport) %> |
+        <%= link_to 'Author', manage_user_path(@comment.user) %> <small><span class="text-muted">(<%= @comment.user.type.demodulize %>)</span></small> |
+        Helpful: <%= number_with_delimiter @comment.helpful_count %>
+      </li>
+
+      <li class="list-group-item">
+        Created <%= time_ago_in_words(@comment.created_at).capitalize %> ago
+        <small class="text-muted">(<%= format_timestamp @comment.created_at %>)</small>
+      </li>
+
+      <li class="list-group-item">
+        <% if @comment.reviewed_at.present? %>
+          Reviewed <%= time_ago_in_words(@comment.reviewed_at).capitalize %> ago
+          <small class="text-muted">(<%= format_timestamp @comment.reviewed_at %>)</small>
+        <% else %>
+          State: Unreviewed
+        <% end %>
+      </li>
+
+      <% if @comment.outdated_at.present? %>
+        <li class="list-group-item">
+          Flagged as outdated: <%= format_timestamp @comment.outdated_at %>
+          <small class="text-muted">(<%= time_ago_in_words(@comment.outdated_at).capitalize %> ago)</small>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="border-start border-primary border-3 ps-2 mb-3">
+      <%= render_markdown @comment.body %>
+    </div>
+  </div>
+</div>
