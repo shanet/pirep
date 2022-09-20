@@ -2,8 +2,9 @@
   <div class="d-flex justify-content-between form-group">
     <% Airport::LANDING_RIGHTS_TYPES.each_with_index do |(key, configuration), index| %>
       <div class="landing-rights-box text-center btn btn-sm d-flex flex-column justify-content-center align-items-center
-        <%= @airport.landing_rights == key ? 'btn-primary' : 'btn-outline-primary' %> <%= index.zero? ? '' : 'ms-2' %>"
+        <%= @airport.landing_rights == key ? 'btn-primary' : 'btn-outline-primary' %> <%= index == 0 ? '' : 'ms-2' %>"
         data-landing-rights-type="<%= key %>">
+
         <div class="icon">
           <i class="fas fa-<%= configuration[:icon] %>"></i>
         </div>

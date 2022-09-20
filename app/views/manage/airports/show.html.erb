@@ -1,5 +1,64 @@
 <% @breadcrumbs = [['Airports', manage_airports_path], [@airport.code]] %>
 
-<%= @airport.code %>
-<%= @airport.name %>
-<%= link_to 'Edit', edit_manage_airport_path(@airport) %>
+<div class="row">
+  <div class="col-8">
+    <h1 class="display-6"><%= @airport.code %></h1>
+    <h6><%= @airport.name.titleize %>
+  </div>
+
+  <div class="col-4">
+    <div class="d-flex justify-content-end mb-3">
+      <div class="btn-group">
+        <% if @airport.unmapped? %>
+          <%= button_to (@airport.reviewed_at.present? ? 'Unapprove' : 'Approve'), manage_airport_path(@airport),
+            class: 'btn btn-success rounded-0 rounded-start', method: :patch, params: {users_user: {reviewed_at: (@airport.reviewed_at.present? ? nil : Time.zone.now)}} %>
+        <% end %>
+
+        <%= link_to 'View', airport_path(@airport), class: 'btn btn-primary' %>
+        <%= link_to 'Edit', edit_manage_airport_path(@airport), class: 'btn btn-primary' %>
+
+        <% if @airport.unmapped? %>
+          <%= button_to 'Delete', manage_airport_path(@airport), method: :delete, class: 'btn btn-danger rounded-0 rounded-end',
+            data: {confirm: 'Are you sure you want to permanently delete this airport?'} %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row my-3">
+  <div class="col-12 col-md-4">
+    <ul class="list-group">
+      <li class="list-group-item"><strong>Tags:</strong> <%= @airport.tags.map(&:label).join(', ') %></li>
+      <li class="list-group-item"><strong>Revision count:</strong> <%= @airport.versions.count %></li>
+      <li class="list-group-item"><strong>Unique users:</strong> <%= @airport.versions.pluck(:whodunnit).uniq.count %></li>
+      <li class="list-group-item"><strong>Facility type:</strong> <%= Airport::FACILITY_TYPES[@airport.facility_type.to_sym][:label].singularize %></li>
+      <li class="list-group-item"><strong>Landing rights:</strong> <%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights.to_sym][:short_description] %></li>
+      <li class="list-group-item"><strong>Location:</strong> <%= @airport.latitude %>, <%= @airport.longitude %></li>
+      <li class="list-group-item"><strong>Elevation:</strong> <%= @airport.elevation %>ft</li>
+
+      <% if @airport.unmapped? %>
+        <li class="list-group-item">
+          <% if @airport.reviewed_at.present? %>
+            <strong>Reviewed:</strong> <%= time_ago_in_words(@airport.reviewed_at).capitalize %> ago
+            <small class="text-muted">(<%= format_timestamp @airport.reviewed_at %>)</small>
+          <% else %>
+            <strong>State:</strong> Unreviewed
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="col-12 col-md-8 my-3 my-md-0">
+    <h4>Description</h4>
+
+    <% if @airport.description.present? %>
+      <div class="border-start border-primary border-3 ps-2 mb-3">
+        <%= render_markdown @airport.description %>
+      </div>
+    <% else %>
+      Empty
+    <% end %>
+  </div>
+</div>

@@ -36,7 +36,7 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
         end
       end
 
-      assert Users::User.find(@airport.versions.last.whodunnit).is_a?(Users::Unknown), 'Update version user not set to unknown user'
+      assert Users::User.find_by(id: @airport.versions.last.whodunnit).is_a?(Users::Unknown), 'Update version user not set to unknown user'
 
       # Updating again should not create another user
       assert_difference('Users::Unknown.count', 0) do
@@ -44,7 +44,8 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
         assert_redirected_to airport_path(@airport.code)
       end
 
-      assert_in_delta Time.zone.now, Users::Unknown.last.last_edit_at, 1.second, 'Unknown user\'s last edit timestamp not set after updating airport'
+      assert_in_delta Time.zone.now, Users::Unknown.last.last_seen_at, 1.second, 'Unknown user\'s last seen at timestamp not set after updating airport'
+      assert_in_delta Time.zone.now, Users::Unknown.last.last_edit_at, 1.second, 'Unknown user\'s last edit at timestamp not set after updating airport'
     end
   end
 

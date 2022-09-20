@@ -3,6 +3,11 @@ require 'test_helper'
 class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
+  setup do
+    # Create an unknown user ahead of time so the calls below don't create one and throw off all of the assert_difference counts
+    create(:unknown, ip_address: '127.0.0.1')
+  end
+
   test 'new' do
     get new_user_registration_path
     assert_response :success
@@ -16,7 +21,7 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
       assert_redirected_to root_path
     end
 
-    user = Users::User.last
+    user = Users::Known.last
 
     assert_equal user_attributes[:email], user.email, 'Incorrect email for new user'
     assert user.is_a?(Users::Known), 'Incorrect type for new user'
@@ -37,7 +42,7 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_difference('Users::User.count') do
       post user_registration_path, params: {user: {email: 'bob@example.com', password: 'battery', password_confirmation: 'battery', type: 'Users::Admin'}}
       assert_redirected_to root_path
-      assert Users::User.last.is_a?(Users::Known), 'Admin created through registation form'
+      assert Users::User.order(:created_at).last.is_a?(Users::Known), 'Admin created through registation form'
     end
   end
 

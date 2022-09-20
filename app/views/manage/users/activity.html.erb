@@ -1,0 +1,13 @@
+<% @breadcrumbs = [['Users', manage_users_path], [user_label(@user), manage_user_path(@user)], ['Activity']] %>
+
+<h1 class="display-6">Activity for <%= @user.unknown? ? @user.ip_address : @user.email %></h1>
+
+<div class="row">
+  <div class="col-12 col-md-4">
+    <div class="card">
+      <div class="card-header">
+        Comments
+      </div>
+    </div>
+  </div>
+</div>

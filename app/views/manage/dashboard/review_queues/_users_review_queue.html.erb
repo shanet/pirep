@@ -1,0 +1,23 @@
+<%
+  queue_limit = 10
+  users = Users::Known.where(reviewed_at: nil).order(created_at: :desc)
+%>
+
+<div class="card mt-3">
+  <div class="card-header d-flex justify-content-between">
+    <span>Users Review Queue</span>
+    <span><span class="badge bg-primary rounded-pill"><%= number_with_delimiter users.count %></span></span>
+  </div>
+
+  <div class="list-group list-group-flush">
+    <% if users.any? %>
+      <% users.limit(queue_limit).each do |user| %>
+        <%= render 'manage/dashboard/review_queues/user_row', user: user %>
+      <% end %>
+
+      <%= render 'manage/dashboard/review_queues/oversize_queue', records: users, queue_limit: queue_limit %>
+    <% else %>
+      <%= render 'manage/dashboard/review_queues/empty_queue' %>
+    <% end %>
+  </div>
+</div>

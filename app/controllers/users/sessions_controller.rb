@@ -12,7 +12,7 @@ class Users::SessionsController < Devise::SessionsController
 
     super do
       # If the user was signed in and it's an XHR request respond with the appropriate redirect. Otherwise, let the default devise behavior handle it
-      next unless current_user && request.xhr?
+      next unless user_signed_in? && request.xhr?
 
       @redirect = after_sign_in_path_for(current_user)
       return render :create

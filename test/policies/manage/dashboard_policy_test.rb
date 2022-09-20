@@ -2,8 +2,10 @@ require 'policy_test'
 
 module Manage
   class DashboardPolicyTest < PolicyTest
-    test 'index?' do
-      assert_allows_admin :manage_dashboard, :index
+    ['index', 'activity'].each do |action|
+      test action do
+        assert_allows_admin :manage_dashboard, action
+      end
     end
   end
 end

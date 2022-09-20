@@ -9,6 +9,6 @@ class Users::SessionsPolicy < ApplicationPolicy
 
   def destroy?
     # Only allow a sign out if already signed in
-    return @user
+    return unknown? == false
   end
 end

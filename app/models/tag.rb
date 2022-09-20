@@ -106,6 +106,10 @@ class Tag < ApplicationRecord
     return self[:name].to_sym
   end
 
+  def label
+    return TAGS[name]&.[](:label)
+  end
+
 private
 
   def remove_empty_tag!

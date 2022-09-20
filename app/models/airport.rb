@@ -8,9 +8,6 @@ class Airport < ApplicationRecord
 
   accepts_nested_attributes_for :tags
 
-  validates :code, uniqueness: true
-  validates :site_number, uniqueness: true
-
   after_save :remove_empty_tag!
 
   FACILITY_TYPES = {
@@ -44,6 +41,20 @@ class Airport < ApplicationRecord
     ultralight: {
       hidden: true,
     },
+  }
+
+  FACILITY_USES = {
+    PU: 'Public',
+    PR: 'Private',
+  }
+
+  OWNERSHIP_TYPES = {
+    PU: 'Public',
+    PR: 'Private',
+    MA: 'Air Force',
+    MN: 'Navy',
+    MR: 'Army',
+    CG: 'Coast Guard',
   }
 
   LANDING_RIGHTS_TYPES = {
@@ -93,6 +104,17 @@ class Airport < ApplicationRecord
 
   # Only create versions when there's a change to one of the columns listed above
   has_paper_trail only: self::HISTORY_COLUMNS.keys
+
+  validates :code, uniqueness: true, presence: true
+  validates :name, presence: true
+  validates :site_number, uniqueness: true
+  validates :latitude, numericality: {}
+  validates :longitude, numericality: {}
+  validates :elevation, numericality: {only_integer: true}
+  validates :facility_type, inclusion: {in: FACILITY_TYPES.keys.map(&:to_s)}
+  validates :facility_use, inclusion: {in: FACILITY_USES.keys.map(&:to_s)}
+  validates :ownership_type, inclusion: {in: OWNERSHIP_TYPES.keys.map(&:to_s)}
+  validates :owner_phone, length: {maximum: 20}
 
   enum facility_type: FACILITY_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
   enum landing_rights: LANDING_RIGHTS_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
@@ -214,5 +236,13 @@ class Airport < ApplicationRecord
   def all_versions
     # Return versions of the airport and associated tags as well
     return versions.or(PaperTrail::Version.where(item_type: 'Tag', airport_id: id)).reorder(created_at: :desc)
+  end
+
+  def created_by
+    return Users::User.find_by(id: versions.find_by(event: 'create')&.whodunnit)
+  end
+
+  def unmapped?
+    return tags.any? {|tag| tag.name == :unmapped}
   end
 end

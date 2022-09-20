@@ -13,28 +13,28 @@ module AirportsHelper
   end
 
   def version_author(version)
+    # Use `find_by` to handle versions without an author
     user = Users::User.find_by(id: version.whodunnit)
-    return 'Unknown' unless user
+    return 'System' unless user
 
-    case user.type
-      when Users::Unknown.to_s
-        return link_to user.ip_address, manage_user_path(user)
-      else
-        return link_to user.email, manage_user_path(user)
+    if user.unknown?
+      return link_to user.ip_address, manage_user_path(user)
     end
+
+    return link_to user.email, manage_user_path(user)
   end
 
   def version_title(version, column)
     if version.item_type == 'Tag'
       case version.event
         when 'create'
-          return 'Tag Added'
+          return '<i class="fa-solid fa-square-plus"></i> Tag Added'.html_safe
         when 'destroy'
-          return 'Tag Removed'
+          return '<i class="fa-solid fa-square-minus"></i> Tag Removed'.html_safe
       end
     end
 
-    return Airport::HISTORY_COLUMNS[column.to_sym]
+    return '<i class="fa-solid fa-pen-to-square"></i> '.html_safe + Airport::HISTORY_COLUMNS[column.to_sym]
   end
 
   def diff(previous, current)

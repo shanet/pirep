@@ -1,0 +1,27 @@
+<% @breadcrumbs = [['Comments', manage_comments_path], [@comment.short_id, manage_comment_path(@comment)], ['Edit']] %>
+
+<h1 class="display-6">Edit Comment</h1>
+
+<%= form_with(model: @comment, url: manage_comment_path(@comment), html: {method: :patch}) do |form| %>
+  <%= render 'shared/record_errors', record: form.object %>
+
+  <div class="row">
+    <div class="col-2 my-1">
+    <%= form.label :helpful_count, class: 'form-label' %>
+    <%= form.number_field :helpful_count, class: 'form-control' %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 my-1">
+      <%= form.label :body, class: 'form-label' %>
+      <%= form.text_area :body, class: 'form-control', rows: 10 %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 my-3">
+      <%= form.submit 'Submit', class: 'btn btn-primary' %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,33 @@
+<% @breadcrumbs = [['Comments', manage_comments_path]] %>
+
+<h1 class="display-6">All Comments</h1>
+
+<% if @comments.any? %>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Author</th>
+        <th>Airport</th>
+        <th>Reviewed</th>
+        <th>Body</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @comments.each do |comment| %>
+        <tr>
+          <td class="col"><%= link_to comment.short_id, manage_comment_path(comment) %></td>
+          <td class="col"><%= link_to comment.user.short_id, manage_user_path(comment.user) %> <small class="text-muted">(<%= comment.user.type.demodulize %>)</small></td>
+          <td class="col"><%= link_to comment.airport.code, manage_airport_path(comment.airport) %></td>
+          <td class="col text-center"><i class="fs-4 fa-solid <%= comment.reviewed_at ? 'fa-solid fa-square-check text-success' : 'fa-square-xmark text-warning' %>"></i></td>
+          <td class="col"><%= render_markdown(comment.body).truncate(400, separator: /\s/, omission: '…').html_safe %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= render 'shared/pagination', records: @comments, path: :manage_comments_path %>
+<% else %>
+  <%= render 'shared/empty_view', label: 'No comments exist.' %>
+<% end %>

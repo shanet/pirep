@@ -14,4 +14,9 @@ class TagTest < ActiveSupport::TestCase
     create(:tag, airport: airport)
     assert airport.tags.where.not(name: :empty).any?, 'Empty tag on airport not removed'
   end
+
+  test 'has label' do
+    tag = create(:tag)
+    assert_equal Tag::TAGS[tag.name.to_sym][:label], tag.label, 'Wrong label for tag'
+  end
 end

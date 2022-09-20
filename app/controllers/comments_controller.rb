@@ -2,7 +2,7 @@ class CommentsController < ApplicationController
   before_action :set_comment, only: [:helpful, :flag_outdated, :undo_outdated, :destroy]
 
   def create
-    comment = Comment.new(comment_params)
+    comment = Comment.new(comment_params.merge(user: active_user))
     authorize comment
 
     if comment.save
@@ -58,6 +58,6 @@ private
   end
 
   def comment_params
-    params.require(:comment).permit(:body, :airport_id)
+    return params.require(:comment).permit(:body, :airport_id)
   end
 end

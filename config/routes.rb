@@ -16,8 +16,20 @@ Rails.application.routes.draw do
 
   namespace :manage do
     root to: 'dashboard#index'
-    resources :airports
-    resources :users
+    get 'activity', to: 'dashboard#activity', as: :activity
+    resources :comments
+
+    resources :airports do
+      member do
+        patch 'version/:version_id', action: :update_version, as: :version
+      end
+    end
+
+    resources :users do
+      member do
+        get 'activity', to: 'users#activity', as: :activity
+      end
+    end
   end
 
   resources :airports do

@@ -8,19 +8,20 @@ class Users::RegistrationsPolicy < ApplicationPolicy
   end
 
   # Only allow users to view/edit themselves
+  # Unknown users are not allowed
   def show?
-    return @user == @record
+    return unknown? == false && @user == @record
   end
 
   def edit?
-    return @user == @record
+    return unknown? == false && @user == @record
   end
 
   def update?
-    return @user == @record
+    return unknown? == false && @user == @record
   end
 
   def destroy?
-    return @user == @record
+    return unknown? == false && @user == @record
   end
 end

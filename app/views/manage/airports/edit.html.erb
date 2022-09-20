@@ -1,14 +1,111 @@
-<% @breadcrumbs = [['Airports', manage_airports_path], [@airport.code, manage_airport_path(@airport)], ['Edit']] %>
+<%
+  @breadcrumbs = [['Airports', manage_airports_path], [@airport.code, manage_airport_path(@airport)], ['Edit']]
+
+  # Filter out any hidden facilitiy types
+  facility_type_options = Airport::FACILITY_TYPES.map {|key, value| value[:hidden] ? nil : [value[:label].singularize, key]}.compact
+  facility_use_options = Airport::FACILITY_USES.map {|key, value| [value, key]}
+  ownership_type_options = Airport::OWNERSHIP_TYPES.map {|key, value| [value, key]}
+%>
 
 <h1 class="display-6">Edit <%= @airport.code %></h1>
 
 <%= form_with(model: @airport, url: manage_airport_path(@airport), html: {method: :patch}) do |form| %>
-  <div class="my-1">
-    <%= form.label :name, class: 'form-label' %>
-    <%= form.text_field :name, class: 'form-control' %>
+  <%= render 'shared/record_errors', record: form.object %>
+
+  <div class="row mt-2">
+    <div class="col-12 col-md-6 mb-3">
+      <div class="card">
+        <div class="card-header">
+          The Basics
+        </div>
+
+        <div class="card-body">
+          <div class="mb-2">
+            <%= form.label :code, class: 'form-label' %>
+            <%= form.text_field :code, class: 'form-control' %>
+          </div>
+
+          <div class="mb-2">
+            <%= form.label :name, class: 'form-label' %>
+            <%= form.text_field :name, class: 'form-control' %>
+          </div>
+
+          <%= form.label :fuel_type, class: 'form-label' %>
+          <%= form.text_field :fuel_type, class: 'form-control' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 mb-3">
+      <div class="card">
+        <div class="card-header">
+          Location
+        </div>
+
+        <div class="card-body">
+          <div class="mb-2">
+            <%= form.label :latitude, class: 'form-label' %>
+            <%= form.text_field :latitude, class: 'form-control' %>
+          </div>
+
+          <div class="mb-2">
+            <%= form.label :longitude, class: 'form-label' %>
+            <%= form.text_field :longitude, class: 'form-control' %>
+          </div>
+
+          <%= form.label :elevation, class: 'form-label' %>
+          <div class="input-group">
+            <%= form.text_field :elevation, class: 'form-control' %>
+            <span class="input-group-text">ft</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 mb-3">
+      <div class="card">
+        <div class="card-header">
+          Facility
+        </div>
+
+        <div class="card-body">
+          <div class="mb-2">
+            <%= form.label :facility_type, class: 'form-label' %>
+            <%= form.select :facility_type, options_for_select(facility_type_options, selected: @airport.facility_type), {}, class: 'form-select' %>
+          </div>
+
+          <%= form.label :facility_use, class: 'form-label' %>
+          <%= form.select :facility_use, options_for_select(facility_use_options, selected: @airport.facility_use), {}, class: 'form-select' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 mb-3">
+      <div class="card">
+        <div class="card-header">
+          Ownership
+        </div>
+
+      <div class="card-body">
+        <div class="mb-2">
+          <%= form.label :ownership_type, class: 'form-label' %>
+          <%= form.select :ownership_type, options_for_select(ownership_type_options, selected: @airport.ownership_type), {}, class: 'form-select' %>
+        </div>
+
+        <div class="mb-2">
+          <%= form.label :owner_name, class: 'form-label' %>
+          <%= form.text_field :owner_name, class: 'form-control' %>
+        </div>
+
+        <%= form.label :owner_phone, class: 'form-label' %>
+        <%= form.text_field :owner_phone, class: 'form-control' %>
+      </div>
+    </div>
   </div>
 
-  <div class="my-3">
-    <%= form.submit 'Submit', class: 'btn btn-primary' %>
+  <div class="row">
+    <div class="col-12 mb-3">
+      <%= form.submit 'Submit', class: 'btn btn-primary' %>
+    </div>
   </div>
 <% end %>

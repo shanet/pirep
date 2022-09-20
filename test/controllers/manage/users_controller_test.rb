@@ -23,6 +23,11 @@ class Manage::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test 'update' do
     patch manage_user_path(@user, params: {users_user: {name: 'foo'}})
-    assert_response :redirect
+    assert_redirected_to manage_user_path(@user)
+  end
+
+  test 'activity' do
+    get activity_manage_user_path(@user)
+    assert_response :success
   end
 end

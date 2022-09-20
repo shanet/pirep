@@ -1,0 +1,46 @@
+<div id="version-<%= version.id %>" class="col-3 d-flex align-items-stretch">
+  <div class="border-start border-primary position-relative">
+    <div class="timeline-circle rounded-circle border border-primary bg-white"></div>
+
+    <div class="ms-3">
+      <%= time_ago_in_words(version.created_at).capitalize %> ago<br>
+
+      <small class="text-muted">
+        <%= format_timestamp(version.created_at) %>
+        <% if current_user&.admin? %>
+          <br><%= version_author(version) %>
+        <% end %>
+      </small>
+
+      <div>
+        <% if version.item_type != 'Tag' %>
+          <%= button_to 'View', preview_airport_path(@airport, version_id: version.id), method: :get, class: 'btn btn-outline-primary btn-sm mt-1' %>
+        <% end %>
+
+        <% if version.item_type == 'Tag' %>
+          <% if TagPolicy.new(current_user, version.reify).revert? %>
+            <%= button_to 'Revert', revert_tag_path(version.id), method: :patch, class: 'btn btn-outline-danger btn-sm mt-1' %>
+          <% end %>
+        <% else %>
+          <% if AirportPolicy.new(current_user, @airport).revert? %>
+            <%= button_to 'Revert', revert_airport_path(@airport, version_id: version.id), method: :patch, class: 'btn btn-outline-danger btn-sm mt-1' %>
+          <% end %>
+        <% end %>
+
+        <% if Manage::AirportPolicy.new(current_user, @airport).update_version? %>
+          <%= button_to (version.reviewed_at ? 'Unapprove' : 'Approve'), version_manage_airport_path(@airport, version.id),
+            class: 'btn btn-sm btn-outline-success mt-1',
+            method: :patch, params: {version: {reviewed_at: (version.reviewed_at ? nil : Time.zone.now)}} %>
+
+          <p><small class="text-muted">
+            <% if version.reviewed_at %>
+              Reviewed at: <%= format_timestamp version.reviewed_at %>
+            <% else %>
+              Unreviewed
+            <% end %>
+          </small></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="row border-bottom pb-2 mb-3">
+  <div class="col-4 text-center">
+    <h3><%= PaperTrail::Version.where(whodunnit: user.id).count %></h3>
+    <h6>Total Contributions</h6>
+  </div>
+
+  <div class="col-4 text-center">
+    <h3><%= PaperTrail::Version.where(whodunnit: user.id, item_type: Airport.name).count %></h3>
+    <h6>Airports Edited</h6>
+  </div>
+
+  <div class="col-4 text-center">
+    <h3><%= user.created_at.strftime('%b %Y') %></h3>
+    <h6>Member Since</h6>
+  </div>
+</div>

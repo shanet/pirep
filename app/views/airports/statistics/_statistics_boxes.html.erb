@@ -6,12 +6,16 @@
 
 <div class="row">
   <div class="col-sm mb-2 pe-1">
-    <%= render partial: 'airports/statistics/statistics_box', locals: {label: 'Elevation', value: @airport.elevation, units: :ft, icon: :mountain, theme: @airport.elevation_threat_level} %>
+    <%= render partial: 'airports/statistics/statistics_box', locals: {
+      label: 'Elevation', value: @airport.elevation, units: :ft, icon: :mountain, theme: @airport.elevation_threat_level
+    } %>
   </div>
 
   <div class="col-sm mb-2 ps-1">
     <% if runways.any? %>
-      <%= render partial: 'airports/statistics/statistics_box', locals: {label: 'Runway %s' % runways.first.number, value: runways.first.length, units: :ft, icon: :road, theme: runways.first.length_threat_level} %>
+      <%= render partial: 'airports/statistics/statistics_box', locals: {
+        label: 'Runway %s' % runways.first.number, value: runways.first.length, units: :ft, icon: :road, theme: runways.first.length_threat_level
+      } %>
     <% end %>
   </div>
 
@@ -22,11 +26,13 @@
       <% next unless runway %>
 
       <div class="col-sm mb-2 <%= if grouped_runways.compact.count == 2
-                                    index.zero? ? 'pe-1' : 'ps-1'
+                                    index == 0 ? 'pe-1' : 'ps-1'
                                   else
                                     ''
                                   end %>">
-        <%= render partial: 'airports/statistics/statistics_box', locals: {label: 'Runway %s' % runway.number, value: runway.length, units: :ft, icon: :road, theme: runway.length_threat_level} %>
+        <%= render partial: 'airports/statistics/statistics_box', locals: {
+          label: 'Runway %s' % runway.number, value: runway.length, units: :ft, icon: :road, theme: runway.length_threat_level
+        } %>
       </div>
     <% end %>
 

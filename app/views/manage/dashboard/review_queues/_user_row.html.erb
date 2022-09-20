@@ -1,0 +1,14 @@
+<div class="review-record list-group-item" data-record-id="<%= user.id %>">
+  <div class="d-flex justify-content-between">
+    <div>
+      <%= link_to user.email, manage_user_path(user) %><br>
+      <small class="text-muted"><%= time_ago_in_words(user.created_at).capitalize %> ago</small>
+    </div>
+
+    <div class="btn-group">
+      <%= link_to '<i class="fa-solid fa-pen-to-square text-primary me-1"></i>'.html_safe, edit_manage_user_path(user) %>
+      <%= button_to '<i class="fa-solid fa-square-check text-success"></i>'.html_safe, manage_user_path(user),
+        class: 'border-0 bg-transparent', method: :patch, remote: true, params: {users_user: {reviewed_at: Time.zone.now}} %>
+    </div>
+  </div>
+</div>

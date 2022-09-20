@@ -1,0 +1,26 @@
+<div class="review-record list-group-item" data-record-id="<%= comment.id %>">
+  <div class="d-flex justify-content-between mb-1">
+    <div>
+      <small>
+        <%= link_to comment.short_id, manage_comment_path(comment) %> |
+        <%= link_to comment.airport.code, manage_airport_path(comment.airport) %> |
+
+        <% if comment.user.unknown? %>
+          <%= link_to comment.user.ip_address, manage_user_path(comment.user) %> |
+        <% else %>
+          <%= link_to comment.user.email, manage_user_path(comment.user) %> |
+        <% end %>
+
+        <span class="text-muted"><%= time_ago_in_words(comment.created_at).capitalize %> ago</span>
+      </small>
+    </div>
+
+    <div class="btn-group">
+      <%= link_to '<i class="fa-solid fa-pen-to-square text-primary me-1"></i>'.html_safe, edit_manage_comment_path(comment) %>
+      <%= button_to '<i class="fa-solid fa-square-check text-success"></i>'.html_safe, manage_comment_path(comment),
+        class: 'border-0 bg-transparent', method: :patch, remote: true, params: {comment: {reviewed_at: Time.zone.now}} %>
+    </div>
+  </div>
+
+  <%= render_markdown(comment.body).truncate(400, separator: /\s/, omission: '…').html_safe %>
+</div>

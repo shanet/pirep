@@ -2,8 +2,13 @@ require 'test_helper'
 
 class CommentsControllerTest < ActionDispatch::IntegrationTest
   test 'create' do
+    user = create(:known)
+    sign_in user
+
     post comments_path, params: {comment: {airport_id: create(:airport).id, body: 'Hello, world!'}}
     assert_response :redirect
+
+    assert_equal user, Comment.last.user, 'User not set for comment'
   end
 
   test 'helpful' do

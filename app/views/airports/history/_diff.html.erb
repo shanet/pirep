@@ -1,0 +1,17 @@
+<div class="col-9">
+  <div class="card mb-5">
+    <div class="card-header ps-1">
+      <%= version_title(version, column) %>
+    </div>
+
+    <div class="row">
+      <div class="col-6 pe-0">
+        <div class="diff diff-removed p-1"><%= diff(change.first, change.last).left.html_safe %></div>
+      </div>
+
+      <div class="col-6 ps-0 border-start">
+        <div class="diff diff-added p-1"><%= diff(change.first, change.last).right.html_safe %></div>
+      </div>
+    </div>
+  </div>
+</div>

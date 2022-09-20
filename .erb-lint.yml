@@ -5,14 +5,21 @@ linters:
   Rubocop:
     enabled: true
     rubocop_config:
+      inherit_from:
+        - .rubocop.yml
+
+      Layout/ArgumentAlignment:
+        Enabled: false
+      Layout/FirstHashElementIndentation:
+        Enabled: false
+      Layout/HashAlignment:
+        Enabled: false
       Layout/InitialIndentation:
         Enabled: false
       Layout/LeadingEmptyLines:
         Enabled: false
       Layout/LineLength:
         Enabled: false
-      Layout/SpaceInsideHashLiteralBraces:
-        EnforcedStyle: no_space
       Layout/TrailingEmptyLines:
         Enabled: false
       Layout/TrailingWhitespace:
@@ -21,16 +28,8 @@ linters:
       Lint/UselessAssignment:
         Enabled: false
 
-      Style/FormatString:
-        EnforcedStyle: percent
-      Style/FormatStringToken:
+      Style/TrailingCommaInHashLiteral:
         Enabled: false
-      Style/FrozenStringLiteralComment:
-        Enabled: false
-      Style/IfUnlessModifier:
-        Enabled: false
-      Style/TrailingCommaInArrayLiteral:
-        EnforcedStyleForMultiline: comma
 
   NoJavascriptTagHelper:
     enabled: false
