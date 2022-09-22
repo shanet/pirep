@@ -38,6 +38,11 @@ private
     return current_user || Users::Unknown.create_or_find_by!(ip_address: request.ip)
   end
 
+  # Tell Pundit to use the active user wrapper instead of current user directly
+  def pundit_user
+    return active_user
+  end
+
   def touch_user
     return unless active_user
 

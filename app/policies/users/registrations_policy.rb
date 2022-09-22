@@ -1,10 +1,10 @@
 class Users::RegistrationsPolicy < ApplicationPolicy
   def new?
-    return true
+    return !@user.disabled_at
   end
 
   def create?
-    return true
+    return !@user.disabled_at
   end
 
   # Only allow users to view/edit themselves

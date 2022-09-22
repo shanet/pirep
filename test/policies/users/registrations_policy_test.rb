@@ -9,7 +9,7 @@ module Users
 
     ['new', 'create'].each do |action|
       test action do
-        assert_allows_all :registration, action
+        assert_allows_all :registration, action, allow_disabled: false
       end
     end
 

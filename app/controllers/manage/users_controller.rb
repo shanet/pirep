@@ -46,6 +46,6 @@ private
   end
 
   def user_params
-    return params.require(:users_user).permit(:name, :email, :ip_address, :type, :reviewed_at, :locked_at, :confirmed_at)
+    return params.require(:users_user).permit(:name, :email, :ip_address, :type, :reviewed_at, :disabled_at, :locked_at, :confirmed_at)
   end
 end

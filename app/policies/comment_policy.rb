@@ -1,18 +1,18 @@
 class CommentPolicy < ApplicationPolicy
   def create?
-    return true
+    return !@user.disabled_at
   end
 
   def helpful?
-    return true
+    return !@user.disabled_at
   end
 
   def flag_outdated?
-    return true
+    return !@user.disabled_at
   end
 
   def undo_outdated?
-    return true
+    return !@user.disabled_at
   end
 
   def destroy?

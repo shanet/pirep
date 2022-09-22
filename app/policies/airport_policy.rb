@@ -8,7 +8,7 @@ class AirportPolicy < ApplicationPolicy
   end
 
   def update?
-    return true
+    return !@user.disabled_at
   end
 
   def search?

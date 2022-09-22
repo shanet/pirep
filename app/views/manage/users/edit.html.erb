@@ -40,10 +40,27 @@
 
   <div class="row">
     <div class="col-12 col-md-4 my-2">
+      <%= form.label :disabled_at, class: 'form-label' %>
+      <div class="input-group">
+        <%= form.text_field :disabled_at, class: 'form-control' %>
+
+        <% if @user.disabled_at %>
+          <a href="#" class="input-group-text" onclick="document.querySelector('#users_user_disabled_at').value=''">Clear</a>
+        <% else %>
+          <a href="#" class="input-group-text" onclick="document.querySelector('#users_user_disabled_at').value=new Date(Date.now()).toISOString()">Now</a>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4 my-2">
       <%= form.label :locked_at, class: 'form-label' %>
       <div class="input-group">
         <%= form.text_field :locked_at, class: 'form-control' %>
-        <a href="#" class="input-group-text" onclick="document.querySelector('#users_user_locked_at').value=new Date(Date.now()).toISOString()">Now</a>
+        <% if @user.locked_at %>
+          <a href="#" class="input-group-text" onclick="document.querySelector('#users_user_locked_at').value=''">Clear</a>
+        <% else %>
+          <a href="#" class="input-group-text" onclick="document.querySelector('#users_user_locked_at').value=new Date(Date.now()).toISOString()">Now</a>
+        <% end %>
       </div>
     </div>
 
@@ -51,7 +68,12 @@
       <%= form.label :confirmed_at, class: 'form-label' %>
       <div class="input-group">
         <%= form.text_field :confirmed_at, class: 'form-control' %>
-        <a href="#" class="input-group-text" onclick="document.querySelector('#users_user_confirmed_at').value=new Date(Date.now()).toISOString()">Now</a>
+
+        <% if @user.confirmed_at %>
+          <a href="#" class="input-group-text" onclick="document.querySelector('#users_user_confirmed_at').value=''">Clear</a>
+        <% else %>
+          <a href="#" class="input-group-text" onclick="document.querySelector('#users_user_confirmed_at').value=new Date(Date.now()).toISOString()">Now</a>
+        <% end %>
       </div>
     </div>
   </div>
