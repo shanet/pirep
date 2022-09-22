@@ -7,6 +7,8 @@
     </div>
 
     <ul class="list-group">
+      <li class="list-group-item"><strong>Type:</strong> <%= @user.type.demodulize %></li>
+
       <% if @user.unknown? %>
         <li class="list-group-item"><strong>IP Address:</strong> <%= @user.ip_address %></li>
       <% else %>
@@ -16,7 +18,7 @@
         <li class="list-group-item"><strong>Locked:</strong> <i class="fa-solid fa-<%= @user.locked_at ? 'square-check' : 'square-xmark' %>"></i></li>
       <% end %>
 
-      <li class="list-group-item"><strong>Type:</strong> <%= @user.type.demodulize %></li>
+      <li class="list-group-item"><strong>Disabled:</strong> <i class="fa-solid fa-<%= @user.disabled_at ? 'square-check' : 'square-xmark' %>"></i></li>
       <li class="list-group-item"><strong>Last edit:</strong> <%= @user.last_edit_at || 'None' %></li>
 
       <% unless @user.unknown? %>

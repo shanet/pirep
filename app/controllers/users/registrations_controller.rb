@@ -1,5 +1,5 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  layout :layout_for_action
+  layout 'devise'
   respond_to :html, :js
 
   before_action :configure_sign_up_params, only: [:create]
