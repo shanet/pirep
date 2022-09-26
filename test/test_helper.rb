@@ -20,6 +20,14 @@ class ActiveSupport::TestCase
     PaperTrail.enabled = was_enabled
     PaperTrail.request.enabled = was_enabled_for_request
   end
+
+  def with_rack_attack
+    was_enabled = Rack::Attack.enabled
+    Rack::Attack.enabled = true
+    yield
+  ensure
+    Rack::Attack.enabled = was_enabled
+  end
 end
 
 # Include Devise helpers for signing in/out users

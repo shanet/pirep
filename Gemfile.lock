@@ -206,6 +206,8 @@ GEM
       activesupport (>= 3.0.0)
     racc (1.6.0)
     rack (2.2.4)
+    rack-attack (6.6.1)
+      rack (>= 1.0, < 3)
     rack-test (2.0.2)
       rack (>= 1.3)
     rails (7.0.3.1)
@@ -336,6 +338,7 @@ DEPENDENCIES
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
   pundit
+  rack-attack
   rails (= 7.0.3.1)
   rubocop
   rubocop-rails

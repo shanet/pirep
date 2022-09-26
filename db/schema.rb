@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_22_061145) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_24_072520) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -85,6 +85,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_22_061145) do
     t.datetime "reviewed_at", precision: nil
     t.index ["airport_id"], name: "index_comments_on_airport_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "postgres_cache_store", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "key", null: false
+    t.text "value"
+    t.jsonb "entry"
+    t.index ["key"], name: "index_postgres_cache_store_on_key", unique: true
   end
 
   create_table "remarks", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
