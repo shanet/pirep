@@ -47,4 +47,7 @@ Rails.application.configure do
 
   # Turn off PaperTrail in test for performance
   PaperTrail.enabled = false
+
+  Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
+  Rack::Attack.enabled = false
 end

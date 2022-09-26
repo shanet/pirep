@@ -26,12 +26,13 @@ gem 'font-awesome-sass'
 gem 'kramdown'
 gem 'paper_trail'
 gem 'pundit'
-gem 'rubocop'
-gem 'rubocop-rails'
+gem 'rack-attack'
 gem 'rubyzip'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'rubocop'
+  gem 'rubocop-rails'
 end
 
 group :development do

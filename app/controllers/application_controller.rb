@@ -34,8 +34,12 @@ private
     end
   end
 
-  def active_user
-    return current_user || Users::Unknown.create_or_find_by!(ip_address: request.ip)
+  def active_user(create_unknown: true)
+    return current_user if current_user
+
+    # Create a new unknown user if requested. We may want to skip this so we're not creating users on each page view for example.
+    method = (create_unknown ? :create_or_find_by! : :find_by)
+    return Users::Unknown.send(method, ip_address: request.ip)
   end
 
   # Tell Pundit to use the active user wrapper instead of current user directly
@@ -44,7 +48,7 @@ private
   end
 
   def touch_user
-    return unless active_user
+    return unless active_user(create_unknown: false)
 
     active_user.touch :last_seen_at # rubocop:disable Rails/SkipsModelValidations
   end

@@ -68,8 +68,4 @@ protected
       resource.update_without_password(params)
     end
   end
-
-  def layout_for_action
-    return (action_name == :new ? 'devise' : 'application')
-  end
 end
