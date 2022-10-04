@@ -250,6 +250,10 @@ export function getZoom() {
   return map.getZoom();
 }
 
+export function getCenter() {
+  return Object.values(map.getCenter()).reverse();
+}
+
 function exposeObjectsForTesting() {
   // Don't expose anything if not running tests
   if(!document.getElementById('map').dataset.isTest) return;

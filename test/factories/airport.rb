@@ -4,6 +4,7 @@ FactoryBot.define do
     sequence(:code) {|count| 'PAE%d' % count}
     latitude {47.9073174}
     longitude {-122.282094}
+    coordinates {[latitude, longitude]}
     sequence(:site_number) {|count| '2621%d.*A' % count}
     facility_type {'airport'}
     facility_use {'PU'}

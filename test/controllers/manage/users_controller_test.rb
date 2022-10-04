@@ -11,6 +11,11 @@ class Manage::UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test 'search' do
+    get search_manage_users_path(query: @user.email)
+    assert_response :success
+  end
+
   test 'show' do
     get manage_user_path(@user)
     assert_response :success

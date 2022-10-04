@@ -1,0 +1,21 @@
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>User Type</th>
+      <th class="text-center">Reviewed</th>
+      <th>Email Address / IP Address</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td class="col"><%= link_to user.short_id, manage_user_path(user) %></td>
+        <td class="col"><%= user.type.demodulize %></td>
+        <td class="col text-center"><i class="fs-4 fa-solid <%= user.reviewed_at ? 'fa-solid fa-square-check text-success' : 'fa-square-xmark text-warning' %>"></i></td>
+        <td class="col"><%= user_label(user) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

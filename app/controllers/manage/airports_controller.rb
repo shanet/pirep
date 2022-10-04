@@ -1,8 +1,17 @@
 class Manage::AirportsController < ApplicationController
+  include SearchQueryable
   before_action :set_airport, only: [:show, :edit, :update, :update_version]
 
   def index
     @airports = Airport.order(:code).page(params[:page])
+    authorize @airports, policy_class: Manage::AirportPolicy
+  end
+
+  def search
+    results = Search.query(preprocess_query, Airport, wildcard: true)
+
+    @total_records = results.count(Airport.table_name)
+    @airports = results.page(params[:page])
     authorize @airports, policy_class: Manage::AirportPolicy
   end
 

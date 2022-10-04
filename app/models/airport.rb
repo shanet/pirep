@@ -1,6 +1,8 @@
 require 'google/google_api'
 
 class Airport < ApplicationRecord
+  include Searchable
+
   has_many :runways, dependent: :destroy
   has_many :remarks, dependent: :destroy
   has_many :tags, dependent: :destroy
@@ -120,6 +122,11 @@ class Airport < ApplicationRecord
   enum landing_rights: LANDING_RIGHTS_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
 
   has_many_attached :photos
+
+  # Rank airport codes above names to prioritize searching by airport code
+  # Also rank public airports over private airports
+  searchable({column: :code, weight: ['facility_use = \'PU\'', :A, :B]})
+  searchable({column: :name, weight: ['facility_use = \'PU\'', :C, :D]})
 
   def self.geojson
     return Airport.includes(:tags).map(&:to_geojson)

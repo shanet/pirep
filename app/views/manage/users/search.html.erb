@@ -1,8 +1,8 @@
-<% @breadcrumbs = [['Users']] %>
+<% @breadcrumbs = [['Users', manage_users_path], ['Search Results']] %>
 
 <div class="row">
   <div class="col-8">
-    <h1 class="display-6">All Users</h1>
+    <h1 class="display-6">Search Results</h1>
   </div>
 
   <div class="col-4 d-flex flex-column">
@@ -12,7 +12,7 @@
 
 <% if @users.any? %>
   <%= render 'index_table' %>
-  <%= render 'shared/pagination', records: @users, path: :manage_users_path %>
+  <%= render 'shared/pagination', records: @users, total_records: @total_records, path: :search_manage_users_path, path_query: {query: params['query']} %>
 <% else %>
   <%= render 'shared/empty_view', label: 'No users exist.' %>
 <% end %>

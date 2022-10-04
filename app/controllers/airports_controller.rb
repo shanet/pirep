@@ -1,4 +1,6 @@
 class AirportsController < ApplicationController
+  include SearchQueryable
+
   layout 'blank'
 
   before_action :set_airport, only: [:update, :history]
@@ -32,10 +34,10 @@ class AirportsController < ApplicationController
   def search
     authorize :airport, :search?
 
-    # Do a very basic match on the airport code for now. TODO: make this an actual search
-    results = Airport.where('code LIKE ?', params[:query].upcase).pluck(:code, :name)
+    coordinates = (params['latitude'] && params['longitude'] ? {latitude: params['latitude'].to_f, longitude: params['longitude'].to_f} : nil)
 
-    render json: results.map {|airport| {code: airport.first, label: airport.last}}
+    results = Search.query(preprocess_query, Airport, coordinates, wildcard: true).limit(10).uniq
+    render json: results.map {|airport| {code: airport.code, label: airport.name}}
   end
 
   def history

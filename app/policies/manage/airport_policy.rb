@@ -3,6 +3,10 @@ class Manage::AirportPolicy < ApplicationPolicy
     return admin?
   end
 
+  def search?
+    return admin?
+  end
+
   def show?
     return admin?
   end
