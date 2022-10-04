@@ -19,6 +19,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Update Apt
+        run: sudo apt-get update
+
       # Ghostscript is needed for ImageMagick to work with PDFs
       - name: Install Packages
         run: sudo apt-get install --yes ghostscript

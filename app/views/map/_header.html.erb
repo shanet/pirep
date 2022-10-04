@@ -1,5 +1,9 @@
 <div class="map-header">
-  <span class="ps-2"><%= image_tag 'logo.png' %></span> |
+  <% if user_signed_in? && current_user.admin? %>
+    <span><%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_root_path, class: 'ps-2' %></span> |
+  <% else %>
+    <span class="ps-2"><%= image_tag 'logo.png' %></span> |
+  <% end %>
 
   <% if user_signed_in? %>
     <span><%= link_to '<i class="fas fa-user me-1"></i>'.html_safe + current_user.email, user_path %></span> |

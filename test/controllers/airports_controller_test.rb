@@ -2,7 +2,7 @@ require 'test_helper'
 
 class AirportsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @airport = create(:airport)
+    @airport = create(:airport, code: 'PAE')
   end
 
   test 'lists airports' do
@@ -70,7 +70,8 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'searches airports' do
-    get search_airports_path(query: @airport.code)
+    # Searching with the K prefix should drop it and return the same results as without it
+    get search_airports_path(query: "K#{@airport.code}", latitude: @airport.latitude, longitude: @airport.longitude)
 
     assert_response :success
     assert_equal @airport.code, JSON.parse(response.body).first['code'], 'Airport not returned from search'

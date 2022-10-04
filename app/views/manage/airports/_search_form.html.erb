@@ -1,0 +1,7 @@
+<%= form_tag(search_manage_airports_path, class: 'mt-auto', method: :get) do %>
+  <div class="input-group">
+    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+    <input type="text" name="query" class="form-control" value="<%= params['query'] %>" autocomplete="off">
+    <button class="btn btn-primary">Search</button>
+  </div>
+<% end %>

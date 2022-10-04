@@ -1,0 +1,18 @@
+<% @breadcrumbs = [['Airports', manage_airports_path], ['Search Results']] %>
+
+<div class="row">
+  <div class="col-8">
+    <h1 class="display-6">Search Results</h1>
+  </div>
+
+  <div class="col-4 d-flex flex-column">
+    <%= render 'search_form' %>
+  </div>
+</div>
+
+<% if @airports.any? %>
+  <%= render 'index_table' %>
+  <%= render 'shared/pagination', records: @airports, total_records: @total_records, path: :search_manage_airports_path, path_query: {query: params['query']} %>
+<% else %>
+  <%= render 'shared/empty_view', label: 'No airports exist.' %>
+<% end %>

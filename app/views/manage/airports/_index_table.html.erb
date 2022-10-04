@@ -1,0 +1,19 @@
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Code</th>
+      <th>Name</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @airports.each do |airport| %>
+      <tr>
+        <td class="col"><%= link_to airport.short_id, manage_airport_path(airport) %></td>
+        <td class="col"><%= airport.code %></td>
+        <td class="col"><%= airport.name.titleize %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

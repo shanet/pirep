@@ -20,12 +20,16 @@ Rails.application.routes.draw do
     resources :comments
 
     resources :airports do
+      get 'search', action: :search, as: :search, on: :collection
+
       member do
         patch 'version/:version_id', action: :update_version, as: :version
       end
     end
 
     resources :users do
+      get 'search', action: :search, as: :search, on: :collection
+
       member do
         get 'activity', to: 'users#activity', as: :activity
       end
@@ -33,7 +37,7 @@ Rails.application.routes.draw do
   end
 
   resources :airports do
-    get 'search(/:query)', action: :search, as: :search, on: :collection
+    get 'search', action: :search, as: :search, on: :collection
 
     member do
       get 'history', as: :history

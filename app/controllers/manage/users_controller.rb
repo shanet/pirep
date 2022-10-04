@@ -1,8 +1,18 @@
 class Manage::UsersController < ApplicationController
+  include SearchQueryable
+
   before_action :set_user, only: [:show, :edit, :update, :destroy, :activity]
 
   def index
     @users = Users::User.order(:updated_at).page(params[:page])
+    authorize @users, policy_class: Manage::UserPolicy
+  end
+
+  def search
+    results = Search.query(preprocess_query, Users::User, wildcard: true)
+
+    @total_records = results.count(Users::User.table_name)
+    @users = results.page(params[:page])
     authorize @users, policy_class: Manage::UserPolicy
   end
 

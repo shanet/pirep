@@ -11,6 +11,11 @@ class Manage::AirportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test 'search' do
+    get search_manage_airports_path(query: @airport.code)
+    assert_response :success
+  end
+
   test 'show' do
     get manage_airport_path(@airport)
     assert_response :success

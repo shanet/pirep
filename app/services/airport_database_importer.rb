@@ -43,6 +43,7 @@ private
       owner_phone: airport_data[:owner_phone],
       latitude: airport_data[:latitude],
       longitude: airport_data[:longitude],
+      coordinates: [airport_data[:latitude], airport_data[:longitude]],
       elevation: airport_data[:elevation].to_i,
       fuel_type: airport_data[:fuel_type],
       landing_rights: (airport_data[:facility_use] == 'PR' ? :private_ : :public_),

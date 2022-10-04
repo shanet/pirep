@@ -10,8 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_24_072520) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_28_074636) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "cube"
+  enable_extension "earthdistance"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
@@ -70,6 +72,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_24_072520) do
     t.string "landing_requirements"
     t.string "diagram"
     t.datetime "reviewed_at", precision: nil
+    t.point "coordinates"
     t.index ["code"], name: "index_airports_on_code", unique: true
     t.index ["site_number"], name: "index_airports_on_site_number", unique: true
   end
@@ -112,6 +115,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_24_072520) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["airport_id"], name: "index_runways_on_airport_id"
+  end
+
+  create_table "searches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "searchable_type", null: false
+    t.uuid "searchable_id", null: false
+    t.tsvector "term_vector", null: false
+    t.string "term", null: false
+    t.point "coordinates"
+    t.index ["searchable_id", "searchable_type", "term"], name: "index_searches_on_searchable_id_and_searchable_type_and_term", unique: true
+    t.index ["searchable_type", "searchable_id"], name: "index_searches_on_searchable"
+    t.index ["term_vector"], name: "index_searches_on_term_vector", using: :gin
   end
 
   create_table "tags", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|

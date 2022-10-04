@@ -7,6 +7,7 @@ let selectedSearchResultIndex = -1;
 document.addEventListener('DOMContentLoaded', () => {
   const search = document.getElementById('search');
   if(!search) return;
+
   const {searchEndpoint} = search.dataset;
 
   const inputEventHandler = utils.debounce(async () => {
@@ -15,7 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Only start searching if three or more characters have been entered
     if(query.length < 3) return;
 
-    const response = await fetch(`${searchEndpoint}/${query}`);
+    const mapCenter = map.getCenter();
+    const response = await fetch(`${searchEndpoint}?query=${query}&latitude=${mapCenter[0]}&longitude=${mapCenter[1]}`);
 
     if(!response.ok) {
       return flashes.show(flashes.FLASH_ERROR, 'An error occurred while retrieving search results.');
