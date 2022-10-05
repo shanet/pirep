@@ -128,4 +128,11 @@ class AirportTest < ActiveSupport::TestCase
     create(:tag, name: :unmapped, airport: @airport)
     assert @airport.reload.unmapped?, 'Unmapped airport not considered unmapped'
   end
+
+  test 'deserializes coordinates as point type' do
+    with_versioning do
+      @airport.update!(description: 'changed')
+      assert @airport.versions.last.reify.coordinates.is_a?(ActiveRecord::Point), 'Coordinates not deserialized as point'
+    end
+  end
 end
