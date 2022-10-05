@@ -137,6 +137,16 @@ class Airport < ApplicationRecord
     return FACILITY_TYPES.reject {|_key, value| value[:hidden]}
   end
 
+  def []=(key, value)
+    # Papertrail will not deserialize point objects from JSONB as point objects.
+    # Convert `coordinates` to a point object when deserializing to account for this.
+    if key == :coordinates && value.is_a?(Hash)
+      value = ActiveRecord::Point.new(value['x'], value['y'])
+    end
+
+    super
+  end
+
   def to_geojson
     return {
       type: 'Feature',
