@@ -4,6 +4,7 @@ class TagsController < ApplicationController
     authorize @tag
 
     if @tag.destroy
+      Action.create!(type: :tag_removed, actionable: @tag, user: active_user, version: @tag.versions.last).persisted?
       render :destroy
     else # rubocop:disable Style/EmptyElse
       # TODO: error handle

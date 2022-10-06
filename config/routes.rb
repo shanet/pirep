@@ -12,6 +12,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     get 'user', to: 'users/registrations#show'
+    get 'user/activity', to: 'users/registrations#activity', as: :activity_user
   end
 
   namespace :manage do

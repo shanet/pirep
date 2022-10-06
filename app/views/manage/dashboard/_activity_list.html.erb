@@ -1,0 +1,20 @@
+<div class="card mt-3">
+  <div class="card-header d-flex justify-content-between">
+    <span><%= title %></span>
+    <span><span class="badge bg-primary rounded-pill"><%= number_with_delimiter count %></span></span>
+  </div>
+
+  <div class="list-group list-group-flush">
+    <% if records.any? %>
+      <% records.each do |airport| %>
+        <div class="list-group-item">
+          <%= yield airport %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="list-group-item">
+        <%= render 'shared/empty_view', label: 'No activity', icon: 'fa-solid fa-ghost' %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -28,11 +28,13 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
 
   test 'updates airport, unknown user' do
     with_versioning do
-      # Updating an airport should create a new unknown user if not signed in
-      assert_difference('PaperTrail::Version.count') do
-        assert_difference('Users::Unknown.count') do
-          patch airport_path(@airport), params: {airport: {description: 'description'}}
-          assert_redirected_to airport_path(@airport.code)
+      assert_difference('Action.where(type: :airport_edited).count') do
+        assert_difference('PaperTrail::Version.count') do
+          # Updating an airport should create a new unknown user if not signed in
+          assert_difference('Users::Unknown.count') do
+            patch airport_path(@airport), params: {airport: {description: 'description'}}
+            assert_redirected_to airport_path(@airport.code)
+          end
         end
       end
 
@@ -55,8 +57,10 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
 
     # If there's a signed in user a new unknown user should not be created
     assert_difference('Users::Unknown.count', 0) do
-      patch airport_path(@airport), params: {airport: {description: 'description'}}
-      assert_redirected_to airport_path(@airport.code)
+      assert_difference('Action.where(type: :airport_edited).count') do
+        patch airport_path(@airport), params: {airport: {description: 'description'}}
+        assert_redirected_to airport_path(@airport.code)
+      end
     end
 
     assert_in_delta Time.zone.now, user.reload.last_edit_at, 1.second, 'Known user\'s last edit timestamp not set after updating airport'
@@ -64,8 +68,19 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
 
   test 'updates airport photos' do
     assert_difference('@airport.photos.count', 1) do
-      patch airport_path(@airport), params: {airport: {photos: [Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png')]}}
+      assert_difference('Action.where(type: :airport_photo_uploaded).count') do
+        patch airport_path(@airport), params: {airport: {photos: [Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png')]}}
+        assert_redirected_to airport_path(@airport.code)
+      end
+    end
+  end
+
+  test 'update airport tags' do
+    assert_difference('Action.where(type: :tag_added).count') do
+      patch airport_path(@airport), params: {airport: {tags_attributes: {'0': {name: :camping, selected: true}}}}
+
       assert_redirected_to airport_path(@airport.code)
+      assert_equal :camping, @airport.reload.tags.last.name, 'Did not save tag'
     end
   end
 

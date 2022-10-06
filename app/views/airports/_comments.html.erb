@@ -12,7 +12,10 @@
         </div>
 
         <div class="comment-actions text-end ms-2">
-          <%= button_to [:helpful, comment], remote: true, class: 'btn btn-outline-primary btn-sm' do %>
+          <%= button_to [:helpful, comment],
+            remote: true,
+            class: "btn btn-#{comment.found_helpful?(active_user) ? '' : 'outline-'}primary btn-sm btn-helpful",
+            disabled: comment.found_helpful?(active_user) do %>
             <i class="fas fa-thumbs-up"></i> Helpful
           <% end %>
 

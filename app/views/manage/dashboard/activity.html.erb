@@ -1,22 +1,44 @@
+<% @breadcrumbs = [['Activity']] %>
+
 <div class="row">
-  <div class="col-12 col-md-3">
-    <div class="card mt-3">
-      <div class="card-body text-center">
-        <h3><%= number_with_delimiter PaperTrail::Version.where('created_at > ?', 1.day.ago).count %></h3>
-        <h6>Edits Today</h6>
-      </div>
-    </div>
+  <div class="col-6 col-md-3"><%= render 'meter', label: 'Total Edits', value: Action.where(type: Action.edited_actions).count %></div>
+  <div class="col-6 col-md-3"><%= render 'meter', label: 'Total Comments', value: Comment.count %></div>
+  <div class="col-6 col-md-3"><%= render 'meter', label: 'Edits Today', value: Action.where(type: Action.edited_actions).where('created_at > ?', 1.day.ago).count %></div>
+  <div class="col-6 col-md-3"><%= render 'meter', label: 'Active Users Today', value: Users::User.where('last_seen_at > ?', 1.day.ago).count %></div>
+</div>
+
+<div class="row">
+  <div class="col-12 col-md-6">
+    <%= render 'activity_list', records: @active_airports[:all_time],
+      title: "Top #{@limit} Airports &ndash; All Time".html_safe,
+      count: @active_airports[:all_time].count(Airport.table_name) do |airport| %>
+      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= airport.rank %> edits
+    <% end %>
   </div>
 
-  <div class="col-12 col-md-3">
-    <div class="card mt-3">
-      <div class="card-body text-center">
-        <h3><%= number_with_delimiter Users::User.where('last_seen_at > ?', 1.day.ago).count %></h3>
-        <h6>Active Users Today</h6>
-      </div>
-    </div>
+  <div class="col-12 col-md-6">
+    <%= render 'activity_list', records: @active_airports[:month],
+      title: "Top #{@limit} Airports &ndash; Past 30 days".html_safe,
+      count: @active_airports[:month].count(Airport.table_name) do |airport| %>
+      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= airport.rank %> edits
+    <% end %>
   </div>
 </div>
 
-Most Active Users - This week / All time
-Most Active Airports - This week / All time
+<div class="row">
+  <div class="col-12 col-md-6">
+    <%= render 'activity_list', records: @active_users[:all_time],
+      title: "Top #{@limit} Users &ndash; All Time".html_safe,
+      count: @active_users[:all_time].count(Users::User.table_name) do |user| %>
+      <%= link_to user_label(user), manage_user_path(user) %>: <%= user.rank %> edits
+    <% end %>
+  </div>
+
+  <div class="col-12 col-md-6">
+    <%= render 'activity_list', records: @active_users[:month],
+      title: "Top #{@limit} Users &ndash; Past 30 days".html_safe,
+      count: @active_users[:month].count(Users::User.table_name) do |user| %>
+      <%= link_to user_label(user), manage_user_path(user) %>: <%= user.rank %> edits
+    <% end %>
+  </div>
+</div>

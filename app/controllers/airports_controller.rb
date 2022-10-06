@@ -20,6 +20,7 @@ class AirportsController < ApplicationController
   def update
     if @airport.update(airport_params) && @airport.photos.attach(params[:airport][:photos] || [])
       touch_author
+      create_actions
 
       if request.xhr?
         head :ok
@@ -88,6 +89,24 @@ private
   def touch_author
     # Keep track of when a user last made an edit
     active_user&.touch(:last_edit_at) # rubocop:disable Rails/SkipsModelValidations
+  end
+
+  def create_actions
+    # Create an action for each added tag
+    if airport_params[:tags_attributes] # rubocop:disable Style/SafeNavigation
+      airport_params[:tags_attributes].each do |_key, tag|
+        Action.create!(type: :tag_added, actionable: @airport.tags.find_by(name: tag[:name]), user: active_user)
+      end
+    end
+
+    # Also (or) create an action for any edits to the airport
+    if airport_params.except(:tags_attributes).to_h.any?
+      Action.create!(type: :airport_edited, actionable: @airport, user: active_user, version: @airport.versions.last)
+    end
+
+    if params[:airport][:photos] # rubocop:disable Style/GuardClause
+      Action.create!(type: :airport_photo_uploaded, actionable: @airport, user: active_user)
+    end
   end
 
   def user_for_paper_trail

@@ -72,6 +72,15 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test 'activity' do
+    user = create(:known)
+    sign_in(user)
+    create(:action, user: user)
+
+    get activity_user_path
+    assert_response :success
+  end
+
   test 'edit' do
     user = create(:known)
     sign_in(user)

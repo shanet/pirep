@@ -1,0 +1,26 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "20138b2a7607bf15070ba4929def6a6bcde779a848be2245fc93e15f6870a87f",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/manage/dashboard_controller.rb",
+      "line": 28,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Action.select(\"#{action_foreign_key} AS join_id\", \"COUNT(id) AS rank\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Manage::DashboardController",
+        "method": "most_active_records"
+      },
+      "user_input": "action_foreign_key",
+      "confidence": "Medium",
+      "note": "The only values in this query are non-user changable constants"
+    }
+  ],
+  "updated": "2022-10-09 01:12:18 -0700",
+  "brakeman_version": "5.2.3"
+}

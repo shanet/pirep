@@ -1,36 +1,29 @@
 <%
-  # It may be worth it at some point to create an activity model and track activity through it since we can do all of this in the database.
-  # But since it's only limit*2 models here it should be fine to do it in memory which keeps things simple for the time being.
-  limit = 10
-  recent_activity = PaperTrail::Version.where(whodunnit: user.id, item_type: [Airport.name, Tag.name]).limit(limit) + Comment.where(user: @user).limit(limit)
-  recent_activity = recent_activity.sort_by(&:created_at).reverse![0..limit]
+  actions_limit = 10
+  actions = Action.where(user: user).order(created_at: :desc)
 %>
 
 <h5>Recent Activity</h5>
-<small class="text-muted"><%= link_to 'View all Activity', activity_manage_user_path(user) %></small>
+<small><%= link_to 'View all Activity', all_activity_path %></small>
 
-<% if recent_activity.any? %>
+<% if actions.any? %>
   <ul class="list-group my-3">
-    <% recent_activity.each do |record| %>
+    <% actions.limit(actions_limit).each do |action| %>
       <li class="list-group-item">
-        <% if record.is_a? PaperTrail::Version %>
-          <% if record.item_type == Airport.name %>
-            <i class="fa-solid fa-pen-to-square"></i> <%= link_to record.object['code'], airport_path(record.object['code']) %>:
-            <%= record.object_changes.keys.map(&:capitalize).join(', ') %>
-            <br><small class="text-muted"><%= format_timestamp record.created_at %></small>
+        <%
+          link = action_link(action)
+          next unless link
+        %>
 
-          <% elsif record.item_type == Tag.name %>
-            <i class="fa-solid <%= record.event == 'create' ? 'fa-square-plus' : 'fa-square-minus' %>"></i>
-            <%= link_to Airport.find(record.airport_id).code, airport_path(Airport.find(record.airport_id).code) %>:
-            Tag <%= record.event == 'create' ? 'added' : 'removed' %>
-            <br><small class="text-muted"><%= format_timestamp record.created_at %></small>
-          <% end %>
-
-        <% elsif record.is_a? Comment %>
-          <i class="fa-solid fa-comment"></i> <%= link_to record.airport.code, airport_path(record.airport) %>: Comment added
-          <br><small class="text-muted"><%= format_timestamp record.created_at %></small>
-        <% end %>
+        <i class="<%= link[:icon] %>"></i> <%= link[:label] %>
+        <br><small class="text-muted"><%= format_timestamp action.created_at %></small>
       </li>
+    <% end %>
+
+    <% if actions.count > actions_limit %>
+      <div class="list-group-item">
+        <small class="fst-italic text-muted">Showing <%= actions_limit %> most recent contributions only &mdash; <%= link_to 'view all activity', activity_manage_user_path(user) %>.</small>
+      </div>
     <% end %>
   </ul>
 <% else %>

@@ -1,5 +1,5 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  layout 'devise'
+  layout :layout_for_action
   respond_to :html, :js
 
   before_action :configure_sign_up_params, only: [:create]
@@ -23,6 +23,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def show
     authorize current_user, policy_class: Users::RegistrationsPolicy
+    @user = current_user
+  end
+
+  def activity
+    authorize current_user, policy_class: Users::RegistrationsPolicy
+    @actions = policy_scope(Action.where(user: @user).order(created_at: :desc).page(params[:page]))
     @user = current_user
   end
 
@@ -67,5 +73,9 @@ protected
       params.delete(:current_password)
       resource.update_without_password(params)
     end
+  end
+
+  def layout_for_action
+    return (action_name == :new ? 'devise' : 'application')
   end
 end

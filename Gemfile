@@ -14,6 +14,7 @@ gem 'puma', '~> 4.1'
 gem 'sass-rails', '>= 6'
 
 # Third party gems
+gem 'activerecord-cte'
 gem 'amazing_print'
 gem 'bootstrap', '~> 5'
 gem 'brakeman'

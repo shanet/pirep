@@ -13,6 +13,10 @@ class Users::RegistrationsPolicy < ApplicationPolicy
     return unknown? == false && @user == @record
   end
 
+  def activity?
+    return unknown? == false && @user == @record
+  end
+
   def edit?
     return unknown? == false && @user == @record
   end

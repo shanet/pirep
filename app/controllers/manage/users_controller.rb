@@ -4,7 +4,7 @@ class Manage::UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :activity]
 
   def index
-    @users = Users::User.order(:updated_at).page(params[:page])
+    @users = policy_scope(Users::User.order(:updated_at).page(params[:page]), policy_scope_class: Manage::UserPolicy::Scope)
     authorize @users, policy_class: Manage::UserPolicy
   end
 
@@ -12,7 +12,7 @@ class Manage::UsersController < ApplicationController
     results = Search.query(preprocess_query, Users::User, wildcard: true)
 
     @total_records = results.count(Users::User.table_name)
-    @users = results.page(params[:page])
+    @users = policy_scope(results.page(params[:page]), policy_scope_class: Manage::UserPolicy::Scope)
     authorize @users, policy_class: Manage::UserPolicy
   end
 
@@ -46,6 +46,7 @@ class Manage::UsersController < ApplicationController
   end
 
   def activity
+    @actions = policy_scope(Action.where(user: @user).order(created_at: :desc).page(params[:page]))
   end
 
 private

@@ -10,12 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_28_074636) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_05_050325) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "actions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "type"
+    t.uuid "user_id", null: false
+    t.string "actionable_type", null: false
+    t.uuid "actionable_id", null: false
+    t.uuid "version_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actionable_type", "actionable_id"], name: "index_actions_on_actionable"
+    t.index ["user_id"], name: "index_actions_on_user_id"
+    t.index ["version_id"], name: "index_actions_on_version_id"
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -123,9 +136,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_28_074636) do
     t.tsvector "term_vector", null: false
     t.string "term", null: false
     t.point "coordinates"
-    t.index ["searchable_id", "searchable_type", "term"], name: "index_searches_on_searchable_id_and_searchable_type_and_term", unique: true
-    t.index ["searchable_type", "searchable_id"], name: "index_searches_on_searchable"
-    t.index ["term_vector"], name: "index_searches_on_term_vector", using: :gin
+    t.index ["searchable_id", "searchable_type", "term"], name: "searches_next_searchable_id_searchable_type_term_idx1", unique: true
+    t.index ["searchable_type", "searchable_id"], name: "searches_next_searchable_type_searchable_id_idx1"
+    t.index ["term_vector"], name: "searches_next_term_vector_idx1", using: :gin
   end
 
   create_table "tags", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
@@ -184,6 +197,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_28_074636) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "actions", "users"
+  add_foreign_key "actions", "versions"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "airports"

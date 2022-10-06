@@ -1,10 +1,16 @@
 response = () => {
-  let helpfulCount = document.querySelector('.comment[data-comment-id="<%= @comment.id %>"] .helpful-count');
-  let count = helpfulCount.querySelector('.count');
+  const helpfulCount = document.querySelector('.comment[data-comment-id="<%= @comment.id %>"] .helpful-count');
+  const count = helpfulCount.querySelector('.count');
 
   // Update the count and show the wrapper element
   count.innerText = parseInt(count.innerText) + 1;
   helpfulCount.classList.remove('d-none');
+
+  // Fill in the button to confirm it was clicked and disable it to prevent further clicks
+  const helpfulButton = document.querySelector('.comment[data-comment-id="<%= @comment.id %>"] .btn-helpful');
+  helpfulButton.classList.remove('btn-outline-primary');
+  helpfulButton.classList.add('btn-primary');
+  helpfulButton.disabled = true;
 };
 
 response();
