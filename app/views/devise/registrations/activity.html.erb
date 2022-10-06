@@ -1,4 +1,4 @@
-<% @breadcrumbs = [['Users', manage_users_path], [user_label(@user), manage_user_path(@user)], ['Activity']] %>
+<% @breadcrumbs = [['Users'], [@user.email, user_path], ['Activity']] %>
 
 <h1 class="display-6">Activity for <%= user_label(@user) %></h1>
 
@@ -6,7 +6,7 @@
   <div class="col">
     <% if @actions.any? %>
       <%= render 'shared/users/all_activity', actions: @actions %>
-      <%= render 'shared/pagination', records: @actions, path: :activity_manage_user_path %>
+      <%= render 'shared/pagination', records: @actions, path: :activity_user_path %>
     <% else %>
       <%= render 'shared/empty_view', label: 'No contributions exist.' %>
     <% end %>

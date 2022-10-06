@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
     comment = Comment.new(comment_params.merge(user: active_user))
     authorize comment
 
-    if comment.save
+    if comment.save && Action.create(type: :comment_added, actionable: comment, user: active_user).persisted?
       redirect_to airport_path(comment.airport.code), notice: 'Comment posted successfully'
     else # rubocop:disable Style/EmptyElse
       # TODO: error handle
@@ -13,9 +13,10 @@ class CommentsController < ApplicationController
   end
 
   def helpful
-    @comment.helpful_count += 1
+    # Don't increment helpful count if the user already found it helpful
+    forbidden if @comment.found_helpful?(active_user)
 
-    if @comment.save
+    if @comment.update(helpful_count: @comment.helpful_count + 1) && Action.create(type: :comment_helpful, actionable: @comment, user: active_user).persisted?
       render :helpful
     else # rubocop:disable Style/EmptyElse
       # TODO: error handle
@@ -23,9 +24,7 @@ class CommentsController < ApplicationController
   end
 
   def flag_outdated
-    @comment.outdated_at = Time.zone.now
-
-    if @comment.save
+    if @comment.update(outdated_at: Time.zone.now) && Action.create(type: :comment_flagged, actionable: @comment, user: active_user).persisted?
       render :flag_outdated
     else # rubocop:disable Style/EmptyElse
       # TODO: error handle
@@ -33,9 +32,7 @@ class CommentsController < ApplicationController
   end
 
   def undo_outdated
-    @comment.outdated_at = nil
-
-    if @comment.save
+    if @comment.update(outdated_at: nil) && Action.create(type: :comment_unflagged, actionable: @comment, user: active_user).persisted?
       render :undo_outdated
     else # rubocop:disable Style/EmptyElse
       # TODO: error handle

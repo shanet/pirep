@@ -6,7 +6,7 @@
       <%= image_tag gravatar_url(@user.email, size: 300), class: 'img-thumbnail' %>
     </div>
 
-    <ul class="list-group">
+    <ul class="list-group mb-3">
       <li class="list-group-item"><strong>Type:</strong> <%= @user.type.demodulize %></li>
 
       <% if @user.unknown? %>
@@ -19,17 +19,24 @@
       <% end %>
 
       <li class="list-group-item"><strong>Disabled:</strong> <i class="fa-solid fa-<%= @user.disabled_at ? 'square-check' : 'square-xmark' %>"></i></li>
-      <li class="list-group-item"><strong>Last edit:</strong> <%= @user.last_edit_at || 'None' %></li>
 
       <% unless @user.unknown? %>
-        <li class="list-group-item"><strong>Last seen:</strong> <%= @user.last_seen_at %></li>
+        <li class="list-group-item">
+          <strong>Last seen:</strong> <%= @user.last_seen_at ? "#{time_ago_in_words(@user.last_seen_at).capitalize} ago" : 'Never' %>
+          <br><small class="text-muted"><%= format_timestamp @user.last_seen_at %></small>
+        </li>
       <% end %>
+
+      <li class="list-group-item">
+        <strong>Last edit:</strong> <%= @user.last_edit_at ? "#{time_ago_in_words(@user.last_edit_at).capitalize} ago" : 'None' %>
+        <br><small class="text-muted"><%= format_timestamp @user.last_edit_at %></small>
+      </li>
 
       <% unless @user.unknown? %>
         <li class="list-group-item">
           <% if @user.reviewed_at.present? %>
             <strong>Reviewed:</strong> <%= time_ago_in_words(@user.reviewed_at).capitalize %> ago
-            <small class="text-muted">(<%= format_timestamp @user.reviewed_at %>)</small>
+            <br><small class="text-muted"><%= format_timestamp @user.reviewed_at %></small>
           <% else %>
             <strong>State:</strong> Unreviewed
           <% end %>
@@ -52,6 +59,6 @@
     </div>
 
     <%= render 'shared/users/statistics', user: @user %>
-    <%= render 'shared/users/activity_timeline', user: @user %>
+    <%= render 'shared/users/activity_timeline', user: @user, all_activity_path: activity_manage_user_path(@user) %>
   </div>
 </div>

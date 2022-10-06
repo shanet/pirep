@@ -7,5 +7,9 @@ module Manage
         assert_allows_admin :manage_airport, action
       end
     end
+
+    test 'scope' do
+      assert_scope([:admin], [:known, :unknown], [create(:airport)], Airport)
+    end
   end
 end

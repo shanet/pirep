@@ -54,6 +54,8 @@ GEM
     activerecord (7.0.3.1)
       activemodel (= 7.0.3.1)
       activesupport (= 7.0.3.1)
+    activerecord-cte (0.2.0)
+      activerecord
     activestorage (7.0.3.1)
       actionpack (= 7.0.3.1)
       activejob (= 7.0.3.1)
@@ -315,6 +317,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-cte
   amazing_print
   better_errors
   binding_of_caller

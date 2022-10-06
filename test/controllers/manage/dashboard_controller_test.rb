@@ -11,6 +11,9 @@ class Manage::DashboardControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'activity' do
+    # Create an action to be rendered as a basic sanity check for this page
+    create(:action)
+
     get manage_activity_path
     assert_response :success
   end

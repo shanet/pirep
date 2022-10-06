@@ -1,4 +1,8 @@
 module ApplicationHelper
+  def active_user
+    return (current_user || Users::Unknown.find_by(ip_address: request.ip))
+  end
+
   def flash_to_class(flash_type)
     flash_type = flash_type.to_sym
 

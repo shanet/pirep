@@ -53,14 +53,40 @@ class PolicyTest < ActiveSupport::TestCase
     assert_denies :admin, record, action, "Allowed admin to #{record}/#{action}"
   end
 
+  def assert_scope(allowed_users, denied_users, records, model)
+    scope_class = "#{self.class.name.gsub(/Test$/, '')}::Scope".constantize
+
+    allowed_users.each do |user|
+      user = create_user(user)
+      scoped_records = scope_class.new(user, model.all).resolve
+
+      records.each do |record|
+        assert record.in?(scoped_records), "Denied #{user.type} access to scoped record"
+      end
+    end
+
+    denied_users.each do |user|
+      user = create_user(user)
+      scoped_records = scope_class.new(user, model.all).resolve
+
+      records.each do |record|
+        assert_not record.in?(scoped_records), "Allowed #{user.type} access to scoped record"
+      end
+    end
+  end
+
 private
 
   def execute_policy(user, record, action, disabled_user: false)
-    unless user.is_a? Users::User
-      user = create(user, disabled_at: (disabled_user ? Time.zone.now : nil))
-    end
+    user = create_user(user, disabled_user: disabled_user)
+    klass = self.class.name.gsub(/Test$/, '').constantize
 
-    klass = self.class.to_s.gsub(/Test$/, '').constantize
     return klass.new(user, record).send("#{action}?")
+  end
+
+  def create_user(user_or_type, disabled_user: false)
+    return user_or_type if user_or_type.is_a? Users::User
+
+    return create(user_or_type, disabled_at: (disabled_user ? Time.zone.now : nil))
   end
 end

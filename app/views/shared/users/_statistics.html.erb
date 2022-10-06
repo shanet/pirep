@@ -1,11 +1,11 @@
 <div class="row border-bottom pb-2 mb-3">
   <div class="col-4 text-center">
-    <h3><%= PaperTrail::Version.where(whodunnit: user.id).count %></h3>
+    <h3><%= Action.where(user: user).count %></h3>
     <h6>Total Contributions</h6>
   </div>
 
   <div class="col-4 text-center">
-    <h3><%= PaperTrail::Version.where(whodunnit: user.id, item_type: Airport.name).count %></h3>
+    <h3><%= Action.where(user: user, type: :airport_edited).distinct(:actionable).count %></h3>
     <h6>Airports Edited</h6>
   </div>
 

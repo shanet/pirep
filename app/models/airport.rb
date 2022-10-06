@@ -7,6 +7,7 @@ class Airport < ApplicationRecord
   has_many :remarks, dependent: :destroy
   has_many :tags, dependent: :destroy
   has_many :comments, dependent: :destroy
+  has_many :actions, as: :actionable, dependent: :destroy
 
   accepts_nested_attributes_for :tags
 

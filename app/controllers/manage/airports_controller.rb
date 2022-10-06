@@ -3,7 +3,7 @@ class Manage::AirportsController < ApplicationController
   before_action :set_airport, only: [:show, :edit, :update, :update_version]
 
   def index
-    @airports = Airport.order(:code).page(params[:page])
+    @airports = policy_scope(Airport.order(:code).page(params[:page]), policy_scope_class: Manage::AirportPolicy::Scope)
     authorize @airports, policy_class: Manage::AirportPolicy
   end
 
@@ -11,7 +11,7 @@ class Manage::AirportsController < ApplicationController
     results = Search.query(preprocess_query, Airport, wildcard: true)
 
     @total_records = results.count(Airport.table_name)
-    @airports = results.page(params[:page])
+    @airports = policy_scope(results.page(params[:page]), policy_scope_class: Manage::AirportPolicy::Scope)
     authorize @airports, policy_class: Manage::AirportPolicy
   end
 

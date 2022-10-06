@@ -33,6 +33,12 @@ class Tag < ApplicationRecord
       theme: 'orange',
       addable: true,
     },
+    bicycles: {
+      label: 'Bicycles',
+      icon: 'person-biking',
+      theme: 'green',
+      addable: true,
+    },
     swimming: {
       label: 'Swimming',
       icon: 'umbrella-beach',
