@@ -49,14 +49,19 @@ module FaaApi
     end
 
     def current_data_cycle
+      # Objects of this class should not live longer than a data cycle so we can memoize this
+      return @current_data_cycle if defined? @current_data_cycle
+
       # New data is available every 28 days
+      # It may be worth updating the seed date periodically so we don't have to do as many iterations here
       cycle_length = 28.days
       next_cycle = Date.new(2020, 9, 10)
 
       # Iterate from the start cycle until we hit the current date than back up one cycle for the current one
       next_cycle += cycle_length while Date.current >= next_cycle
 
-      return next_cycle - cycle_length
+      @current_data_cycle = next_cycle - cycle_length
+      return @current_data_cycle
     end
   end
 
@@ -64,7 +69,7 @@ module FaaApi
     include Base
 
     def download_airport_data_archive(destination_directory)
-      response = Faraday.get('https://nfdc.faa.gov/webContent/28DaySub/%s/APT.zip' % current_data_cycle)
+      response = Faraday.get('https://nfdc.faa.gov/webContent/28DaySub/%s/APT.zip' % current_data_cycle.strftime('%Y-%m-%d'))
       raise Exceptions::AirportDatabaseDownloadFailed unless response.success?
 
       # Write archive to disk

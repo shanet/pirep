@@ -71,6 +71,12 @@ private
       airport[key] = extract_value_from_line(line, range.first, range.last)
     end
 
+    # Ensure these fields are normalized
+    airport[:airport_code].upcase!
+    airport[:facility_type].downcase!
+    airport[:facility_use].upcase!
+    airport[:ownership_type].upcase!
+
     airport[:latitude] = convert_degrees_minutes_seconds_to_decimal(airport[:latitude])
     airport[:longitude] = convert_degrees_minutes_seconds_to_decimal(airport[:longitude])
 

@@ -1,0 +1,9 @@
+<% if @airport.closed? %>
+  <div class="alert alert-danger mb-2">
+    Sadly, this airport is reportedly closed based on it being removed from the FAA's database.
+  </div>
+<% else %>
+  <div class="alert alert-primary mb-2">
+    Are you familiar with this airport? Help out other pilots by adding your local knowledge<% if defined?(show_link) %> on its <%= link_to 'airport page', airport_path(@airport.code) %><% end %>!
+  </div>
+<% end %>

@@ -7,10 +7,10 @@
     </div>
   </div>
 
-  <% if @airport.empty? %>
+  <% if @airport.empty? || @airport.closed? %>
     <div class="row">
-      <div class="col-12 mb-2">
-        <%= render 'airports/empty_notice' %>
+      <div class="col-12">
+        <%= render 'airports/notices' %>
       </div>
     </div>
   <% end %>

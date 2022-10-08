@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_05_050325) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_07_055206) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -86,6 +86,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_05_050325) do
     t.string "diagram"
     t.datetime "reviewed_at", precision: nil
     t.point "coordinates"
+    t.datetime "faa_data_cycle", precision: nil
     t.index ["code"], name: "index_airports_on_code", unique: true
     t.index ["site_number"], name: "index_airports_on_site_number", unique: true
   end

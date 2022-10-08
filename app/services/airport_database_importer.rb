@@ -1,8 +1,11 @@
+require 'faa/faa_api'
+
 class AirportDatabaseImporter
   MILITARY_OWNERSHIP_TYPES = ['MA', 'MN', 'MR', 'CG']
 
   def initialize(airports)
     @airports = airports
+    @current_data_cycle = FaaApi.client.current_data_cycle
   end
 
   def load_database
@@ -19,12 +22,16 @@ class AirportDatabaseImporter
         update_remark(airport, remark)
       end
     end
+
+    tag_closed_airports
   end
 
 private
 
   def update_airport(site_number, airport_data)
-    airport = Airport.find_by(site_number: site_number) || Airport.new(site_number: site_number)
+    # First try to find existing airports by their site number. Unfortunately this number doesn't seem to be very stable so fallback to the airport code
+    # and if that fails it must be a new airport we haven't seen before (yay!).
+    airport = Airport.find_by(site_number: site_number) || Airport.find_by(code: airport_data[:airport_code]) || Airport.new
 
     # Normalize the facility type to the options we use for filtering
     if airport_data[:ownership_type].in?(MILITARY_OWNERSHIP_TYPES)
@@ -34,6 +41,7 @@ private
     end
 
     airport.update!({
+      site_number: site_number,
       code: airport_data[:airport_code],
       name: airport_data[:airport_name],
       facility_type: airport_data[:facility_type],
@@ -47,6 +55,7 @@ private
       elevation: airport_data[:elevation].to_i,
       fuel_type: airport_data[:fuel_type],
       landing_rights: (airport_data[:facility_use] == 'PR' ? :private_ : :public_),
+      faa_data_cycle: @current_data_cycle,
     })
 
     return airport
@@ -83,5 +92,18 @@ private
       element: remark_data[:element],
       text: remark_data[:text],
     })
+  end
+
+  def tag_closed_airports
+    # This function saddens me to write, but it's interesting data to track airports have closed.
+    # We can do this by checking which airports have their data cycle not set to the current one which
+    # would denote it had been removed from the FAA's database. This will serve as roughly the date it
+    # was closed and we can then add a closed tag to it for display on the map.
+    closed_airports = Airport.where('faa_data_cycle < ?', @current_data_cycle)
+      .where("NOT EXISTS (#{Tag.select('1').where(name: :closed).where('tags.airport_id = airports.id').to_sql})")
+
+    closed_airports.each do |airport|
+      Tag.create!(name: :closed, airport: airport)
+    end
   end
 end
