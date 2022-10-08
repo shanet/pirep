@@ -31,6 +31,13 @@ class AirportTest < ActiveSupport::TestCase
     assert create(:airport, :empty).empty?, 'Airport not empty'
   end
 
+  test 'airport is closed' do
+    airport = create(:airport)
+    create(:tag, airport: airport, name: :closed)
+
+    assert airport.closed?, 'Airport not closed'
+  end
+
   test 'airport is not empty if tagged with a user addable tag' do
     airport = create(:airport, :empty)
     assert airport.empty?, 'Airport empty with associated non-user addable tag'

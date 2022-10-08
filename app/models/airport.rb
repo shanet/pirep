@@ -191,6 +191,10 @@ class Airport < ApplicationRecord
     tags.where(name: :empty).destroy_all
   end
 
+  def closed?
+    return tags.where(name: :closed).any?
+  end
+
   def private?
     return facility_use == 'PR'
   end

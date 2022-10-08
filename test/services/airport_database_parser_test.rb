@@ -13,7 +13,7 @@ private
       '26210.*A' => {
         airport_code: 'PAE',
         airport_name: 'SNOHOMISH COUNTY (PAINE FLD)',
-        facility_type: 'AIRPORT',
+        facility_type: 'airport', # These values are lowercase in the Airport class' enum
         facility_use: 'PU',
         ownership_type: 'PU',
         owner_name: 'SNOHOMISH COUNTY',

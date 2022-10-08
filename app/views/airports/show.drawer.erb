@@ -22,10 +22,10 @@
   </div>
 <% end %>
 
-<% if @airport.empty? %>
+<% if @airport.empty? || @airport.closed? %>
   <div class="row my-2">
     <div class="col-sm">
-      <%= render partial: 'airports/empty_notice', formats: :html, locals: {show_link: true} %>
+      <%= render partial: 'airports/notices', formats: :html, locals: {show_link: true} %>
     </div>
   </div>
 <% end %>
