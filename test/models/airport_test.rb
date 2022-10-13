@@ -142,4 +142,15 @@ class AirportTest < ActiveSupport::TestCase
       assert @airport.versions.last.reify.coordinates.is_a?(ActiveRecord::Point), 'Coordinates not deserialized as point'
     end
   end
+
+  test 'uses bounding box' do
+    # Heliports don't use bounding boxes
+    assert_not create(:airport, facility_type: 'heliport').uses_bounding_box?, 'Heliport uses bounding box'
+  end
+
+  test 'has bounding box' do
+    assert @airport.has_bounding_box?, 'Airport does not have bounding box'
+    assert_not create(:airport, :no_bounding_box).has_bounding_box?, 'Airport has bounding box'
+    assert_not create(:airport, facility_type: 'heliport').has_bounding_box?, 'Heliport uses bounding box'
+  end
 end

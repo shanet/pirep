@@ -6,6 +6,7 @@ class AirportDatabaseImporter
   def initialize(airports)
     @airports = airports
     @current_data_cycle = FaaApi.client.current_data_cycle
+    @bounding_box_calculator = AirportBoundingBoxCalculator.new
   end
 
   def load_database
@@ -13,6 +14,7 @@ class AirportDatabaseImporter
       airport = update_airport(site_number, airport_data)
 
       update_tags(airport)
+      update_bounding_box(airport)
 
       (airport_data[:runways] || []).each do |runway|
         update_runway(airport, runway)
@@ -91,6 +93,24 @@ private
     remark.update!({
       element: remark_data[:element],
       text: remark_data[:text],
+    })
+  end
+
+  def update_bounding_box(airport)
+    # Updating the bounding box involves an API query to OpenStreeMaps. Since the location of an airport doesn't
+    # change, only do this if we don't already have a bounding box value for the airport or it was already done and
+    # no bounding box was found. Also skip facility types like heliports as they are small enough to simply zoom
+    # in on their center.
+    return if airport.bbox_checked? || !airport.uses_bounding_box? || airport.has_bounding_box?
+
+    bounding_box = @bounding_box_calculator.calculate(airport)
+
+    airport.update!({
+      bbox_checked: true,
+      bbox_ne_latitude: bounding_box[:northeast][:latitude],
+      bbox_ne_longitude: bounding_box[:northeast][:longitude],
+      bbox_sw_latitude: bounding_box[:southwest][:latitude],
+      bbox_sw_longitude: bounding_box[:southwest][:longitude],
     })
   end
 
