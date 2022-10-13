@@ -41,7 +41,7 @@ class Search < ApplicationRecord
 
   def self.query(query, models=nil, coordinates=nil, wildcard: false)
     # Add a suffix wildcard to the query if requested to allow for partial matches on words
-    query = query.downcase.split.map {|term| wildcard ? "#{term}:*" : term}.join(' & ')
+    query = query.downcase.gsub("'", "''").split.map {|term| wildcard ? "#{term}:*" : term}.join(' & ')
 
     # Only for airports: Rank the results by proximity to the coordinates if given any. This uses the `<@>` operator to calculate the distance
     # from the airport's coordinates to the given coordinates with Postgres' earthdistance extension. This assumes the Earth is a perfect sphere

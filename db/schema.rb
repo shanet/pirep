@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_07_055206) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_13_033906) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -87,6 +87,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_07_055206) do
     t.datetime "reviewed_at", precision: nil
     t.point "coordinates"
     t.datetime "faa_data_cycle", precision: nil
+    t.float "bbox_ne_latitude"
+    t.float "bbox_ne_longitude"
+    t.float "bbox_sw_latitude"
+    t.float "bbox_sw_longitude"
+    t.boolean "bbox_checked", default: false, null: false
     t.index ["code"], name: "index_airports_on_code", unique: true
     t.index ["site_number"], name: "index_airports_on_site_number", unique: true
   end
@@ -137,9 +142,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_07_055206) do
     t.tsvector "term_vector", null: false
     t.string "term", null: false
     t.point "coordinates"
-    t.index ["searchable_id", "searchable_type", "term"], name: "searches_next_searchable_id_searchable_type_term_idx1", unique: true
-    t.index ["searchable_type", "searchable_id"], name: "searches_next_searchable_type_searchable_id_idx1"
-    t.index ["term_vector"], name: "searches_next_term_vector_idx1", using: :gin
+    t.index ["searchable_id", "searchable_type", "term"], name: "searches_next_searchable_id_searchable_type_term_idx", unique: true
+    t.index ["searchable_type", "searchable_id"], name: "searches_next_searchable_type_searchable_id_idx"
+    t.index ["term_vector"], name: "searches_next_term_vector_idx", using: :gin
   end
 
   create_table "tags", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|

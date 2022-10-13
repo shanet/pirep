@@ -3,9 +3,7 @@ require 'zip'
 
 module FaaApi
   def self.client
-    return Stub.new if Rails.env.test?
-
-    return Service.new
+    return (Rails.env.test? ? Stub.new : Service.new)
   end
 
   module Base

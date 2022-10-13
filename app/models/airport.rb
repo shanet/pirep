@@ -199,6 +199,15 @@ class Airport < ApplicationRecord
     return facility_use == 'PR'
   end
 
+  def has_bounding_box? # rubocop:disable Naming/PredicateName
+    return uses_bounding_box? && bbox_ne_latitude.present?
+  end
+
+  def uses_bounding_box?
+    # Heliports and seaplane bases are small enough to simply zoom in on their center rather than calculating a bounding box
+    return ['heliport', 'seaplane_base'].exclude?(facility_type)
+  end
+
   def landing_rights
     return self[:landing_rights].to_sym
   end

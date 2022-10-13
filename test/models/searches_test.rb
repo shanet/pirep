@@ -61,6 +61,14 @@ class SearchesTest < ActiveSupport::TestCase
     assert_equal @public_airport, results.first.searchable, 'First result not name of public airport'
   end
 
+  test 'searches by public airports by name with apostrophe' do
+    airport = create(:airport, name: "O'Hare International")
+    results = Search.query("O'hare", [Airport], wildcard: true)
+
+    assert_search_rank_ordering results
+    assert_equal airport, results.first.searchable, 'First result not name of public airport'
+  end
+
   test 'searches by public airports by name with whitespace' do
     results = Search.query(@public_airport.name, [Airport], wildcard: true)
 
