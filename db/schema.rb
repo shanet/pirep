@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_13_033906) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_20_075030) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -92,6 +92,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_13_033906) do
     t.float "bbox_sw_latitude"
     t.float "bbox_sw_longitude"
     t.boolean "bbox_checked", default: false, null: false
+    t.jsonb "annotations"
     t.index ["code"], name: "index_airports_on_code", unique: true
     t.index ["site_number"], name: "index_airports_on_site_number", unique: true
   end

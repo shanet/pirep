@@ -82,6 +82,7 @@ private
       :wifi,
       :landing_rights,
       :landing_requirements,
+      :annotations,
       tags_attributes: [:name]
     )
   end

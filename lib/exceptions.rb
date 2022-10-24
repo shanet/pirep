@@ -7,5 +7,5 @@ module Exceptions
   end
 
   class AirportDatabaseDownloadFailed < StandardContextError; end
-  class OpenStreeMapsQueryFailed < StandardContextError; end
+  class OpenStreetMapsQueryFailed < StandardContextError; end
 end

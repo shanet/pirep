@@ -1,5 +1,4 @@
 const FLASH_EXPIRATION = 5000; // ms
-const FLASH_ANIMATION_DURATION = 250; // ms (should be greater than value set in flashes.scss)
 
 // These match the Rails flash types in `application_helper.rb`
 export const FLASH_ERROR = 'danger';
@@ -21,10 +20,7 @@ export function show(type, message) {
   // Fade out the flash after a set time and then remove it from the DOM once the animation is over
   setTimeout(() => {
     flash.classList.add('hide');
-
-    setTimeout(() => {
-      document.getElementById('flashes').removeChild(flash);
-    }, FLASH_ANIMATION_DURATION);
+    flash.addEventListener('animationend', () => {flash.remove();});
   }, FLASH_EXPIRATION);
 }
 

@@ -39,6 +39,7 @@ rules:
   max-len:
     - error
     - code: 200
+  no-continue: off
   no-plusplus: off
   no-shadow: off
   no-unused-vars:

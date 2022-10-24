@@ -1,0 +1,24 @@
+<div class="d-flex justify-content-between px-1">
+  <div class="airport-diagram-saved hide text-success">Saved!</div>
+
+  <div class="form-check form-switch">
+    <input id="annotations-editing" class="form-check-input float-none me-1" type="checkbox" role="switch">
+    <label class="form-check-label" for="annotations-editing">Edit airport diagram annotations</label>
+  </div>
+</div>
+
+<div class="airport-diagram">
+  <% if @airport.diagram %>
+    <img class="img-thumbnail" src="<%= '/assets/diagrams/%s' % @airport.diagram %>">
+  <% else %>
+    <img class="img-thumbnail" src="<%= airport_satellite_image(@airport) %>">
+  <% end %>
+
+  <div class="annotations" data-annotations="<%= (@airport.annotations || []).to_json %>">
+    <div class="help d-none m-1 text-white text-center">Click/tap to add an annotation marker to the image</div>
+
+    <%= form_with model: @airport, local: false do |form| %>
+      <%= form.hidden_field :annotations %>
+    <% end %>
+  </div>
+</div>

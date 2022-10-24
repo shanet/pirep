@@ -27,6 +27,7 @@ FactoryBot.define do
     bbox_sw_latitude       {47.8966986}
     bbox_sw_longitude      {-122.2918449}
     photos                 {[Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png')]}
+    annotations            {[{label: 'Parking', x: 25, y: 25}, {label: 'Gas', x: 50, y: 50}]}
 
     after(:create) do |airport, _evaluator|
       create(:runway, airport: airport)
