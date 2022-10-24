@@ -1,3 +1,4 @@
+require 'exceptions'
 require 'open_street_maps/open_street_maps_api'
 
 class AirportBoundingBoxCalculator
@@ -12,6 +13,9 @@ class AirportBoundingBoxCalculator
     parse_nodes(response[:elements], parsed_response)
 
     return calculate_bounding_box(parsed_response)
+  rescue Exceptions::OpenStreetMapsQueryFailed
+    Rails.logger.warning "Bounding box query failed for #{airport.code}"
+    return empty_bounding_box
   end
 
 private
@@ -41,10 +45,7 @@ private
   end
 
   def calculate_bounding_box(ways)
-    bounding_box = {
-      southwest: {latitude: nil, longitude: nil},
-      northeast: {latitude: nil, longitude: nil},
-    }
+    bounding_box = empty_bounding_box
 
     ways.each do |_id, way|
       way[:nodes].each do |node|
@@ -57,5 +58,12 @@ private
     end
 
     return bounding_box
+  end
+
+  def empty_bounding_box
+    return {
+      southwest: {latitude: nil, longitude: nil},
+      northeast: {latitude: nil, longitude: nil},
+    }
   end
 end

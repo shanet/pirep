@@ -4,6 +4,7 @@ import Rails from '@rails/ujs';
 Rails.start();
 
 import 'airports/airports';
+import 'airports/annotations';
 import 'map/header';
 import 'map/map';
 import 'map/search';

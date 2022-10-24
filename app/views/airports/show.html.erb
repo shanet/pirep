@@ -37,13 +37,7 @@
     <div class="col-12 col-md-6">
       <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @airport.all_photos, border: true} %>
       <%= render 'airports/upload_photo_form' %>
-
-      <% if @airport.diagram %>
-        <img class="airport-diagram img-thumbnail" src="<%= '/assets/diagrams/%s' % @airport.diagram %>">
-      <% else %>
-        <img class="airport-diagram img-thumbnail" src="<%= airport_satellite_image(@airport) %>">
-      <% end %>
-
+      <%= render 'airports/diagram' %>
       <%= render 'airports/remarks' %>
     </div>
   </div>
