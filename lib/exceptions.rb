@@ -1,11 +1,7 @@
 module Exceptions
-  class StandardContextError < StandardError
-    def initialize(context=nil, *args)
-      @__raven_context = {extra: context}
-      super(*args)
-    end
-  end
-
-  class AirportDatabaseDownloadFailed < StandardContextError; end
-  class OpenStreetMapsQueryFailed < StandardContextError; end
+  class AirportDatabaseDownloadFailed < StandardError; end
+  class MaxmindDatabaseChecksumDownloadFailed < StandardError; end
+  class MaxmindDatabaseDownloadFailed < StandardError; end
+  class MaxmindDatabaseIntegrityCheckFailed < StandardError; end
+  class OpenStreetMapsQueryFailed < StandardError; end
 end

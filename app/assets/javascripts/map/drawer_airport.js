@@ -55,7 +55,13 @@ function zoomAirport(event) {
     previousZoomLevel = map.getZoom();
     wereSectionalLayersShown = map.areSectionalLayersShown();
 
-    map.flyTo(button.dataset.latitude, button.dataset.longitude, 15);
+    // Zoom to a bounding box if we have one for the airport
+    if(JSON.parse(button.dataset.boundingBox)) {
+      map.fitBounds(JSON.parse(button.dataset.boundingBox), 150);
+    } else {
+      map.flyTo(button.dataset.latitude, button.dataset.longitude, button.dataset.zoomLevel);
+    }
+
     map.toggleSectionalLayers(false);
     layerSwitcher.updateLayerSwitcherIcon(layerSwitcher.LAYER_MAP);
 
