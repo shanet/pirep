@@ -156,6 +156,9 @@ class Airport < ApplicationRecord
 
   def to_geojson
     return {
+      # Mapbox requires IDs to be integers (even though the RFC says strings are okay!)
+      # so we need a hash function that returns a 32bit number. CRC32 should do the job.
+      id: code_digest,
       type: 'Feature',
       geometry: {
         type: 'Point',
@@ -166,9 +169,6 @@ class Airport < ApplicationRecord
         tags: tags.pluck(:name),
         facility_type: facility_type,
       },
-      # Mapbox requires IDs to be integers (even though the RFC says strings are okay!)
-      # so we need a hash function that returns a 32bit number. CRC32 should do the job.
-      id: code_digest,
     }
   end
 

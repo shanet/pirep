@@ -1,3 +1,5 @@
+<% bounding_box = @airport.has_bounding_box? ? [[@airport.bbox_sw_longitude, @airport.bbox_sw_latitude], [@airport.bbox_ne_longitude, @airport.bbox_ne_latitude]] : nil %>
+
 <div class="airport-drawer-header theme-<%= @airport.theme %>">
   <div class="row">
     <div class="col-sm pt-3 pb-2 d-flex">
@@ -9,7 +11,13 @@
   <div class="row">
     <div class="col-sm py-2 d-flex">
       <span class="flex-fill"><%= @airport.latitude %>, <%= @airport.longitude %></span>
-      <button type="button" class="btn btn-secondary btn-sm zoom-btn" data-latitude="<%= @airport.latitude %>" data-longitude="<%= @airport.longitude %>">Zoom In</button>
+      <button
+        type="button"
+        class="btn btn-secondary btn-sm zoom-btn"
+        data-bounding-box="<%= bounding_box.to_json %>"
+        data-latitude="<%= @airport.latitude %>"
+        data-longitude="<%= @airport.longitude %>"
+        data-zoom-level="<%= @airport.uses_bounding_box? ? 16 : 17 %>">Zoom In</button>
     </div>
   </div>
 </div>

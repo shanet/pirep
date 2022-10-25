@@ -19,8 +19,48 @@
       "user_input": "action_foreign_key",
       "confidence": "Medium",
       "note": "The only values in this query are non-user changable constants"
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "782564e88b40c29f1e697dd18535f542c74f34dbeb522d86de6da0a792019641",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/maxmind/maxmind_db.rb",
+      "line": 54,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"tar -xf #{File.open(File.join(directory, \"database.tar.gz\"), \"wb\").path} --directory #{directory} && mv #{directory}/GeoLite2-City_* #{directory}/database\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MaxmindDb::Service",
+        "method": "update_database!"
+      },
+      "user_input": "File.open(File.join(directory, \"database.tar.gz\"), \"wb\").path",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "7c346aeb3526dbb941eb1d5fdd7946d5932ad36c2c35b5dacb174ebc816fdecc",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/maxmind/maxmind_db.rb",
+      "line": 51,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"cat #{File.open(File.join(directory, \"database.tar.gz.sha256\"), \"w\").path} | sha256sum -c -\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "MaxmindDb::Service",
+        "method": "update_database!"
+      },
+      "user_input": "File.open(File.join(directory, \"database.tar.gz.sha256\"), \"w\").path",
+      "confidence": "Medium",
+      "note": ""
     }
   ],
-  "updated": "2022-10-09 01:12:18 -0700",
+  "updated": "2022-10-24 23:48:26 -0700",
   "brakeman_version": "5.2.3"
 }

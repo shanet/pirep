@@ -1,8 +1,6 @@
 module GoogleApi
   def self.client
-    return Stub.new unless Rails.application.credentials.google_api_key
-
-    return Service.new
+    return (Rails.application.credentials.google_api_key ? Service.new : Stub.new)
   end
 
   class Service

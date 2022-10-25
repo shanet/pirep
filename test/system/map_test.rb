@@ -7,6 +7,15 @@ class MapTest < ApplicationSystemTestCase
     @airport = create(:airport)
   end
 
+  test 'set default map center location' do
+    visit map_path
+    wait_for_map_ready
+
+    center = evaluate_script('mapbox.getCenter()')
+    assert_equal(47.62055376532627, center['lat'], 'Map not centered')
+    assert_equal(-122.34936256185215, center['lng'], 'Map not centered')
+  end
+
   test 'opens airport drawer' do
     visit map_path
     wait_for_map_ready

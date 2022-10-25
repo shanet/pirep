@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // The annotations container size is dependent on the image size which won't be known until it's fully loaded.
   // Only initialize everything here once that's completed.
   const image = document.querySelector('.airport-diagram img');
+  if(!image) return;
 
   // If the image loaded before this the DOM loaded event fired go ahead and initialize everything now. Otherwise, add a listener for the image to finish.
   if(image.complete) {

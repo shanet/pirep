@@ -62,8 +62,15 @@ function initMap() {
 }
 
 function initialMapCenter() {
-  const coordinates = urlSearchParams.getCoordinates() || [48.11, -122.06];
-  const zoomLevel = urlSearchParams.getZoomLevel() || 8;
+  let coordinates = urlSearchParams.getCoordinates();
+  let zoomLevel = urlSearchParams.getZoomLevel();
+
+  // If there were no coordinates in the URL use the geoip lookup value
+  if(!coordinates) {
+    const map = document.getElementById('map');
+    coordinates = [map.dataset.centerLatitude, map.dataset.centerLongitude];
+    zoomLevel = map.dataset.zoomLevel;
+  }
 
   return [coordinates, zoomLevel];
 }
@@ -244,6 +251,10 @@ function getSelectedAirportMarker() {
 
 export function flyTo(latitude, longitude, zoom) {
   map.flyTo({center: [longitude, latitude], zoom});
+}
+
+export function fitBounds(boundingBox, padding) {
+  map.fitBounds(boundingBox, {padding: padding || 0});
 }
 
 export function getZoom() {
