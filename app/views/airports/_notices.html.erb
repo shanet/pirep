@@ -1,6 +1,6 @@
 <% if @airport.closed? %>
   <div class="alert alert-danger mb-2">
-    Sadly, this airport is reportedly closed based on it being removed from the FAA's database.
+    Sadly, this airport is reportedly closed<% unless @airport.unmapped? %> based on it being removed from the FAA's database<% end %>.
   </div>
 <% else %>
   <div class="alert alert-primary mb-2">

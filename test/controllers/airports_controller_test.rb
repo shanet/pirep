@@ -12,6 +12,33 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     assert_equal @airport.code, JSON.parse(response.body).first['properties']['code'], 'Airport not included in airports index'
   end
 
+  test 'new airport' do
+    get new_airport_path(format: :drawer)
+    assert_response :success, 'Failed to get new airport page'
+
+    # There is no default format for this route
+    assert_raises(ActionController::UnknownFormat) do
+      get new_airport_path
+    end
+  end
+
+  test 'create airport' do
+    assert_difference('Airport.count') do
+      assert_difference('Action.where(type: :airport_added).count') do
+        post airports_path(params: {airport: {
+          name: 'Unmapped airport',
+          latitude: @airport.latitude,
+          longitude: @airport.longitude,
+          elevation: @airport.elevation,
+          state: 'closed',
+          landing_rights: :private_,
+        }})
+
+        assert_redirected_to airport_path(Airport.last.code)
+      end
+    end
+  end
+
   test 'shows airport' do
     get airport_path(@airport)
     assert_response :success, 'Failed to get airport by ID'
@@ -24,6 +51,9 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
 
     get airport_path("K#{@airport.code}")
     assert_response :success, 'Failed to get airport by ICAO code'
+
+    get airport_path(@airport, format: :drawer)
+    assert_response :success, 'Failed to get airport page as drawer'
   end
 
   test 'updates airport, unknown user' do

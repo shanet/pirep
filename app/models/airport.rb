@@ -62,34 +62,28 @@ class Airport < ApplicationRecord
 
   LANDING_RIGHTS_TYPES = {
     public_: {
-      short_requirements_label: 'Landing Notes',
-      long_requirements_label: 'Notes',
-      short_description: 'Open to public',
-      long_description: 'Open to public',
+      short_description: 'Open to the public',
+      long_description: 'Open to the public',
       color: 'green',
       icon: 'lock-open',
+      button: 'success',
     },
-    restrictions: {
-      short_requirements_label: 'Restrictions',
-      long_requirements_label: 'Requirements for landing',
-      short_description: 'Allowed with restrictions',
+    restricted: {
+      has_requirements: true,
+      short_requirements_label: 'Restricted',
+      long_requirements_label: 'Requirements/contact info for landing',
+      short_description: 'Allowed with restrictions/permission',
       long_description: 'Private, but open to public with restrictions',
       color: 'orange',
       icon: 'key',
-    },
-    permission: {
-      short_requirements_label: 'Contact info',
-      long_requirements_label: 'Contact info for landing permission (this will be public!)',
-      short_description: 'Allowed with prior permission',
-      long_description: 'Private, but landing allowed with prior permission',
-      color: 'orange',
-      icon: 'key',
+      button: 'warning',
     },
     private_: {
       short_description: 'Private to everyone',
       long_description: 'Private to everyone <i class="far fa-frown-open"></i>'.html_safe,
       color: 'red',
       icon: 'lock',
+      button: 'danger',
     },
   }
 
@@ -138,6 +132,30 @@ class Airport < ApplicationRecord
     return FACILITY_TYPES.reject {|_key, value| value[:hidden]}
   end
 
+  def self.new_unmapped(parameters)
+    # State is not part of the airport model so remove it and store it for the code below below passing the parameters to the new record
+    state = parameters[:state]
+    parameters.delete(:state)
+
+    airport = Airport.new(parameters)
+
+    # We need to generate some unique code for the airport. By definition, an unmapped airport won't have a code so give it a fake letter
+    # prefix (with three letters so it doesn't conflict with any future ICAO codes) and an sequentially increasing number suffix to make
+    # it unique. There may be a better way to do this but this should be sufficient for now. It's not likely that we'll have a bunch of
+    # unmapped airports that would make this number suffix huge.
+    airport.code = "UNM#{(Airport.joins(:tags).where('tags.name': :unmapped).count + 1).to_s.rjust(2, '0')}"
+    airport.site_number = airport.code
+    airport.facility_use = :PR
+    airport.facility_type = :airport
+    airport.ownership_type = :PR
+    airport.tags << Tag.new(name: :unmapped)
+
+    # Tag closed airports as closed
+    airport.tags << Tag.new(name: :closed) if state == 'closed'
+
+    return airport
+  end
+
   def []=(key, value)
     # Papertrail will not deserialize point objects from JSONB as point objects.
     # Convert `coordinates` to a point object when deserializing to account for this.
@@ -177,7 +195,7 @@ class Airport < ApplicationRecord
     return false if tags.map {|tag| Tag::TAGS[tag.name][:addable]}.any?
 
     # Return if landing rights/requirements are set
-    return false if [:restrictions, :permission].include?(landing_rights) || landing_requirements.present?
+    return false if [:restricted, :permission].include?(landing_rights) || landing_requirements.present?
 
     # Return if the airport has some user contributed info filled out for it
     return [
@@ -198,7 +216,11 @@ class Airport < ApplicationRecord
   end
 
   def closed?
-    return tags.where(name: :closed).any?
+    return tags.where(name: :closed).count > 0
+  end
+
+  def unmapped?
+    return tags.where(name: :unmapped).count > 0
   end
 
   def private?
@@ -214,8 +236,12 @@ class Airport < ApplicationRecord
     return ['heliport', 'seaplane_base'].exclude?(facility_type)
   end
 
+  def bounding_box
+    return (has_bounding_box? ? [[bbox_sw_longitude, bbox_sw_latitude], [bbox_ne_longitude, bbox_ne_latitude]] : nil)
+  end
+
   def landing_rights
-    return self[:landing_rights].to_sym
+    return self[:landing_rights]&.to_sym
   end
 
   def all_photos

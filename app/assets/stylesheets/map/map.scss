@@ -1,6 +1,10 @@
 #map {
   height: 100vh;
   width: 100vw;
+
+  &.editing canvas:hover {
+    cursor: crosshair;
+  }
 }
 
 // Refloat the map attribution so it's horizontal and aligned to the bottom of the page

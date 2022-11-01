@@ -23,14 +23,14 @@
       <%
         [
           {column: :description, icon: 'fa-book-open', title: 'Description'},
-          {column: :transient_parking, icon: 'fa-parking', title: 'Transient Parking'},
-          {column: :fuel_location, icon: 'fa-gas-pump', title: 'Fuel Location'},
-          {column: :landing_fees, icon: 'fa-dollar-sign', title: 'Landing &amp; Tie-down Fees'},
-          {column: :crew_car, icon: 'fa-car', title: 'Crew Car Availability'},
-          {column: :wifi, icon: 'fa-wifi', title: 'WiFi Access'},
+          {column: :transient_parking, icon: 'fa-parking', title: 'Transient Parking', height: :medium},
+          {column: :fuel_location, icon: 'fa-gas-pump', title: 'Fuel Location', height: :small},
+          {column: :landing_fees, icon: 'fa-dollar-sign', title: 'Landing &amp; Tie-down Fees', height: :small},
+          {column: :crew_car, icon: 'fa-car', title: 'Crew Car Availability', height: :small},
+          {column: :wifi, icon: 'fa-wifi', title: 'WiFi Access', height: :small},
         ].each do |textarea|
       %>
-        <%= render 'airports/textarea_editor', model: @airport, column: textarea[:column], icon: textarea[:icon], title: textarea[:title] %>
+        <%= render 'airports/textarea_editor', model: @airport, column: textarea[:column], icon: textarea[:icon], title: textarea[:title], height: textarea[:height] %>
       <% end %>
     </div>
 

@@ -10,6 +10,24 @@ class AirportsController < ApplicationController
     render json: Airport.geojson.to_json
   end
 
+  def new
+    @airport = Airport.new
+    authorize @airport
+  end
+
+  def create
+    @airport = Airport.new_unmapped(new_airport_params)
+    authorize @airport
+
+    if @airport.save
+      # TODO: enqueue job to get bounding box of airport
+      Action.create!(type: :airport_added, actionable: @airport, user: active_user)
+      redirect_to airport_path(@airport.code), notice: 'New airport added to map, please fill out any known additional information about it.'
+    else # rubocop:disable Style/EmptyElse
+      # TODO: error handle
+    end
+  end
+
   def show
     @airport = Airport.find_by(code: params[:id].upcase) || Airport.find_by(code: params[:id].upcase.gsub(/^K/, '')) || Airport.find(params[:id])
     authorize @airport
@@ -38,7 +56,7 @@ class AirportsController < ApplicationController
     coordinates = (params['latitude'] && params['longitude'] ? {latitude: params['latitude'].to_f, longitude: params['longitude'].to_f} : nil)
 
     results = Search.query(preprocess_query, Airport, coordinates, wildcard: true).limit(10).uniq
-    render json: results.map {|airport| {code: airport.code, label: airport.name}}
+    render json: results.map {|airport| {code: airport.code, label: airport.name, bounding_box: airport.bounding_box}}
   end
 
   def history
@@ -73,7 +91,7 @@ private
     # Filter out any tags that are not selected since the UI shows all tags as options to add
     params['airport']&.[]('tags_attributes')&.select! {|_index, tag| tag['selected'] == 'true'}
 
-    params.require(:airport).permit(
+    return params.require(:airport).permit(
       :description,
       :transient_parking,
       :fuel_location,
@@ -83,6 +101,19 @@ private
       :landing_rights,
       :landing_requirements,
       :annotations,
+      tags_attributes: [:name]
+    )
+  end
+
+  def new_airport_params
+    return params.require(:airport).permit(
+      :name,
+      :latitude,
+      :longitude,
+      :elevation,
+      :landing_rights,
+      :landing_requirements,
+      :state,
       tags_attributes: [:name]
     )
   end

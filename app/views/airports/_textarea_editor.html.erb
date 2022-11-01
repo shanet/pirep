@@ -12,7 +12,7 @@
   </div>
 
   <div>
-    <%= text_area_tag nil, model.send(column), data: {editor: true, read_only: read_only, height: textarea_editor_height(defined?(height) ? height : :large)}.compact %>
+    <%= text_area_tag nil, model.send(column), data: {editor: true, read_only: read_only, height: textarea_editor_height(defined?(height) && height ? height : :large)}.compact %>
 
     <%= form_with model: model, local: false do |form| %>
       <%= form.hidden_field column, {'data-column-field': true} %>

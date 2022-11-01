@@ -1,4 +1,4 @@
-<% placeholder = '_airport_code_' %>
+<% airport_path_placeholder = '_airport_code_' %>
 
 <div id="ui">
   <div id="controls">
@@ -22,11 +22,12 @@
 <div
   id="map"
   data-airports-path="<%= airports_path %>"
-  data-airport-path="<%= airport_path(placeholder, format: :drawer) %>"
+  data-new-airport-path="<%= new_airport_path(format: :drawer) %>"
+  data-show-airport-path="<%= airport_path(airport_path_placeholder, format: :drawer) %>"
+  data-airport-path-placeholder="<%= airport_path_placeholder %>"
   data-center-latitude="<%= @center[:latitude] %>"
   data-center-longitude="<%= @center[:longitude] %>"
   data-zoom-level="<%= @zoom_level %>"
-  data-placeholder="<%= placeholder %>"
   data-marker-image-path="<%= image_path('marker') %>"
   data-marker-selected-image-path="<%= image_path('marker_selected') %>"
   data-mapbox-api-key="<%= Rails.application.credentials.mapbox_api_key %>"

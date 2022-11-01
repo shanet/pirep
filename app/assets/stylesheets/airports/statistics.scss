@@ -2,35 +2,3 @@
   border-radius: calc(.25rem - 1px);
   color: $white;
 }
-
-.landing-rights {
-  .icon {
-    border-radius: calc(.25rem - 1px) 0 0 calc(.25rem - 1px);
-    color: $white;
-    font-size: 24px;
-    max-width: 40px;
-    min-width: 40px;
-  }
-
-  .label {
-    background-color: rgba(0, 0, 0, .03);
-    border: 1px solid rgba(0, 0, 0, .125);
-    border-left: none;
-    border-radius: 0 calc(.25rem - 1px) calc(.25rem - 1px) 0;
-  }
-}
-
-.landing-rights-box {
-  flex-basis: 0;
-  flex-grow: 1;
-  flex-shrink: 1;
-  height: 100px;
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  .icon {
-    font-size: 24px;
-  }
-}

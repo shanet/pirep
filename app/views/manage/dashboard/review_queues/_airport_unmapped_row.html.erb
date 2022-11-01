@@ -4,9 +4,9 @@
       <%= link_to airport.code, manage_airport_path(airport) %> |
 
       <% if airport.created_by&.unknown? %>
-        <%= link_to airport.created_by.ip_address, manage_user_path(airport.created_by) %> |
+        <%= link_to airport.created_by.ip_address, manage_user_path(airport.created_by) %>
       <% elsif airport.created_by %>
-        <%= link_to airport.created_by.email, manage_user_path(airport.created_by) %> |
+        <%= link_to airport.created_by.email, manage_user_path(airport.created_by) %>
       <% else %>
         <%# No record for who created this airport %>
         System

@@ -1,22 +1,22 @@
 import * as flashes from 'map/flashes';
-import * as layerSwitcher from 'map/layer_switcher';
+import * as actionButtons from 'map/action_buttons';
 import * as map from 'map/map';
 import * as photoGallery from 'shared/photo_gallery';
 import * as textareaEditors from 'shared/textarea_editors';
 import * as urlSearchParams from 'map/url_search_params';
 
-const DRAWER_CONTENT_ID = 'drawer-airport';
+const DRAWER_CONTENT_ID = 'drawer-show-airport';
 
 let previousZoomLevel;
 let wereSectionalLayersShown;
 
 export async function loadDrawer(airportCode) {
   // Get the path to request airport info from dynamically
-  // Tthis means swapping out a placeholder value with the airport code we want to get
-  const {airportPath} = document.getElementById('map').dataset;
-  const {placeholder} = document.getElementById('map').dataset;
+  // This means swapping out a placeholder value with the airport code we want to get
+  const showAirportPath = document.getElementById('map').dataset.showAirportPath;
+  const airportPathPlaceholder = document.getElementById('map').dataset.airportPathPlaceholder;
 
-  const response = await fetch(airportPath.replace(placeholder, airportCode));
+  const response = await fetch(showAirportPath.replace(airportPathPlaceholder, airportCode));
 
   if(!response.ok) {
     return flashes.show(flashes.FLASH_ERROR, 'An error occurred while retrieving airport details.');
@@ -43,7 +43,7 @@ function zoomAirport(event) {
     map.flyTo(button.dataset.latitude, button.dataset.longitude, previousZoomLevel);
 
     if(wereSectionalLayersShown) {
-      layerSwitcher.updateLayerSwitcherIcon(layerSwitcher.LAYER_SATELLITE);
+      actionButtons.updateactionButtonsIcon(actionButtons.LAYER_SATELLITE);
       map.toggleSectionalLayers(true);
       urlSearchParams.clearLayer();
     }
@@ -63,11 +63,11 @@ function zoomAirport(event) {
     }
 
     map.toggleSectionalLayers(false);
-    layerSwitcher.updateLayerSwitcherIcon(layerSwitcher.LAYER_MAP);
+    actionButtons.updateLayerSwitcherIcon(actionButtons.LAYER_MAP);
 
     button.innerText = 'Zoom Out';
     button.dataset.zoomedIn = 'true';
 
-    urlSearchParams.setLayer(layerSwitcher.LAYER_SATELLITE);
+    urlSearchParams.setLayer(actionButtons.LAYER_SATELLITE);
   }
 }

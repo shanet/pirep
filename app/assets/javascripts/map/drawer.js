@@ -1,11 +1,13 @@
-import * as map from 'map/map';
 import * as drawerAbout from 'map/drawer_about';
-import * as drawerAirport from 'map/drawer_airport';
 import * as drawerLogin from 'map/drawer_login';
+import * as drawerNewAirport from 'map/drawer_new_airport';
+import * as drawerShowAirport from 'map/drawer_show_airport';
+import * as map from 'map/map';
 
 export const DRAWER_ABOUT = 'about';
-export const DRAWER_AIRPORT = 'airport';
 export const DRAWER_LOGIN = 'login';
+export const DRAWER_NEW_AIRPORT = 'new_airport';
+export const DRAWER_SHOW_AIRPORT = 'airport';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Close the drawer when clicking the drawer handle
@@ -19,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Open the drawer by default if an anchor is present
   const anchor = new URL(window.location).hash.slice(1);
-  if([DRAWER_ABOUT, DRAWER_LOGIN].indexOf(anchor) !== -1) {
+  if([DRAWER_ABOUT, DRAWER_LOGIN, DRAWER_NEW_AIRPORT].indexOf(anchor) !== -1) {
     loadDrawer(anchor);
     openDrawer(true);
   }
@@ -36,11 +38,14 @@ export async function loadDrawer(type, ...args) {
     case DRAWER_ABOUT:
       drawer = drawerAbout;
       break;
-    case DRAWER_AIRPORT:
-      drawer = drawerAirport;
-      break;
     case DRAWER_LOGIN:
       drawer = drawerLogin;
+      break;
+    case DRAWER_NEW_AIRPORT:
+      drawer = drawerNewAirport;
+      break;
+    case DRAWER_SHOW_AIRPORT:
+      drawer = drawerShowAirport;
       break;
     default:
       console.log(`Unknown drawer type ${type}`); // eslint-disable-line no-console

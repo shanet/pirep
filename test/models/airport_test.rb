@@ -5,6 +5,21 @@ class AirportTest < ActiveSupport::TestCase
     @airport = create(:airport)
   end
 
+  test 'populates new unmapped airport' do
+    airport = Airport.new_unmapped(attributes_for(:airport))
+    assert_equal 'UNM01', airport.code
+    assert_equal 'UNM01', airport.site_number
+    assert_equal 'airport', airport.facility_type
+    assert_equal 'PR', airport.facility_use
+    assert_equal 'PR', airport.ownership_type
+
+    airport.save!
+
+    # Creating another unmapped airport should use the next unmapped airport code
+    airport2 = Airport.new_unmapped({})
+    assert_equal 'UNM02', airport2.code, 'Unmapped airport not given a unique code'
+  end
+
   test 'does not return hidden facility types' do
     assert_not Airport.facility_types.keys.include?(:ultralight), 'Included hidden facility type'
   end
@@ -38,6 +53,12 @@ class AirportTest < ActiveSupport::TestCase
     assert airport.closed?, 'Airport not closed'
   end
 
+  test 'is unmapped' do
+    assert_not @airport.unmapped?, 'Mapped airport considered unmapped'
+    @airport.tags << create(:tag, name: :unmapped)
+    assert @airport.unmapped?, 'Unmapped airport not considered unmapped'
+  end
+
   test 'airport is not empty if tagged with a user addable tag' do
     airport = create(:airport, :empty)
     assert airport.empty?, 'Airport empty with associated non-user addable tag'
@@ -48,7 +69,7 @@ class AirportTest < ActiveSupport::TestCase
 
   test 'airport is not empty if landing rights are added' do
     airport = create(:airport, :empty)
-    airport.update!(landing_rights: :permission)
+    airport.update!(landing_rights: :restricted)
     assert_not airport.empty?, 'Airport not empty with landing rights added'
   end
 
@@ -129,13 +150,6 @@ class AirportTest < ActiveSupport::TestCase
     end
   end
 
-  test 'is unmapped' do
-    assert_not @airport.unmapped?, 'Mapped airport considered unmapped'
-
-    create(:tag, name: :unmapped, airport: @airport)
-    assert @airport.reload.unmapped?, 'Unmapped airport not considered unmapped'
-  end
-
   test 'deserializes coordinates as point type' do
     with_versioning do
       @airport.update!(description: 'changed')
@@ -151,6 +165,7 @@ class AirportTest < ActiveSupport::TestCase
   test 'has bounding box' do
     assert @airport.has_bounding_box?, 'Airport does not have bounding box'
     assert_not create(:airport, :no_bounding_box).has_bounding_box?, 'Airport has bounding box'
+    assert_nil create(:airport, :no_bounding_box).bounding_box, 'Airport has bounding box'
     assert_not create(:airport, facility_type: 'heliport').has_bounding_box?, 'Heliport uses bounding box'
   end
 end

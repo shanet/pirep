@@ -11,7 +11,7 @@
       <div class="btn-group">
         <% if @airport.unmapped? %>
           <%= button_to (@airport.reviewed_at.present? ? 'Unapprove' : 'Approve'), manage_airport_path(@airport),
-            class: 'btn btn-success rounded-0 rounded-start', method: :patch, params: {users_user: {reviewed_at: (@airport.reviewed_at.present? ? nil : Time.zone.now)}} %>
+            class: 'btn btn-success rounded-0 rounded-start', method: :patch, params: {airport: {reviewed_at: (@airport.reviewed_at.present? ? nil : Time.zone.now)}} %>
         <% end %>
 
         <%= link_to 'View', airport_path(@airport), class: 'btn btn-primary' %>

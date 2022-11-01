@@ -3,6 +3,14 @@ class AirportPolicy < ApplicationPolicy
     return true
   end
 
+  def new?
+    return !@user.disabled_at
+  end
+
+  def create?
+    return !@user.disabled_at
+  end
+
   def show?
     return true
   end

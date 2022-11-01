@@ -144,11 +144,9 @@ class MapTest < ApplicationSystemTestCase
     open_airport(@airport)
 
     # Wait for the drawer opening and panning to airport animation to complete
-    wait_for_zoom_animation
     click_on 'Zoom In'
 
     # Wait for zoom animation to finish and check that we're now zoomed in
-    wait_for_zoom_animation
     assert_not_equal default_zoom_level, map_zoom_level, 'Map did not zoom in on airport'
 
     # Zooming in should switch to satellite view
@@ -156,7 +154,6 @@ class MapTest < ApplicationSystemTestCase
 
     # Zoom back out and wait for the animation to complete
     click_on 'Zoom Out'
-    wait_for_zoom_animation
 
     assert_equal default_zoom_level, map_zoom_level, 'Map did not zoom back out from airport'
     assert_not 'layer=satellite'.in?(URI.parse(current_url).query), 'Layer URL parameter not removed'
@@ -180,7 +177,6 @@ class MapTest < ApplicationSystemTestCase
     within('.airport-drawer-header') do
       # Wait for zoom animation to finish
       click_on 'Zoom In'
-      wait_for_zoom_animation
 
       click_on 'More'
     end
@@ -189,7 +185,6 @@ class MapTest < ApplicationSystemTestCase
 
     # Go back and give some time for the zoom animation to complete
     go_back
-    wait_for_zoom_animation
 
     # Going back to the map should return to the same state
     assert_selector '.airport-drawer-header'
@@ -224,6 +219,29 @@ class MapTest < ApplicationSystemTestCase
 
     (filter_facility_types + filter_tags).each do |filter|
       assert filter_enabled?(filter), "Filter #{filter} not enabled from URL parameter"
+    end
+  end
+
+  test 'adds unmapped airport' do
+    visit map_path
+    wait_for_map_ready
+
+    find('#new-airport-button').click
+
+    # Select a location for the new airport on the map
+    find('button.select-coordinates').click
+    find('#map').click(x: 0, y: 0)
+    assert_equal 16, map_zoom_level, 'Map not zoomed in on selected coordinates'
+
+    within('#new-airport') do
+      assert_match /Location: -?\d+(\.\d+)?, -?\d+(\.\d+)? \/ \d+ft/, find('.coordinates').text, 'Location label not set on selection'
+
+      find('#airport_name').fill_in(with: 'Secret Airport')
+      find('#airport_landing_rights_restricted + label').click
+      find('#airport_landing_requirements').fill_in(with: 'Call 867-5309')
+
+      click_on 'Submit'
+      assert_equal airport_path(Airport.last.code), current_path, 'Not redirected to new airport on form submit'
     end
   end
 
@@ -263,11 +281,6 @@ private
 
   def map_location
     return evaluate_script('mapbox.getCenter()')
-  end
-
-  def wait_for_zoom_animation
-    # This isn't ideal, but given that the animation is happening within WebGL there's not really a good way to wait for the zoom to finish programmatically
-    sleep 3
   end
 
   def wait_for_map_ready

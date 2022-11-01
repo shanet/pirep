@@ -1,5 +1,3 @@
-<% bounding_box = @airport.has_bounding_box? ? [[@airport.bbox_sw_longitude, @airport.bbox_sw_latitude], [@airport.bbox_ne_longitude, @airport.bbox_ne_latitude]] : nil %>
-
 <div class="airport-drawer-header theme-<%= @airport.theme %>">
   <div class="row">
     <div class="col-sm pt-3 pb-2 d-flex">
@@ -14,7 +12,7 @@
       <button
         type="button"
         class="btn btn-secondary btn-sm zoom-btn"
-        data-bounding-box="<%= bounding_box.to_json %>"
+        data-bounding-box="<%= @airport.bounding_box.to_json %>"
         data-latitude="<%= @airport.latitude %>"
         data-longitude="<%= @airport.longitude %>"
         data-zoom-level="<%= @airport.uses_bounding_box? ? 16 : 17 %>">Zoom In</button>
@@ -47,7 +45,7 @@
 </div>
 
 <%= render partial: 'airports/statistics/statistics_boxes', formats: :html, locals: {runways_limit: 3} %>
-<%= render partial: 'airports/statistics/landing_rights', formats: :html %>
+<%= render partial: 'airports/landing_rights/landing_rights', formats: :html %>
 
 <div class="row">
   <div class="col-sm">

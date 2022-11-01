@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "easymde": "^2.13.0",
-    "mapbox-gl": "2.1.0"
+    "mapbox-gl": "^2.10.0"
   },
   "version": "0.1.0",
   "devDependencies": {

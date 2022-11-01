@@ -1,9 +1,10 @@
 import 'mapbox-gl';
 
+import * as actionButtons from 'map/action_buttons';
 import * as drawer from 'map/drawer';
 import * as filters from 'map/filters';
 import * as flashes from 'map/flashes';
-import * as layerSwitcher from 'map/layer_switcher';
+import * as newAirportDrawer from 'map/drawer_new_airport';
 import * as urlSearchParams from 'map/url_search_params';
 
 const SECTIONAL_LAYERS = {
@@ -19,6 +20,7 @@ const displayedAirports = {
   features: [],
 };
 
+let mapElement = null;
 let map = null;
 
 // All airports without filters
@@ -33,11 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchAirports();
     addSectionalLayersToMap();
     addEventHandlersToMap();
+    add3dTerrain();
   });
 }, {once: true});
 
 function initMap() {
-  mapboxgl.accessToken = document.getElementById('map').dataset.mapboxApiKey; // eslint-disable-line no-undef
+  mapElement = document.getElementById('map');
+  mapboxgl.accessToken = mapElement.dataset.mapboxApiKey; // eslint-disable-line no-undef
 
   const [coordinates, zoomLevel] = initialMapCenter();
 
@@ -56,7 +60,7 @@ function initMap() {
   // Let the tests know that the map is fully ready to use (once we have the airports layer shown)
   map.on('idle', () => {
     if(map.getLayer(AIRPORT_LAYER)) {
-      document.getElementById('map').dataset.ready = true;
+      mapElement.dataset.ready = true;
     }
   });
 }
@@ -67,7 +71,7 @@ function initialMapCenter() {
 
   // If there were no coordinates in the URL use the geoip lookup value
   if(!coordinates) {
-    const map = document.getElementById('map');
+    const map = mapElement;
     coordinates = [map.dataset.centerLatitude, map.dataset.centerLongitude];
     zoomLevel = map.dataset.zoomLevel;
   }
@@ -90,7 +94,7 @@ function addSectionalLayersToMap() {
         type: 'raster',
       },
       paint: {
-        'raster-opacity': (urlSearchParams.getLayer() === layerSwitcher.LAYER_SATELLITE ? 0 : 1),
+        'raster-opacity': (urlSearchParams.getLayer() === actionButtons.LAYER_SATELLITE ? 0 : 1),
         'raster-fade-duration': 300,
       },
     });
@@ -98,8 +102,19 @@ function addSectionalLayersToMap() {
 }
 
 function addEventHandlersToMap() {
+  map.on('click', (event) => {
+    if(!mapElement.classList.contains('editing')) return;
+
+    flyTo(event.lngLat['lat'], event.lngLat['lng'], 16);
+    const elevation = map.queryTerrainElevation([event.lngLat['lng'], event.lngLat['lat']]);
+    newAirportDrawer.locationSelected(event.lngLat['lat'], event.lngLat['lng'], elevation);
+  });
+
   // Open the drawer for an airport when its marker is clicked or close if the already open airport is clicked
   map.on('click', AIRPORT_LAYER, (event) => {
+    // Don't do anything if a new airport is being added
+    if(mapElement.classList.contains('editing')) return;
+
     if(event.features[0].id === getSelectedAirportMarker()) {
       drawer.closeDrawer();
       closeAirport();
@@ -128,8 +143,25 @@ function addEventHandlersToMap() {
   });
 }
 
+function add3dTerrain() {
+  map.addSource('dem', {
+    'type': 'raster-dem',
+    'url': 'mapbox://mapbox.terrain-rgb',
+  });
+
+  map.setTerrain({'source': 'dem'});
+
+  map.setFog({
+    'range': [0.8, 8],
+    'color': '#dc9f9f',
+    'horizon-blend': 0.5,
+    'high-color': '#245bde',
+    'space-color': '#000000',
+  });
+}
+
 async function fetchAirports() {
-  const {airportsPath} = document.getElementById('map').dataset;
+  const {airportsPath} = mapElement.dataset;
   const response = await fetch(airportsPath);
 
   if(!response.ok) {
@@ -141,39 +173,49 @@ async function fetchAirports() {
 }
 
 function addAirportsToMap() {
-  map.loadImage(document.getElementById('map').dataset.markerImagePath, (error, image) => {
-    // TODO: make this better
-    if(error) throw error;
+  map.loadImage(mapElement.dataset.markerImagePath, (error, image) => {
+    if(error) {
+      flashes.show(flashes.FLASH_ERROR, 'Failed to add airports to map');
+      throw error;
+    }
+
     map.addImage('marker', image);
 
-    map.loadImage(document.getElementById('map').dataset.markerSelectedImagePath, (error, image) => {
-      if(error) throw error;
+    map.loadImage(mapElement.dataset.markerSelectedImagePath, (error, image) => {
+      if(error) {
+        flashes.show(flashes.FLASH_ERROR, 'Failed to add airports to map');
+        throw error;
+      }
+
       map.addImage('marker_selected', image);
-
-      map.addSource(AIRPORT_LAYER, {
-        type: 'geojson',
-        data: displayedAirports,
-        buffer: 0,
-        maxzoom: 18,
-        tolerance: 3.5,
-      });
-
-      map.addLayer({
-        id: AIRPORT_LAYER,
-        type: 'symbol',
-        source: AIRPORT_LAYER,
-        layout: {
-          'icon-allow-overlap': true,
-          'icon-image': 'marker',
-          'icon-size': 0.8,
-        },
-      });
+      addAirportToMap(AIRPORT_LAYER, displayedAirports);
 
       // The map is fully loaded, start manipulating it
       applyUrlSearchParamsOnMap();
       filterAirportsOnMap();
       exposeObjectsForTesting();
     });
+  });
+}
+
+export function addAirportToMap(layerId, geojson) {
+  map.addSource(layerId, {
+    type: 'geojson',
+    data: geojson,
+    buffer: 0,
+    maxzoom: 18,
+    tolerance: 3.5,
+  });
+
+  map.addLayer({
+    id: layerId,
+    type: 'symbol',
+    source: layerId,
+    layout: {
+      'icon-allow-overlap': true,
+      'icon-image': 'marker',
+      'icon-size': 0.8,
+    },
   });
 }
 
@@ -210,11 +252,11 @@ export function areSectionalLayersShown() {
   return (map.getPaintProperty(Object.keys(SECTIONAL_LAYERS)[0], 'raster-opacity') === 1);
 }
 
-export function openAirport(airportCode) {
+export function openAirport(airportCode, boundingBox) {
   // Find the feature for the given airport code
   for(let i = 0; i < allAirports.length; i++) {
     if(allAirports[i].properties.code === airportCode) {
-      openAirportFeature(allAirports[i]);
+      openAirportFeature(allAirports[i], boundingBox);
       break;
     }
   }
@@ -225,28 +267,42 @@ export function closeAirport() {
   setAirportMarkerSelected('');
 }
 
-function openAirportFeature(airport) {
+function openAirportFeature(airport, boundingBox) {
   // Set the airport's marker as selected
   setAirportMarkerSelected(airport.id);
 
-  // Delay moving to the airport if the drawer is closed so the map doesn't move before the drawer is finished animating
-  setTimeout(() => {
+  if(boundingBox) {
+    map.fitBounds(boundingBox, {padding: 100});
+  } else {
     map.flyTo({center: airport.geometry.coordinates, padding: {right: 500}});
-  }, (drawer.isDrawerOpen() ? 0 : 500));
+  }
 
   // Open the drawer for the clicked airport
-  drawer.loadDrawer(drawer.DRAWER_AIRPORT, airport.properties.code);
+  drawer.loadDrawer(drawer.DRAWER_SHOW_AIRPORT, airport.properties.code);
   drawer.openDrawer();
 
   urlSearchParams.setAirport(airport.properties.code);
 }
 
-function setAirportMarkerSelected(airportCode) {
-  map.setLayoutProperty(AIRPORT_LAYER, 'icon-image', ['match', ['id'], airportCode, 'marker_selected', 'marker']);
+export function setAirportMarkerSelected(airportCode, layerId) {
+  if(!layerId) layerId = AIRPORT_LAYER;
+
+  // Ensure that the layer exists before manipulating it
+  if(!map.getLayer(layerId)) return;
+
+  map.setLayoutProperty(layerId, 'icon-image', ['match', ['id'], airportCode, 'marker_selected', 'marker']);
 }
 
 function getSelectedAirportMarker() {
   return map.getLayoutProperty(AIRPORT_LAYER, 'icon-image')[2];
+}
+
+export function removeLayer(layerId) {
+  // Avoid an error by trying to remove a non-existant layer
+  if(!map.getSource(layerId)) return false;
+
+  map.removeLayer(layerId);
+  return map.removeSource(layerId);
 }
 
 export function flyTo(latitude, longitude, zoom) {
@@ -267,7 +323,7 @@ export function getCenter() {
 
 function exposeObjectsForTesting() {
   // Don't expose anything if not running tests
-  if(!document.getElementById('map').dataset.isTest) return;
+  if(!mapElement.dataset.isTest) return;
 
   // This is yucky, but we need the map object at global scope so we can access it in Capybara tests
   window.mapbox = map;
