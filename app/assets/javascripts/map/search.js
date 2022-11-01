@@ -58,7 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       case 13: // Enter
         // Open the airport when a result is entered
-        map.openAirport(resultsList.childNodes[selectedSearchResultIndex].dataset.airportCode);
+        const result = resultsList.childNodes[selectedSearchResultIndex];
+        map.openAirport(result.dataset.airportCode, JSON.parse(result.dataset.boundingBox));
         hideSearchResults();
         break;
       default:
@@ -87,6 +88,7 @@ function showSearchResults(results) {
     node.classList.add('list-group-item');
     node.innerText = `${result.code} - ${result.label}`;
     node.dataset.airportCode = result.code;
+    node.dataset.boundingBox = JSON.stringify(result.bounding_box);
     resultsList.appendChild(node);
 
     // Show airport when result is clicked (use mousedown to since blur will take precedence over click)

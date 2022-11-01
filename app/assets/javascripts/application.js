@@ -5,6 +5,7 @@ Rails.start();
 
 import 'airports/airports';
 import 'airports/annotations';
+import 'airports/landing_rights';
 import 'map/header';
 import 'map/map';
 import 'map/search';

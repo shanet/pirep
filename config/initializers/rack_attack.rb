@@ -1,5 +1,5 @@
 WRITE_THROTTLED_PATHS = [
-  /\/airports\/.+\z/,
+  /\/airports.*\z/,
   /\/tags\/.+\z/,
   /\/comments\z/,
   /\/comments\/.+\/helpful\z/,

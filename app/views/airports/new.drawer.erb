@@ -1,0 +1,50 @@
+<h1 class="display-6 mb-0">New Airport</h1>
+<div class="mb-3">Add an unmapped airport to Pirep</div>
+
+<div class="row mt-2">
+  <div class="col mb-3">
+    <%= form_with(model: @airport, id: 'new-airport', local: true) do |form| %>
+      <%= render partial: 'shared/record_errors', formats: :html, locals: {record: form.object} %>
+
+      <div class="mb-3">
+        <button class="select-coordinates btn btn-primary" type="button"><i class="fa-solid fa-location-crosshairs"></i> Select location</button>
+        <div class="coordinates form-text mt-1"></div>
+        <%= form.hidden_field :latitude %>
+        <%= form.hidden_field :longitude %>
+        <%= form.hidden_field :elevation %>
+      </div>
+
+      <div class="mb-3">
+        <h5 class="mb-0">Name</h5>
+        <div class="form-text mb-2">Pick a good name, this can't be changed later!</div>
+        <%= form.text_field :name, class: 'form-control' %>
+      </div>
+
+      <div class="mb-3">
+        <h5 class="mb-0">Active Airport?</h5>
+        <div class="form-text mb-2">Is this airport still active or has it been closed/abandoned? Assume open if unknown.</div>
+
+        <%= form.radio_button :state, :active, class: 'btn-check', checked: true %>
+        <%= form.label(:state, value: :active, class: 'btn btn-outline-success') do %>
+          <i class="fa-solid fa-plane-departure"></i> Active
+        <% end %>
+
+        <%= form.radio_button :state, :closed, class: 'btn-check' %>
+        <%= form.label(:state, value: :closed, class: 'btn btn-outline-danger') do %>
+          <i class="fa-solid fa-times-circle"></i> Closed
+        <% end %>
+      </div>
+
+      <div id="landing-rights-container" class="mb-3">
+        <h5 class="mb-0">Landing Restrictions</h5>
+        <div class="form-text mb-2">Who can use this airport?</div>
+        <%= render partial: 'airports/landing_rights/landing_rights_selector', formats: :html, locals: {form: form} %>
+      </div>
+
+      <div class="mb-2">
+        <div class="form-text mb-2">Airport tags, description, photos, etc. can be edited once the airport is saved.</div>
+        <%= form.submit 'Submit', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
+</div>

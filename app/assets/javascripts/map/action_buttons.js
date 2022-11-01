@@ -1,3 +1,4 @@
+import * as drawer from 'map/drawer';
 import * as map from 'map/map';
 import * as urlSearchParams from 'map/url_search_params';
 
@@ -5,6 +6,11 @@ export const LAYER_SATELLITE = 'satellite';
 export const LAYER_MAP = 'map';
 
 document.addEventListener('DOMContentLoaded', () => {
+  initLayerSwitcher();
+  initNewAirport();
+}, {once: true});
+
+function initLayerSwitcher() {
   const layerSwitcher = document.getElementById('layer-switcher');
   if(!layerSwitcher) return;
 
@@ -22,7 +28,20 @@ document.addEventListener('DOMContentLoaded', () => {
       updateLayerSwitcherIcon(LAYER_SATELLITE);
     }
   });
-}, {once: true});
+}
+
+function initNewAirport() {
+  const newAirportButton = document.getElementById('new-airport-button');
+  if(!newAirportButton) return;
+
+  newAirportButton.addEventListener('click', () => {
+    // Deselect any airport that is already selected
+    map.closeAirport();
+
+    drawer.loadDrawer(drawer.DRAWER_NEW_AIRPORT);
+    drawer.openDrawer();
+  });
+}
 
 export function updateLayerSwitcherIcon(shownIcon) {
   const layerSwitcher = document.getElementById('layer-switcher');

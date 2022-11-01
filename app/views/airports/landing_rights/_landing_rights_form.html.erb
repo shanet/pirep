@@ -1,0 +1,7 @@
+<%= form_with model: @airport, local: true do |form| %>
+  <%= render 'airports/landing_rights/landing_rights_selector', form: form %>
+
+  <div class="text-center mt-2">
+    <%= form.submit 'Update Airport Access', class: 'btn btn-primary' %>
+  </div>
+<% end %>

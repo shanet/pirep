@@ -1,6 +1,6 @@
 class Manage::AirportsController < ApplicationController
   include SearchQueryable
-  before_action :set_airport, only: [:show, :edit, :update, :update_version]
+  before_action :set_airport, only: [:show, :edit, :update, :destroy, :update_version]
 
   def index
     @airports = policy_scope(Airport.order(:code).page(params[:page]), policy_scope_class: Manage::AirportPolicy::Scope)
@@ -30,6 +30,14 @@ class Manage::AirportsController < ApplicationController
     end
   end
 
+  def destroy
+    if @airport.destroy
+      redirect_to manage_airports_path, notice: 'Airport deleted successfully'
+    else
+      redirect_to manage_airport_path(@airport)
+    end
+  end
+
   def update_version
     if PaperTrail::Version.find(params[:version_id]).update(version_params)
       if request.xhr?
@@ -53,7 +61,7 @@ private
   end
 
   def airport_params
-    return params.require(:airport).permit(:code, :name, :fuel_type, :latitude, :longitude, :elevation, :facility_type, :facility_use, :ownership_type, :owner_name, :owner_phone)
+    return params.require(:airport).permit(:code, :name, :fuel_type, :latitude, :longitude, :elevation, :facility_type, :facility_use, :ownership_type, :owner_name, :owner_phone, :reviewed_at)
   end
 
   def version_params

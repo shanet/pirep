@@ -19,6 +19,10 @@ class Manage::AirportPolicy < ApplicationPolicy
     return admin?
   end
 
+  def destroy?
+    return admin?
+  end
+
   def update_version?
     return admin?
   end

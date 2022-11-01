@@ -20,7 +20,7 @@
       <% if defined?(subtitle) %>
         <%= subtitle %>
       <% else %>
-        <%= @airport.latitude %>, <%= @airport.longitude %>
+        <%= @airport.latitude.round(7) %>, <%= @airport.longitude.round(7) %>
       <% end %>
     </div>
 

@@ -6,6 +6,10 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   driven_by :selenium, using: driver, screen_size: [1400, 1400] do |options|
     # Enable WebGL for Mapbox
     options.add_argument('--use-gl')
+
+    # Specifying prefers-reduced-motion tells Mapbox to disable fly-to animations which is useful for
+    # tests because it eliminates the need for sleep statements to wait for these animations to complete
+    options.add_argument('--force-prefers-reduced-motion')
   end
 
   # CI runs somewhat slower so give it some more time before failing a test
