@@ -1,7 +1,12 @@
+// Tell FontAwesome to look under /assets for its font files
+$fa-font-path: 'assets';
+
 @import 'bootstrap';
-@import 'font-awesome';
 @import 'mapbox-gl';
 @import 'easymde.min'; // stylelint-disable-line scss/at-import-partial-extension
+@import 'fontawesome/fontawesome';
+@import 'fontawesome/solid';
+@import 'fontawesome/regular';
 
 @import 'themes';
 

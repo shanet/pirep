@@ -304,8 +304,4 @@ class Airport < ApplicationRecord
   def created_by
     return Users::User.find_by(id: versions.find_by(event: 'create')&.whodunnit)
   end
-
-  def unmapped?
-    return tags.any? {|tag| tag.name == :unmapped}
-  end
 end

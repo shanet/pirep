@@ -16,7 +16,7 @@ $handle-size: 25px;
     border-radius: 100%;
     box-shadow: $gray-800 0 5px 15px;
     height: $handle-size;
-    left: -#{$handle-size / 2 + 3};
+    left: calc(($handle-size / 2 + 3px) * -1);
     line-height: $handle-size;
     position: absolute;
     top: 50px;

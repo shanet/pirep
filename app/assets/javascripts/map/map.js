@@ -105,9 +105,9 @@ function addEventHandlersToMap() {
   map.on('click', (event) => {
     if(!mapElement.classList.contains('editing')) return;
 
-    flyTo(event.lngLat['lat'], event.lngLat['lng'], 16);
-    const elevation = map.queryTerrainElevation([event.lngLat['lng'], event.lngLat['lat']]);
-    newAirportDrawer.locationSelected(event.lngLat['lat'], event.lngLat['lng'], elevation);
+    flyTo(event.lngLat.lat, event.lngLat.lng, 16);
+    const elevation = map.queryTerrainElevation([event.lngLat.lng, event.lngLat.lat]);
+    newAirportDrawer.locationSelected(event.lngLat.lat, event.lngLat.lng, elevation);
   });
 
   // Open the drawer for an airport when its marker is clicked or close if the already open airport is clicked
@@ -145,15 +145,15 @@ function addEventHandlersToMap() {
 
 function add3dTerrain() {
   map.addSource('dem', {
-    'type': 'raster-dem',
-    'url': 'mapbox://mapbox.terrain-rgb',
+    type: 'raster-dem',
+    url: 'mapbox://mapbox.terrain-rgb',
   });
 
-  map.setTerrain({'source': 'dem'});
+  map.setTerrain({source: 'dem'});
 
   map.setFog({
-    'range': [0.8, 8],
-    'color': '#dc9f9f',
+    range: [0.8, 8],
+    color: '#dc9f9f',
     'horizon-blend': 0.5,
     'high-color': '#245bde',
     'space-color': '#000000',
@@ -285,7 +285,7 @@ function openAirportFeature(airport, boundingBox) {
 }
 
 export function setAirportMarkerSelected(airportCode, layerId) {
-  if(!layerId) layerId = AIRPORT_LAYER;
+  if(!layerId) layerId = AIRPORT_LAYER; // eslint-disable-line no-param-reassign
 
   // Ensure that the layer exists before manipulating it
   if(!map.getLayer(layerId)) return;

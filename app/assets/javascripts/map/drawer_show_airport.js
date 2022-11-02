@@ -13,8 +13,8 @@ let wereSectionalLayersShown;
 export async function loadDrawer(airportCode) {
   // Get the path to request airport info from dynamically
   // This means swapping out a placeholder value with the airport code we want to get
-  const showAirportPath = document.getElementById('map').dataset.showAirportPath;
-  const airportPathPlaceholder = document.getElementById('map').dataset.airportPathPlaceholder;
+  const {showAirportPath} = document.getElementById('map').dataset;
+  const {airportPathPlaceholder} = document.getElementById('map').dataset;
 
   const response = await fetch(showAirportPath.replace(airportPathPlaceholder, airportCode));
 

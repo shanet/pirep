@@ -39,3 +39,6 @@ yarn-debug.log*
 
 # Maxmind databases
 **/*.mmdb
+
+# CSS builds
+/app/assets/builds/*
