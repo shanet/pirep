@@ -20,7 +20,10 @@ class RackAttackTest < ActionDispatch::IntegrationTest
   end
 
   test 'throttles airport creates' do
-    # TODO
+    with_rack_attack do
+      assert_throttles airports_path, :post, Rails.configuration.rack_attack_write_limit,
+                       expected_response: :redirect, **{airport: attributes_for(:airport)}
+    end
   end
 
   test 'throttles airport updates' do
@@ -52,13 +55,15 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 private
 
   def assert_throttles(path, method, num_requests, expected_response: :success, **params)
-    num_requests.times do
-      send(method, path, params: params)
-      assert_response expected_response
-    end
+    freeze_time do
+      num_requests.times do
+        send(method, path, params: params)
+        assert_response expected_response
+      end
 
-    # One more request should put us over the limit
-    send(method, path, params: params)
-    assert_response TOO_MANY_REQUESTS
+      # One more request should put us over the limit
+      send(method, path, params: params)
+      assert_response TOO_MANY_REQUESTS
+    end
   end
 end

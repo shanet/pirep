@@ -183,10 +183,10 @@ class MapTest < ApplicationSystemTestCase
 
     assert_equal airport_path(@airport.code), URI.parse(current_url).path, 'Did not navigate to airport show page'
 
-    # Go back and give some time for the zoom animation to complete
-    go_back
-
     # Going back to the map should return to the same state
+    go_back
+    wait_for_map_ready
+
     assert_selector '.airport-drawer-header'
     assert_not_equal default_zoom_level, map_zoom_level, 'Map did not preserve zoom level'
     assert_not sectional_layer_shown?, 'Map did not preserve layer'
@@ -285,10 +285,10 @@ private
 
   def wait_for_map_ready
     # Once the map is fully ready to use it will populate a data attribute
-    find('#map[data-ready="true"]', wait: 30)
+    find('#map[data-ready="true"]', wait: 60)
   rescue Capybara::ElementNotFound => error
     # Something may have prevented Mapbox from initalizing, it would he helpful to print the browser logs in this case
-    warn page.driver.browser.logs.get(:browser)
+    warn page.driver.browser.logs.get(:browser) unless ENV['CI']
     raise error
   end
 end

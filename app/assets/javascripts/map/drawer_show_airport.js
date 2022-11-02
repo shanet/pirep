@@ -43,7 +43,7 @@ function zoomAirport(event) {
     map.flyTo(button.dataset.latitude, button.dataset.longitude, previousZoomLevel);
 
     if(wereSectionalLayersShown) {
-      actionButtons.updateactionButtonsIcon(actionButtons.LAYER_SATELLITE);
+      actionButtons.updateLayerSwitcherIcon(actionButtons.LAYER_SATELLITE);
       map.toggleSectionalLayers(true);
       urlSearchParams.clearLayer();
     }

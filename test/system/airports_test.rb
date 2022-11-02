@@ -106,14 +106,14 @@ class AirportsTest < ApplicationSystemTestCase
     contact = 'Call 867-5309 for info'
 
     click_on 'Edit Airport Access'
-    find('.landing-rights-box[data-landing-rights-type="restrictions"]').click
-    fill_in 'Requirements for landing:', with: contact
+    find('#airport_landing_rights_restricted + label').click
+    fill_in 'Requirements/contact info for landing:', with: contact
     click_on 'Update Airport Access'
 
     # Kind of messy, but check that the page has the expected landing rights text on it now
     landing_rights = find('.landing-rights').text
     assert landing_rights.include?(contact)
-    assert landing_rights.include?(Airport::LANDING_RIGHTS_TYPES[:restrictions][:long_description])
+    assert landing_rights.include?(Airport::LANDING_RIGHTS_TYPES[:restricted][:long_description])
   end
 
   test 'edit textareas' do
