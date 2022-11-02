@@ -56,12 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         selectSearchResult(selectedSearchResultIndex);
         break;
-      case 13: // Enter
+      case 13: { // Enter
         // Open the airport when a result is entered
         const result = resultsList.childNodes[selectedSearchResultIndex];
         map.openAirport(result.dataset.airportCode, JSON.parse(result.dataset.boundingBox));
         hideSearchResults();
         break;
+      }
       default:
         // Hide the results list when any other key is hit
         hideSearchResults();

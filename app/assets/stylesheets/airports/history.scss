@@ -7,9 +7,9 @@ $circle-diameter: 16px;
 .revision {
   .timeline-circle {
     height: $circle-diameter;
-    left: -#{$circle-diameter / 2};
+    left: calc($circle-diameter / 2 * -1);
     position: absolute;
-    top: #{$circle-diameter / 4};
+    top: calc($circle-diameter / 4);
     width: $circle-diameter;
   }
 

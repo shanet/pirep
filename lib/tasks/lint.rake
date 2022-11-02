@@ -23,7 +23,7 @@ namespace :lint do
   end
 
   task css: :environment do
-    sh 'yarn run stylelint %s "**/*.{css,scss}"' % [(autocorrect? ? '--fix' : '')], verbose: false
+    sh 'yarn run stylelint %s "app/assets/stylesheets/**/*.{css,scss}"' % [(autocorrect? ? '--fix' : '')], verbose: false
   end
 
   task js: :environment do

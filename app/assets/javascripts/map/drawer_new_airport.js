@@ -7,8 +7,7 @@ const DRAWER_CONTENT_ID = 'drawer-new-airport';
 export async function loadDrawer() {
   // Get the path to request airport info from dynamically
   // Tthis means swapping out a placeholder value with the airport code we want to get
-  const newAirportPath = document.getElementById('map').dataset.newAirportPath;
-
+  const {newAirportPath} = document.getElementById('map').dataset;
   const response = await fetch(newAirportPath);
 
   if(!response.ok) {

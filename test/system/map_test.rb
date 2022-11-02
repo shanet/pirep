@@ -234,7 +234,7 @@ class MapTest < ApplicationSystemTestCase
     assert_equal 16, map_zoom_level, 'Map not zoomed in on selected coordinates'
 
     within('#new-airport') do
-      assert_match /Location: -?\d+(\.\d+)?, -?\d+(\.\d+)? \/ \d+ft/, find('.coordinates').text, 'Location label not set on selection'
+      assert_match(/Location: -?\d+(\.\d+)?, -?\d+(\.\d+)? \/ \d+ft/, find('.coordinates').text, 'Location label not set on selection')
 
       find('#airport_name').fill_in(with: 'Secret Airport')
       find('#airport_landing_rights_restricted + label').click

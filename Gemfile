@@ -7,11 +7,11 @@ ruby '3.0.4'
 gem 'rails', '7.0.3.1'
 
 gem 'bootsnap', '>= 1.4.2', require: false
+gem 'dartsass-rails', '~> 0.4.0'
 gem 'importmap-rails'
 gem 'jbuilder', '~> 2.7'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.1'
-gem 'sass-rails', '>= 6'
 
 # Third party gems
 gem 'activerecord-cte'
@@ -23,7 +23,6 @@ gem 'devise'
 gem 'diffy'
 gem 'erb_lint', '>= 0.0.35'
 gem 'faraday'
-gem 'font-awesome-sass'
 gem 'kramdown'
 gem 'maxmind-geoip2'
 gem 'paper_trail'

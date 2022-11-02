@@ -115,6 +115,8 @@ GEM
     concurrent-ruby (1.1.10)
     connection_pool (2.3.0)
     crass (1.0.6)
+    dartsass-rails (0.4.0)
+      railties (>= 6.0.0)
     debug_inspector (1.1.0)
     devise (4.8.1)
       bcrypt (~> 3.0)
@@ -149,8 +151,6 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    font-awesome-sass (6.1.1)
-      sassc (~> 2.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
     html_tokenizer (0.0.7)
@@ -291,8 +291,6 @@ GEM
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sass-rails (6.0.0)
-      sassc-rails (~> 2.1, >= 2.1.1)
     sassc (2.4.0)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -352,12 +350,12 @@ DEPENDENCIES
   bundler-audit
   byebug
   capybara (>= 2.15)
+  dartsass-rails (~> 0.4.0)
   devise
   diffy
   erb_lint (>= 0.0.35)
   factory_bot_rails
   faraday
-  font-awesome-sass
   importmap-rails
   jbuilder (~> 2.7)
   kramdown
@@ -372,7 +370,6 @@ DEPENDENCIES
   rubocop
   rubocop-rails
   rubyzip
-  sass-rails (>= 6)
   selenium-webdriver (>= 4.3.0)
   webdrivers
 
