@@ -14,5 +14,10 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   # CI runs somewhat slower so give it some more time before failing a test
   Capybara.default_max_wait_time = 10 if ENV['CI']
+
+  # We'll get far fewer flakes without animations
   Capybara.disable_animation = true
+
+  # Silence some annoying "Capybara starting Puma..." while running tests
+  Capybara.server = :puma, {Silent: true}
 end

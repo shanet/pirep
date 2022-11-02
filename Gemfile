@@ -4,7 +4,7 @@ git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 ruby '3.0.4'
 
 # Core Rails gems
-gem 'rails', '7.0.3.1'
+gem 'rails', '7.0.4'
 
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'dartsass-rails', '~> 0.4.0'
@@ -12,11 +12,11 @@ gem 'importmap-rails'
 gem 'jbuilder', '~> 2.7'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.1'
+gem 'sprockets-rails'
 
 # Third party gems
 gem 'activerecord-cte'
 gem 'amazing_print'
-gem 'bootstrap', '~> 5'
 gem 'brakeman'
 gem 'bundler-audit'
 gem 'devise'

@@ -1,7 +1,7 @@
 require 'policy_test'
 
 class AirportPolicyTest < PolicyTest
-  ['index', 'new', 'show', 'search', 'history', 'preview'].each do |action|
+  ['index', 'show', 'search', 'history', 'preview'].each do |action|
     test action do
       assert_allows_all :airport, action
     end

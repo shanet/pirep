@@ -1,11 +1,7 @@
-namespace :test do
-  task full: :environment do
-    sh 'rails lint', verbose: false
-    sh 'rails test:all', verbose: false
-  end
-end
+# rubocop:disable Rails/RakeEnvironment
 
-task lint: :environment do
+desc 'Run all linters'
+task :lint do
   sh 'rails lint:ruby', verbose: false
   sh 'rails lint:erb', verbose: false
   sh 'rails lint:css', verbose: false
@@ -14,23 +10,28 @@ task lint: :environment do
 end
 
 namespace :lint do
-  task ruby: :environment do
+  desc 'Run Ruby linter'
+  task :ruby do
     sh 'bundle exec rubocop %s' % [(autocorrect? ? '--auto-correct' : '--parallel')], verbose: false
   end
 
-  task erb: :environment do
+  desc 'Run ERB linter'
+  task :erb do
     sh 'bundle exec erblint %s "app/views/**/*.*.erb"' % [(autocorrect? ? '--autocorrect' : '')], verbose: false
   end
 
-  task css: :environment do
+  desc 'Run CSS linter'
+  task :css do
     sh 'yarn run stylelint %s "app/assets/stylesheets/**/*.{css,scss}"' % [(autocorrect? ? '--fix' : '')], verbose: false
   end
 
-  task js: :environment do
+  desc 'Run JavaScript linter'
+  task :js do
     sh 'yarn run eslint %s "app/assets/javascripts/**/*.js"' % [(autocorrect? ? '--fix' : '')], verbose: false
   end
 
-  task security: :environment do
+  desc 'Run security audits'
+  task :security do
     sh 'bundle exec bundle-audit update', verbose: false
     sh 'bundle exec bundle-audit', verbose: false
     sh 'yarn audit', verbose: false
@@ -45,6 +46,8 @@ namespace :lint do
   end
 end
 
-task fix: :environment do
+task :fix do
   # Dummy task for the `fix` argument
 end
+
+# rubocop:enable Rails/RakeEnvironment
