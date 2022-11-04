@@ -12,7 +12,7 @@ end
 namespace :lint do
   desc 'Run Ruby linter'
   task :ruby do
-    sh 'bundle exec rubocop %s' % [(autocorrect? ? '--auto-correct' : '--parallel')], verbose: false
+    sh 'bundle exec rubocop %s' % [(autocorrect? ? '--autocorrect' : '--parallel')], verbose: false
   end
 
   desc 'Run ERB linter'
