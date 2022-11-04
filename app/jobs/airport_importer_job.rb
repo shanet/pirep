@@ -1,7 +1,5 @@
 class AirportImporterJob < ApplicationJob
-  queue_as :default
-
-  def perform(*_args)
+  def perform
     airports = AirportDatabaseParser.new.download_and_parse
     AirportDatabaseImporter.new(airports).load_database
 

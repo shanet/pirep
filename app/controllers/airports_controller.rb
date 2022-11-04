@@ -20,7 +20,9 @@ class AirportsController < ApplicationController
     authorize @airport
 
     if @airport.save
-      # TODO: enqueue job to get bounding box of airport
+      # It's unlikely, but try to get a bounding box for the new airport just in case one exists
+      FetchAirportBoundingBoxJob.perform_later(@airport)
+
       Action.create!(type: :airport_added, actionable: @airport, user: active_user)
       redirect_to airport_path(@airport.code), notice: 'New airport added to map, please fill out any known additional information about it.'
     else # rubocop:disable Style/EmptyElse
