@@ -6,7 +6,10 @@
       <span><i class="fas <%= icon %> me-2"></i><%= title.html_safe %></span>
 
       <% unless read_only %>
-        <i class="fas fa-edit editor-edit-icon"></i>
+        <div>
+          <span class="editor-saved saved-indicator hide text-success me-2">Saved!</span>
+          <i class="fas fa-edit editor-edit-icon"></i>
+        </div>
       <% end %>
     </div>
   </div>
