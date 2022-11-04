@@ -100,6 +100,12 @@ function writeEditorChanges(editor) {
   // Get the hidden form field, update its value with the current editor value, and submit the form
   const formField = editorContainer(editor).parentNode.querySelector('input[data-column-field="true"]');
   formField.value = editor.codemirror.getValue();
+
+  // Show a saved indicator after the form is submitted
+  formField.parentNode.addEventListener('ajax:success', () => {
+    showSavedIndicator(editor);
+  });
+
   Rails.fire(formField.parentNode, 'submit');
 }
 
@@ -109,4 +115,13 @@ function editorContainer(editor) {
 
 function editorCardHeader(editor) {
   return editor.element.parentNode.parentNode.querySelector('.card-header');
+}
+
+function showSavedIndicator(editor) {
+  const indicator = editorContainer(editor).parentNode.parentNode.querySelector('.saved-indicator');
+  indicator.classList.replace('hide', 'show');
+
+  setTimeout(() => {
+    indicator.classList.replace('show', 'hide');
+  }, 3000);
 }

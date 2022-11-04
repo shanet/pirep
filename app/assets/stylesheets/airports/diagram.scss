@@ -98,20 +98,6 @@
   }
 }
 
-.airport-diagram-saved {
-  &.show {
-    opacity: 1;
-    transition: opacity .25s, visibility .25s;
-    visibility: visible;
-  }
-
-  &.hide {
-    opacity: 0;
-    transition: opacity 1s, visibility 1s;
-    visibility: hidden;
-  }
-}
-
 @keyframes jiggle {
   from { transform: rotate(-4deg); }
   to { transform: rotate(4deg); }

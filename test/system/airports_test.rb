@@ -192,9 +192,10 @@ private
 
   def assert_editor_has_text(label, property, text)
     editor = nil
+    card = find('.card', text: label)
 
     # Find the editor with the given label
-    within(find('.card', text: label)) do
+    within(card) do
       # Click on the editor to enter edit mode
       editor = find('.EasyMDEContainer')
       editor.click
@@ -213,8 +214,14 @@ private
     # Check that the editor has the given text in read mode and that the backend was updated accordingly
     within(editor) do
       assert_equal text, find('.editor-preview-full').text, 'Editor value not saved after clicking off of editor'
-      assert_equal text, @airport.reload.send(property), 'Editor value not updated on backend'
     end
+
+    # Check that the saved indicator is shown and also wait for the update request to complete before checking if the value was persisted to the backend below
+    within(card) do
+      assert_selector '.saved-indicator'
+    end
+
+    assert_equal text, @airport.reload.send(property), 'Editor value not updated on backend'
   end
 
   def assert_image_shown(image)

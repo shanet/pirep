@@ -52,3 +52,17 @@
 .comment-textarea {
   height: 150px !important; // stylelint-disable-line declaration-no-important
 }
+
+.saved-indicator {
+  &.show {
+    opacity: 1;
+    transition: opacity .25s, visibility .25s;
+    visibility: visible;
+  }
+
+  &.hide {
+    opacity: 0;
+    transition: opacity 1s, visibility 1s;
+    visibility: hidden;
+  }
+}
