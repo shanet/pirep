@@ -31,10 +31,11 @@ function initEditor(textarea) {
   const editor = new EasyMDE({ // eslint-disable-line no-undef
     autoDownloadFontAwesome: false,
     element: textarea,
-    status: false,
-    minHeight: (textarea.dataset.height || undefined),
     hideIcons: ['image'],
+    minHeight: (textarea.dataset.height || undefined),
     showIcons: ['code', 'table', 'horizontal-rule'],
+    spellChecker: false,
+    status: false,
   });
 
   const container = editorContainer(editor);

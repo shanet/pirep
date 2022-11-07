@@ -6,6 +6,7 @@ Rails.start();
 import 'airports/airports';
 import 'airports/annotations';
 import 'airports/landing_rights';
+import 'manage/users_edit';
 import 'map/header';
 import 'map/map';
 import 'map/search';

@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initEditingTags();
   initTagDeleteIcons();
   initExtraRemarks();
+  initMapBackButton();
 }, {once: true});
 
 function initEditingTags() {
@@ -49,4 +50,18 @@ function initExtraRemarks() {
       extraRemarks[i].classList.toggle('hidden');
     }
   });
+}
+
+function initMapBackButton() {
+  const mapBackButton = document.getElementById('map-back');
+  if(!mapBackButton) return;
+
+  // If there is no href attribute set it means we want to call `history.back` for the link but this has to be done
+  // in a JavaScript module rather than in the link attribute itself because of the CSP not allowing inline JavaScript.
+  if(mapBackButton.getAttribute('href') === '') {
+    mapBackButton.addEventListener('click', (event) => {
+      window.history.back();
+      event.preventDefault();
+    });
+  }
 }
