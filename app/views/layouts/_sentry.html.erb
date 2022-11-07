@@ -10,7 +10,7 @@
 <% if Rails.application.credentials.sentry_dsn_frontend %>
   <%= javascript_include_tag 'sentry.min.js' %>
 
-  <script type="text/javascript">
+  <%= javascript_tag nonce: true do %>
     Sentry.init({
       dsn: '<%= Rails.application.credentials.sentry_dsn_frontend %>',
     });
@@ -20,5 +20,5 @@
         scope.setUser({id: '<%= current_user.id %>'});
       });
     <% end %>
-  </script>
+  <% end %>
 <% end %>

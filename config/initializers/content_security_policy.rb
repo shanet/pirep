@@ -1,30 +1,30 @@
-# Be sure to restart your server when you modify this file.
+# Rails-ujs will apply a nonce value to any inline JavaScript
+Rails.configuration.content_security_policy_nonce_generator = ->(_request) {SecureRandom.base64(32)}
+Rails.configuration.content_security_policy_nonce_directives = ['script-src']
 
-# Define an application-wide content security policy
-# For further information see the following documentation
-# https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+Rails.configuration.content_security_policy do |policy|
+  # All hosts that are allowed to load content onto the pages
+  hosts = [
+    Rails.configuration.asset_host.presence || :self,
+    'api.mapbox.com',
+    'events.mapbox.com',
+    'sentry.io',
+  ]
 
-# Rails.application.config.content_security_policy do |policy|
-#   policy.default_src :self, :https
-#   policy.font_src    :self, :https, :data
-#   policy.img_src     :self, :https, :data
-#   policy.object_src  :none
-#   policy.script_src  :self, :https
-#   policy.style_src   :self, :https
-#   # If you are using webpack-dev-server then specify webpack-dev-server host
-#   policy.connect_src :self, :https, "http://localhost:3035", "ws://localhost:3035" if Rails.env.development?
+  policy.base_uri(:self)
+  policy.connect_src(*(hosts + [:self]))
+  policy.default_src(*(hosts + [:self]))
+  policy.font_src(*hosts)
+  policy.form_action(:self)
+  policy.img_src(*(hosts + [:data]))
+  policy.object_src(:none)
+  policy.script_src(*hosts)
+  policy.style_src(*hosts)
+  policy.worker_src(:blob)
 
-#   # Specify URI for violation reports
-#   # policy.report_uri "/csp-violation-report-endpoint"
-# end
-
-# If you are using UJS then enable automatic nonce generation
-# Rails.application.config.content_security_policy_nonce_generator = -> request { SecureRandom.base64(16) }
-
-# Set the nonce only to specific directives
-# Rails.application.config.content_security_policy_nonce_directives = %w(script-src)
-
-# Report CSP violations to a specified URI
-# For further information see the following documentation:
-# https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy-Report-Only
-# Rails.application.config.content_security_policy_report_only = true
+  # Send any CSP errors to Sentry
+  if Rails.application.credentials.sentry_dsn_frontend
+    public_key, secret_key, project_id = Rails.application.credentials.sentry_dsn_frontend.match(/https?:\/\/(.+)@(.+).ingest.sentry.io\/(.+)/).captures
+    policy.report_uri("https://#{secret_key}.ingest.sentry.io/api/#{project_id}/security/?sentry_key=#{public_key}")
+  end
+end
