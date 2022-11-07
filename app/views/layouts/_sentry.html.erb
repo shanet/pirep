@@ -1,0 +1,24 @@
+<%#
+  Sentry is served here outside of the import map because despite my best efforts I cannot get it to work with import maps.
+  See https://github.com/getsentry/sentry-javascript/issues/6141 for a feature request to support import maps.
+  This isn't a big deal though since we need to dynamically put the user ID in the Sentry context which means we need to
+  have this in the view layer anyway.
+
+  `sentry.min.js` is the CDN file as found here: https://docs.sentry.io/platforms/javascript/install/cdn/
+%>
+
+<% if Rails.application.credentials.sentry_dsn_frontend %>
+  <%= javascript_include_tag 'sentry.min.js' %>
+
+  <script type="text/javascript">
+    Sentry.init({
+      dsn: '<%= Rails.application.credentials.sentry_dsn_frontend %>',
+    });
+
+    <% if current_user %>
+      Sentry.configureScope(scope => {
+        scope.setUser({id: '<%= current_user.id %>'});
+      });
+    <% end %>
+  </script>
+<% end %>
