@@ -30,6 +30,8 @@ gem 'paper_trail'
 gem 'pundit'
 gem 'rack-attack'
 gem 'rubyzip'
+gem 'sentry-rails'
+gem 'sentry-ruby'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

@@ -1,9 +1,10 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
-  after_action :verify_authorized
+  before_action :set_sentry_context
   before_action :set_paper_trail_whodunnit
   before_action :touch_user
+  after_action :verify_authorized
 
   rescue_from ActionController::RoutingError, with: :render_not_found
   rescue_from ActionController::BadRequest, with: :render_bad_request
@@ -51,5 +52,11 @@ private
     return unless active_user(create_unknown: false)
 
     active_user.touch :last_seen_at # rubocop:disable Rails/SkipsModelValidations
+  end
+
+  def set_sentry_context
+    return unless current_user
+
+    Sentry.set_user(id: current_user.id)
   end
 end
