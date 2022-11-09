@@ -10,40 +10,42 @@ private
 
   def expected_airport_data
     return {
-      '26210.*A' => {
-        airport_code: 'PAE',
+      'PAE' => {
         airport_name: 'SNOHOMISH COUNTY (PAINE FLD)',
-        facility_type: 'airport', # These values are lowercase in the Airport class' enum
+        facility_type: 'A',
         facility_use: 'PU',
         ownership_type: 'PU',
-        owner_name: 'SNOHOMISH COUNTY',
-        owner_phone: '425-388-3411',
-        latitude: 47.9073174,
-        longitude: -122.282094,
-        elevation: '607.5',
-        fuel_type: '100LLA',
+        latitude: 47.90731805555556,
+        longitude: -122.2820938888889,
+        elevation: 606,
+        city: 'EVERETT',
+        state: 'WA',
+        city_distance: 6.0,
+        sectional: 'SEATTLE',
+        fuel_types: '100LL,A',
+        activation_date: DateTime.new(1938, 11, 1),
         runways: [
           {
             number: '16L/34R',
-            length: '3004',
-            surface: 'ASPH-G',
+            length: 3004,
+            surface: 'ASPH',
             lights: 'MED',
           },
           {
             number: '16R/34L',
-            length: '9010',
-            surface: 'ASPH-CONC-G',
+            length: 9010,
+            surface: 'ASPH-CONC',
             lights: 'HIGH',
           },
         ],
         remarks: [
           {
-            element: 'WAA110-1',
-            text: 'RWY 16L/34R CLSD BTN 0500-1500Z.',
+            element: 'E111',
+            text: 'ESTABD PRIOR TO 15 MAY 1959.',
           },
           {
-            element: 'WAA110-11',
-            text: 'AVOID INT DEPS FM RWY 16L/34R',
+            element: 'A110-1',
+            text: 'RWY 16L/34R CLSD BTN 0500-1500Z.',
           },
         ],
       },

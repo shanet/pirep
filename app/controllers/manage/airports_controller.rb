@@ -61,7 +61,20 @@ private
   end
 
   def airport_params
-    return params.require(:airport).permit(:code, :name, :fuel_type, :latitude, :longitude, :elevation, :facility_type, :facility_use, :ownership_type, :owner_name, :owner_phone, :reviewed_at)
+    return params.require(:airport).permit(
+      :code,
+      :name,
+      :fuel_types,
+      :latitude,
+      :longitude,
+      :city,
+      :state,
+      :elevation,
+      :facility_type,
+      :facility_use,
+      :ownership_type,
+      :reviewed_at
+    )
   end
 
   def version_params

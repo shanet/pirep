@@ -8,7 +8,6 @@ class AirportTest < ActiveSupport::TestCase
   test 'populates new unmapped airport' do
     airport = Airport.new_unmapped(attributes_for(:airport))
     assert_equal 'UNM01', airport.code
-    assert_equal 'UNM01', airport.site_number
     assert_equal 'airport', airport.facility_type
     assert_equal 'PR', airport.facility_use
     assert_equal 'PR', airport.ownership_type
@@ -167,5 +166,10 @@ class AirportTest < ActiveSupport::TestCase
     assert_not create(:airport, :no_bounding_box).has_bounding_box?, 'Airport has bounding box'
     assert_nil create(:airport, :no_bounding_box).bounding_box, 'Airport has bounding box'
     assert_not create(:airport, facility_type: 'heliport').has_bounding_box?, 'Heliport uses bounding box'
+  end
+
+  test 'converts fuel types to array' do
+    @airport.fuel_types = 'A , MOGAS'
+    assert_equal ['A', 'MOGAS'], @airport.fuel_types, 'Fuel types string not conver to array and stripped of whitespace'
   end
 end

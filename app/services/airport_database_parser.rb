@@ -1,120 +1,81 @@
+require 'csv'
 require 'faa/faa_api'
 
 class AirportDatabaseParser
-  # These are the ranges for column data as documented in the README at:
-  #   * https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/
-  #   * Specifically: https://nfdc.faa.gov/webContent/28DaySub/[year]-[month]-[day]/Layout_Data/apt_rf.txt
-  VALUE_RANGES = {
-    airport: {
-      site_number: [4, 11],
-      airport_code: [28, 4],
-      airport_name: [134, 50],
-      facility_type: [15, 13],
-      facility_use: [186, 2],
-      ownership_type: [184, 2],
-      owner_name: [188, 35],
-      owner_phone: [340, 16],
-      latitude: [524, 15],
-      longitude: [551, 15],
-      elevation: [579, 7],
-      fuel_type: [901, 40],
-    },
-    runway: {
-      site_number: [4, 11],
-      number: [17, 7],
-      length: [24, 5],
-      surface: [33, 12],
-      lights: [61, 5],
-    },
-    remark: {
-      site_number: [4, 11],
-      element: [13, 17],
-      text: [30, 1500],
-    },
-  }
-
   def initialize
     @airports = {}
   end
 
   def download_and_parse
     Dir.mktmpdir do |tmp_directory|
-      parse_file(FaaApi.client.airport_data(tmp_directory))
+      files = FaaApi.client.airport_data(tmp_directory)
+
+      parse_csv(files[:airports]) {|row| parse_airport(row)}
+      parse_csv(files[:runways]) {|row| parse_runway(row)}
+      parse_csv(files[:remarks]) {|row| parse_remark(row)}
+
       return @airports
     end
   end
 
 private
 
-  def parse_file(path)
-    # The provided file is annoyingly encoded with latin1 (iso-8859-1) so read it as that and then convert each line to utf-8
-    File.foreach(path, encoding: 'iso-8859-1') do |line|
-      line.encode!('utf-8')
+  def parse_csv(path)
+    # The provided file is annoyingly encoded with latin1 (iso-8859-1) so read it as that and then convert to utf-8
+    file = File.read(path, encoding: 'iso-8859-1').encode('utf-8')
 
-      type = line[0...3].downcase.to_sym
-
-      case type
-        when :apt
-          parse_airport(line)
-        when :rwy
-          parse_runway(line)
-        when :rmk
-          parse_remark(line)
-      end
+    CSV.parse(file, headers: true).each do |row|
+      yield row
+    rescue => error
+      Rails.logger.error "Failed parsing airport #{row['ARPT_ID']} data in CSV file: #{path}"
+      raise error
     end
   end
 
-  def parse_airport(line)
-    airport = {}
+  def parse_airport(row)
+    # Anything without an airport ID is either malformed or a blank line in the CSV
+    return if row['ARPT_ID'].blank?
 
-    VALUE_RANGES[:airport].each do |key, range|
-      airport[key] = extract_value_from_line(line, range.first, range.last)
-    end
-
-    # Ensure these fields are normalized
-    airport[:airport_code].upcase!
-    airport[:facility_type].downcase!
-    airport[:facility_use].upcase!
-    airport[:ownership_type].upcase!
-
-    airport[:latitude] = convert_degrees_minutes_seconds_to_decimal(airport[:latitude])
-    airport[:longitude] = convert_degrees_minutes_seconds_to_decimal(airport[:longitude])
-
-    @airports[airport[:site_number]] = airport.tap {|airport_| airport_.delete(:site_number)}
+    # rubocop:disable Layout/HashAlignment
+    @airports[row['ARPT_ID'].upcase] = {
+      airport_name:    row['ARPT_NAME'],
+      facility_type:   row['SITE_TYPE_CODE'].upcase,
+      facility_use:    row['FACILITY_USE_CODE'].upcase,
+      ownership_type:  row['OWNERSHIP_TYPE_CODE'].upcase,
+      latitude:        row['LAT_DECIMAL'].to_f,
+      longitude:       row['LONG_DECIMAL'].to_f,
+      elevation:       row['ELEV'].to_i,
+      city:            row['CITY'],
+      state:           row['COUNTY_ASSOC_STATE'].upcase,
+      city_distance:   row['DIST_CITY_TO_AIRPORT'].to_f,
+      sectional:       row['CHART_NAME'],
+      fuel_types:      row['FUEL_TYPES'],
+      activation_date: (row['ACTIVATION_DATE'].present? ? DateTime.strptime(row['ACTIVATION_DATE'], '%Y/%m') : nil),
+    }
+    # rubocop:enable Layout/HashAlignment
   end
 
-  def parse_runway(line)
-    runway = {}
+  def parse_runway(row)
+    return if row['ARPT_ID'].blank?
 
-    VALUE_RANGES[:runway].each do |key, range|
-      runway[key] = extract_value_from_line(line, range.first, range.last)
-    end
+    @airports[row['ARPT_ID']][:runways] ||= []
 
-    @airports[runway[:site_number]][:runways] ||= []
-    @airports[runway[:site_number]][:runways] << runway.tap {|runway_| runway_.delete(:site_number)}
+    @airports[row['ARPT_ID']][:runways] << {
+      number: row['RWY_ID'],
+      length: row['RWY_LEN'].to_i,
+      surface: row['SURFACE_TYPE_CODE'].upcase,
+      lights: row['RWY_LGT_CODE'].upcase,
+    }
   end
 
-  def parse_remark(line)
-    remark = {}
+  def parse_remark(row)
+    return if row['ARPT_ID'].blank?
 
-    VALUE_RANGES[:remark].each do |key, range|
-      remark[key] = extract_value_from_line(line, range.first, range.last)
-    end
+    @airports[row['ARPT_ID']][:remarks] ||= []
 
-    @airports[remark[:site_number]][:remarks] ||= []
-    @airports[remark[:site_number]][:remarks] << remark.tap {|remark_| remark_.delete(:site_number)}
-  end
-
-  def extract_value_from_line(line, start, length)
-    return line[(start - 1)...(start + length - 1)].strip
-  end
-
-  def convert_degrees_minutes_seconds_to_decimal(coordinate)
-    degrees, minutes, seconds = coordinate.split('-')
-    direction = seconds[-1]
-
-    decimal = degrees.to_f + (minutes.to_f / 60) + (seconds.to_f / 3600)
-    decimal *= -1 if ['W', 'S'].include?(direction)
-    return decimal.round(7)
+    @airports[row['ARPT_ID']][:remarks] << {
+      element: row['ELEMENT'].presence || row['LEGACY_ELEMENT_NUMBER'],
+      text: row['REMARK'],
+    }
   end
 end

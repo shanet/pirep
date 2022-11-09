@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_04_060055) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_08_083333) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -63,22 +63,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_04_060055) do
     t.string "code", null: false
     t.float "latitude", null: false
     t.float "longitude", null: false
-    t.string "site_number", null: false
     t.string "facility_type"
     t.string "facility_use"
     t.string "ownership_type"
-    t.string "owner_name"
-    t.string "owner_phone"
     t.text "description"
     t.text "transient_parking"
     t.text "fuel_location"
     t.text "crew_car"
     t.text "landing_fees"
     t.text "wifi"
-    t.text "passport_location"
     t.integer "elevation", null: false
-    t.string "fuel_type"
-    t.string "gate_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "landing_rights"
@@ -93,8 +87,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_04_060055) do
     t.float "bbox_sw_longitude"
     t.boolean "bbox_checked", default: false, null: false
     t.jsonb "annotations"
+    t.string "city"
+    t.string "state"
+    t.float "city_distance"
+    t.string "sectional"
+    t.datetime "activation_date", precision: nil
+    t.string "fuel_types", array: true
     t.index ["code"], name: "index_airports_on_code", unique: true
-    t.index ["site_number"], name: "index_airports_on_site_number", unique: true
   end
 
   create_table "comments", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
