@@ -104,14 +104,13 @@ class Airport < ApplicationRecord
 
   validates :code, uniqueness: true, presence: true
   validates :name, presence: true
-  validates :site_number, uniqueness: true
   validates :latitude, numericality: {}
   validates :longitude, numericality: {}
   validates :elevation, numericality: {only_integer: true}
   validates :facility_type, inclusion: {in: FACILITY_TYPES.keys.map(&:to_s)}
   validates :facility_use, inclusion: {in: FACILITY_USES.keys.map(&:to_s)}
   validates :ownership_type, inclusion: {in: OWNERSHIP_TYPES.keys.map(&:to_s)}
-  validates :owner_phone, length: {maximum: 20}
+  validates :state, length: {is: 2}, if: -> {state.present?}
 
   enum facility_type: FACILITY_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
   enum landing_rights: LANDING_RIGHTS_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
@@ -144,7 +143,6 @@ class Airport < ApplicationRecord
     # it unique. There may be a better way to do this but this should be sufficient for now. It's not likely that we'll have a bunch of
     # unmapped airports that would make this number suffix huge.
     airport.code = "UNM#{(Airport.joins(:tags).where('tags.name': :unmapped).count + 1).to_s.rjust(2, '0')}"
-    airport.site_number = airport.code
     airport.facility_use = :PR
     airport.facility_type = :airport
     airport.ownership_type = :PR
@@ -169,6 +167,12 @@ class Airport < ApplicationRecord
   def annotations=(value)
     # Patch requests will send the annotations as a string so we need to parse it for it to be properly saved as a JSONB object
     value = JSON.parse(value) if value.is_a?(String)
+    super
+  end
+
+  def fuel_types=(value)
+    # Split CSV strings into arrays for any fuel types that are submitted from a form textfield as such
+    value = value.split(',').map(&:strip) if value.is_a?(String)
     super
   end
 

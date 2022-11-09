@@ -31,10 +31,11 @@
     <ul class="list-group">
       <li class="list-group-item"><strong>Tags:</strong> <%= @airport.tags.map(&:label).join(', ') %></li>
       <li class="list-group-item"><strong>Revision count:</strong> <%= @airport.versions.count %></li>
-      <li class="list-group-item"><strong>Unique users:</strong> <%= @airport.versions.pluck(:whodunnit).uniq.count %></li>
+      <li class="list-group-item"><strong>Unique contributors:</strong> <%= @airport.versions.pluck(:whodunnit).uniq.count %></li>
       <li class="list-group-item"><strong>Facility type:</strong> <%= Airport::FACILITY_TYPES[@airport.facility_type.to_sym][:label].singularize %></li>
       <li class="list-group-item"><strong>Landing rights:</strong> <%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights.to_sym][:short_description] %></li>
-      <li class="list-group-item"><strong>Location:</strong> <%= @airport.latitude %>, <%= @airport.longitude %></li>
+      <li class="list-group-item"><strong>Coordinates:</strong> <%= @airport.latitude.round(7) %>, <%= @airport.longitude.round(7) %></li>
+      <li class="list-group-item"><strong>Location:</strong> <%= @airport.city.titleize %>, <%= @airport.state %></li>
       <li class="list-group-item"><strong>Elevation:</strong> <%= @airport.elevation %>ft</li>
 
       <% if @airport.unmapped? %>

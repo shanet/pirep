@@ -1,7 +1,16 @@
 require 'faa/faa_api'
 
 class AirportDatabaseImporter
-  MILITARY_OWNERSHIP_TYPES = ['MA', 'MN', 'MR', 'CG']
+  FACILITY_TYPES = {
+    'A' => :airport,
+    'B' => :balloonport,
+    'C' => :seaplane_base,
+    'G' => :gliderport,
+    'H' => :heliport,
+    'U' => :ultralight,
+  }
+
+  MILITARY_OWNERSHIP_TYPES = Set.new(['MA', 'MN', 'MR', 'CG'])
 
   def initialize(airports)
     @airports = airports
@@ -10,8 +19,8 @@ class AirportDatabaseImporter
   end
 
   def load_database
-    @airports.each do |site_number, airport_data|
-      airport = update_airport(site_number, airport_data)
+    @airports.each do |airport_code, airport_data|
+      airport = update_airport(airport_code, airport_data)
 
       update_tags(airport)
       update_bounding_box(airport)
@@ -30,48 +39,51 @@ class AirportDatabaseImporter
 
 private
 
-  def update_airport(site_number, airport_data)
-    # First try to find existing airports by their site number. Unfortunately this number doesn't seem to be very stable so fallback to the airport code
-    # and if that fails it must be a new airport we haven't seen before (yay!).
-    airport = Airport.find_by(site_number: site_number) || Airport.find_by(code: airport_data[:airport_code]) || Airport.new
+  def update_airport(airport_code, airport_data)
+    airport = Airport.find_by(code: airport_code) || Airport.new
 
     # Normalize the facility type to the options we use for filtering
     if airport_data[:ownership_type].in?(MILITARY_OWNERSHIP_TYPES)
       airport_data[:facility_type] = :military
     else
-      airport_data[:facility_type] = airport_data[:facility_type].parameterize.underscore
+      airport_data[:facility_type] = FACILITY_TYPES[airport_data[:facility_type]].to_s
     end
 
+    # rubocop:disable Layout/HashAlignment
     airport.update!({
-      site_number: site_number,
-      code: airport_data[:airport_code],
-      name: airport_data[:airport_name],
-      facility_type: airport_data[:facility_type],
-      facility_use: airport_data[:facility_use],
-      ownership_type: airport_data[:ownership_type],
-      owner_name: airport_data[:owner_name],
-      owner_phone: airport_data[:owner_phone],
-      latitude: airport_data[:latitude],
-      longitude: airport_data[:longitude],
-      coordinates: [airport_data[:latitude], airport_data[:longitude]],
-      elevation: airport_data[:elevation].to_i,
-      fuel_type: airport_data[:fuel_type],
-      landing_rights: (airport_data[:facility_use] == 'PR' ? :private_ : :public_),
-      faa_data_cycle: @current_data_cycle,
+      code:            airport_code,
+      name:            airport_data[:airport_name],
+      facility_type:   airport_data[:facility_type],
+      facility_use:    airport_data[:facility_use],
+      ownership_type:  airport_data[:ownership_type],
+      latitude:        airport_data[:latitude],
+      longitude:       airport_data[:longitude],
+      coordinates:     [airport_data[:latitude], airport_data[:longitude]],
+      elevation:       airport_data[:elevation],
+      city:            airport_data[:city],
+      state:           airport_data[:state],
+      city_distance:   airport_data[:city_distance],
+      fuel_types:      airport_data[:fuel_types].split(','),
+      landing_rights:  (airport_data[:facility_use] == 'PR' ? :private_ : :public_),
+      sectional:       airport_data[:sectional],
+      activation_date: airport_data[:activation_date],
+      faa_data_cycle:  @current_data_cycle,
     })
+    # rubocop:enable Layout/HashAlignment
 
     return airport
   end
 
   def update_tags(airport)
     # Tag public and private airports
-    unless airport.ownership_type.in?(MILITARY_OWNERSHIP_TYPES)
+    # Skip military airports as those are all private so there's no need to tag them
+    if !airport.ownership_type.in?(MILITARY_OWNERSHIP_TYPES) && airport.tags.where(name: [:private_, :public_]).count == 0
       tag = (airport.facility_use == 'PR' ? :private_ : :public_)
       airport.tags << Tag.new(name: tag)
     end
 
     # Tag airports without any user contributed data yet
-    if airport.empty? # rubocop:disable Style/GuardClause
+    if airport.empty? && airport.tags.where(name: :empty).count == 0 # rubocop:disable Style/GuardClause
       airport.tags << Tag.new(name: :empty)
     end
   end

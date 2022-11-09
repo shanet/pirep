@@ -16,7 +16,11 @@ module FaaApi
       extract_archive(destination_directory, archive_path)
 
       # Return the path to the extracted airport data file
-      return File.join(destination_directory, 'APT.txt')
+      return {
+        airports: File.join(destination_directory, 'APT_BASE.csv'),
+        runways: File.join(destination_directory, 'APT_RWY.csv'),
+        remarks: File.join(destination_directory, 'APT_RMK.csv'),
+      }
     end
 
     def airport_diagrams(destination_directory)
@@ -67,7 +71,7 @@ module FaaApi
     include Base
 
     def download_airport_data_archive(destination_directory)
-      response = Faraday.get('https://nfdc.faa.gov/webContent/28DaySub/%s/APT.zip' % current_data_cycle.strftime('%Y-%m-%d'))
+      response = Faraday.get("https://nfdc.faa.gov/webContent/28DaySub/extra/#{current_data_cycle.strftime('%d_%b_%Y')}_APT_CSV.zip")
       raise Exceptions::AirportDatabaseDownloadFailed unless response.success?
 
       # Write archive to disk
@@ -78,11 +82,11 @@ module FaaApi
     end
 
     def download_airport_diagram_archive(archive, _destination_directory)
-      response = Faraday.get('https://aeronav.faa.gov/upload_313-d/terminal/DDTPP%s_%s.zip' % [archive, current_data_cycle.strftime('%y%m%d')])
+      response = Faraday.get("https://aeronav.faa.gov/upload_313-d/terminal/DDTPP#{archive}_#{current_data_cycle.strftime('%y%m%d')}.zip")
       raise Exceptions::AirportDatabaseDownloadFailed unless response.success?
 
       # Write archive to disk
-      archive_path = File.join(directory, 'archive_%s.zip' % archive)
+      archive_path = File.join(directory, "archive_#{archive}.zip")
       File.binwrite(archive_path, response.body)
 
       return archive_path
