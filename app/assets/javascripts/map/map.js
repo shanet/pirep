@@ -7,11 +7,6 @@ import * as flashes from 'map/flashes';
 import * as newAirportDrawer from 'map/drawer_new_airport';
 import * as urlSearchParams from 'map/url_search_params';
 
-const SECTIONAL_LAYERS = {
-  seattle: [-124.094901, 44.634929, -116.327513, 48.995149],
-  falls: [-124.079738, 40.016959, -116.727446, 44.494397],
-};
-
 const AIRPORT_LAYER = 'airports';
 
 // Airports currently displayed on the map (with filters applied)
@@ -23,17 +18,23 @@ const displayedAirports = {
 let mapElement = null;
 let map = null;
 
+const charts = {};
+
 // All airports without filters
 let allAirports = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   if(!document.getElementById('map')) return;
 
+  charts['sectional'] = JSON.parse(document.getElementById('map').dataset.sectionalCharts || '[]');
+  charts['terminal'] = JSON.parse(document.getElementById('map').dataset.terminalAreaCharts || '[]');
+  charts['caribbean'] = JSON.parse(document.getElementById('map').dataset.caribbeanCharts || '[]');
+
   initMap();
 
   map.on('load', () => {
     fetchAirports();
-    addSectionalLayersToMap();
+    addChartLayersToMap();
     addEventHandlersToMap();
     add3dTerrain();
   });
@@ -79,24 +80,27 @@ function initialMapCenter() {
   return [coordinates, zoomLevel];
 }
 
-function addSectionalLayersToMap() {
-  Object.keys(SECTIONAL_LAYERS).forEach((id) => {
-    map.addLayer({
-      id,
-      type: 'raster',
-      source: {
-        bounds: SECTIONAL_LAYERS[id],
-        maxzoom: 11,
-        minzoom: 5,
-        scheme: 'tms',
-        tiles: [`http://localhost:3000/assets/tiles/${id}/{z}/{x}/{y}.png`],
-        tileSize: 256,
+function addChartLayersToMap() {
+  ['sectional', 'caribbean', 'terminal'].forEach(chartType => {
+    Object.keys(charts[chartType]).forEach((key) => {
+      map.addLayer({
+        id: `${chartType}/${key}`,
         type: 'raster',
-      },
-      paint: {
-        'raster-opacity': (urlSearchParams.getLayer() === actionButtons.LAYER_SATELLITE ? 0 : 1),
-        'raster-fade-duration': 300,
-      },
+        source: {
+          bounds: charts[chartType][key]['bounding_box'],
+          maxzoom: 11,
+          // Terminal charts only show up when zoomed in a sufficient amount
+          minzoom: (chartType == 'terminal' ? 10 : 0),
+          scheme: 'tms',
+          tiles: [`http://localhost:3000/assets/tiles/${chartType}/current/${key}/{z}/{x}/{y}.png`],
+          tileSize: 256,
+          type: 'raster',
+        },
+        paint: {
+          'raster-opacity': (urlSearchParams.getLayer() === actionButtons.LAYER_SATELLITE ? 0 : 1),
+          'raster-fade-duration': 300,
+        },
+      });
     });
   });
 }
@@ -242,14 +246,16 @@ function applyUrlSearchParamsOnMap() {
 }
 
 export function toggleSectionalLayers(show) {
-  Object.keys(SECTIONAL_LAYERS).forEach((id) => {
-    // map.setLayoutProperty(id, 'visibility', (show ? 'visible' : 'none'));
-    map.setPaintProperty(id, 'raster-opacity', (show ? 1 : 0));
+  ['sectional', 'caribbean', 'terminal'].forEach(chartType => {
+    Object.keys(charts[chartType]).forEach((id) => {
+      map.setPaintProperty(`${chartType}/${id}`, 'raster-opacity', (show ? 1 : 0));
+    });
   });
 }
 
 export function areSectionalLayersShown() {
-  return (map.getPaintProperty(Object.keys(SECTIONAL_LAYERS)[0], 'raster-opacity') === 1);
+  // We only hide/show all layers so just check if the first sectional chart is shown or not to determine the state of all charts
+  return (map.getPaintProperty(`sectional/${Object.keys(charts['sectional'])[0]}`, 'raster-opacity') === 1);
 }
 
 export function openAirport(airportCode, boundingBox) {
