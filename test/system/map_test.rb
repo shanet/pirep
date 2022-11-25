@@ -124,16 +124,30 @@ class MapTest < ApplicationSystemTestCase
     visit map_path
     wait_for_map_ready
 
-    assert sectional_layer_shown?, 'Sectional layer not shown by default'
+    assert chart_layer_shown?(:sectional, @airport.sectional), 'Sectional layer not shown by default'
 
     find('#layer-switcher').click
-    assert_not sectional_layer_shown?, 'Satellite layer not shown'
+    assert_not chart_layer_shown?(:sectional, @airport.sectional), 'Satellite layer not shown'
     assert_equal 'layer=satellite', URI.parse(current_url).query, 'Layer URL parameter not set'
 
     # Toggle back to the sectional layer
     find('#layer-switcher').click
-    assert sectional_layer_shown?, 'Sectional layer not shown again'
+    assert chart_layer_shown?(:sectional, @airport.sectional), 'Sectional layer not shown again'
     assert_empty URI.parse(current_url).query, 'Layer URL parameter not removed'
+  end
+
+  # NOTE: this test only works with an airport contained within a terminal area chart of the same name as its sectional chart
+  test 'shows terminal area charts when soomed in' do
+    visit map_path
+    wait_for_map_ready
+
+    assert chart_layer_shown?(:sectional, @airport.sectional), 'Sectional layer not shown by default'
+    open_airport(@airport)
+
+    # Zoom into the airport then switch back to chart view to confirm that the terminal area chart is shown when zoomed in sufficiently
+    click_on 'Zoom In'
+    find('#layer-switcher').click
+    assert chart_layer_shown?(:terminal, @airport.sectional), 'Terminal area chart not shown when zoomed in'
   end
 
   test 'zooms into airport' do
@@ -143,16 +157,13 @@ class MapTest < ApplicationSystemTestCase
     default_zoom_level = map_zoom_level
     open_airport(@airport)
 
-    # Wait for the drawer opening and panning to airport animation to complete
+    # Zoom in on the airport and then check that we're now zoomed in
     click_on 'Zoom In'
-
-    # Wait for zoom animation to finish and check that we're now zoomed in
     assert_not_equal default_zoom_level, map_zoom_level, 'Map did not zoom in on airport'
 
     # Zooming in should switch to satellite view
     assert 'layer=satellite'.in?(URI.parse(current_url).query), 'Layer URL parameter not set'
 
-    # Zoom back out and wait for the animation to complete
     click_on 'Zoom Out'
 
     assert_equal default_zoom_level, map_zoom_level, 'Map did not zoom back out from airport'
@@ -189,7 +200,7 @@ class MapTest < ApplicationSystemTestCase
 
     assert_selector '.airport-drawer-header'
     assert_not_equal default_zoom_level, map_zoom_level, 'Map did not preserve zoom level'
-    assert_not sectional_layer_shown?, 'Map did not preserve layer'
+    assert_not chart_layer_shown?(:sectional, @airport.sectional), 'Map did not preserve layer'
   end
 
   test 'sets state from URL parameters' do
@@ -211,7 +222,7 @@ class MapTest < ApplicationSystemTestCase
     wait_for_map_ready
 
     assert_equal zoom_level, map_zoom_level, 'Zoom level not set from URL parameter'
-    assert_not sectional_layer_shown?, 'Satellite layer not shown from URL parameter'
+    assert_not chart_layer_shown?(:sectional, @airport.sectional), 'Satellite layer not shown from URL parameter'
     assert_selector '#drawer-content .airport-drawer-header', text: "#{@airport.code} - #{@airport.name.titleize}"
 
     assert_in_delta latitude, map_location['lat'], 0.01, 'Map not centered at given URL parameter latitude'
@@ -271,8 +282,8 @@ private
     return evaluate_script("mapbox.getSource('airports')._data.features").map {|airport| airport['properties']}
   end
 
-  def sectional_layer_shown?
-    return evaluate_script('mapbox.getPaintProperty("seattle", "raster-opacity")') == 1
+  def chart_layer_shown?(chart_type, chart_name)
+    return evaluate_script("mapbox.getPaintProperty('#{chart_type}/#{chart_name}', 'raster-opacity')") == 1
   end
 
   def map_zoom_level

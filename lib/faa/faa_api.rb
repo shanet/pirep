@@ -11,62 +11,6 @@ module FaaApi
     # https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/
     AIRPORT_DIAGRAM_ARCHIVES = ['A', 'B', 'C', 'D', 'E']
 
-    SECTIONAL_CHARTS = {
-      albuquerque:              'Albuquerque',
-      anchorage:                'Anchorage',
-      atlanta:                  'Atlanta',
-      bethel:                   'Bethel',
-      billings:                 'Billings',
-      brownsville:              'Brownsville',
-      cape_lisburne:            'Cape_Lisburne',
-      charlotte:                'Charlotte',
-      cheyenne:                 'Cheyenne',
-      chicago:                  'Chicago',
-      cincinnati:               'Cincinnati',
-      cold_bay:                 'Cold_Bay',
-      dallas_ft_worth:          'Dallas-Ft_Worth',
-      dawson:                   'Dawson',
-      denver:                   'Denver',
-      detroit:                  'Detroit',
-      dutch_harbor:             'Dutch_Harbor',
-      el_paso:                  'El_Paso',
-      fairbanks:                'Fairbanks',
-      great_falls:              'Great_Falls',
-      green_bay:                'Green_Bay',
-      halifax:                  'Halifax',
-      hawaiian_islands:         'Hawaiian_Islands',
-      houston:                  'Houston',
-      jacksonville:             'Jacksonville',
-      juneau:                   'Juneau',
-      kansas_city:              'Kansas_City',
-      ketchikan:                'Ketchikan',
-      klamath_falls:            'Klamath_Falls',
-      kodiak:                   'Kodiak',
-      lake_huron:               'Lake_Huron',
-      las_vegas:                'Las_Vegas',
-      los_angeles:              'Los_Angeles',
-      mcgrath:                  'McGrath',
-      memphis:                  'Memphis',
-      miami:                    'Miami',
-      montreal:                 'Montreal',
-      new_orleans:              'New_Orleans',
-      new_york:                 'New_York',
-      nome:                     'Nome',
-      omaha:                    'Omaha',
-      phoenix:                  'Phoenix',
-      point_barrow:             'Point_Barrow',
-      st_louis:                 'St_Louis',
-      salt_lake_city:           'Salt_Lake_City',
-      san_antonio:              'San_Antonio',
-      san_francisco:            'San_Francisco',
-      seattle:                  'Seattle',
-      seward:                   'Seward',
-      twin_cities:              'Twin_Cities',
-      washington:               'Washington',
-      western_aleutian_islands: 'Western_Aleutian_Islands',
-      wichita:                  'Wichita',
-    }
-
     def airport_data(destination_directory)
       archive_path = download_airport_data_archive(destination_directory)
       extract_archive(destination_directory, archive_path)
@@ -89,18 +33,6 @@ module FaaApi
       end
     end
 
-    def sectional_charts(destination_directory, charts_to_download=nil)
-      return charts(destination_directory, :sectional, Rails.configuration.sectional_charts, charts_to_download)
-    end
-
-    def terminal_area_charts(destination_directory, charts_to_download=nil)
-      return charts(destination_directory, :terminal, Rails.configuration.terminal_area_charts, charts_to_download)
-    end
-
-    def caribbean_charts(destination_directory, charts_to_download=nil)
-      return charts(destination_directory, :caribbean, Rails.configuration.caribbean_charts, charts_to_download)
-    end
-
     def charts(destination_directory, chart_type, charts_config, charts_to_download=nil)
       # Only download the given charts if specified
       charts_to_download = (charts_to_download ? charts_config.select {|key, _value| key.in?(Array(charts_to_download))} : charts_config)
@@ -116,10 +48,8 @@ module FaaApi
         charts[key] = File.join(destination_directory, chart[:filename])
 
         # The Hawaii archive is special in that it includes charts for other islands as well so we have to handle those here
-        if chart[:insets]
-          chart[:insets].each do |key, inset_chart|
-            charts[key] = File.join(destination_directory, inset_chart)
-          end
+        chart&.[](:insets)&.each do |inset_key, inset_chart|
+          charts[inset_key] = File.join(destination_directory, inset_chart)
         end
       end
 
@@ -133,7 +63,9 @@ module FaaApi
         # Extract each file in the archive to the destination directory
         archive.each do |file|
           path = File.join(destination_directory, file.name)
-          # archive.extract(file, path)
+          archive.extract(file, path)
+        rescue Zip::DestinationFileExistsError
+          # Ignore the file if it already exists, we must have already extracted it
         end
       end
     end
@@ -152,6 +84,10 @@ module FaaApi
 
       @current_data_cycle = next_cycle - cycle_length
       return @current_data_cycle
+    end
+
+    def shapefile_path(chart_type, chart_name)
+      return Rails.root.join("lib/faa/charts_crop_shapefiles/#{chart_type}/#{chart_name}.shp").to_s
     end
   end
 
@@ -183,12 +119,12 @@ module FaaApi
     def download_chart(chart, chart_type, destination_directory)
       Rails.logger.info("Downloading #{chart_type}/#{chart} chart")
 
-      # response = Faraday.get("https://aeronav.faa.gov/visual/#{current_data_cycle.strftime('%m-%d-%Y')}/#{chart_download_path(chart_type)}/#{chart}")
-      # raise Exceptions::ChartDownloadFailed unless response.success?
+      response = Faraday.get("https://aeronav.faa.gov/visual/#{current_data_cycle.strftime('%m-%d-%Y')}/#{chart_download_path(chart_type)}/#{chart}")
+      raise Exceptions::ChartDownloadFailed unless response.success?
 
       # Write archive to disk
       chart_path = File.join(destination_directory, chart)
-      # File.binwrite(chart_path, response.body)
+      File.binwrite(chart_path, response.body)
 
       return chart_path
     end
@@ -199,6 +135,22 @@ module FaaApi
         terminal: 'tac-files',
         caribbean: 'Caribbean',
       }[chart_type]
+    end
+
+    def sectional_charts(destination_directory, charts_to_download=nil)
+      return charts(destination_directory, :sectional, Rails.configuration.sectional_charts, charts_to_download)
+    end
+
+    def terminal_area_charts(destination_directory, charts_to_download=nil)
+      return charts(destination_directory, :terminal, Rails.configuration.terminal_area_charts, charts_to_download)
+    end
+
+    def caribbean_charts(destination_directory, charts_to_download=nil)
+      return charts(destination_directory, :caribbean, Rails.configuration.caribbean_charts, charts_to_download)
+    end
+
+    def chart_shapefile(chart_type, chart_name)
+      return shapefile_path(chart_type, chart_name)
     end
   end
 
@@ -213,8 +165,28 @@ module FaaApi
       return Rails.root.join('test/fixtures/airport_diagrams.zip')
     end
 
-    def download_sectional_chart(*)
-      # TODO: return stub here
+    def download_chart(*)
+      return Rails.root.join('test/fixtures/charts_test.zip')
+    end
+
+    def sectional_charts(destination_directory, charts_to_download=nil)
+      return charts(destination_directory, :test, Rails.configuration.test_charts, charts_to_download)
+    end
+
+    def terminal_area_charts(destination_directory, charts_to_download=nil)
+      return charts(destination_directory, :test, Rails.configuration.test_charts, charts_to_download)
+    end
+
+    def caribbean_charts(destination_directory, charts_to_download=nil)
+      return charts(destination_directory, :test, Rails.configuration.test_charts, charts_to_download)
+    end
+
+    def test_charts(destination_directory, charts_to_download=nil)
+      return charts(destination_directory, :test, Rails.configuration.test_charts, charts_to_download)
+    end
+
+    def chart_shapefile(*)
+      return shapefile_path('test', 'test')
     end
   end
 end

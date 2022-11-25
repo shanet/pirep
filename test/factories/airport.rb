@@ -19,6 +19,7 @@ FactoryBot.define do
     wifi                   {'Integer convallis tincidunt mi, quis pulvinar nulla bibendum nec.'}
     fuel_types             {['100LL', 'UL100']}
     landing_rights         {:public_}
+    sectional              {'seattle'}
     bbox_checked           {true}
     bbox_ne_latitude       {47.922902}
     bbox_ne_longitude      {-122.2691531}

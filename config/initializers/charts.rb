@@ -134,7 +134,7 @@ Rails.configuration.sectional_charts = {
   memphis: {
     archive: 'Memphis.zip',
     filename: 'Memphis SEC.tif',
-    bounding_box:  [-95.1861902, 31.9467178, -87.7739182, 36.2327687],
+    bounding_box: [-95.1861902, 31.9467178, -87.7739182, 36.2327687],
   },
   dallas_ft_worth: {
     archive: 'Dallas-Ft_Worth.zip',
@@ -475,20 +475,30 @@ Rails.configuration.terminal_area_charts = {
     filename: 'Tampa TAC.tif',
     bounding_box: [-83.0958004, 27.2921468, -81.8288128, 28.5966997],
     insets: {
-      orlando: 'Orlando TAC.tif'
+      orlando: 'Orlando TAC.tif',
     },
   },
 }
 
 Rails.configuration.caribbean_charts = {
-  caribbean_1: {
+  caribbean_1: { # rubocop:disable Naming/VariableNumber
     archive: 'Caribbean_1_VFR.zip',
     filename: 'Caribbean 1 VFR Chart.tif',
     bounding_box: [-85.4799295, 16.0031192, -71.7328657, 27.5226193],
   },
-  caribbean_2: {
+  caribbean_2: { # rubocop:disable Naming/VariableNumber
     archive: 'Caribbean_2_VFR.zip',
     filename: 'Caribbean 2 VFR Chart.tif',
     bounding_box: [-73.2298992, 14.0020451, -60.2281204, 22.2515826],
   },
 }
+
+# This is a really small geotiff only used for running tests so they run in a reasonable amount of time
+if Rails.env.test?
+  Rails.configuration.test_charts = {
+    test: {
+      archive: 'charts_test.zip',
+      filename: 'Charts Test SEC.tif',
+    },
+  }
+end
