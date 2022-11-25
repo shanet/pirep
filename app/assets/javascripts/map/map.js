@@ -26,9 +26,9 @@ let allAirports = [];
 document.addEventListener('DOMContentLoaded', () => {
   if(!document.getElementById('map')) return;
 
-  charts['sectional'] = JSON.parse(document.getElementById('map').dataset.sectionalCharts || '[]');
-  charts['terminal'] = JSON.parse(document.getElementById('map').dataset.terminalAreaCharts || '[]');
-  charts['caribbean'] = JSON.parse(document.getElementById('map').dataset.caribbeanCharts || '[]');
+  charts.sectional = JSON.parse(document.getElementById('map').dataset.sectionalCharts || '[]');
+  charts.terminal = JSON.parse(document.getElementById('map').dataset.terminalAreaCharts || '[]');
+  charts.caribbean = JSON.parse(document.getElementById('map').dataset.caribbeanCharts || '[]');
 
   initMap();
 
@@ -81,16 +81,16 @@ function initialMapCenter() {
 }
 
 function addChartLayersToMap() {
-  ['sectional', 'caribbean', 'terminal'].forEach(chartType => {
+  ['sectional', 'caribbean', 'terminal'].forEach((chartType) => {
     Object.keys(charts[chartType]).forEach((key) => {
       map.addLayer({
         id: `${chartType}/${key}`,
         type: 'raster',
         source: {
-          bounds: charts[chartType][key]['bounding_box'],
+          bounds: charts[chartType][key].bounding_box,
           maxzoom: 11,
           // Terminal charts only show up when zoomed in a sufficient amount
-          minzoom: (chartType == 'terminal' ? 10 : 0),
+          minzoom: (chartType === 'terminal' ? 10 : 0),
           scheme: 'tms',
           tiles: [`http://localhost:3000/assets/tiles/${chartType}/current/${key}/{z}/{x}/{y}.png`],
           tileSize: 256,
@@ -246,7 +246,7 @@ function applyUrlSearchParamsOnMap() {
 }
 
 export function toggleSectionalLayers(show) {
-  ['sectional', 'caribbean', 'terminal'].forEach(chartType => {
+  ['sectional', 'caribbean', 'terminal'].forEach((chartType) => {
     Object.keys(charts[chartType]).forEach((id) => {
       map.setPaintProperty(`${chartType}/${id}`, 'raster-opacity', (show ? 1 : 0));
     });
@@ -255,7 +255,7 @@ export function toggleSectionalLayers(show) {
 
 export function areSectionalLayersShown() {
   // We only hide/show all layers so just check if the first sectional chart is shown or not to determine the state of all charts
-  return (map.getPaintProperty(`sectional/${Object.keys(charts['sectional'])[0]}`, 'raster-opacity') === 1);
+  return (map.getPaintProperty(`sectional/${Object.keys(charts.sectional)[0]}`, 'raster-opacity') === 1);
 }
 
 export function openAirport(airportCode, boundingBox) {
