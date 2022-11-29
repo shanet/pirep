@@ -21,6 +21,7 @@
 
 <div
   id="map"
+  data-asset-host="<%= Rails.configuration.asset_host %>"
   data-airports-path="<%= airports_path %>"
   data-new-airport-path="<%= new_airport_path(format: :drawer) %>"
   data-show-airport-path="<%= airport_path(airport_path_placeholder, format: :drawer) %>"
@@ -34,4 +35,5 @@
   data-sectional-charts="<%= Rails.configuration.sectional_charts.to_json %>"
   data-terminal-area-charts="<%= Rails.configuration.terminal_area_charts.to_json %>"
   data-caribbean-charts="<%= Rails.configuration.caribbean_charts.to_json %>"
-  data-is-test="<%= Rails.env.test? %>"></div>
+  data-is-test="<%= Rails.env.test? %>"
+  data-test-tile-path="<%= image_path('logo.png') %>"></div>

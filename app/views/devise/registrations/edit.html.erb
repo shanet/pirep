@@ -17,6 +17,11 @@
         <%= form.email_field :email, autocomplete: 'email', class: 'form-control' %>
       </div>
 
+      <div class="mb-3">
+        <%= form.label :timezone, class: 'form-label' %>
+        <%= form.select :timezone, options_for_select(Rails.configuration.supported_timezones.map {|timezone| [timezone.tzinfo.name, timezone.tzinfo.name]}.sort, selected: form.object.timezone), {}, {class: 'form-select'} %>
+      </div>
+
       <div class="mb-3 border rounded p-3">
         <div class="mb-2">
           <h5>Change Password</h5>

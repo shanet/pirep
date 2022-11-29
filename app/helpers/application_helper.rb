@@ -17,8 +17,9 @@ module ApplicationHelper
     }[flash_type]
   end
 
-  def format_timestamp(timestamp)
-    return timestamp&.strftime('%F %T')
+  def format_timestamp(timestamp, format: nil)
+    timestamp = timestamp&.in_time_zone(current_user&.timezone.presence || Rails.configuration.default_timezone)
+    return timestamp&.strftime(format || '%F %T %Z')
   end
 
   def gravatar_url(email_address, size: nil)

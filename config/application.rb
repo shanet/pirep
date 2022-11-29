@@ -10,6 +10,9 @@ module Pirep
     config.active_job.queue_adapter = :good_job
     config.pagination_page_size = 50
 
+    config.default_timezone = 'Etc/UTC'
+    config.supported_timezones = [ActiveSupport::TimeZone.new(config.default_timezone)] + ActiveSupport::TimeZone.us_zones
+
     # Override the default form error HTML with something compatible with Bootstrap
     config.action_view.field_error_proc = proc do |html_tag, _instance|
       html_tag.gsub('form-control', 'form-control is-invalid').html_safe

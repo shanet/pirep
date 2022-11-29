@@ -4,7 +4,7 @@ response = () => {
   let date = outdatedAt.querySelector('.date');
 
   // Update the outdated at date, show the outdated at alert, and hide the flag button
-  date.innerText = "<%= @comment.outdated_at.strftime('%B %-d, %Y') %>";
+  date.innerText = "<%= format_timestamp(@comment.outdated_at, format: '%B %-d, %Y') %>";
   outdatedAt.classList.remove('d-none');
   flagOutdated.classList.add('d-none');
 };

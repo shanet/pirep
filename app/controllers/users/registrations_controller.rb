@@ -28,7 +28,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def activity
     authorize current_user, policy_class: Users::RegistrationsPolicy
-    @actions = policy_scope(Action.where(user: @user).order(created_at: :desc).page(params[:page]))
+    @actions = policy_scope(Action.where(user: current_user).order(created_at: :desc).page(params[:page]))
     @user = current_user
   end
 
@@ -47,6 +47,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
     super
   end
 
+  def update_timezone
+    authorize current_user, policy_class: Users::RegistrationsPolicy
+
+    if current_user.update(timezone: params[:timezone])
+      head :ok
+    else
+      head :internal_server_error
+    end
+  end
+
 protected
 
   def configure_sign_up_params
@@ -54,7 +64,7 @@ protected
   end
 
   def configure_account_update_params
-    devise_parameter_sanitizer.permit(:account_update, keys: [:name])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:name, :timezone])
   end
 
   def after_sign_up_path_for(_user)

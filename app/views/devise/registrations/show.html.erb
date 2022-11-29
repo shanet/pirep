@@ -22,15 +22,16 @@
       <li class="list-group-item"><strong>Name:</strong> <%= @user.name %></li>
       <li class="list-group-item"><strong>Email Address:</strong> <%= @user.email %></li>
       <li class="list-group-item"><strong>Email Confirmed:</strong> <i class="fa-solid fa-<%= @user.confirmed_at ? 'square-check' : 'square-xmark' %>"></i></li>
+      <li class="list-group-item"><strong>Timezone:</strong> <%= @user.timezone %></li>
 
       <li class="list-group-item">
         <strong>Last seen:</strong> <%= @user.last_seen_at ? "#{time_ago_in_words(@user.last_seen_at).capitalize} ago" : 'Never' %>
-        <br><small class="text-muted"><%= format_timestamp @user.last_seen_at %></small>
+        <br><small class="text-muted"><%= format_timestamp(@user.last_seen_at) %></small>
       </li>
 
       <li class="list-group-item">
         <strong>Last edit:</strong> <%= @user.last_edit_at ? "#{time_ago_in_words(@user.last_edit_at).capitalize} ago" : 'None' %>
-        <br><small class="text-muted"><%= format_timestamp @user.last_edit_at %></small>
+        <br><small class="text-muted"><%= format_timestamp(@user.last_edit_at) %></small>
       </li>
     </ul>
   </div>

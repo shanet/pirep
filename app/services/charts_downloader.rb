@@ -6,7 +6,7 @@ require 'faa/faa_api'
 class ChartsDownloader
   def download_and_convert(chart_type, charts_to_download=nil)
     verify_gdal_binaries_exist
-    tiles_directory_prefix = "public/assets/tiles/#{chart_type}"
+    tiles_directory_prefix = "public/assets/tiles#{Rails.env.test? ? '_test' : ''}/#{chart_type}"
 
     Dir.mktmpdir do |tmp_directory|
       Dir.chdir(tmp_directory) do

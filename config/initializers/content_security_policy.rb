@@ -16,7 +16,7 @@ Rails.configuration.content_security_policy do |policy|
   policy.default_src(*(hosts + [:self]))
   policy.font_src(*hosts)
   policy.form_action(:self)
-  policy.img_src(*(hosts + [:data]))
+  policy.img_src(*(hosts + ['www.gravatar.com', :data]))
   policy.object_src(:none)
   policy.script_src(*hosts)
   policy.style_src(*hosts)
