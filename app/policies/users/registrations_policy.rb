@@ -28,4 +28,8 @@ class Users::RegistrationsPolicy < ApplicationPolicy
   def destroy?
     return unknown? == false && @user == @record
   end
+
+  def update_timezone?
+    return unknown? == false && @user == @record
+  end
 end

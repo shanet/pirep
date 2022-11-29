@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :action do
-    type {:airport_edited}
+    type {:airport_added}
     actionable {create(:airport)}
     user {create(:known)}
   end

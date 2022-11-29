@@ -1,0 +1,12 @@
+<% if current_user&.timezone.blank? %>
+  <%= javascript_tag nonce: true do %>
+    fetch('<%= update_timezone_user_path %>', {
+      method: 'PATCH',
+      body: JSON.stringify({'timezone': Intl.DateTimeFormat().resolvedOptions().timeZone}),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content,
+      }
+    });
+  <% end %>
+<% end %>

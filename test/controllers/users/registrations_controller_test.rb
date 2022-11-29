@@ -74,8 +74,8 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
 
   test 'activity' do
     user = create(:known)
-    sign_in(user)
     create(:action, user: user)
+    sign_in(user)
 
     get activity_user_path
     assert_response :success
@@ -107,5 +107,16 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_difference('Users::User.count', -1) do
       delete user_registration_path
     end
+  end
+
+  test 'update_timezone' do
+    user = create(:known)
+    sign_in(user)
+    timezone = 'America/Denver'
+
+    patch update_timezone_user_path, params: {timezone: timezone}
+    assert_response :success
+
+    assert_equal timezone, user.reload.timezone
   end
 end
