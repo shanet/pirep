@@ -98,16 +98,25 @@ function readMode(editor) {
 }
 
 function writeEditorChanges(editor) {
-  // Get the hidden form field, update its value with the current editor value, and submit the form
-  const formField = editorContainer(editor).parentNode.querySelector('input[data-column-field="true"]');
-  formField.value = editor.codemirror.getValue();
+  // Update the hidden form field with the current editor value to be submitted with the form
+  const editorValueFormField = editorContainer(editor).parentNode.querySelector('input[data-column-field="true"]');
+  editorValueFormField.value = editor.codemirror.getValue();
 
   // Show a saved indicator after the form is submitted
-  formField.parentNode.addEventListener('ajax:success', () => {
-    showSavedIndicator(editor);
+  editorValueFormField.parentNode.addEventListener('ajax:success', (response) => {
+    showEditorStatus(editor, 'Saved!', true);
+
+    // Reset the rendered at timestamp so subsequent updates to this field are not rejected as being a conflicting modification
+    editorContainer(editor).parentNode.querySelector('input[data-rendered-at="true"]').value = response.detail[0].timestamp;
   });
 
-  Rails.fire(formField.parentNode, 'submit');
+  editorValueFormField.parentNode.addEventListener('ajax:error', (response) => {
+    if(response.detail[1] !== 'Conflict') return;
+
+    showEditorStatus(editor, 'This content was edited by another user. Copy your changes and refresh the page.', false, 10000);
+  });
+
+  Rails.fire(editorValueFormField.parentNode, 'submit');
 }
 
 function editorContainer(editor) {
@@ -118,11 +127,15 @@ function editorCardHeader(editor) {
   return editor.element.parentNode.parentNode.querySelector('.card-header');
 }
 
-function showSavedIndicator(editor) {
-  const indicator = editorContainer(editor).parentNode.parentNode.querySelector('.saved-indicator');
-  indicator.classList.replace('hide', 'show');
+function showEditorStatus(editor, message, isSuccess, timeout) {
+  const status = editorContainer(editor).parentNode.parentNode.querySelector('.status-indicator');
+  status.innerText = message;
+
+  status.classList.remove('text-success', 'text-danger');
+  status.classList.add(isSuccess ? 'text-success' : 'text-danger');
+  status.classList.replace('hide', 'show');
 
   setTimeout(() => {
-    indicator.classList.replace('show', 'hide');
-  }, 3000);
+    status.classList.replace('show', 'hide');
+  }, timeout || 3000);
 }

@@ -114,6 +114,24 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'rejects conflicting airport update' do
+    with_versioning do
+      @airport.update!(fuel_location: 'over there')
+
+      # Updating a modified field after the page rendered timestamp should be rejected
+      patch airport_path(@airport), params: {airport: {fuel_location: 'over here', rendered_at: 1.hour.ago}}
+      assert_response :conflict
+
+      # Updating an unmodified field after the page rendered timestamp however should be accepted
+      patch airport_path(@airport), params: {airport: {description: 'neat airport', rendered_at: 1.hour.ago}}
+      assert_redirected_to airport_path(@airport.code)
+
+      # Updating a modified field in the future should be accepted field
+      patch airport_path(@airport), params: {airport: {fuel_location: 'over here', rendered_at: 1.hour.from_now}}
+      assert_redirected_to airport_path(@airport.code)
+    end
+  end
+
   test 'searches airports' do
     # Searching with the K prefix should drop it and return the same results as without it
     get search_airports_path(query: "K#{@airport.code}", latitude: @airport.latitude, longitude: @airport.longitude)

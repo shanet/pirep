@@ -38,12 +38,16 @@ class AirportsController < ApplicationController
   end
 
   def update
+    if airport_write_conflict?(@airport, params[:airport][:rendered_at])
+      return head :conflict
+    end
+
     if @airport.update(airport_params) && @airport.photos.attach(params[:airport][:photos] || [])
       touch_author
       create_actions
 
       if request.xhr?
-        head :ok
+        render json: {timestamp: Time.zone.now.iso8601}
       else
         redirect_to airport_path(@airport.code)
       end
@@ -145,5 +149,17 @@ private
 
   def user_for_paper_trail
     return active_user.id
+  end
+
+  def airport_write_conflict?(airport, timestamp)
+    edited_fields = airport_params.select {|column, _value| Airport::TEXTAREA_EDITABLE_COLUMNS[column.to_sym]}
+
+    # For each field that was edited, check if there was a conflicting update to it made between when the page was rendered and the update request.
+    # The existance of the column name in any version's changed columns after the given timestamp is sufficient to establish a conflict.
+    edited_fields.each do |column, _value|
+      return true if airport.versions.where('created_at > ?', timestamp).where('object_changes ? :column', column: column).any?
+    end
+
+    return false
   end
 end

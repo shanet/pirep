@@ -119,12 +119,29 @@ class AirportsTest < ApplicationSystemTestCase
   test 'edit textareas' do
     visit airport_path(@airport.code)
 
-    assert_editor_has_text('Description', :description, 'Description edit')
+    # Check that we can update a field twice and the changes are not rejected as conflicting
+    2.times do
+      assert_editor_has_text('Description', :description, 'Description edit')
+    end
+
     assert_editor_has_text('Transient Parking', :transient_parking, 'Transient parking edit')
     assert_editor_has_text('Fuel Location', :fuel_location, 'Fuel location edit')
     assert_editor_has_text('Landing & Tie-down Fees', :landing_fees, 'Landing fee edit')
     assert_editor_has_text('Crew Car Availability', :crew_car, 'Crew car edit')
     assert_editor_has_text('WiFi Access', :wifi, 'WiFi edit')
+
+    # An update that would overwrite a conflicting change should be rejected
+    with_versioning do
+      travel_to(1.minute.from_now) do
+        @airport.update!(description: 'blerg')
+      end
+
+      _editor, card = update_editor('Description', 'Description edit2')
+
+      within(card) do
+        assert_selector '.status-indicator.text-danger'
+      end
+    end
   end
 
   test 'scrolls photos' do
@@ -191,6 +208,22 @@ class AirportsTest < ApplicationSystemTestCase
 private
 
   def assert_editor_has_text(label, property, text)
+    editor, card = update_editor(label, text)
+
+    # Check that the editor has the given text in read mode and that the backend was updated accordingly
+    within(editor) do
+      assert_equal text, find('.editor-preview-full').text, 'Editor value not saved after clicking off of editor'
+    end
+
+    # Check that the status indicator is shown and also wait for the update request to complete before checking if the value was persisted to the backend below
+    within(card) do
+      assert_selector '.status-indicator.text-success'
+    end
+
+    assert_equal text, @airport.reload.send(property), 'Editor value not updated on backend'
+  end
+
+  def update_editor(label, text)
     editor = nil
     card = find('.card', text: label)
 
@@ -204,24 +237,14 @@ private
         assert editor[:class].include?('editing'), 'Editor not in edit mode'
 
         # Select all the text currently in the editor, delete it, and then enter the given text
-        find('textarea', visible: false).send_keys([:control, 'a'], [:meta, 'a'], :backspace, text)
+        find('textarea', visible: false).send_keys([(/darwin/ =~ RUBY_PLATFORM ? :meta : :control), 'a'], :backspace, text)
       end
     end
 
     # Click off of the editor to write changes and exit edit mode
     find('.airport-header').click
 
-    # Check that the editor has the given text in read mode and that the backend was updated accordingly
-    within(editor) do
-      assert_equal text, find('.editor-preview-full').text, 'Editor value not saved after clicking off of editor'
-    end
-
-    # Check that the saved indicator is shown and also wait for the update request to complete before checking if the value was persisted to the backend below
-    within(card) do
-      assert_selector '.saved-indicator'
-    end
-
-    assert_equal text, @airport.reload.send(property), 'Editor value not updated on backend'
+    return editor, card
   end
 
   def assert_image_shown(image)

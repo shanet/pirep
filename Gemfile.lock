@@ -145,6 +145,7 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
+    foreman (0.87.2)
     fugit (1.7.2)
       et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
@@ -350,6 +351,7 @@ DEPENDENCIES
   erb_lint (>= 0.0.35)
   factory_bot_rails
   faraday
+  foreman
   good_job
   importmap-rails
   jbuilder (~> 2.7)

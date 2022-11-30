@@ -3,21 +3,24 @@
 <div class="card my-2">
   <div class="card-header">
     <div class="d-flex justify-content-between align-items-center">
-      <span><i class="fas <%= icon %> me-2"></i><%= title.html_safe %></span>
+      <span class="flex-shrink-0 me-3"><i class="fas <%= icon %> me-2"></i><%= title.html_safe %></span>
 
       <% unless read_only %>
-        <div>
-          <span class="editor-saved saved-indicator hide text-success me-2">Saved!</span>
-          <i class="fas fa-edit editor-edit-icon"></i>
-        </div>
+        <span class="status-indicator hide flex-grow-1 text-end me-3"></span>
+        <span><i class="fas fa-edit editor-edit-icon"></i></span>
       <% end %>
     </div>
   </div>
 
   <div>
-    <%= text_area_tag nil, model.send(column), data: {editor: true, read_only: read_only, height: textarea_editor_height(defined?(height) && height ? height : :large)}.compact %>
+    <%= text_area_tag nil, model.send(column), data: {
+      editor: true,
+      height: textarea_editor_height(defined?(height) && height ? height : :large),
+      read_only: read_only,
+    }.compact %>
 
     <%= form_with model: model, local: false do |form| %>
+      <%= form.hidden_field :rendered_at, value: Time.zone.now.iso8601, 'data-rendered-at': true %>
       <%= form.hidden_field column, {'data-column-field': true} %>
     <% end %>
   </div>
