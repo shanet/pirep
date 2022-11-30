@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-if ! command -v foreman &> /dev/null
-then
-  echo "Installing foreman..."
-  gem install foreman
+if ! command -v foreman &> /dev/null; then
+  echo 'Foreman binary not found. Did you run `bundle install`?'
+  exit 1
 fi
 
-foreman start -f Procfile.dev
+foreman start

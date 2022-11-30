@@ -53,7 +53,7 @@
   height: 150px !important; // stylelint-disable-line declaration-no-important
 }
 
-.saved-indicator {
+.status-indicator {
   &.show {
     opacity: 1;
     transition: opacity .25s, visibility .25s;

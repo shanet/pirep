@@ -87,17 +87,21 @@ class Airport < ApplicationRecord
     },
   }
 
-  # Only keep versions for changes to these columns
-  HISTORY_COLUMNS = {
+  # These columns are editable via shared textareas and require conflict resolution to avoid overwriting changes
+  TEXTAREA_EDITABLE_COLUMNS = {
     description: 'Description',
     transient_parking: 'Transient Parking',
     fuel_location: 'Fuel location',
     landing_fees: 'Landing Fees',
     crew_car: 'Crew Car',
     wifi: 'WiFi',
+  }
+
+  # Only keep versions for changes to these columns
+  HISTORY_COLUMNS = {
     landing_rights: 'Landing rights',
     landing_requirements: 'Landing requirements',
-  }
+  }.merge(TEXTAREA_EDITABLE_COLUMNS)
 
   # Only create versions when there's a change to one of the columns listed above
   has_paper_trail only: self::HISTORY_COLUMNS.keys
