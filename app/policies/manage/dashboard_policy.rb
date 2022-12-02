@@ -6,4 +6,8 @@ class Manage::DashboardPolicy < ApplicationPolicy
   def activity?
     return admin?
   end
+
+  def update_read_only?
+    return admin?
+  end
 end

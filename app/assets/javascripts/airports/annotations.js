@@ -286,16 +286,27 @@ function saveAnnotations() {
   // Send the serialized annotations to Rails
   const formField = annotationsContainer.querySelector('form #airport_annotations');
   formField.value = JSON.stringify(seralizedAnnotations);
-  Rails.fire(formField.parentNode, 'submit');
 
-  showSavedIndicator();
+  formField.parentNode.addEventListener('ajax:success', () => {
+    showAnnotationsStatus('Saved!', true);
+  });
+
+  formField.parentNode.addEventListener('ajax:error', () => {
+    showAnnotationsStatus('Failed to save annotations', false, 10000);
+  });
+
+  Rails.fire(formField.parentNode, 'submit');
 }
 
-function showSavedIndicator() {
-  const saved = document.querySelector('.airport-diagram-saved');
-  saved.classList.replace('hide', 'show');
+function showAnnotationsStatus(message, isSuccess, timeout) {
+  const status = document.querySelector('.airport-diagram-saved');
+  status.innerText = message;
+
+  status.classList.remove('text-success', 'text-danger');
+  status.classList.add(isSuccess ? 'text-success' : 'text-danger');
+  status.classList.replace('hide', 'show');
 
   setTimeout(() => {
-    saved.classList.replace('show', 'hide');
-  }, 3000);
+    status.classList.replace('show', 'hide');
+  }, timeout || 3000);
 }

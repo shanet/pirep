@@ -111,9 +111,17 @@ function writeEditorChanges(editor) {
   });
 
   editorValueFormField.parentNode.addEventListener('ajax:error', (response) => {
-    if(response.detail[1] !== 'Conflict') return;
+    let message = null;
 
-    showEditorStatus(editor, 'This content was edited by another user. Copy your changes and refresh the page.', false, 10000);
+    if(response.detail[1] === 'Conflict') {
+      message = 'This content was edited by another user. Copy your changes and refresh the page.';
+    } else if(response.detail[1] === 'Forbidden') {
+      message = 'Your change was rejected.';
+    } else {
+      message = 'An unknown error occurred saving your changes.';
+    }
+
+    showEditorStatus(editor, message, false, 10000);
   });
 
   Rails.fire(editorValueFormField.parentNode, 'submit');

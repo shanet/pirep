@@ -73,7 +73,8 @@ private
       :facility_type,
       :facility_use,
       :ownership_type,
-      :reviewed_at
+      :reviewed_at,
+      :locked_at
     )
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_28_062852) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_01_083548) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -93,6 +93,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_28_062852) do
     t.string "sectional"
     t.datetime "activation_date", precision: nil
     t.string "fuel_types", array: true
+    t.datetime "locked_at", precision: nil
     t.index ["code"], name: "index_airports_on_code", unique: true
   end
 
@@ -154,6 +155,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_28_062852) do
     t.text "value"
     t.jsonb "entry"
     t.index ["key"], name: "index_postgres_cache_store_on_key", unique: true
+  end
+
+  create_table "read_onlies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.boolean "enabled", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "remarks", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|

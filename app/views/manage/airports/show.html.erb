@@ -37,6 +37,7 @@
       <li class="list-group-item"><strong>Coordinates:</strong> <%= @airport.latitude.round(7) %>, <%= @airport.longitude.round(7) %></li>
       <li class="list-group-item"><strong>Location:</strong> <%= @airport.city&.titleize %>, <%= @airport.state %></li>
       <li class="list-group-item"><strong>Elevation:</strong> <%= @airport.elevation %>ft</li>
+      <li class="list-group-item"><strong>Locked:</strong> <i class="fa-solid fa-<%= @airport.locked_at ? 'square-check' : 'square-xmark' %>"></i></li>
 
       <% if @airport.unmapped? %>
         <li class="list-group-item">

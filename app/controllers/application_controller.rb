@@ -21,6 +21,10 @@ private
   end
 
   def bad_request(format=nil, message: nil)
+    render_error(format, :bad_request, message)
+  end
+
+  def internal_server_error(format=nil, message: nil)
     render_error(format, :internal_server_error, message)
   end
 

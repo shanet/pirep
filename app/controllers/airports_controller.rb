@@ -38,9 +38,8 @@ class AirportsController < ApplicationController
   end
 
   def update
-    if airport_write_conflict?(@airport, params[:airport][:rendered_at])
-      return head :conflict
-    end
+    # Ensure that the update won't overwrite a change that another user already made
+    return head(:conflict) if airport_write_conflict?(@airport, params[:airport][:rendered_at])
 
     if @airport.update(airport_params) && @airport.photos.attach(params[:airport][:photos] || [])
       touch_author
@@ -51,8 +50,8 @@ class AirportsController < ApplicationController
       else
         redirect_to airport_path(@airport.code)
       end
-    else # rubocop:disable Style/EmptyElse
-      # TODO: error handle
+    else
+      (request.xhr? ? head(:internal_server_error) : internal_server_error)
     end
   end
 

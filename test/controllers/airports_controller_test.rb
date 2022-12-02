@@ -132,6 +132,13 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'rejects update when airport is locked' do
+    @airport.update!(locked_at: Time.zone.now)
+
+    patch airport_path(@airport), params: {airport: {description: 'edit'}}
+    assert_response :forbidden
+  end
+
   test 'searches airports' do
     # Searching with the K prefix should drop it and return the same results as without it
     get search_airports_path(query: "K#{@airport.code}", latitude: @airport.latitude, longitude: @airport.longitude)
