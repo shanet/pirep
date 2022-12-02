@@ -1,6 +1,7 @@
 class Manage::DashboardController < ApplicationController
   def index
     authorize :dashboard, policy_class: Manage::DashboardPolicy
+    flash.now[:error] = 'Read only mode is enabled' if Rails.configuration.read_only.enabled?
   end
 
   def activity
@@ -17,6 +18,18 @@ class Manage::DashboardController < ApplicationController
       all_time: most_active_records(Users::User, :user_id, @limit),
       month: most_active_records(Users::User, :user_id, @limit, 1.month.ago),
     }
+  end
+
+  def update_read_only
+    authorize :update_read_only, policy_class: Manage::DashboardPolicy
+
+    if params[:read_only] == 'true'
+      Rails.configuration.read_only.enable!
+      redirect_to manage_root_path
+    else
+      Rails.configuration.read_only.disable!
+      redirect_to manage_root_path, notice: 'Read only mode has been disabled'
+    end
   end
 
 private

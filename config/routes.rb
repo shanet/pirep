@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   namespace :manage do
     root to: 'dashboard#index'
     get 'activity', to: 'dashboard#activity', as: :activity
+    patch 'update_read_only', to: 'dashboard#update_read_only', as: :update_read_only
+
     resources :comments
 
     resources :airports do

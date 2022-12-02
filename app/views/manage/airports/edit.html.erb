@@ -32,7 +32,18 @@
 
           <%= form.label :fuel_types, class: 'form-label' %>
           <%= form.text_field :fuel_types, class: 'form-control', value: @airport.fuel_types.join(', ') %>
-          <o class="form-text">Fuel types are a CSV list</o>
+          <p class="form-text">Fuel types are a CSV list</p>
+
+          <%= form.label :locked_at, class: 'form-label' %>
+            <div class="input-group">
+            <%= form.text_field :locked_at, class: 'form-control' %>
+
+            <% if @airport.locked_at %>
+              <a href="#" class="input-group-text clear-timestamp" data-target="airport_locked_at">Clear</a>
+            <% else %>
+              <a href="#" class="input-group-text set-timestamp" data-target="airport_locked_at">Now</a>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>

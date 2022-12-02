@@ -17,3 +17,24 @@
     <%= render 'manage/dashboard/review_queues/comments_review_queue' %>
   </div>
 </div>
+
+<div class="row mb-3">
+  <div class="col-12">
+    <div class="dangerzone border border-2 border-danger rounded p-3">
+      <h4>Read Only Mode</h4>
+
+      <p>
+        Read only mode is currently <span class="fw-bold"><%= Rails.configuration.read_only.enabled? ? 'enabled' : 'disabled' %></span>.<br>
+        <small>Read only mode prevents any write operations site-wide to all users (except admins in the manage pages).</small>
+      </p>
+
+      <% if Rails.configuration.read_only.enabled? %>
+        <%= button_to '<i class="fa-solid fa-radiation"></i> Disable read only mode'.html_safe, manage_update_read_only_path(read_only: false),
+          data: {confirm: 'Are you sure you want to disable read only mode?'}, method: :patch, class: 'btn btn-danger' %>
+      <% else %>
+        <%= button_to '<i class="fa-solid fa-radiation"></i> Enable read only mode'.html_safe, manage_update_read_only_path(read_only: true),
+          data: {confirm: 'Are you sure you want to enable read only mode?'}, method: :patch, class: 'btn btn-danger' %>
+      <% end %>
+    </div>
+  </div>
+</div>

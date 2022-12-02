@@ -16,6 +16,11 @@ class Users::Unknown < Users::User
     return false
   end
 
+  # Don't send a confirmation email to unknown users since we don't know their email address
+  def send_confirmation_notification?
+    return false
+  end
+
   private_class_method def self.randomize_credentials(user)
     # Users must have email addresses and password so provide some dummy values for unknown users
     user.email = "#{SecureRandom.uuid}@pirep.io"

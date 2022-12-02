@@ -108,7 +108,7 @@ private
 
   def verify_gdal_binaries_exist
     ['gdalwarp', 'gdal_translate', 'gdal2tiles.py'].each do |binary|
-      unless system("which #{binary} &> /dev/null")
+      unless system("which #{binary} > /dev/null 2>&1")
         Rails.logger.error("#{binary} binary not found, ensure that it exists and is in your $PATH")
         raise Exceptions::GdalBinaryNotFound, binary
       end

@@ -1,9 +1,15 @@
+<% if @airport.locked_at %>
+  <div class="alert alert-warning mb-2">
+    <i class="fa-solid fa-lock"></i> This airport is temporarily locked. Edits may not be made while locked.
+  </div>
+<% end %>
+
 <% if @airport.closed? %>
   <div class="alert alert-danger mb-2">
-    Sadly, this airport is reportedly closed<% unless @airport.unmapped? %> based on it being removed from the FAA's database<% end %>.
+    <i class="fa-solid fa-skull-crossbones"></i> Sadly, this airport is reportedly closed<% unless @airport.unmapped? %> based on it being removed from the FAA's database<% end %>.
   </div>
 <% else %>
   <div class="alert alert-primary mb-2">
-    Are you familiar with this airport? Help out other pilots by adding your local knowledge<% if defined?(show_link) %> on its <%= link_to 'airport page', airport_path(@airport.code) %><% end %>!
+    <i class="fa-solid fa-pencil"></i> Are you familiar with this airport? Help out other pilots by adding your local knowledge<% if defined?(show_link) %> on its <%= link_to 'airport page', airport_path(@airport.code) %><% end %>!
   </div>
 <% end %>

@@ -299,7 +299,7 @@ private
     find('#map[data-ready="true"]', wait: 60)
   rescue Capybara::ElementNotFound => error
     # Something may have prevented Mapbox from initalizing, it would he helpful to print the browser logs in this case
-    warn page.driver.browser.logs.get(:browser) unless ENV['CI']
+    warn page.driver.browser.logs.get(:browser)
     raise error
   end
 end

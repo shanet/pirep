@@ -17,4 +17,16 @@ class Manage::DashboardControllerTest < ActionDispatch::IntegrationTest
     get manage_activity_path
     assert_response :success
   end
+
+  test 'update_read_only' do
+    patch manage_update_read_only_path, params: {read_only: true}
+    assert_redirected_to manage_root_path
+    assert Rails.configuration.read_only.enabled?, 'Read only mode not enabled'
+
+    patch manage_update_read_only_path, params: {read_only: false}
+    assert_redirected_to manage_root_path
+    assert Rails.configuration.read_only.disabled?, 'Read only mode not disabled'
+  ensure
+    Rails.configuration.read_only.disable!
+  end
 end

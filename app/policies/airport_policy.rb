@@ -8,7 +8,7 @@ class AirportPolicy < ApplicationPolicy
   end
 
   def create?
-    return !@user.disabled_at
+    return !@user.disabled_at && Rails.configuration.read_only.disabled?
   end
 
   def show?
@@ -16,7 +16,7 @@ class AirportPolicy < ApplicationPolicy
   end
 
   def update?
-    return !@user.disabled_at
+    return !@user.disabled_at && !@record.locked_at && Rails.configuration.read_only.disabled?
   end
 
   def search?
