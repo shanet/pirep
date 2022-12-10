@@ -1,22 +1,27 @@
 <% airport_path_placeholder = '_airport_code_' %>
 
-<div id="ui">
-  <div id="controls">
-    <div class="columns">
-      <div><%= render 'navigation' %></div>
+<div id="controls">
+  <div id="grid">
+    <div>
+      <div class="map-header">
+        <%= render 'header' %>
+      </div>
 
-      <div>
+      <div class="filters">
+        <%= render 'map/filters/filters' %>
+      </div>
+
+      <div class="flashes">
         <div id="flashes"></div>
       </div>
 
-      <div class="right">
-        <%= render 'header' %>
+      <div class="action-buttons">
         <%= render 'action_buttons' %>
       </div>
     </div>
   </div>
 
-  <%= render 'drawer' %>
+  <%= render 'map/drawer/drawer' %>
 </div>
 
 <div

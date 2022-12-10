@@ -57,13 +57,6 @@ function initMap() {
   });
 
   map.addControl(new mapboxgl.AttributionControl(), 'bottom-left'); // eslint-disable-line no-undef
-
-  // Let the tests know that the map is fully ready to use (once we have the airports layer shown)
-  map.on('idle', () => {
-    if(map.getLayer(AIRPORT_LAYER)) {
-      mapElement.dataset.ready = true;
-    }
-  });
 }
 
 function initialMapCenter() {
@@ -335,4 +328,7 @@ function exposeObjectsForTesting() {
 
   // This is yucky, but we need the map object at global scope so we can access it in Capybara tests
   window.mapbox = map;
+
+  // Let the tests know that the map is fully ready to use (once we have the airports layer shown)
+  mapElement.dataset.ready = true;
 }

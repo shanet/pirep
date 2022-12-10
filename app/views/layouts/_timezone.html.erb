@@ -1,4 +1,4 @@
-<% if current_user&.timezone.blank? %>
+<% if current_user && current_user.timezone.blank? %>
   <%= javascript_tag nonce: true do %>
     fetch('<%= update_timezone_user_path %>', {
       method: 'PATCH',

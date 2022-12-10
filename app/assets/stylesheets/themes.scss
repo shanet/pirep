@@ -84,7 +84,7 @@ $themes: (
   }
 
   // Map action buttons
-  .action-buttons > .theme-#{$name} {
+  #action-buttons > .theme-#{$name} {
     background-color: map-get($colors, 'primary');
   }
 }
