@@ -1,4 +1,12 @@
-<div class="map-header">
+<div>
+  <input id="search" class="form-control" type="text" autofocus autocomplete="off" placeholder="Search airports" data-search-endpoint="<%= search_airports_path %>">
+
+  <div id="search-results-parent">
+    <ul id="search-results" class="list-group"></ul>
+  </div>
+</div>
+
+<div class="navigation">
   <% if user_signed_in? && current_user.admin? %>
     <span><%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_root_path, class: 'ps-2' %></span> |
   <% else %>

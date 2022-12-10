@@ -1,3 +1,4 @@
+import * as actionButton from 'map/action_buttons';
 import * as flashes from 'map/flashes';
 import * as map from 'map/map';
 import * as utils from 'shared/utils';
@@ -58,8 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       case 13: { // Enter
         // Open the airport when a result is entered
-        const result = resultsList.childNodes[selectedSearchResultIndex];
-        map.openAirport(result.dataset.airportCode, JSON.parse(result.dataset.boundingBox));
+        openAirport(resultsList.childNodes[selectedSearchResultIndex].dataset);
         hideSearchResults();
         break;
       }
@@ -94,7 +94,7 @@ function showSearchResults(results) {
 
     // Show airport when result is clicked (use mousedown to since blur will take precedence over click)
     node.addEventListener('mousedown', () => {
-      map.openAirport(result.code);
+      openAirport(node.dataset);
     });
 
     /* eslint-disable no-loop-func */
@@ -106,6 +106,12 @@ function showSearchResults(results) {
   }
 
   resultsList.style.display = 'block';
+}
+
+function openAirport(result) {
+  map.openAirport(result.airportCode, JSON.parse(result.boundingBox));
+  map.toggleSectionalLayers(false);
+  actionButton.updateLayerSwitcherIcon(actionButton.LAYER_MAP);
 }
 
 function hideSearchResults() {

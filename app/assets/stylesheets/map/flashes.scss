@@ -1,8 +1,6 @@
 $animation-duration: .2s;
 
 #flashes {
-  margin-top: 40%;
-
   .toast {
     animation: fade-in-down $animation-duration ease-in forwards;
     opacity: 0;

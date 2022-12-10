@@ -75,17 +75,17 @@ function hideDrawerContent() {
 }
 
 export function openDrawer(instant=false) {
-  const drawer = document.getElementById('controls');
-  drawer.classList.remove('slide-out-drawer');
-  drawer.classList.add(`slide-in-drawer${instant ? '-instant' : ''}`);
+  const grid = document.getElementById('grid');
+  grid.classList.remove('slide-out-drawer');
+  grid.classList.add(`slide-in-drawer${instant ? '-instant' : ''}`);
 }
 
 export function closeDrawer() {
-  const drawer = document.getElementById('controls');
-  drawer.classList.remove('slide-in-drawer', 'slide-in-drawer-instant');
-  drawer.classList.add('slide-out-drawer');
+  const grid = document.getElementById('grid');
+  grid.classList.remove('slide-in-drawer', 'slide-in-drawer-instant');
+  grid.classList.add('slide-out-drawer');
 }
 
 export function isDrawerOpen() {
-  return (document.getElementById('controls').classList.contains('slide-in-drawer'));
+  return (document.getElementById('grid').classList.contains('slide-in-drawer'));
 }
