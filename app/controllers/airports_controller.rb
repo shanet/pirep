@@ -106,6 +106,7 @@ private
       :landing_rights,
       :landing_requirements,
       :annotations,
+      :cover_image,
       tags_attributes: [:name]
     )
   end

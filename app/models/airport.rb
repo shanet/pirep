@@ -87,6 +87,16 @@ class Airport < ApplicationRecord
     },
   }
 
+  COVER_IMAGES = {
+    default: 'Default',
+    beach: 'Beach',
+    city: 'City',
+    desert: 'Desert',
+    forest: 'Forest',
+    mountains: 'Mountains',
+    town: 'Town',
+  }
+
   # These columns are editable via shared textareas and require conflict resolution to avoid overwriting changes
   TEXTAREA_EDITABLE_COLUMNS = {
     description: 'Description',
@@ -101,6 +111,7 @@ class Airport < ApplicationRecord
   HISTORY_COLUMNS = {
     landing_rights: 'Landing rights',
     landing_requirements: 'Landing requirements',
+    cover_image: 'Theme',
   }.merge(TEXTAREA_EDITABLE_COLUMNS)
 
   # Only create versions when there's a change to one of the columns listed above

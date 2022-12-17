@@ -11,7 +11,7 @@
     <% if defined? show_edit_form %>
       <div class="small my-1">
         <% if @airport.landing_rights == :private_ %>
-          Some privately owned airports are actually open to the public or the owners are happy to have pilots stop by with prior permission given. If this is the case for this airport enter it as such!
+          Is this airport actually open to the public with or without restrictions? Or perhaps the owner is happy for pilots to stop by with prior permission?
         <% elsif @airport.landing_requirements.present? %>
           <%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:short_requirements_label] %>: <%= @airport.landing_requirements %>
        <% end %>

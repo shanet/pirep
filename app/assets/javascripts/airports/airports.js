@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTagDeleteIcons();
   initExtraRemarks();
   initMapBackButton();
+  initCoverImageForm();
 }, {once: true});
 
 function initEditingTags() {
@@ -64,4 +65,10 @@ function initMapBackButton() {
       event.preventDefault();
     });
   }
+}
+
+function initCoverImageForm() {
+  document.getElementById('airport_cover_image').addEventListener('change', (event) => {
+    event.target.form.submit();
+  });
 }
