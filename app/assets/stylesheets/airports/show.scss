@@ -1,5 +1,33 @@
 @import 'variables';
 
+.airport-header-cover-image {
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+
+  @include media-breakpoint-up(md) {
+    background-size: contain;
+  }
+
+  .airport-header {
+    flex-grow: 1;
+  }
+
+  .airport-subheader {
+    background-color: rgba(0, 0, 0, .5);
+    color: $white;
+  }
+
+  &.cover-image-beach { background-image: url('beach.jpg'); }
+  &.cover-image-city { background-image: url('city.jpg'); }
+  &.cover-image-desert { background-image: url('desert.jpg'); }
+  &.cover-image-forest { background-image: url('forest.jpg'); }
+  &.cover-image-mountains { background-image: url('mountains.jpg'); }
+  &.cover-image-town { background-image: url('town.jpg'); }
+}
+
 .airport-subheader > .container {
   row-gap: $spacer;
 

@@ -1,41 +1,59 @@
 <%
+  drawer ||= false
   runways = @airport.runways.order(length: :desc)
-  runways = runways.limit(runways_limit - 1) if defined?(runways_limit)
-  ap runways
+  runways = runways.limit(3) if drawer
 %>
 
-<div class="row">
-  <div class="col-sm mb-2 pe-1">
+<div class="row g-2 mb-3">
+  <% if !drawer && @airport.city.present? && @airport.state.present? %>
+    <div class="col-12">
+      <%= render partial: 'airports/statistics/statistics_box', locals: {
+        label: 'Location', value: "#{@airport.city.titleize}, #{@airport.state}", icon: 'location-dot', theme: 'blue-grey'
+      } %>
+    </div>
+  <% end %>
+
+  <% if !drawer && @airport.sectional.present? %>
+    <div class="col-6">
+      <%= render partial: 'airports/statistics/statistics_box', locals: {
+        label: 'Sectional', value: @airport.sectional.titleize, icon: :map, theme: 'blue-grey'
+      } %>
+    </div>
+  <% end %>
+
+  <% if !drawer && @airport.activation_date.present? %>
+    <div class="col-6">
+      <%= render partial: 'airports/statistics/statistics_box', locals: {
+        label: 'Activation date', value: @airport.activation_date.strftime('%b %Y'), icon: 'cake-candles', theme: 'blue-grey'
+      } %>
+    </div>
+  <% end %>
+
+  <% if @airport.closed? && @airport.faa_data_cycle %>
+    <div class="col-<%= drawer ? 12 : 6 %>">
+      <%= render partial: 'airports/statistics/statistics_box', locals: {
+        label: 'Closed date', value: @airport.faa_data_cycle.strftime('%b %Y'), icon: 'skull-crossbones', theme: :red
+      } %>
+    </div>
+  <% end %>
+
+  <div class="col-<%= drawer ? 12 : 6 %>">
+    <%= render partial: 'airports/statistics/statistics_box', locals: {
+      label: 'Fuel available', value: (@airport.fuel_types&.any? ? @airport.fuel_types.join(', ') : 'None'), icon: 'gas-pump', theme: (@airport.fuel_types&.any? ? 'blue-grey' : :red)
+    } %>
+  </div>
+
+  <div class="col-<%= drawer ? 12 : 6 %>">
     <%= render partial: 'airports/statistics/statistics_box', locals: {
       label: 'Elevation', value: @airport.elevation, units: :ft, icon: :mountain, theme: @airport.elevation_threat_level
     } %>
   </div>
 
-  <div class="col-sm mb-2 ps-1">
-    <% if runways.any? %>
+  <% runways.each do |runway| %>
+    <div class="col-<%= drawer ? 12 : 6 %>">
       <%= render partial: 'airports/statistics/statistics_box', locals: {
-        label: 'Runway %s' % runways.first.number, value: runways.first.length, units: :ft, icon: :road, theme: runways.first.length_threat_level
+        label: "Runway #{runway.number}", value: runway.length, units: :ft, icon: :road, theme: runway.length_threat_level
       } %>
-    <% end %>
-  </div>
-
-  <div class="w-100"></div>
-
-  <% runways.offset(1).in_groups_of(2).each do |grouped_runways| %>
-    <% grouped_runways.each_with_index do |runway, index| %>
-      <% next unless runway %>
-
-      <div class="col-sm mb-2 <%= if grouped_runways.compact.count == 2
-                                    index == 0 ? 'pe-1' : 'ps-1'
-                                  else
-                                    ''
-                                  end %>">
-        <%= render partial: 'airports/statistics/statistics_box', locals: {
-          label: 'Runway %s' % runway.number, value: runway.length, units: :ft, icon: :road, theme: runway.length_threat_level
-        } %>
-      </div>
-    <% end %>
-
-    <div class="w-100"></div>
+    </div>
   <% end %>
 </div>

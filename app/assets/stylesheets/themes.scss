@@ -46,11 +46,21 @@ $themes: (
     background-color: map-get($colors, 'primary');
     border: 2px solid map-get($colors, 'dark');
 
-    &.editing.unselected {
-      background-color: map-get($colors, 'light');
+    &.editing {
+      background-color: map-get($colors, 'primary');
+      box-shadow: 0 0 5px 2px $black;
 
       &:hover {
-        background-color: map-get($colors, 'primary');
+        background-color: map-get($colors, 'dark');
+      }
+
+      &.unselected {
+        background-color: map-get($colors, 'light');
+        box-shadow: none;
+
+        &:hover {
+          background-color: map-get($colors, 'dark');
+        }
       }
     }
   }

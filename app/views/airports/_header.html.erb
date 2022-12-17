@@ -1,43 +1,56 @@
-<div class="container-fluid airport-header theme-<%= @airport.theme %>">
-  <div class="container">
-    <div class="col-12 p-3 text-center">
-      <h3><%= @airport.code %> - <%= @airport.name.titleize %></h3>
+<% cover_image = (@airport.cover_image != 'default') %>
+
+<div class="container-fluid p-0 <%= cover_image ? "airport-header-cover-image cover-image-#{@airport.cover_image} mb-3" : '' %>">
+  <div class="airport-header <%= cover_image ? '' : "theme-#{@airport.theme}" %>">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-6 offset-md-3 p-3 text-center">
+          <h3><%= @airport.code %> - <%= @airport.name.titleize %></h3>
+        </div>
+
+        <div class="col-12 col-md-3 p-3">
+          <%= form_with model: @airport, local: false, class: 'd-flex justify-content-end align-items-center' do |form| %>
+            <%= form.label :cover_image, 'Theme:', class: 'form-label me-2 mb-0' %>
+            <%= form.select :cover_image, options_for_select(Airport::COVER_IMAGES.map {|key, value| [value, key]}, selected: @airport.cover_image), {}, class: 'form-select form-select-sm w-auto' %>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="container-fluid airport-subheader theme-<%= @airport.theme %> mb-3">
-  <div class="container d-flex justify-content-between align-items-center flex-wrap py-2">
-    <div>
-      <% if current_page?(action: :show) %>
-        <%# If we're given a referrer from the map, use the history API to return back to that page as it will include the full query string with the map state %>
-        <% map_link = (request.referer && URI(request.referer).path == root_path ? '' : root_path(airport: @airport.code)) %>
-        <%= link_to '<i class="fa-solid fa-chevron-left me-1"></i>Map'.html_safe, map_link, id: 'map-back', class: 'btn btn-sm btn-outline-dark' %>
-      <% end %>
-    </div>
+  <div class="airport-subheader <%= cover_image ? '' : "theme-#{@airport.theme} mb-3" %>">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap py-2">
+      <div>
+        <% if current_page?(action: :show) %>
+          <%# If we're given a referrer from the map, use the history API to return back to that page as it will include the full query string with the map state %>
+          <% map_link = (request.referer && URI(request.referer).path == root_path ? '' : root_path(airport: @airport.code)) %>
+          <%= link_to '<i class="fa-solid fa-chevron-left me-1"></i>Map'.html_safe, map_link, id: 'map-back', class: "btn btn-sm btn-outline-#{cover_image ? 'light' : 'dark'}" %>
+        <% end %>
+      </div>
 
-    <div class="mx-2">
-      <% if defined?(subtitle) %>
-        <%= subtitle %>
-      <% else %>
-        <%= @airport.latitude.round(7) %>, <%= @airport.longitude.round(7) %>
-      <% end %>
-    </div>
+      <div class="mx-2">
+        <% if defined?(subtitle) %>
+          <%= subtitle %>
+        <% else %>
+          <%= @airport.latitude.round(7) %>, <%= @airport.longitude.round(7) %>
+        <% end %>
+      </div>
 
-    <div>
-      <% if Manage::AirportPolicy.new(current_user, @airport).show? %>
-        <%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_airport_path(@airport), class: 'btn btn-sm btn-outline-dark' %>
-      <% end %>
+      <div>
+        <% if Manage::AirportPolicy.new(current_user, @airport).show? %>
+          <%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_airport_path(@airport), class: "btn btn-sm btn-outline-#{cover_image ? 'light' : 'dark'}" %>
+        <% end %>
 
-      <% unless current_page?(action: :history) %>
-        <%= link_to '<i class="fas fa-clock-rotate-left me-1"></i>History'.html_safe, history_airport_path(@airport), class: 'btn btn-sm btn-outline-dark' %>
-      <% end %>
+        <% unless current_page?(action: :history) %>
+          <%= link_to '<i class="fas fa-clock-rotate-left me-1"></i>History'.html_safe, history_airport_path(@airport), class: "btn btn-sm btn-outline-#{cover_image ? 'light' : 'dark'}" %>
+        <% end %>
 
-      <% if user_signed_in? %>
-        <%= link_to '<i class="fas fa-right-from-bracket me-1"></i>Logout'.html_safe, destroy_user_session_path, method: :delete, class: 'btn btn-sm btn-outline-dark' %>
-      <% else %>
-        <%= link_to '<i class="fas fa-right-to-bracket me-1"></i>Log In'.html_safe, new_user_session_path, class: 'btn btn-sm btn-outline-dark' %>
-      <% end %>
+        <% if user_signed_in? %>
+          <%= link_to '<i class="fas fa-right-from-bracket me-1"></i>Logout'.html_safe, destroy_user_session_path, method: :delete, class: "btn btn-sm btn-outline-#{cover_image ? 'light' : 'dark'}" %>
+        <% else %>
+          <%= link_to '<i class="fas fa-right-to-bracket me-1"></i>Log In'.html_safe, new_user_session_path, class: "btn btn-sm btn-outline-#{cover_image ? 'light' : 'dark'}" %>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>
