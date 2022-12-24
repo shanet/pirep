@@ -42,3 +42,6 @@ yarn-debug.log*
 
 # CSS builds
 /app/assets/builds/*
+
+# FAA charts cache
+.charts_cache/*

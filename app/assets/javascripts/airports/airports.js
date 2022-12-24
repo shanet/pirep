@@ -68,7 +68,10 @@ function initMapBackButton() {
 }
 
 function initCoverImageForm() {
-  document.getElementById('airport_cover_image').addEventListener('change', (event) => {
+  const coverImage = document.getElementById('airport_cover_image');
+  if(!coverImage) return;
+
+  coverImage.addEventListener('change', (event) => {
     event.target.form.submit();
   });
 }

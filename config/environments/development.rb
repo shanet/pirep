@@ -1,4 +1,5 @@
 require 'active_support/cache/store/postgres_cache_store'
+require_relative Rails.root.join('lib/middleware/missing_map_tiles_middleware')
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -29,6 +30,9 @@ Rails.application.configure do
 
     config.cache_store = :null_store
   end
+
+  # Treat missing tiles as 204s instead of 404s for performance (in prod this is handled by the CDN)
+  config.middleware.use MissingMapTilesMiddleware
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local

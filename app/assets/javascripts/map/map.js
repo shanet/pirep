@@ -8,6 +8,7 @@ import * as newAirportDrawer from 'map/drawer_new_airport';
 import * as urlSearchParams from 'map/url_search_params';
 
 const AIRPORT_LAYER = 'airports';
+const CHART_LAYERS = ['sectional', 'terminal', 'caribbean'];
 
 // Airports currently displayed on the map (with filters applied)
 const displayedAirports = {
@@ -18,17 +19,11 @@ const displayedAirports = {
 let mapElement = null;
 let map = null;
 
-const charts = {};
-
 // All airports without filters
 let allAirports = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   if(!document.getElementById('map')) return;
-
-  charts.sectional = JSON.parse(document.getElementById('map').dataset.sectionalCharts || '[]');
-  charts.terminal = JSON.parse(document.getElementById('map').dataset.terminalAreaCharts || '[]');
-  charts.caribbean = JSON.parse(document.getElementById('map').dataset.caribbeanCharts || '[]');
 
   initMap();
 
@@ -74,28 +69,25 @@ function initialMapCenter() {
 }
 
 function addChartLayersToMap() {
-  ['sectional', 'caribbean', 'terminal'].forEach((chartType) => {
-    Object.keys(charts[chartType]).forEach((key) => {
-      map.addLayer({
-        id: `${chartType}/${key}`,
+  CHART_LAYERS.forEach((chartLayer) => {
+    map.addLayer({
+      id: chartLayer,
+      type: 'raster',
+      source: {
+        maxzoom: 11,
+        // Terminal charts only show up when zoomed in a sufficient amount
+        minzoom: (chartLayer === 'terminal' ? 10 : 0),
+        scheme: 'tms',
+        // In test there needs to be some asset to request to avoid a "no route exists" error. Since no tiles may be
+        // generated use a dummy image as a tile. This will make for an odd looking map but that won't matter in tests.
+        tiles: [mapElement.dataset.isTest === 'true' ? mapElement.dataset.testTilePath : `${mapElement.dataset.assetHost}/assets/tiles/${chartLayer}/current/{z}/{x}/{y}.png`],
+        tileSize: 256,
         type: 'raster',
-        source: {
-          bounds: charts[chartType][key].bounding_box,
-          maxzoom: 11,
-          // Terminal charts only show up when zoomed in a sufficient amount
-          minzoom: (chartType === 'terminal' ? 10 : 0),
-          scheme: 'tms',
-          // In test there needs to be some asset to request to avoid a "no route exists" error. Since no tiles may be
-          // generated use a dummy image as a tile. This will make for an odd looking map but that won't matter in tests.
-          tiles: [mapElement.dataset.isTest === 'true' ? mapElement.dataset.testTilePath : `${mapElement.dataset.assetHost}/assets/tiles/${chartType}/current/${key}/{z}/{x}/{y}.png`],
-          tileSize: 256,
-          type: 'raster',
-        },
-        paint: {
-          'raster-opacity': (urlSearchParams.getLayer() === actionButtons.LAYER_SATELLITE ? 0 : 1),
-          'raster-fade-duration': 300,
-        },
-      });
+      },
+      paint: {
+        'raster-opacity': (urlSearchParams.getLayer() === actionButtons.LAYER_SATELLITE ? 0 : 1),
+        'raster-fade-duration': 300,
+      },
     });
   });
 }
@@ -241,16 +233,14 @@ function applyUrlSearchParamsOnMap() {
 }
 
 export function toggleSectionalLayers(show) {
-  ['sectional', 'caribbean', 'terminal'].forEach((chartType) => {
-    Object.keys(charts[chartType]).forEach((id) => {
-      map.setPaintProperty(`${chartType}/${id}`, 'raster-opacity', (show ? 1 : 0));
-    });
+  CHART_LAYERS.forEach((chartLayer) => {
+    map.setPaintProperty(chartLayer, 'raster-opacity', (show ? 1 : 0));
   });
 }
 
 export function areSectionalLayersShown() {
   // We only hide/show all layers so just check if the first sectional chart is shown or not to determine the state of all charts
-  return (map.getPaintProperty(`sectional/${Object.keys(charts.sectional)[0]}`, 'raster-opacity') === 1);
+  return (map.getPaintProperty('sectional', 'raster-opacity') === 1);
 }
 
 export function openAirport(airportCode, boundingBox) {

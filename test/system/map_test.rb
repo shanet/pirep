@@ -124,30 +124,29 @@ class MapTest < ApplicationSystemTestCase
     visit map_path
     wait_for_map_ready
 
-    assert chart_layer_shown?(:sectional, @airport.sectional), 'Sectional layer not shown by default'
+    assert chart_layer_shown?(:sectional), 'Sectional layer not shown by default'
 
     find('#layer-switcher').click
-    assert_not chart_layer_shown?(:sectional, @airport.sectional), 'Satellite layer not shown'
+    assert_not chart_layer_shown?(:sectional), 'Satellite layer not shown'
     assert_equal 'layer=satellite', URI.parse(current_url).query, 'Layer URL parameter not set'
 
     # Toggle back to the sectional layer
     find('#layer-switcher').click
-    assert chart_layer_shown?(:sectional, @airport.sectional), 'Sectional layer not shown again'
+    assert chart_layer_shown?(:sectional), 'Sectional layer not shown again'
     assert_empty URI.parse(current_url).query, 'Layer URL parameter not removed'
   end
 
-  # NOTE: this test only works with an airport contained within a terminal area chart of the same name as its sectional chart
   test 'shows terminal area charts when soomed in' do
     visit map_path
     wait_for_map_ready
 
-    assert chart_layer_shown?(:sectional, @airport.sectional), 'Sectional layer not shown by default'
+    assert chart_layer_shown?(:sectional), 'Sectional layer not shown by default'
     open_airport(@airport)
 
     # Zoom into the airport then switch back to chart view to confirm that the terminal area chart is shown when zoomed in sufficiently
     click_on 'Zoom In'
     find('#layer-switcher').click
-    assert chart_layer_shown?(:terminal, @airport.sectional), 'Terminal area chart not shown when zoomed in'
+    assert chart_layer_shown?(:terminal), 'Terminal area chart not shown when zoomed in'
   end
 
   test 'zooms into airport' do
@@ -200,7 +199,7 @@ class MapTest < ApplicationSystemTestCase
 
     assert_selector '.airport-drawer-header'
     assert_not_equal default_zoom_level, map_zoom_level, 'Map did not preserve zoom level'
-    assert_not chart_layer_shown?(:sectional, @airport.sectional), 'Map did not preserve layer'
+    assert_not chart_layer_shown?(:sectional), 'Map did not preserve layer'
   end
 
   test 'sets state from URL parameters' do
@@ -222,7 +221,7 @@ class MapTest < ApplicationSystemTestCase
     wait_for_map_ready
 
     assert_equal zoom_level, map_zoom_level, 'Zoom level not set from URL parameter'
-    assert_not chart_layer_shown?(:sectional, @airport.sectional), 'Satellite layer not shown from URL parameter'
+    assert_not chart_layer_shown?(:sectional), 'Satellite layer not shown from URL parameter'
     assert_selector '#drawer-content .airport-drawer-header', text: "#{@airport.code} - #{@airport.name.titleize}"
 
     assert_in_delta latitude, map_location['lat'], 0.01, 'Map not centered at given URL parameter latitude'
@@ -282,8 +281,8 @@ private
     return evaluate_script("mapbox.getSource('airports')._data.features").map {|airport| airport['properties']}
   end
 
-  def chart_layer_shown?(chart_type, chart_name)
-    return evaluate_script("mapbox.getPaintProperty('#{chart_type}/#{chart_name}', 'raster-opacity')") == 1
+  def chart_layer_shown?(chart_layer)
+    return evaluate_script("mapbox.getPaintProperty('#{chart_layer}', 'raster-opacity')") == 1
   end
 
   def map_zoom_level
@@ -296,7 +295,8 @@ private
 
   def wait_for_map_ready
     # Once the map is fully ready to use it will populate a data attribute
-    find('#map[data-ready="true"]', wait: 60)
+    # Mapbox runs incredibly slow on CI so give it a bunch of time before failing
+    find('#map[data-ready="true"]', wait: (ENV['CI'] ? 300 : 30))
   rescue Capybara::ElementNotFound => error
     # Something may have prevented Mapbox from initalizing, it would he helpful to print the browser logs in this case
     warn page.driver.browser.logs.get(:browser)
