@@ -7,7 +7,13 @@ class AirportsController < ApplicationController
 
   def index
     authorize :airport, :index?
-    render json: Airport.geojson.to_json
+
+    # This is stored as a static asset in production since dumping all airports to JSON takes a while
+    if Rails.env.production?
+      redirect_to URI.join('https:////', Rails.configuration.asset_host || '', 'airports.json').to_s
+    else
+      render json: Airport.geojson.to_json
+    end
   end
 
   def new

@@ -117,16 +117,31 @@ module FaaApi
     end
 
     def download_chart(chart, chart_type, destination_directory)
-      Rails.logger.info("Downloading #{chart_type}/#{chart} chart")
+      Rails.logger.info("Downloading #{chart_type}/#{chart} chart archive")
 
-      response = Faraday.get("https://aeronav.faa.gov/visual/#{current_data_cycle.strftime('%m-%d-%Y')}/#{chart_download_path(chart_type)}/#{chart}")
-      raise Exceptions::ChartDownloadFailed unless response.success?
+      charts_cycle = current_data_cycle.strftime('%m-%d-%Y')
+      cached_chart = Rails.root.join('.charts_cache', charts_cycle, chart_type.to_s, chart)
 
-      # Write archive to disk
-      chart_path = File.join(destination_directory, chart)
-      File.binwrite(chart_path, response.body)
+      # Try to use a cache if running in development so we don't need to download these large files multiple times
+      if Rails.env.development? && cached_chart.exist?
+        Rails.logger.info('Using cached chart archive, delete .charts_cache to bust cache')
+        return cached_chart
+      else
+        response = Faraday.get("https://aeronav.faa.gov/visual/#{charts_cycle}/#{chart_download_path(chart_type)}/#{chart}")
+        raise Exceptions::ChartDownloadFailed unless response.success?
 
-      return chart_path
+        # Write archive to disk
+        chart_path = File.join(destination_directory, chart)
+        File.binwrite(chart_path, response.body)
+
+        # Also write the chart to the development cache
+        if Rails.env.development?
+          FileUtils.mkdir_p(Rails.root.join('.charts_cache', charts_cycle, chart_type).to_s)
+          File.binwrite(Rails.root.join('.charts_cache', charts_cycle, chart_type, chart).to_s, response.body)
+        end
+
+        return chart_path
+      end
     end
 
     def chart_download_path(chart_type)
