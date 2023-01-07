@@ -38,23 +38,13 @@ module AirportsHelper
   end
 
   def diff(previous, current)
-    return Diffy::SplitDiff.new(sanitize(previous), sanitize(current), format: :html)
+    return Diffy::SplitDiff.new(sanitize(diff_to_s(previous)), sanitize(diff_to_s(current)), format: :html)
   end
 
-  def airport_satellite_image(airport)
-    url = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/static/'
-    image_size = [1000, 1280] # px, width,height
+  def diff_to_s(annotations)
+    return annotations unless annotations.is_a? Array
 
-    # Use the bounding box if we have one, otherwise fallback to a centered image on the airport's location
-    if airport.has_bounding_box?
-      bounding_box = [airport.bbox_sw_longitude, airport.bbox_sw_latitude, airport.bbox_ne_longitude, airport.bbox_ne_latitude]
-      url += "[#{bounding_box.join(',')}]/#{image_size.join('x')}?padding=75&"
-    else
-      # For airport types that don't use a bounding box (heliports for instance) we should zoom in further as they occupy much less space than fixed wing airports
-      zoom_level = (airport.uses_bounding_box? ? 16 : 17)
-      url += "#{airport.longitude},#{airport.latitude},#{zoom_level}/#{image_size.join('x')}?"
-    end
-
-    return url + "access_token=#{Rails.application.credentials.mapbox_api_key}"
+    # Annotations are stored as JSONB arrays so we need to convert them to a string before passing them into the diff generator
+    return annotations.map {|annotation| "#{annotation['label']}: (#{annotation['latitude']}, #{annotation['longitude']})"}.join("\n")
   end
 end

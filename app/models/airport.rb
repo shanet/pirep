@@ -112,6 +112,7 @@ class Airport < ApplicationRecord
     landing_rights: 'Landing rights',
     landing_requirements: 'Landing requirements',
     cover_image: 'Theme',
+    annotations: 'Annotations',
   }.merge(TEXTAREA_EDITABLE_COLUMNS)
 
   # Only create versions when there's a change to one of the columns listed above

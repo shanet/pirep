@@ -47,12 +47,12 @@ class MapTest < ApplicationSystemTestCase
 
   # The login drawer should be open by default when the `#login` anchor is present in the URL
   test 'opens login drawer' do
-    visit map_path(anchor: :login)
+    visit map_path(params: {drawer: :login})
     assert_selector '#login-tabs'
   end
 
   test 'opens about drawer' do
-    visit map_path(anchor: :about)
+    visit map_path(params: {drawer: :about})
     assert_selector '#about'
   end
 
@@ -253,6 +253,29 @@ class MapTest < ApplicationSystemTestCase
       click_on 'Submit'
       assert_equal airport_path(Airport.last.code), current_path, 'Not redirected to new airport on form submit'
     end
+  end
+
+  test 'displays annotations for airport' do
+    # Create another airport with annotations to ensure only one airport's annotations are shown, but far enough away that it won't be in the same viewport and still be displayed
+    create(:airport, latitude: @airport.latitude + 10, longitude: @airport.longitude + 10)
+
+    visit map_path
+    wait_for_map_ready
+
+    # There should be no annotations on the map when first loaded zoomed out
+    assert_no_selector '.annotation'
+
+    open_airport(@airport)
+    click_on 'Zoom In'
+    assert_selector '.annotation', count: @airport.annotations.count
+
+    # Clicking on an annotation label should not enter editing mode
+    first('.annotation .label').click
+    assert_no_selector '.annotation.editing'
+
+    # Zooming out should remove the annotations
+    click_on 'Zoom Out'
+    assert_no_selector '.annotation'
   end
 
 private

@@ -23,7 +23,7 @@
       <div>
         <% if current_page?(action: :show) %>
           <%# If we're given a referrer from the map, use the history API to return back to that page as it will include the full query string with the map state %>
-          <% map_link = (request.referer && URI(request.referer).path == root_path ? '' : root_path(airport: @airport.code)) %>
+          <% map_link = (request.referer && URI(request.referer).path == root_path ? '' : root_path(airport: @airport.code, zoom: 9)) %>
           <%= link_to '<i class="fa-solid fa-chevron-left me-1"></i>Map'.html_safe, map_link, id: 'map-back', class: "btn btn-sm btn-outline-#{cover_image ? 'light' : 'dark'}" %>
         <% end %>
       </div>

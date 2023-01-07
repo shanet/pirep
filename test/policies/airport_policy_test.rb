@@ -5,7 +5,7 @@ class AirportPolicyTest < PolicyTest
     @airport = create(:airport)
   end
 
-  ['index', 'show', 'search', 'history', 'preview'].each do |action|
+  ['index', 'show', 'search', 'history', 'preview', 'annotations'].each do |action|
     test action do
       assert_allows_all @airport, action
     end

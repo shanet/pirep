@@ -1,6 +1,7 @@
 import 'mapbox-gl';
 
 import * as actionButtons from 'map/action_buttons';
+import * as annotationFactory from 'shared/annotation_factory';
 import * as drawer from 'map/drawer';
 import * as filters from 'map/filters';
 import * as flashes from 'map/flashes';
@@ -10,17 +11,25 @@ import * as urlSearchParams from 'map/url_search_params';
 const AIRPORT_LAYER = 'airports';
 const CHART_LAYERS = ['sectional', 'terminal', 'caribbean'];
 
-// Airports currently displayed on the map (with filters applied)
-const displayedAirports = {
-  type: 'FeatureCollection',
-  features: [],
-};
+const DRAWER_WIDTH = 450; // px
 
 let mapElement = null;
 let map = null;
 
 // All airports without filters
 let allAirports = [];
+
+// Airports currently displayed on the map (with filters applied)
+const displayedAirports = {
+  type: 'FeatureCollection',
+  features: [],
+};
+
+// Cache of airport annotations so we don't have to repeatedly fetch them when the map is panned
+const annotationsCache = {};
+
+// Mutex to prevent repeated annotation fetching
+let fetchingAnnotations = false;
 
 document.addEventListener('DOMContentLoaded', () => {
   if(!document.getElementById('map')) return;
@@ -42,30 +51,27 @@ function initMap() {
   const [coordinates, zoomLevel] = initialMapCenter();
 
   map = new mapboxgl.Map({ // eslint-disable-line no-undef
+    attributionControl: false,
     center: coordinates.reverse(),
     container: 'map',
+    hash: true,
+    maxZoom: 18,
+    preserveDrawingBuffer: true,
     style: 'mapbox://styles/mapbox/satellite-streets-v11',
     zoom: zoomLevel,
-    maxZoom: 18,
-    attributionControl: false,
-    preserveDrawingBuffer: true,
   });
 
   map.addControl(new mapboxgl.AttributionControl(), 'bottom-left'); // eslint-disable-line no-undef
 }
 
 function initialMapCenter() {
-  let coordinates = urlSearchParams.getCoordinates();
-  let zoomLevel = urlSearchParams.getZoomLevel();
+  // If there is a Mapbox hash in the URL don't use the provided initial map center values
+  if(window.location.hash.length > 0) return [[null, null], null];
 
-  // If there were no coordinates in the URL use the geoip lookup value
-  if(!coordinates) {
-    const map = mapElement;
-    coordinates = [map.dataset.centerLatitude, map.dataset.centerLongitude];
-    zoomLevel = map.dataset.zoomLevel;
-  }
-
-  return [coordinates, zoomLevel];
+  return [
+    [mapElement.dataset.centerLatitude, mapElement.dataset.centerLongitude],
+    mapElement.dataset.zoomLevel,
+  ];
 }
 
 function addChartLayersToMap() {
@@ -125,13 +131,33 @@ function addEventHandlersToMap() {
 
   // Update the URL search params after dragging the map with the current position
   map.on('moveend', () => {
-    const center = map.getCenter();
-    urlSearchParams.setCoordinates(center.lat.toFixed(7), center.lng.toFixed(7));
+    fetchAirportAnnotations();
   });
 
-  map.on('zoomend', () => {
-    urlSearchParams.setZoomLevel(map.getZoom().toFixed(5));
+  map.on('move', () => {
+    fetchAirportAnnotations();
   });
+
+  map.on('error', (error) => {
+    // Since the chart layers are not rectangles we can't use a bounding box for them. Instead, the server is configured to return
+    // a 204 response to denote a tile with no content. This is faster than a 404 since Mapbox seems to not try to parse the response
+    // but it does put all of these error messages in the JS console. We can ignore these since they're not actually errors.
+    if(String(error.error).startsWith('Error: Could not load image because of The source image could not be decoded')) return;
+
+    console.error(error); // eslint-disable-line no-console
+  });
+
+  map.on('idle', initialAirportAnnotationsFetch);
+  map.on('sourcedata', exposeObjectsForTesting);
+}
+
+// If the map loads with an airport zoomed in on we need to fetch its annotations but this can only be done once the airports layer
+// is rendered. There's no callback for when a layer is fully rendered so whenever the map becomes idle then we know it's rendered
+// and can fetch any needed annotations. However, we only want to do this for the initial idle event so the event listener can be
+// removed once called.
+function initialAirportAnnotationsFetch() {
+  fetchAirportAnnotations();
+  map.off('idle', initialAirportAnnotationsFetch);
 }
 
 function add3dTerrain() {
@@ -184,7 +210,6 @@ function addAirportsToMap() {
       // The map is fully loaded, start manipulating it
       applyUrlSearchParamsOnMap();
       filterAirportsOnMap();
-      exposeObjectsForTesting();
     });
   });
 }
@@ -224,11 +249,62 @@ export function filterAirportsOnMap() {
   if(layer) layer.setData(displayedAirports);
 }
 
+async function fetchAirportAnnotations() {
+  if(fetchingAnnotations) return;
+
+  // Don't fetch annotations if we're zoomed too far out
+  if(getZoom() < 13) {
+    annotationFactory.removeAllAnnotations();
+    return;
+  }
+
+  // The airport layerr may not be ready yet if the map is panned immediately after loading the page
+  if(!map.getLayer(AIRPORT_LAYER)) return;
+
+  fetchingAnnotations = true;
+
+  const displayedAirports = map.queryRenderedFeatures({layers: [AIRPORT_LAYER]});
+  const requests = [];
+
+  for(let i=0; i<displayedAirports.length; i++) {
+    const airport = displayedAirports[i].properties.code;
+    const {annotationsPath} = mapElement.dataset;
+
+    if(!annotationsCache[airport]) {
+      const request = fetch(annotationsPath.replace('PLACEHOLDER', airport))
+        .then((response) => response.json())
+        .then((json) => {annotationsCache[airport] = json;})
+        .catch(() => {
+          console.error(`An error occurred while retrieving annotations for airport ${airport}.`); // eslint-disable-line no-console
+        });
+
+      requests.push(request);
+    }
+  }
+
+  await Promise.all(requests);
+  annotationFactory.removeAllAnnotations();
+  addAirportAnnotations();
+
+  fetchingAnnotations = false;
+}
+
+async function addAirportAnnotations() {
+  Object.values(annotationsCache).forEach((annotations) => {
+    if(!annotations) return;
+
+    annotations.forEach((annotation) => {
+      annotationFactory.addAnnotationToMap(map, annotation.latitude, annotation.longitude, annotation.label, {editing: false, readOnly: true});
+    });
+  });
+}
+
 function applyUrlSearchParamsOnMap() {
   const airport = urlSearchParams.getAirport();
+  const zoomLevel = urlSearchParams.getZoomLevel();
 
   if(airport) {
-    openAirport(airport);
+    openAirport(airport, null, zoomLevel);
   }
 }
 
@@ -243,11 +319,11 @@ export function areSectionalLayersShown() {
   return (map.getPaintProperty('sectional', 'raster-opacity') === 1);
 }
 
-export function openAirport(airportCode, boundingBox) {
+export function openAirport(airportCode, boundingBox, zoomLevel) {
   // Find the feature for the given airport code
   for(let i = 0; i < allAirports.length; i++) {
     if(allAirports[i].properties.code === airportCode) {
-      openAirportFeature(allAirports[i], boundingBox);
+      openAirportFeature(allAirports[i], boundingBox, zoomLevel);
       break;
     }
   }
@@ -258,14 +334,16 @@ export function closeAirport() {
   setAirportMarkerSelected('');
 }
 
-function openAirportFeature(airport, boundingBox) {
+function openAirportFeature(airport, boundingBox, zoomLevel) {
   // Set the airport's marker as selected
   setAirportMarkerSelected(airport.id);
 
   if(boundingBox) {
     map.fitBounds(boundingBox, {padding: 100});
   } else {
-    map.flyTo({center: airport.geometry.coordinates, padding: {right: 500}});
+    const options = {center: airport.geometry.coordinates, padding: {right: DRAWER_WIDTH}};
+    if(zoomLevel) options.zoom = zoomLevel;
+    map.flyTo(options);
   }
 
   // Open the drawer for the clicked airport
@@ -312,9 +390,12 @@ export function getCenter() {
   return Object.values(map.getCenter()).reverse();
 }
 
-function exposeObjectsForTesting() {
+function exposeObjectsForTesting(event) {
   // Don't expose anything if not running tests
   if(!mapElement.dataset.isTest) return;
+
+  // This function is called by a `sourcedata` event. We only want to consider events that involve the airport layer being rendered.
+  if(event.sourceId !== AIRPORT_LAYER) return;
 
   // This is yucky, but we need the map object at global scope so we can access it in Capybara tests
   window.mapbox = map;

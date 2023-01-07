@@ -1,4 +1,5 @@
-<% show_limit = 8 %>
+<%# Airports with diagrams typically have a bunch of remarks that we can collapse to save space %>
+<% show_limit = (@airport.diagram ? 5 : 8) %>
 
 <% if @airport.remarks.any? %>
   <div class="card my-3">

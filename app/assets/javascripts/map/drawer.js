@@ -3,6 +3,7 @@ import * as drawerLogin from 'map/drawer_login';
 import * as drawerNewAirport from 'map/drawer_new_airport';
 import * as drawerShowAirport from 'map/drawer_show_airport';
 import * as map from 'map/map';
+import * as urlSearchParams from 'map/url_search_params';
 
 export const DRAWER_ABOUT = 'about';
 export const DRAWER_LOGIN = 'login';
@@ -20,9 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Open the drawer by default if an anchor is present
-  const anchor = new URL(window.location).hash.slice(1);
-  if([DRAWER_ABOUT, DRAWER_LOGIN, DRAWER_NEW_AIRPORT].indexOf(anchor) !== -1) {
-    loadDrawer(anchor);
+  const drawer = urlSearchParams.getDrawer();
+  if([DRAWER_ABOUT, DRAWER_LOGIN, DRAWER_NEW_AIRPORT].indexOf(drawer) !== -1) {
+    loadDrawer(drawer);
     openDrawer(true);
   }
 }, {once: true});
