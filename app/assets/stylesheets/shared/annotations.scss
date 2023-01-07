@@ -1,0 +1,39 @@
+#map,
+#airport-map {
+  .mapboxgl-marker:hover {
+    cursor: auto;
+  }
+
+  &.editing .annotation .label:hover {
+    cursor: pointer;
+  }
+}
+
+// Hide the little arrow Mapbox adds to popups
+.mapboxgl-popup-tip {
+  display: none;
+}
+
+.mapboxgl-popup-content {
+  background: none;
+  box-shadow: none;
+  max-width: 200px;
+  padding: 0;
+  text-align: center;
+}
+
+.annotation {
+  .label {
+    background: rgba(0, 0, 0, .5);
+    text-overflow: ellipsis;
+  }
+
+  // Don't display the label when the annotation is in editing mode and vice versa for the input group
+  &.editing .label {
+    display: none;
+  }
+
+  &:not(.editing) .input-group {
+    display: none;
+  }
+}

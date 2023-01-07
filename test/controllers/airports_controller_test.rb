@@ -178,4 +178,10 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
       assert_equal original_description, @airport.reload.description, 'Airport not reverted to previous version'
     end
   end
+
+  test 'annotations' do
+    get annotations_airport_path(@airport)
+    assert_response :success, 'Failed to get airport annotations'
+    assert_equal @airport.annotations.length, JSON.parse(response.body).size, 'Incorrect number of annotations returned'
+  end
 end

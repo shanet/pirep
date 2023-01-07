@@ -4,6 +4,7 @@ class AirportsController < ApplicationController
   layout 'blank'
 
   before_action :set_airport, only: [:update, :history]
+  before_action :set_airport_by_code, only: [:show, :annotations]
 
   def index
     authorize :airport, :index?
@@ -37,9 +38,6 @@ class AirportsController < ApplicationController
   end
 
   def show
-    @airport = Airport.find_by(code: params[:id].upcase) || Airport.find_by(code: params[:id].upcase.gsub(/^K/, '')) || Airport.find(params[:id])
-    authorize @airport
-
     return not_found(request.format.symbol) unless @airport
   end
 
@@ -91,10 +89,21 @@ class AirportsController < ApplicationController
     end
   end
 
+  def annotations
+    return not_found unless @airport
+
+    render json: @airport.annotations
+  end
+
 private
 
   def set_airport
     @airport = Airport.find(params[:id])
+    authorize @airport
+  end
+
+  def set_airport_by_code
+    @airport = Airport.find_by(code: params[:id].upcase) || Airport.find_by(code: params[:id].upcase.gsub(/^K/, '')) || Airport.find(params[:id])
     authorize @airport
   end
 

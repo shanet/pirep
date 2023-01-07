@@ -28,6 +28,10 @@
   &.cover-image-town { background-image: url('town.jpg'); }
 }
 
+#airport_cover_image { // stylelint-disable-line selector-id-pattern
+  background-color: rgba(0, 0, 0, .35);
+}
+
 .airport-subheader > .container {
   row-gap: $spacer;
 

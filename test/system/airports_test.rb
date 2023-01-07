@@ -46,6 +46,9 @@ class AirportsTest < ApplicationSystemTestCase
     actual_photo_path = URI.parse(find('.photo-gallery img')[:src]).path
     assert_equal expected_photo_path, actual_photo_path
 
+    # Has airport map
+    assert_selector '#airport-map'
+
     # Has airport diagram
     assert find('.airport-diagram img')[:src].present?
 

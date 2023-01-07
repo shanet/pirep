@@ -21,23 +21,8 @@ class AirportsHelperTest < ActionView::TestCase
     end
   end
 
-  test 'static image for bounding box airport' do
-    airport = create(:airport)
-    bounding_box = [airport.bbox_sw_longitude, airport.bbox_sw_latitude, airport.bbox_ne_longitude, airport.bbox_ne_latitude].join(',')
-
-    url = airport_satellite_image(airport)
-    assert bounding_box.in?(url), 'Bounding box for airport not in satellite image URL'
-  end
-
-  test 'static image for non-bounding box airport' do
-    airport = create(:airport, :no_bounding_box)
-    url = airport_satellite_image(airport)
-    assert [airport.longitude, airport.latitude, 16].join(',').in?(url), 'Center coordinates/zoom level for airport not in satellite image URL'
-  end
-
-  test 'static image for heliport' do
-    airport = create(:airport, facility_type: 'heliport')
-    url = airport_satellite_image(airport)
-    assert [airport.longitude, airport.latitude, 17].join(',').in?(url), 'Center coordinates/zoom level for heliport not in satellite image URL'
+  test 'diffs strings and arrays' do
+    assert diff('foo', 'bar').left, 'Handled diff of strings'
+    assert diff([{label: 'foo', latitude: 0, longitude: 0}], [{label: 'bar', latitude: 0, longitude: 0}]).left, 'Handled diff of annotations'
   end
 end

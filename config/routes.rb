@@ -47,6 +47,7 @@ Rails.application.routes.draw do
       get 'history', as: :history
       get 'preview/:version_id', action: :preview, as: :preview
       patch 'revert/:version_id', action: :revert, as: :revert
+      get 'annotations', as: :annotations
     end
   end
 

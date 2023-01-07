@@ -1,8 +1,8 @@
 const AIRPORT_KEY = 'airport';
-const COORDINATES_KEY = 'coordinates';
-const ZOOM_LEVEL_KEY = 'zoom';
-const LAYER_KEY = 'layer';
+const DRAWER_KEY = 'drawer';
 const FILTERS_KEY = 'filters';
+const LAYER_KEY = 'layer';
+const ZOOM_LEVEL_KEY = 'zoom';
 
 export function getAirport() {
   return normalizeAirportCode(searchParams().get(AIRPORT_KEY));
@@ -14,17 +14,6 @@ export function setAirport(airportCode) {
 
 export function clearAirport() {
   updateUrl(AIRPORT_KEY, null);
-}
-
-export function getCoordinates() {
-  const coordinates = searchParams().get(COORDINATES_KEY);
-  if(!coordinates) return coordinates;
-
-  return coordinates.split(',');
-}
-
-export function setCoordinates(latitude, longitude) {
-  updateUrl(COORDINATES_KEY, `${latitude},${longitude}`);
 }
 
 export function getZoomLevel() {
@@ -41,6 +30,10 @@ export function getLayer() {
 
 export function setLayer(layer) {
   updateUrl(LAYER_KEY, layer);
+}
+
+export function getDrawer() {
+  return searchParams().get(DRAWER_KEY);
 }
 
 export function clearLayer() {
@@ -90,7 +83,7 @@ function updateUrl(key, value) {
     params.set(key, value);
   }
 
-  window.history.replaceState({}, '', `/?${params}`);
+  window.history.replaceState({}, '', `/?${params}${window.location.hash}`);
 }
 
 function searchParams() {

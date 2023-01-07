@@ -11,9 +11,9 @@ $fa-font-path: 'assets';
 
 @import 'themes';
 
-@import 'airports/diagram';
 @import 'airports/history';
 @import 'airports/landing_rights';
+@import 'airports/map';
 @import 'airports/show';
 @import 'airports/statistics';
 @import 'airports/tags';
@@ -31,5 +31,6 @@ $fa-font-path: 'assets';
 @import 'map/map';
 @import 'map/search';
 
+@import 'shared/annotations';
 @import 'shared/collapsible';
 @import 'shared/photo_gallery';

@@ -34,4 +34,8 @@ class AirportPolicy < ApplicationPolicy
   def revert?
     return admin?
   end
+
+  def annotations?
+    return true
+  end
 end

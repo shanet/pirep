@@ -1,0 +1,44 @@
+#airport-map-wrapper {
+  position: relative;
+
+  #annotations-help {
+    background: rgba(0, 0, 0, .5);
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+  }
+}
+
+#airport-map {
+  height: 700px;
+  width: 100%;
+
+  &.editing {
+    .mapboxgl-canvas:hover {
+      cursor: pointer;
+    }
+
+    .mapboxgl-marker {
+      &:hover {
+        cursor: grab;
+      }
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      svg.editing {
+        animation: jiggle .15s infinite alternate;
+      }
+    }
+  }
+
+  canvas:hover {
+    cursor: auto;
+  }
+}
+
+@keyframes jiggle {
+  from { transform: rotate(-4deg); }
+  to { transform: rotate(4deg); }
+}
