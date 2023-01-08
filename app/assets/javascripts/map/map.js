@@ -100,7 +100,7 @@ function addChartLayersToMap() {
 
 function addEventHandlersToMap() {
   map.on('click', (event) => {
-    if(!mapElement.classList.contains('editing')) return;
+    if(!mapElement.classList.contains('adding')) return;
 
     flyTo(event.lngLat.lat, event.lngLat.lng, 16);
     const elevation = map.queryTerrainElevation([event.lngLat.lng, event.lngLat.lat]);
@@ -110,7 +110,7 @@ function addEventHandlersToMap() {
   // Open the drawer for an airport when its marker is clicked or close if the already open airport is clicked
   map.on('click', AIRPORT_LAYER, (event) => {
     // Don't do anything if a new airport is being added
-    if(mapElement.classList.contains('editing')) return;
+    if(mapElement.classList.contains('adding')) return;
 
     if(event.features[0].id === getSelectedAirportMarker()) {
       drawer.closeDrawer();
@@ -380,6 +380,14 @@ export function flyTo(latitude, longitude, zoom) {
 
 export function fitBounds(boundingBox, padding) {
   map.fitBounds(boundingBox, {padding: padding || 0});
+}
+
+export function set3dPitch() {
+  map.easeTo({pitch: 45}, {duration: 500}); // ms
+}
+
+export function resetCamera() {
+  map.easeTo({bearing: 0, pitch: 0}, {duration: 500}); // ms
 }
 
 export function getZoom() {

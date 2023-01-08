@@ -8,6 +8,7 @@ export const LAYER_MAP = 'map';
 document.addEventListener('DOMContentLoaded', () => {
   initLayerSwitcher();
   initNewAirport();
+  initMapPitchButton();
 }, {once: true});
 
 function initLayerSwitcher() {
@@ -55,4 +56,20 @@ export function updateLayerSwitcherIcon(shownIcon) {
     satelliteIcon.classList.add('d-none');
     mapIcon.classList.remove('d-none');
   }
+}
+
+function initMapPitchButton() {
+  const button = document.getElementById('map-pitch-button');
+
+  button.addEventListener('click', () => {
+    if(button.dataset.state === '2d') {
+      map.set3dPitch();
+      button.dataset.state = '3d';
+      button.innerText = '2D';
+    } else {
+      map.resetCamera();
+      button.dataset.state = '2d';
+      button.innerText = '3D';
+    }
+  });
 }

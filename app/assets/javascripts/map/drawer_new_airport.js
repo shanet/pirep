@@ -2,6 +2,7 @@ import * as flashes from 'map/flashes';
 import * as landingRights from 'airports/landing_rights';
 import * as map from 'map/map';
 
+const NEW_AIRPORT_LAYER = 'new_airport';
 const DRAWER_CONTENT_ID = 'drawer-new-airport';
 
 export async function loadDrawer() {
@@ -20,9 +21,9 @@ export async function loadDrawer() {
 }
 
 export function initializeDrawer() {
-  // Put the map into editing mode when the select coordinates button is clicked so a crosshair cursor is shown
+  // Put the map into adding mode when the select coordinates button is clicked so a crosshair cursor is shown
   document.querySelector('#new-airport .select-coordinates').addEventListener('click', () => {
-    document.getElementById('map').classList.add('editing');
+    document.getElementById('map').classList.add('adding');
     flashes.show(flashes.FLASH_NOTICE, 'Select the center of the airport on the map.');
   });
 
@@ -48,17 +49,16 @@ export function locationSelected(latitude, longitude, elevation) {
   document.querySelector('#new-airport #airport_longitude').value = longitude;
   document.querySelector('#new-airport #airport_elevation').value = elevationFeet;
 
-  // Take the map out of editing mode so clicking again doesn't change the location
-  document.getElementById('map').classList.remove('editing');
+  // Take the map out of adding mode so clicking again doesn't change the location
+  document.getElementById('map').classList.remove('adding');
 
   // Add a temporary pin for the new airport
-  const layerId = 'new_airport';
   const airportId = -1;
 
   // Remove the existing pin if one was already added to the map
-  map.removeLayer(layerId);
+  removeNewAirportLayer();
 
-  map.addAirportToMap(layerId, {
+  map.addAirportToMap(NEW_AIRPORT_LAYER, {
     id: airportId,
     type: 'Feature',
     geometry: {
@@ -67,5 +67,12 @@ export function locationSelected(latitude, longitude, elevation) {
     },
   });
 
-  map.setAirportMarkerSelected(airportId, layerId);
+  map.setAirportMarkerSelected(airportId, NEW_AIRPORT_LAYER);
+
+  // Give focus to the name field now that a location is selected
+  document.getElementById('airport_name').focus();
+}
+
+export function removeNewAirportLayer() {
+  map.removeLayer(NEW_AIRPORT_LAYER);
 }

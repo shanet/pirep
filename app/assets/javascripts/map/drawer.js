@@ -85,6 +85,9 @@ export function closeDrawer() {
   const grid = document.getElementById('grid');
   grid.classList.remove('slide-in-drawer', 'slide-in-drawer-instant');
   grid.classList.add('slide-out-drawer');
+
+  // If a new airport was being added but the drawer is closed remove the marker to clear it
+  drawerNewAirport.removeNewAirportLayer();
 }
 
 export function isDrawerOpen() {
