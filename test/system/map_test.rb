@@ -278,6 +278,21 @@ class MapTest < ApplicationSystemTestCase
     assert_no_selector '.annotation'
   end
 
+  test 'enters 3D mode' do
+    visit map_path
+    wait_for_map_ready
+
+    assert_selector '#map-pitch-button', text: '3D'
+
+    find('#map-pitch-button').click
+    assert_selector '#map-pitch-button', text: '2D'
+    assert_equal 45, map_pitch, 'Map not in 3D mode'
+
+    find('#map-pitch-button').click
+    assert_selector '#map-pitch-button', text: '3D'
+    assert_equal 0, map_pitch, 'Map pitch not reset'
+  end
+
 private
 
   def open_airport(airport)
@@ -310,6 +325,10 @@ private
 
   def map_zoom_level
     return evaluate_script('mapbox.getZoom()')
+  end
+
+  def map_pitch
+    return evaluate_script('mapbox.getPitch()')
   end
 
   def map_location
