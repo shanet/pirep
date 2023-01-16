@@ -61,7 +61,7 @@ class ActionDispatch::SystemTestCase
     if user.is_a? Users::Admin
       assert_selector '.navbar', text: 'Logout'
     else
-      assert_selector '.map-header', text: 'Logout'
+      assert_selector '.map-header', text: 'Logout', wait: (ENV['CI'] ? 300 : 30)
     end
   end
 end

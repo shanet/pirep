@@ -20,7 +20,7 @@ function initMap() {
   const mapOptions = {
     container: 'airport-map',
     dragPan: false,
-    minZoom: 13,
+    minZoom: 12,
     style: 'mapbox://styles/mapbox/satellite-streets-v11',
   };
 

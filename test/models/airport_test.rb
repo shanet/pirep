@@ -62,7 +62,7 @@ class AirportTest < ActiveSupport::TestCase
     airport = create(:airport, :empty)
     assert airport.empty?, 'Airport empty with associated non-user addable tag'
 
-    airport.tags << create(:tag, airport: airport)
+    airport.tags << create(:tag, name: :food, airport: airport)
     assert_not airport.empty?, 'Airport empty with associated user addable tag'
   end
 

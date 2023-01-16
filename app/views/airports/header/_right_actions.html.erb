@@ -1,0 +1,31 @@
+<% unless hide_cover_image_dropdown %>
+  <div class="cover-image-dropdown">
+    <button class="dropdown-toggle btn btn-sm btn-outline-<%= color %>" type="button"><i class="fa-solid fa-brush me-1"></i>Theme</button>
+
+    <ul class="dropdown-menu d-none list-group p-0">
+      <% Airport::COVER_IMAGES.each do |cover_image, label| %>
+        <% active = @airport.cover_image == cover_image.to_s %>
+
+        <li class="list-group-item list-group-item-action <%= active ? 'active' : '' %>">
+          <a href="#" class="text-decoration-none <%= active ? 'text-light' : 'text-dark' %>" data-cover-image="<%= cover_image %>">
+            <%= label %><% if active %><i class="fa-solid fa-check ms-1"></i><% end %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+
+    <%= form_with model: @airport, local: false do |form| %>
+      <%= form.hidden_field :cover_image, id: '' %>
+    <% end %>
+  </div>
+<% end %>
+
+<% unless current_page?(action: :history) %>
+  <%= link_to '<i class="fas fa-clock-rotate-left me-1"></i>History'.html_safe, history_airport_path(@airport), class: "btn btn-sm btn-outline-#{color}" %>
+<% end %>
+
+<% if user_signed_in? %>
+  <%= link_to '<i class="fas fa-right-from-bracket me-1"></i>Logout'.html_safe, destroy_user_session_path, method: :delete, class: "btn btn-sm btn-outline-#{color}" %>
+<% else %>
+  <%= link_to '<i class="fas fa-right-to-bracket me-1"></i>Log In'.html_safe, new_user_session_path, class: "btn btn-sm btn-outline-#{color}" %>
+<% end %>

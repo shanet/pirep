@@ -9,10 +9,25 @@ class Tag < ApplicationRecord
   has_paper_trail meta: {airport_id: :airport_id}
 
   TAGS = {
+    public_: {
+      label: 'Public',
+      icon: 'lock-open',
+      theme: 'green',
+    },
+    private_: {
+      label: 'Private',
+      icon: 'lock',
+      theme: 'red',
+    },
+    unmapped: {
+      label: 'Unmapped',
+      icon: 'map-marked-alt',
+      theme: 'blue-grey',
+    },
     food: {
       label: 'Food',
       icon: 'hamburger',
-      theme: 'red',
+      theme: 'deep-orange',
       addable: true,
     },
     camping: {
@@ -68,21 +83,6 @@ class Tag < ApplicationRecord
       icon: 'landmark',
       theme: 'indigo',
       addable: true,
-    },
-    unmapped: {
-      label: 'Unmapped',
-      icon: 'map-marked-alt',
-      theme: 'blue-grey',
-    },
-    public_: {
-      label: 'Public',
-      icon: 'lock-open',
-      theme: 'teal',
-    },
-    private_: {
-      label: 'Private',
-      icon: 'lock',
-      theme: 'deep-orange',
     },
     closed: {
       label: 'Closed',

@@ -1,0 +1,7 @@
+<%# If we're given a referrer from the map, use the history API to return back to that page as it will include the full query string with the map state %>
+<% map_link = (request.referer && URI(request.referer).path == root_path ? '' : root_path(airport: @airport.code, zoom: 9)) %>
+<%= link_to '<i class="fa-solid fa-chevron-left me-1"></i>Map'.html_safe, map_link, class: "map-back btn btn-sm btn-outline-#{color}" %>
+
+<% if Manage::AirportPolicy.new(current_user, @airport).show? %>
+  <%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_airport_path(@airport), class: "btn btn-sm btn-outline-#{color}" %>
+<% end %>

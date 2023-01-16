@@ -31,7 +31,7 @@ class Airport < ApplicationRecord
       theme: 'blue',
     },
     military: {
-      label: 'Military',
+      label: 'Military Bases',
       icon: 'crosshairs',
       theme: 'red',
     },
@@ -126,6 +126,7 @@ class Airport < ApplicationRecord
   validates :facility_type, inclusion: {in: FACILITY_TYPES.keys.map(&:to_s)}
   validates :facility_use, inclusion: {in: FACILITY_USES.keys.map(&:to_s)}
   validates :ownership_type, inclusion: {in: OWNERSHIP_TYPES.keys.map(&:to_s)}
+  validates :cover_image, inclusion: {in: COVER_IMAGES.keys.map(&:to_s)}
   validates :state, length: {is: 2}, if: -> {state.present?}
 
   enum facility_type: FACILITY_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
@@ -258,6 +259,10 @@ class Airport < ApplicationRecord
 
   def bounding_box
     return (has_bounding_box? ? [[bbox_sw_longitude, bbox_sw_latitude], [bbox_ne_longitude, bbox_ne_latitude]] : nil)
+  end
+
+  def zoom_level
+    return (uses_bounding_box? ? 16 : 17)
   end
 
   def landing_rights

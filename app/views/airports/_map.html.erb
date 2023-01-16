@@ -16,7 +16,7 @@
     data-center-longitude="<%= @airport.longitude %>"
     data-mapbox-api-key="<%= Rails.application.credentials.mapbox_api_key %>"
     data-annotations="<%= (@airport.annotations || []).to_json %>"
-    data-zoom-level="<%= @airport.uses_bounding_box? ? 16 : 17 %>"></div>
+    data-zoom-level="<%= @airport.zoom_level %>"></div>
 </div>
 
 <%= form_with model: @airport, local: false do |form| %>

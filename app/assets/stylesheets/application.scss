@@ -1,5 +1,5 @@
-// Tell FontAwesome to look under /assets for its font files
-$fa-font-path: 'assets';
+// Load variables first to ensure customizations to Bootstrap and other third party frameworks are picked up
+@import 'variables';
 
 // These paths for vendor stylesheets are relative to vendor/ (which are then symlinks to node_modules/)
 @import 'bootstrap/bootstrap';
@@ -27,10 +27,12 @@ $fa-font-path: 'assets';
 @import 'map/drawer';
 @import 'map/filters';
 @import 'map/flashes';
+@import 'map/hamburger';
 @import 'map/header';
 @import 'map/map';
 @import 'map/search';
 
 @import 'shared/annotations';
+@import 'shared/breakpoints';
 @import 'shared/collapsible';
 @import 'shared/photo_gallery';

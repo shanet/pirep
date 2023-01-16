@@ -1,7 +1,7 @@
-@import 'drawer';
+@import 'variables';
 
 $animation-duration: 1s;
-$drawer-translate-length: calc(100% - (#{$drawer-width} + #{$handle-size}));
+$drawer-translate-length: calc(100% - (#{$drawer-width} + #{$handle-size} / 2));
 
 #controls {
   height: 100vh;
@@ -22,18 +22,20 @@ $drawer-translate-length: calc(100% - (#{$drawer-width} + #{$handle-size}));
     vertical-align: top;
     width: 100%;
 
-    // The drawer slides in by shrinking the width of the grid container
-    &.slide-in-drawer {
-      animation: slide-in-drawer $animation-duration forwards;
-    }
+    @include media-breakpoint-up(lg) {
+      // The drawer slides in by shrinking the width of the grid container
+      &.slide-in-drawer {
+        animation: slide-in-drawer-xlarge $animation-duration forwards;
+      }
 
-    // Provide an option to show the drawer immediately (useful for default drawer opens on page load)
-    &.slide-in-drawer-instant {
-      animation: slide-in-drawer 0s forwards;
-    }
+      // Provide an option to show the drawer immediately (useful for default drawer opens on page load)
+      &.slide-in-drawer-instant {
+        animation: slide-in-drawer-xlarge 0s forwards;
+      }
 
-    &.slide-out-drawer {
-      animation: slide-out-drawer $animation-duration forwards;
+      &.slide-out-drawer {
+        animation: slide-out-drawer-xlarge $animation-duration forwards;
+      }
     }
 
     > div:first-child {
@@ -44,8 +46,17 @@ $drawer-translate-length: calc(100% - (#{$drawer-width} + #{$handle-size}));
         'filters action-buttons action-buttons';
       grid-template-columns: 1fr auto 1fr;
       grid-template-rows: auto 1fr;
-      height: 100%;
+      height: 100vh;
       width: 100%;
+
+      @include media-breakpoint-down(md) {
+        grid-template-areas:
+          'header'
+          'flashes'
+          'footer';
+        grid-template-columns: auto;
+        grid-template-rows: 20% auto;
+      }
 
       > div * {
         pointer-events: auto;
@@ -53,19 +64,23 @@ $drawer-translate-length: calc(100% - (#{$drawer-width} + #{$handle-size}));
       }
 
       .map-header {
-        display: flex;
-        flex-wrap: wrap;
         grid-area: header;
-        justify-content: space-between;
       }
 
       .filters {
         grid-area: filters;
+
+        @include media-breakpoint-down(md) {
+          grid-area: footer;
+        }
       }
 
       .flashes {
         grid-area: flashes;
-        margin-top: 40%;
+
+        @include media-breakpoint-up(md) {
+          margin-top: 40%;
+        }
       }
 
       .action-buttons {
@@ -73,27 +88,21 @@ $drawer-translate-length: calc(100% - (#{$drawer-width} + #{$handle-size}));
         display: flex;
         grid-area: action-buttons;
         justify-content: flex-end;
+
+        @include media-breakpoint-down(md) {
+          grid-area: footer;
+        }
       }
     }
   }
 }
 
-@keyframes slide-in-drawer {
-  from {
-    width: 100%;
-  }
-
-  to {
-    width: $drawer-translate-length;
-  }
+@keyframes slide-in-drawer-xlarge {
+  from { width: 100%; }
+  to { width: $drawer-translate-length; }
 }
 
-@keyframes slide-out-drawer {
-  from {
-    width: $drawer-translate-length;
-  }
-
-  to {
-    width: 100%;
-  }
+@keyframes slide-out-drawer-xlarge {
+  from { width: $drawer-translate-length; }
+  to { width: 100%; }
 }

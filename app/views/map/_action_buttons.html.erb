@@ -1,14 +1,18 @@
-<div id="action-buttons">
-  <div id="map-pitch-button" class="d-flex justify-content-center align-items-center mb-2 theme-purple" data-state="2d">
+<div id="action-buttons" class="d-flex flex-column">
+  <button id="filters-button" type="button" class="btn btn-light mb-2 d-md-none">
+    <i class="fas fa-filter"></i>
+  </button>
+
+  <button id="map-pitch-button" type="button" class="btn btn-light mb-2" data-state="2d">
     3D
-  </div>
+  </button>
 
-  <div id="new-airport-button" class="d-flex justify-content-center align-items-center mb-2 theme-green">
-    <i class="fas fa-plus"></i>
-  </div>
-
-  <div id="layer-switcher" class="d-flex justify-content-center align-items-center theme-blue">
+  <button id="layer-switcher" type="button" class="btn btn-light mb-2">
     <i class="satellite-icon fas fa-satellite"></i>
     <i class="map-icon fas fa-map d-none"></i>
-  </div>
+  </button>
+
+  <button id="new-airport-button" type="button" class="btn btn-light">
+    <i class="fas fa-plus"></i>
+  </button>
 </div>

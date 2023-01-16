@@ -15,7 +15,7 @@
         data-bounding-box="<%= @airport.bounding_box.to_json %>"
         data-latitude="<%= @airport.latitude %>"
         data-longitude="<%= @airport.longitude %>"
-        data-zoom-level="<%= @airport.uses_bounding_box? ? 16 : 17 %>">Zoom In</button>
+        data-zoom-level="<%= @airport.zoom_level %>">Zoom In</button>
     </div>
   </div>
 </div>

@@ -1,7 +1,8 @@
 import * as map from 'map/map';
 import * as urlSearchParams from 'map/url_search_params';
+import * as utils from 'map/utils';
 
-const FILTER_GROUP_HOVER_TEXT = ' (remove all)';
+const FILTER_GROUP_HOVER_TEXT = ' (clear all)';
 
 const enabledFilters = {};
 const filterLabels = {};
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFilterLabels();
   initFilterGroupLabels();
   initFilters();
+  initFiltersDrawer();
 }, {once: true});
 
 function initFilters() {
@@ -57,7 +59,15 @@ function enableFilter(filter) {
 
   enabledFilters[filterGroup].add(filterName);
 
-  filter.classList.remove('disabled');
+  // Enable all filter elements for the selected filter group/name
+  // There are multiple filter elements for the responsive elements on the page
+  const filters = document.querySelectorAll(`.filter[data-filter-group="${filterGroup}"][data-filter-name="${filterName}"]`);
+
+  for(let i=0; i<filters.length; i++) {
+    filters[i].classList.remove('disabled');
+  }
+
+  // Also enable the filter label (there are only one of these)
   filterLabel.classList.remove('disabled');
 
   urlSearchParams.addFilter(filterGroup, filterName);
@@ -69,14 +79,19 @@ function disableFilter(filter) {
 
   enabledFilters[filterGroup].delete(filterName);
 
-  filter.classList.add('disabled');
+  const filters = document.querySelectorAll(`.filter[data-filter-group="${filterGroup}"][data-filter-name="${filterName}"]`);
+
+  for(let i=0; i<filters.length; i++) {
+    filters[i].classList.add('disabled');
+  }
+
   filterLabel.classList.add('disabled');
 
   urlSearchParams.removeFilter(filterGroup, filterName);
 }
 
 function initFilterGroupLabels() {
-  const filterGroups = document.getElementsByClassName('filter-group');
+  const filterGroups = document.querySelectorAll('#filters .filter-group');
 
   for(let i=0; i<filterGroups.length; i++) {
     const filterGroup = filterGroups[i];
@@ -123,7 +138,7 @@ function hideFilterGroupHoverText(filterLabel) {
 }
 
 function initFilterLabels() {
-  const filters = document.getElementsByClassName('filter');
+  const filters = document.querySelectorAll('#filters .filter');
 
   for(let i=0; i<filters.length; i++) {
     initFilterLabel(filters[i]);
@@ -152,11 +167,17 @@ function initFilterLabel(filter) {
   filterLabels[filter.dataset.filterName] = {filter, filterLabel};
 
   // Clicking on a filter label should apply the filter
-  filterLabel.addEventListener('click', () => {filter.click();});
+  filterLabel.addEventListener('click', () => {
+    filter.click();
+  });
 
   // Change the color of the filter as well when hovering over the filter label
   filterLabel.addEventListener('mouseenter', () => {filter.classList.add('hover');});
   filterLabel.addEventListener('mouseleave', () => {filter.classList.remove('hover');});
+
+  // Add the filters to the DOM and trigger an update event so they're rendered next to their respective icons
+  filter.parentNode.appendChild(filterLabel);
+  updateFilterLabel(filterLabel, filter);
 
   return filterLabel;
 }
@@ -165,15 +186,11 @@ function createFilterLabel(filter) {
   const filterLabel = document.createElement('div');
   const filterLabelSpan = document.createElement('span');
 
-  filterLabel.classList.add(...['filter-label', `theme-${filter.dataset.theme}`]);
+  filterLabel.classList.add(...['filter-label', `theme-${filter.dataset.theme}`, 'd-none', 'd-md-block']);
   filterLabelSpan.appendChild(document.createTextNode(filter.dataset.label));
   filterLabel.appendChild(filterLabelSpan);
 
-  document.body.appendChild(filterLabel);
-  updateFilterLabel(filterLabel, filter);
-
   // Scroll the nav bar when scrolling on the filter labels
-  // It would be really nice to make this a smooth scroll, but I can't find a way to make that work nicely :(
   filterLabel.addEventListener('wheel', async (event) => {
     document.querySelector('#filters > nav').scrollBy(0, event.deltaY);
   });
@@ -269,4 +286,32 @@ export function showAirport(airport) {
   }
 
   return false;
+}
+
+function initFiltersDrawer() {
+  document.querySelector('#filters-drawer .btn-close')?.addEventListener('click', toggleFiltersDrawer);
+}
+
+export function toggleFiltersDrawer() {
+  const drawer = document.getElementById('filters-drawer');
+
+  if(drawer.style.transform) {
+    closeFiltersDrawer();
+  } else {
+    openFiltersDrawer();
+  }
+}
+
+export function openFiltersDrawer() {
+  const drawer = document.getElementById('filters-drawer');
+
+  utils.closeAllDrawers();
+
+  drawer.style.visibility = 'visible';
+  drawer.style.transform = 'none';
+}
+
+export function closeFiltersDrawer() {
+  const drawer = document.getElementById('filters-drawer');
+  drawer.style.transform = '';
 }

@@ -1,4 +1,5 @@
 import * as drawer from 'map/drawer';
+import * as filters from 'map/filters';
 import * as map from 'map/map';
 import * as urlSearchParams from 'map/url_search_params';
 
@@ -9,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initLayerSwitcher();
   initNewAirport();
   initMapPitchButton();
+  initFiltersButton();
 }, {once: true});
 
 function initLayerSwitcher() {
@@ -60,6 +62,7 @@ export function updateLayerSwitcherIcon(shownIcon) {
 
 function initMapPitchButton() {
   const button = document.getElementById('map-pitch-button');
+  if(!button) return;
 
   button.addEventListener('click', () => {
     if(button.dataset.state === '2d') {
@@ -72,4 +75,8 @@ function initMapPitchButton() {
       button.innerText = '3D';
     }
   });
+}
+
+function initFiltersButton() {
+  document.getElementById('filters-button')?.addEventListener('click', filters.toggleFiltersDrawer);
 }

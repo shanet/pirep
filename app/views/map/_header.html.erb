@@ -1,27 +1,57 @@
-<div>
-  <input id="search" class="form-control" type="text" autofocus autocomplete="off" placeholder="Search airports" data-search-endpoint="<%= search_airports_path %>">
+<div class="container-fluid d-flex flex-nowrap flex-md-wrap justify-content-between position-relative p-0">
+  <div class="search">
+    <input id="search" class="form-control" type="text" autofocus autocomplete="off" placeholder="Search airports" data-search-endpoint="<%= search_airports_path %>">
 
-  <div id="search-results-parent">
-    <ul id="search-results" class="list-group"></ul>
+    <div id="search-results-parent">
+      <ul id="search-results" class="list-group"></ul>
+    </div>
+  </div>
+
+  <div id="hamburger-icon" class="d-md-none ms-2" data-target="hamburger-menu">
+    <button type="button" class="btn btn-light"><i class="fa-solid fa-bars"></i></button>
+  </div>
+
+  <div class="navigation d-none d-md-block">
+    <% if user_signed_in? && current_user.admin? %>
+      <span><%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_root_path, class: 'ps-2' %></span> |
+    <% else %>
+      <span class="ps-2"><%= image_tag 'logo.png' %></span> |
+    <% end %>
+
+    <% if user_signed_in? %>
+      <span><%= link_to '<i class="fas fa-user me-1"></i>Account'.html_safe, user_path %></span> |
+    <% else %>
+      <span><a href="#" class="about-link"><i class="fas fa-question-circle me-1"></i>About</a></span> |
+    <% end %>
+
+    <% if user_signed_in? %>
+      <span class="pe-2"><%= link_to '<i class="fas fa-right-from-bracket me-1"></i>Logout'.html_safe, destroy_user_session_path, method: :delete %></span>
+    <% else %>
+      <span class="pe-2"><a href="#" class="login-link"><i class="fas fa-right-to-bracket me-1"></i>Log In</a></span>
+    <% end %>
   </div>
 </div>
 
-<div class="navigation">
-  <% if user_signed_in? && current_user.admin? %>
-    <span><%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_root_path, class: 'ps-2' %></span> |
-  <% else %>
-    <span class="ps-2"><%= image_tag 'logo.png' %></span> |
-  <% end %>
+<div id="hamburger-menu" class="d-none d-md-none mt-2">
+  <div class="d-flex justify-content-end">
+    <ul class="list-group">
+      <% if user_signed_in? && current_user.admin? %>
+        <li class="list-group-item"><%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_root_path %></li>
+      <% else %>
+        <li class="list-group-item"><%= image_tag 'logo.png' %></li>
+      <% end %>
 
-  <% if user_signed_in? %>
-    <span><%= link_to '<i class="fas fa-user me-1"></i>'.html_safe + current_user.email, user_path %></span> |
-  <% else %>
-    <span><a href="#" id="about-link"><i class="fas fa-question-circle me-1"></i>About</a></span> |
-  <% end %>
+      <% if user_signed_in? %>
+        <li class="list-group-item"><%= link_to '<i class="fas fa-user me-1"></i>Account'.html_safe, user_path %></li>
+      <% else %>
+        <li class="list-group-item"><a href="#" class="about-link"><i class="fas fa-question-circle me-1"></i>About</a></li>
+      <% end %>
 
-  <% if user_signed_in? %>
-    <span class="pe-2"><%= link_to '<i class="fas fa-right-from-bracket me-1"></i>Logout'.html_safe, destroy_user_session_path, method: :delete %></span>
-  <% else %>
-    <span class="pe-2"><a href="#" id="login-link"><i class="fas fa-right-to-bracket me-1"></i>Log In</a></span>
-  <% end %>
+      <% if user_signed_in? %>
+        <li class="list-group-item"><%= link_to '<i class="fas fa-right-from-bracket me-1"></i>Logout'.html_safe, destroy_user_session_path, method: :delete %></li>
+      <% else %>
+        <li class="list-group-item"><a href="#" class="login-link"><i class="fas fa-right-to-bracket me-1"></i>Log In</a></li>
+      <% end %>
+    </ul>
+  </div>
 </div>

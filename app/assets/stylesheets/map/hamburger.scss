@@ -1,0 +1,32 @@
+#hamburger-icon {
+  margin-right: $map-fixed-offset;
+  margin-top: $map-fixed-offset;
+
+  button {
+    width: 40px;
+  }
+}
+
+#hamburger-menu {
+  padding: 0 $map-fixed-offset;
+  position: absolute;
+  width: 100%;
+
+  ul {
+    width: 100%;
+
+    @include media-breakpoint-up(sm) {
+      width: 50%;
+    }
+
+    a {
+      display: inline-block;
+      width: 100%;
+    }
+
+    img {
+      height: 1rem;
+      max-width: 100%;
+    }
+  }
+}

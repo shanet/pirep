@@ -54,24 +54,47 @@ function initExtraRemarks() {
 }
 
 function initMapBackButton() {
-  const mapBackButton = document.getElementById('map-back');
-  if(!mapBackButton) return;
+  const mapBackButtons = document.getElementsByClassName('map-back');
 
-  // If there is no href attribute set it means we want to call `history.back` for the link but this has to be done
-  // in a JavaScript module rather than in the link attribute itself because of the CSP not allowing inline JavaScript.
-  if(mapBackButton.getAttribute('href') === '') {
-    mapBackButton.addEventListener('click', (event) => {
-      window.history.back();
-      event.preventDefault();
-    });
+  for(let i=0; i<mapBackButtons.length; i++) {
+    // If there is no href attribute set it means we want to call `history.back` for the link but this has to be done
+    // in a JavaScript module rather than in the link attribute itself because of the CSP not allowing inline JavaScript.
+    if(mapBackButtons[i].getAttribute('href') === '') {
+      mapBackButtons[i].addEventListener('click', (event) => {
+        window.history.back();
+        event.preventDefault();
+      });
+    }
   }
 }
 
 function initCoverImageForm() {
-  const coverImage = document.getElementById('airport_cover_image');
-  if(!coverImage) return;
+  const coverImageDropdowns = document.getElementsByClassName('cover-image-dropdown');
 
-  coverImage.addEventListener('change', (event) => {
-    event.target.form.submit();
-  });
+  for(let i=0; i<coverImageDropdowns.length; i++) {
+    const dropdown = coverImageDropdowns[i];
+    const toggleButton = dropdown.querySelector('.dropdown-toggle');
+
+    toggleButton.addEventListener('click', () => {
+      dropdown.querySelector('.dropdown-menu').classList.toggle('d-none');
+    });
+
+    const options = dropdown.querySelectorAll('.dropdown-menu li a');
+    const form = dropdown.querySelector('form');
+
+    for(let j=0; j<options.length; j++) {
+      options[j].addEventListener('click', () => {
+        form.querySelector('input[name="airport[cover_image]"]').value = options[j].dataset.coverImage;
+        form.submit();
+      });
+    }
+
+    // Close the dropdown when it loses focus
+    toggleButton.addEventListener('blur', (event) => {
+      // Don't close the dropdown if clicking on an option in it
+      if(Array.from(options).indexOf(event.relatedTarget) !== -1) return;
+
+      dropdown.querySelector('.dropdown-menu').classList.toggle('d-none');
+    });
+  }
 }

@@ -1,6 +1,8 @@
+import * as drawer from 'map/drawer';
 import * as flashes from 'map/flashes';
 import * as landingRights from 'airports/landing_rights';
 import * as map from 'map/map';
+import * as utils from 'shared/utils';
 
 const NEW_AIRPORT_LAYER = 'new_airport';
 const DRAWER_CONTENT_ID = 'drawer-new-airport';
@@ -25,6 +27,7 @@ export function initializeDrawer() {
   document.querySelector('#new-airport .select-coordinates').addEventListener('click', () => {
     document.getElementById('map').classList.add('adding');
     flashes.show(flashes.FLASH_NOTICE, 'Select the center of the airport on the map.');
+    if(utils.isBreakpointDown('sm')) drawer.closeDrawer();
   });
 
   landingRights.initLandingRightsForm();
@@ -40,6 +43,9 @@ export function initializeDrawer() {
 }
 
 export function locationSelected(latitude, longitude, elevation) {
+  // Re-open the drawer if it was closed on a small screen
+  drawer.openDrawer();
+
   // Convert meters to feet
   const elevationFeet = Math.round(elevation * 3.28084);
 

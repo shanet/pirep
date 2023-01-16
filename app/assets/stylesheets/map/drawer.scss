@@ -1,33 +1,61 @@
-$drawer-width: 'min(33vw, 450px)';
-$handle-size: 25px;
-
 .drawer {
   background: $white;
   box-shadow: -3px 1px 4px 0 $gray-800;
   height: 100vh;
-  margin-left: $handle-size;
+  margin-left: calc($handle-size / 2);
   pointer-events: auto;
   position: relative;
   white-space: normal;
   width: calc(#{$drawer-width});
+  z-index: $zindex-fixed + 2; // +2 so that the drawer shows on top of the search results
+
+  @include media-breakpoint-down(lg) {
+    left: 100vw;
+    padding-right: calc($handle-size / 2);
+    position: fixed;
+    width: 50vw;
+
+    &.slide-in-drawer {
+      animation: slide-in-drawer-large $animation-duration forwards;
+    }
+
+    &.slide-in-drawer-instant {
+      animation: slide-in-drawer-large 0s forwards;
+    }
+
+    &.slide-out-drawer {
+      animation: slide-out-drawer-large $animation-duration forwards;
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    width: 100vw;
+
+    &.slide-in-drawer {
+      animation: slide-in-drawer-medium $animation-duration forwards;
+    }
+
+    &.slide-in-drawer-instant {
+      animation: slide-in-drawer-medium 0s forwards;
+    }
+
+    &.slide-out-drawer {
+      animation: slide-out-drawer-medium $animation-duration forwards;
+    }
+  }
 
   .handle {
-    background-color: $white;
-    border-radius: 100%;
-    box-shadow: $gray-800 0 5px 15px;
-    height: $handle-size;
-    left: calc(($handle-size / 2 + 3px) * -1);
-    line-height: $handle-size;
+    left: calc($handle-size / 2 * -1);
     position: absolute;
     top: 50px;
-    width: $handle-size;
 
     button {
+      background-color: $white;
+      border-radius: 100%;
+      box-shadow: $gray-800 0 5px 15px;
       color: $black;
-      font-size: 14px;
-      height: 100%;
-      padding: 0 5px 0 7px;
-      width: 100%;
+      height: $handle-size;
+      width: $handle-size;
     }
   }
 
@@ -48,4 +76,24 @@ $handle-size: 25px;
   #registration-form {
     display: none;
   }
+}
+
+@keyframes slide-in-drawer-large {
+  from { left: 100vw; }
+  to { left: 50vw; }
+}
+
+@keyframes slide-out-drawer-large {
+  from { left: 50vw; }
+  to { left: 100vw; }
+}
+
+@keyframes slide-in-drawer-medium {
+  from { left: 100vw; }
+  to { left: 0; }
+}
+
+@keyframes slide-out-drawer-medium {
+  from { left: 0; }
+  to { left: 100vw; }
 }
