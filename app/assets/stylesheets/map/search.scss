@@ -1,10 +1,17 @@
-@import 'variables';
-
-#search {
+.search {
   margin-left: $map-fixed-offset;
   margin-top: $map-fixed-offset;
   width: 340px;
   z-index: $zindex-fixed + 1; // +1 so that the search results display on top of the filters
+
+  @include media-breakpoint-down(md) {
+    width: 100%;
+  }
+}
+
+// Overflow for placeholder text
+#search:placeholder-shown {
+  text-overflow: ellipsis;
 }
 
 #search-results-parent {
@@ -12,13 +19,10 @@
 
   #search-results {
     display: none;
-    padding-left: $map-fixed-offset;
     position: absolute;
     width: 100%;
 
-    li.selected {
-      background-color: $primary;
-      color: $white;
+    li.active {
       cursor: pointer;
     }
   }

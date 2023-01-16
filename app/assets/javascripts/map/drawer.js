@@ -3,7 +3,9 @@ import * as drawerLogin from 'map/drawer_login';
 import * as drawerNewAirport from 'map/drawer_new_airport';
 import * as drawerShowAirport from 'map/drawer_show_airport';
 import * as map from 'map/map';
+import * as mapUtils from 'map/utils';
 import * as urlSearchParams from 'map/url_search_params';
+import * as utils from 'shared/utils';
 
 export const DRAWER_ABOUT = 'about';
 export const DRAWER_LOGIN = 'login';
@@ -76,20 +78,68 @@ function hideDrawerContent() {
 }
 
 export function openDrawer(instant=false) {
+  const drawer = document.getElementById('airport-drawer');
   const grid = document.getElementById('grid');
-  grid.classList.remove('slide-out-drawer');
-  grid.classList.add(`slide-in-drawer${instant ? '-instant' : ''}`);
+
+  // Don't try to open the drawer if it's already open
+  if(drawer.className.indexOf('slide-in-drawer-instant') !== -1) return;
+
+  mapUtils.closeAllDrawers();
+
+  // In small screen sizes the drawer overlaps the map controls as opposed to being inline with them on large screen sizes.
+  // This requires styles applied to the drawer itself vs. the map controls grid depending on screen size. However, we also
+  // want to apply the instant style to the other element so if the page is resized the drawer remains open without the
+  // animation playing again.
+  if(utils.isBreakpointDown('md')) {
+    drawer.classList.remove('slide-out-drawer');
+    drawer.classList.add(`slide-in-drawer${instant ? '-instant' : ''}`);
+    grid.classList.add('slide-in-drawer-instant');
+  } else {
+    grid.classList.remove('slide-out-drawer');
+    grid.classList.add(`slide-in-drawer${instant ? '-instant' : ''}`);
+    drawer.classList.add('slide-in-drawer-instant');
+  }
+
+  // Replace the slide-in classes with the instant classes so the animation does not repeat as the window is resized
+  grid.addEventListener('animationend', () => {
+    grid.classList.replace('slide-in-drawer', 'slide-in-drawer-instant');
+  });
+
+  drawer.addEventListener('animationend', () => {
+    drawer.classList.replace('slide-in-drawer', 'slide-in-drawer-instant');
+  });
 }
 
 export function closeDrawer() {
+  const drawer = document.getElementById('airport-drawer');
   const grid = document.getElementById('grid');
+
+  // Don't try to close the drawer if it's not already open
+  if(drawer.className.indexOf('slide-in-drawer') === -1) return;
+
+  drawer.classList.remove('slide-in-drawer', 'slide-in-drawer-instant');
   grid.classList.remove('slide-in-drawer', 'slide-in-drawer-instant');
-  grid.classList.add('slide-out-drawer');
+
+  // See comment in the open function above for why the screen size matters here
+  if(utils.isBreakpointDown('md')) {
+    drawer.classList.add('slide-out-drawer');
+  } else {
+    grid.classList.add('slide-out-drawer');
+  }
 
   // If a new airport was being added but the drawer is closed remove the marker to clear it
   drawerNewAirport.removeNewAirportLayer();
+
+  // Once the animation is done, remove the slide-out classes to avoid the animation from being played again on a window resize
+  grid.addEventListener('animationend', () => {
+    grid.classList.remove('slide-out-drawer');
+  });
+
+  drawer.addEventListener('animationend', () => {
+    drawer.classList.remove('slide-out-drawer');
+  });
 }
 
-export function isDrawerOpen() {
-  return (document.getElementById('grid').classList.contains('slide-in-drawer'));
+export function getWidth() {
+  return document.getElementById('airport-drawer').offsetWidth;
 }

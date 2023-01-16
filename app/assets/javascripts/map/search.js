@@ -1,6 +1,7 @@
 import * as actionButton from 'map/action_buttons';
 import * as flashes from 'map/flashes';
 import * as map from 'map/map';
+import * as urlSearchParams from 'map/url_search_params';
 import * as utils from 'shared/utils';
 
 let selectedSearchResultIndex = -1;
@@ -90,6 +91,7 @@ function showSearchResults(results) {
     node.innerText = `${result.code} - ${result.label}`;
     node.dataset.airportCode = result.code;
     node.dataset.boundingBox = JSON.stringify(result.bounding_box);
+    node.dataset.zoomLevel = JSON.stringify(result.zoom_level);
     resultsList.appendChild(node);
 
     // Show airport when result is clicked (use mousedown to since blur will take precedence over click)
@@ -109,9 +111,12 @@ function showSearchResults(results) {
 }
 
 function openAirport(result) {
-  map.openAirport(result.airportCode, JSON.parse(result.boundingBox));
+  // Don't open the drawer if on a small screen, just fly to the airport
+  map.openAirport(result.airportCode, JSON.parse(result.boundingBox), result.zoomLevel, !utils.isBreakpointDown('sm'));
+
   map.toggleSectionalLayers(false);
   actionButton.updateLayerSwitcherIcon(actionButton.LAYER_MAP);
+  urlSearchParams.setLayer(actionButton.LAYER_SATELLITE);
 }
 
 function hideSearchResults() {
@@ -123,9 +128,9 @@ function selectSearchResult(selectedSearchResultIndex) {
 
   for(let i = 0; i < resultsList.childNodes.length; i++) {
     if(i === selectedSearchResultIndex) {
-      resultsList.childNodes[i].classList.add('selected');
+      resultsList.childNodes[i].classList.add('active');
     } else {
-      resultsList.childNodes[i].classList.remove('selected');
+      resultsList.childNodes[i].classList.remove('active');
     }
   }
 }

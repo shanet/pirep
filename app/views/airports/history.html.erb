@@ -1,34 +1,34 @@
 <% @breadcrumbs = [[@airport.code, airport_path(@airport)], ['History']] %>
 
-<%= render 'header', subtitle: 'Revision History' %>
+<%= render 'airports/header/header', subtitle: 'Revision History', hide_cover_image_dropdown: true %>
 
-<div class="container">
+<div class="container-lg">
   <div class="row">
     <div class="col-12">
       <%= render 'layouts/flashes' %>
     </div>
   </div>
 
-  <div class="row">
-    <% if @versions.any? %>
-      <% @versions.each do |version| %>
-        <% next unless version.object_changes %>
+  <% if @versions.any? %>
+    <% @versions.each do |version| %>
+      <% next unless version.object_changes %>
 
-        <% version.object_changes.each do |column, change| %>
-          <% next unless Airport::HISTORY_COLUMNS.keys.include?(column.to_sym) || (version.item_type == 'Tag' && column == 'name') %>
+      <div class="row revision">
+        <div class="col-12 col-sm-4 col-lg-3 mb-2 mb-sm-0">
+          <%= render 'airports/history/metadata', version: version %>
+        </div>
 
-          <div class="col-12">
-            <div class="row revision">
-              <%= render 'airports/history/metadata', version: version %>
-              <%= render 'airports/history/diff', version: version, column: column, change: change %>
-            </div>
-          </div>
-        <% end %>
-      <% end %>
-
-      <%= render 'shared/pagination', records: @versions, path: :history_airport_path %>
-    <% else %>
-      <%= render 'shared/empty_view', label: 'No revisions exist for this airport.' %>
+        <div class="col">
+          <% version.object_changes.each do |column, change| %>
+            <% next unless Airport::HISTORY_COLUMNS.keys.include?(column.to_sym) || (version.item_type == 'Tag' && column == 'name') %>
+            <%= render 'airports/history/diff', version: version, column: column, change: change %>
+          <% end %>
+        </div>
+      </div>
     <% end %>
-  </div>
+
+    <%= render 'shared/pagination', records: @versions, total_records: @total_records, path: :history_airport_path %>
+  <% else %>
+    <%= render 'shared/empty_view', label: 'No revisions exist for this airport.' %>
+  <% end %>
 </div>

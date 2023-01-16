@@ -13,6 +13,12 @@
     </div>
   <% end %>
 
+  <div class="col-<%= drawer ? 12 : 6 %>">
+    <%= render partial: 'airports/statistics/statistics_box', locals: {
+      label: 'Elevation', value: @airport.elevation, units: :ft, icon: :mountain, theme: @airport.elevation_threat_level
+    } %>
+  </div>
+
   <% if !drawer && @airport.sectional.present? %>
     <div class="col-6">
       <%= render partial: 'airports/statistics/statistics_box', locals: {
@@ -40,12 +46,6 @@
   <div class="col-<%= drawer ? 12 : 6 %>">
     <%= render partial: 'airports/statistics/statistics_box', locals: {
       label: 'Fuel available', value: (@airport.fuel_types&.any? ? @airport.fuel_types.join(', ') : 'None'), icon: 'gas-pump', theme: (@airport.fuel_types&.any? ? 'blue-grey' : :red)
-    } %>
-  </div>
-
-  <div class="col-<%= drawer ? 12 : 6 %>">
-    <%= render partial: 'airports/statistics/statistics_box', locals: {
-      label: 'Elevation', value: @airport.elevation, units: :ft, icon: :mountain, theme: @airport.elevation_threat_level
     } %>
   </div>
 

@@ -1,0 +1,5 @@
+<nav class="d-flex flex-column text-md-center">
+  <%= render 'map/filters/filter_group', filter_group: :facility_types, filters: Airport.facility_types, title: 'Filter by type' %>
+  <a class="group-break">&nbsp;</a>
+  <%= render 'map/filters/filter_group', filter_group: :tags, filters: Tag::TAGS, title: 'Filter by tag' %>
+</nav>

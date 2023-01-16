@@ -1,3 +1,11 @@
-$map-fixed-offset: 10px;
-$light-grey: #eee;
+$drawer-width: min(33vw, 450px);
 $filters-background: rgba(0, 0, 0, .75);
+$handle-size: 25px;
+$light-grey: #eee;
+$map-fixed-offset: 10px;
+
+// Tell FontAwesome to look under /assets for its font files
+$fa-font-path: 'assets';
+
+// Bootstrap customizations
+$offcanvas-horizontal-width: 70vw;

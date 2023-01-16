@@ -1,0 +1,44 @@
+<% cover_image = (@airport.cover_image != 'default') %>
+
+<div class="container-fluid p-0 <%= cover_image ? "airport-header-cover-image cover-image-#{@airport.cover_image} mb-1" : '' %>">
+  <div class="airport-header <%= cover_image ? '' : "theme-#{@airport.theme}" %> text-center p-3">
+    <h3><%= @airport.code %> - <%= @airport.name.titleize %></h3>
+  </div>
+
+  <div class="airport-subheader <%= cover_image ? '' : "theme-#{@airport.theme} mb-3" %>">
+    <div class="container-lg d-flex justify-content-center justify-content-md-between align-items-center py-2">
+      <div class="d-none d-md-block">
+        <%= render 'airports/header/left_actions', color: (cover_image ? :light : :dark) %>
+      </div>
+
+      <div class="mx-2">
+        <% if defined?(subtitle) %>
+          <%= subtitle %>
+        <% else %>
+          <%= @airport.latitude.round(7) %>, <%= @airport.longitude.round(7) %>
+        <% end %>
+      </div>
+
+      <div class="d-none d-md-flex justify-content-end gap-1">
+        <%= render 'airports/header/right_actions', color: (cover_image ? :light : :dark), hide_cover_image_dropdown: defined?(hide_cover_image_dropdown) %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-lg">
+  <div class="row">
+    <div class="col-12 d-md-none d-flex justify-content-center flex-wrap py-2 gap-2">
+      <%= render 'airports/header/left_actions', color: :dark %>
+      <%= render 'airports/header/right_actions', color: :dark, hide_cover_image_dropdown: defined?(hide_cover_image_dropdown) %>
+    </div>
+  </div>
+</div>
+
+<div class="container-lg">
+  <div class="row">
+    <div class="col-12 mb-2">
+      <%= render 'layouts/breadcrumbs' %>
+    </div>
+  </div>
+</div>

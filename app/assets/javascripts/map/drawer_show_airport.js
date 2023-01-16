@@ -1,9 +1,11 @@
-import * as flashes from 'map/flashes';
 import * as actionButtons from 'map/action_buttons';
+import * as drawer from 'map/drawer';
+import * as flashes from 'map/flashes';
 import * as map from 'map/map';
 import * as photoGallery from 'shared/photo_gallery';
 import * as textareaEditors from 'shared/textarea_editors';
 import * as urlSearchParams from 'map/url_search_params';
+import * as utils from 'shared/utils';
 
 const DRAWER_CONTENT_ID = 'drawer-show-airport';
 
@@ -69,5 +71,10 @@ function zoomAirport(event) {
     button.dataset.zoomedIn = 'true';
 
     urlSearchParams.setLayer(actionButtons.LAYER_SATELLITE);
+
+    // On a small screen size we should close the drawer so the airport is visible again when zooming in
+    if(utils.isBreakpointDown('sm')) {
+      drawer.closeDrawer();
+    }
   }
 }

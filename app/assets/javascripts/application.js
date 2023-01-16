@@ -10,4 +10,5 @@ import 'manage/users_edit';
 import 'map/header';
 import 'map/map';
 import 'map/search';
+import 'map/utils';
 import 'shared/textarea_editors';

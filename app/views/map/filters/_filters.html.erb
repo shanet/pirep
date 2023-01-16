@@ -1,15 +1,22 @@
-<div id="filters" class="mt-2">
+<div id="filters" class="pt-2 pb-4 d-none d-md-grid">
   <div id="filters-header" class="p-2 text-center">
     <a id="filters-scroll-up"><i class="fas fa-chevron-up"></i></a>
   </div>
 
-  <nav class="d-flex flex-column text-center">
-    <%= render 'map/filters/filter_group', filter_group: :facility_types, filters: Airport.facility_types, title: 'Filter by type' %>
-    <a>&nbsp;</a>
-    <%= render 'map/filters/filter_group', filter_group: :tags, filters: Tag::TAGS, title: 'Filter by tag' %>
-  </nav>
+  <%= render 'map/filters/filters_list' %>
 
   <div id="filters-footer" class="p-2 text-center">
     <a id="filters=scroll-down"><i class="fas fa-chevron-down"></i></a>
+  </div>
+</div>
+
+<div id="filters-drawer" class="offcanvas offcanvas-start d-md-none">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Filter Airports</h5>
+    <button type="button" class="btn-close"></button>
+  </div>
+
+  <div class="offcanvas-body">
+    <%= render 'map/filters/filters_list' %>
   </div>
 </div>

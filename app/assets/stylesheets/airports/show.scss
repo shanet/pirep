@@ -1,5 +1,3 @@
-@import 'variables';
-
 .airport-header-cover-image {
   background-size: cover;
   display: flex;
@@ -28,22 +26,20 @@
   &.cover-image-town { background-image: url('town.jpg'); }
 }
 
-#airport_cover_image { // stylelint-disable-line selector-id-pattern
-  background-color: rgba(0, 0, 0, .35);
-}
-
-.airport-subheader > .container {
+.airport-subheader > .container-lg {
   row-gap: $spacer;
 
-  div:first-child,
-  div:last-child {
+  > div:first-child,
+  > div:last-child {
     flex-basis: 0;
     flex-grow: 1;
     white-space: nowrap;
   }
+}
 
-  div:last-child {
-    text-align: right;
+.cover-image-dropdown {
+  .dropdown-menu li:hover {
+    cursor: pointer;
   }
 }
 

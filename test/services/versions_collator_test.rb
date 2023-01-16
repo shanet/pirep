@@ -86,4 +86,20 @@ class VersionsCollatorTest < ActiveSupport::TestCase
       assert_equal 3, @airport.reload.versions.count, 'Versions incorrectly collated'
     end
   end
+
+  test 'collates versions with associated actions' do
+    with_versioning do
+      collation_start_version = @airport.versions.last
+
+      # Create two versions to be collated together
+      @airport.update!(description: 'update 1')
+      @airport.update!(description: 'update 2')
+
+      # Create an action that belongs to the last version which will be deleted in collation
+      action = create(:action, actionable: @airport, version: @airport.versions.last)
+
+      VersionsCollator.new(@airport).collate!
+      assert_equal collation_start_version, action.reload.version, 'Action version reference not updated in version collation'
+    end
+  end
 end

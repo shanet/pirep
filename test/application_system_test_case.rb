@@ -7,16 +7,16 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     # Enable WebGL for Mapbox
     options.add_argument('--use-gl')
 
-    # Specifying prefers-reduced-motion tells Mapbox to disable fly-to animations which is useful for
-    # tests because it eliminates the need for sleep statements to wait for these animations to complete
+    # Specifying prefers-reduced-motion tells Mapbox to disable fly-to animations which is useful for tests because it eliminates
+    # the need for sleep statements to wait for these animations to complete since it's all done within a canvas element.
     options.add_argument('--force-prefers-reduced-motion')
 
     # Support Wayland if being used (`auto` should detect it, well, automatically, but this seems to cause CI failures)
     options.add_argument('--ozone-platform-hint=auto') if ENV['XDG_SESSION_TYPE'] == 'wayland'
   end
 
-  # CI runs somewhat slower so give it some more time before failing a test
-  Capybara.default_max_wait_time = 10 if ENV['CI']
+  # CI on GitHub actions runs wayyyyyyy slower so give it more time before failing a test
+  Capybara.default_max_wait_time = 60 if ENV['CI']
 
   # We'll get far fewer flakes without animations
   Capybara.disable_animation = true

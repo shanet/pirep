@@ -56,6 +56,8 @@ private
         if index == 0
           version.update!(object_changes: collated_changes)
         else
+          # Reassign any actions that reference the current version to the first version in the batch
+          Action.where(version: version).update!(version: batch.first)
           version.destroy!
         end
       end

@@ -3,7 +3,7 @@
 <h1 class="display-6">Edit Account</h1>
 
 <div class="row">
-  <div class="col-8">
+  <div class="col-12 col-md-8">
     <%= form_with(model: resource, scope: :user, url: user_registration_path, html: {method: :put}) do |form| %>
       <%= render 'shared/record_errors', record: form.object %>
 
@@ -55,12 +55,12 @@
     <% end %>
   </div>
 
-  <div class="col-4 text-center">
+  <div class="col-12 col-md-4 text-center">
     <%= image_tag gravatar_url(resource.email, size: 300), class: 'img-thumbnail' %>
     <p><small>Pirep uses Gravatar for user photos. Edit your image on <a href="https://www.gravatar.com">gravatar.com</a>.</small></p>
   </div>
 
-  <div class="col-8 mt-5 mb-3">
+  <div class="col-12 col-md-8 mt-5 mb-3">
     <div class="dangerzone border border-3 border-danger rounded p-3">
       <h3>Delete account</h3>
 

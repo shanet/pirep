@@ -7,11 +7,10 @@ import * as filters from 'map/filters';
 import * as flashes from 'map/flashes';
 import * as newAirportDrawer from 'map/drawer_new_airport';
 import * as urlSearchParams from 'map/url_search_params';
+import * as utils from 'shared/utils';
 
 const AIRPORT_LAYER = 'airports';
 const CHART_LAYERS = ['sectional', 'terminal', 'caribbean'];
-
-const DRAWER_WIDTH = 450; // px
 
 let mapElement = null;
 let map = null;
@@ -112,7 +111,8 @@ function addEventHandlersToMap() {
     // Don't do anything if a new airport is being added
     if(mapElement.classList.contains('adding')) return;
 
-    if(event.features[0].id === getSelectedAirportMarker()) {
+    // If the airport is already selected, close it. Unless we're on a small screen size in which case open the drawer again in case it was closed by zooming in
+    if(event.features[0].id === getSelectedAirportMarker() && !utils.isBreakpointDown('sm')) {
       drawer.closeDrawer();
       closeAirport();
     } else {
@@ -129,14 +129,10 @@ function addEventHandlersToMap() {
     map.getCanvas().style.cursor = '';
   });
 
-  // Update the URL search params after dragging the map with the current position
-  map.on('moveend', () => {
-    fetchAirportAnnotations();
-  });
+  map.on('moveend', fetchAirportAnnotations);
+  map.on('move', fetchAirportAnnotations);
 
-  map.on('move', () => {
-    fetchAirportAnnotations();
-  });
+  map.on('pitchend', set3dButtonLabel);
 
   map.on('error', (error) => {
     // Since the chart layers are not rectangles we can't use a bounding box for them. Instead, the server is configured to return
@@ -210,6 +206,7 @@ function addAirportsToMap() {
       // The map is fully loaded, start manipulating it
       applyUrlSearchParamsOnMap();
       filterAirportsOnMap();
+      set3dButtonLabel();
     });
   });
 }
@@ -319,11 +316,11 @@ export function areSectionalLayersShown() {
   return (map.getPaintProperty('sectional', 'raster-opacity') === 1);
 }
 
-export function openAirport(airportCode, boundingBox, zoomLevel) {
+export function openAirport(airportCode, boundingBox, zoomLevel, openDrawer) {
   // Find the feature for the given airport code
   for(let i = 0; i < allAirports.length; i++) {
     if(allAirports[i].properties.code === airportCode) {
-      openAirportFeature(allAirports[i], boundingBox, zoomLevel);
+      openAirportFeature(allAirports[i], boundingBox, zoomLevel, openDrawer);
       break;
     }
   }
@@ -334,21 +331,25 @@ export function closeAirport() {
   setAirportMarkerSelected('');
 }
 
-function openAirportFeature(airport, boundingBox, zoomLevel) {
+function openAirportFeature(airport, boundingBox, zoomLevel, openDrawer) {
   // Set the airport's marker as selected
   setAirportMarkerSelected(airport.id);
 
   if(boundingBox) {
     map.fitBounds(boundingBox, {padding: 100});
   } else {
-    const options = {center: airport.geometry.coordinates, padding: {right: DRAWER_WIDTH}};
+    // Move the map by the width of the drawer so the selected airport is centered. But only do this on a large screen
+    // size since the drawer will cover the full width on small screens and we don't want to move the map in that case.
+    const drawerPadding = (utils.isBreakpointDown('sm') ? 0 : drawer.getWidth());
+
+    const options = {center: airport.geometry.coordinates, padding: {right: drawerPadding}};
     if(zoomLevel) options.zoom = zoomLevel;
     map.flyTo(options);
   }
 
   // Open the drawer for the clicked airport
   drawer.loadDrawer(drawer.DRAWER_SHOW_AIRPORT, airport.properties.code);
-  drawer.openDrawer();
+  if(openDrawer !== false) drawer.openDrawer();
 
   urlSearchParams.setAirport(airport.properties.code);
 }
@@ -372,6 +373,16 @@ export function removeLayer(layerId) {
 
   map.removeLayer(layerId);
   return map.removeSource(layerId);
+}
+
+function set3dButtonLabel() {
+  // If the map is loaded with a 3D pitch the #d toggle button should be set to 3D mode
+  // We can't know this until the map is initialized however so it must be done here
+  // Note that the state here should reflect what's in action_buttons.js
+  if(map.getPitch() > 0) {
+    document.getElementById('map-pitch-button').innerText = '2D';
+    document.getElementById('map-pitch-button').dataset.state = '3d';
+  }
 }
 
 export function flyTo(latitude, longitude, zoom) {

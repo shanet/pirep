@@ -50,7 +50,8 @@ class AirportsController < ApplicationController
       create_actions
 
       if request.xhr?
-        render json: {timestamp: Time.zone.now.iso8601}
+        # Add one second to avoid a time conflict with the version that was just created
+        render json: {timestamp: 1.second.from_now.iso8601}
       else
         redirect_to airport_path(@airport.code)
       end
@@ -65,11 +66,12 @@ class AirportsController < ApplicationController
     coordinates = (params['latitude'] && params['longitude'] ? {latitude: params['latitude'].to_f, longitude: params['longitude'].to_f} : nil)
 
     results = Search.query(preprocess_query, Airport, coordinates, wildcard: true).limit(10).uniq
-    render json: results.map {|airport| {code: airport.code, label: airport.name, bounding_box: airport.bounding_box}}
+    render json: results.map {|airport| {code: airport.code, label: airport.name, bounding_box: airport.bounding_box, zoom_level: airport.zoom_level}}
   end
 
   def history
     @versions = @airport.all_versions.page(params[:page])
+    @total_records = @airport.all_versions.count
   end
 
   def preview

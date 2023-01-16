@@ -210,7 +210,9 @@ class AirportsTest < ApplicationSystemTestCase
 
   test 'changes cover image' do
     visit airport_path(@airport.code)
-    select 'Forest', from: 'Theme'
+
+    click_on 'Theme'
+    click_on 'Forest'
 
     assert_selector '.airport-header-cover-image.cover-image-forest'
     assert_equal 'forest', @airport.reload.cover_image, 'Cover image not updated on airport'

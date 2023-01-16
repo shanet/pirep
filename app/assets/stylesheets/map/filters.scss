@@ -1,11 +1,22 @@
+#filters,
+#filters-drawer {
+  .filter-group,
+  .filter {
+    transition: .3s;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
 #filters {
   display: grid;
   grid-template-areas: 'header' 'filters' 'footer';
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
+  height: 100%;
   margin-left: $map-fixed-offset;
-  max-height: 87vh;
-  top: 50px;
   width: 36px;
 
   #filters-header,
@@ -46,16 +57,36 @@
 
     .filter-group,
     .filter {
-      transition: .3s;
-
       &.disabled {
         color: $white;
       }
-
-      &:hover {
-        cursor: pointer;
-      }
     }
+
+    .group-break {
+      color: rgba(0, 0, 0, 0);
+    }
+  }
+}
+
+#filters-drawer {
+  @include media-breakpoint-only(sm) {
+    width: 40vw;
+  }
+
+  .filter-group,
+  .filter {
+    text-decoration: none;
+
+    &.disabled {
+      color: inherit;
+    }
+  }
+
+  .group-break {
+    border-bottom: 1px solid $black;
+    height: 0;
+    margin: $spacer 0;
+    text-decoration: none;
   }
 }
 

@@ -1,5 +1,6 @@
 <a class="filter-group p-2 theme-red disabled" data-label="<%= title %>" data-filter-name="<%= filter_group %>" data-theme="red">
   <%= filter_icon('times') %>
+  <span class="d-md-none"><%= title %> (clear all)</span>
 </a>
 
 <% filters.each do |filter_name, configuration| %>
@@ -11,5 +12,6 @@
     data-default-filter="<%= configuration[:default] %>"
     data-theme="<%= configuration[:theme] %>">
       <%= filter_icon(configuration[:icon]) %>
+      <span class="d-md-none"><%= configuration[:label] %></span>
     </a>
 <% end %>
