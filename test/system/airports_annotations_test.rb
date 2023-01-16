@@ -45,7 +45,9 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
     # Test deleting the annotation
     start_editing_annotations
     find('.annotation button.delete').click
+
     assert_no_selector('annotation')
+    assert_selector '.airport-annotations-saved'
     assert_equal [], @airport.reload.annotations, 'Deleted annotation not removed from backend'
   end
 
