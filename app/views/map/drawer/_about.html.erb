@@ -1,3 +1,51 @@
 <div id="about">
-  About Pirep
+  <div class="text-center m-4">
+    <%= image_tag 'logo.png', class: 'logo' %>
+  </div>
+
+  <p>Pirep is a free, collaborative database of all public and private airports located within the United States. All pilots are welcome to contribute, edit, and improve any airport they have local knowledge about.</p>
+
+  <p>In addition to the information provided by the FAA and other public sources, Pirep seeks to capture unpublished, local knowledge about airports such as:
+
+    <ul>
+      <li>Private airports open to the public</li>
+      <li>Unmapped airports</li>
+      <li>Location of transient parking, fuel pumps, pilot lounges, FBOs, etc.</li>
+      <li>Nearby attractions</li>
+      <li>Information on available crew cars, bikes, WiFi, etc.</li>
+      <li>Airport photos</li>
+      <li>Current status and conditions</li>
+      <li>And more!</li>
+    </ul>
+  </p>
+
+  <hr>
+
+  <div class="software-gallery d-flex justify-content-center mb-2">
+    <%= image_tag 'agpl_logo.png', class: 'img-fluid ms-1' %>
+    <%= image_tag 'rails_logo.png', class: 'img-fluid mx-2' %>
+    <%= image_tag 'tux.png', class: 'img-fluid ms-1' %>
+  </div>
+
+  <p>Pirep is free, open source software licensed under the AGPLv3 that anyone may contribute to.</p>
+
+  <div class="text-center mb-3">
+    <p class="mb-1">Found a bug or have an idea for a new feature?</p>
+    <a class="btn btn-primary btn-lg" href="https://github.com/shanet/pirep"><i class="fa-solid fa-code"></i> Contribute on GitHub</a>
+  </div>
+
+  <p>Pirep would have been impossible to build without the following software projects:
+    <ul>
+      <li><a href="https://rubyonrails.org">Ruby on Rails</a></li>
+      <li><a href="https://www.mapbox.com">Mapbox</a></li>
+      <li><a href="https://gdal.org">GDAL</a></li>
+      <li><a href="https://github.com/Ionaru/easy-markdown-editor">EasyMDE</a></li>
+      <li><a href="https://www.postgresql.org">PostgreSQL</a></li>
+      <li>And many more</li>
+    </ul>
+  </p>
+
+  <div class="text-end mt-2">
+    <small class="text-muted">Proudly made in Seattle&nbsp;<i class="fa-solid fa-umbrella"></i></small>
+  </div>
 </div>
