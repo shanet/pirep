@@ -28,7 +28,7 @@ class MapTest < ApplicationSystemTestCase
 
       # Has photos
       expected_photo_path = URI.parse(url_for(@airport.photos.first)).path
-      actual_photo_path = URI.parse(find('.photo-gallery img')[:src]).path
+      actual_photo_path = URI.parse(find('.carousel img')[:src]).path
       assert_equal expected_photo_path, actual_photo_path
 
       # Has elevation
@@ -338,7 +338,7 @@ private
   def wait_for_map_ready
     # Once the map is fully ready to use it will populate a data attribute
     # Mapbox runs incredibly slow on CI so give it a bunch of time before failing
-    find('#map[data-ready="true"]', wait: (ENV['CI'] ? 300 : 30))
+    find('#map[data-ready="true"]', wait: (ENV['CI'] ? 300 : 60))
   rescue Capybara::ElementNotFound => error
     # Something may have prevented Mapbox from initalizing, it would he helpful to print the browser logs in this case
     warn page.driver.browser.logs.get(:browser)

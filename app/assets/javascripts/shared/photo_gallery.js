@@ -1,33 +1,45 @@
-let currentImageIndex = 0;
-
 document.addEventListener('DOMContentLoaded', () => {
-  initializePhotoGallery();
+  initializePhotoGalleries();
 }, {once: true});
 
-export function initializePhotoGallery() {
-  if(!document.querySelector('.photo-gallery .next')) return;
+export function initializePhotoGalleries() {
+  const photoGalleries = document.getElementsByClassName('carousel');
 
-  const images = document.querySelectorAll('.photo-gallery .image');
+  for(let i=0; i<photoGalleries.length; i++) {
+    const photoGallery = photoGalleries[i];
+    const images = photoGallery.querySelectorAll('.carousel-item');
+    photoGallery.dataset.activeImage = 0;
 
-  document.querySelector('.photo-gallery .next').addEventListener('click', () => {
-    currentImageIndex = (currentImageIndex === images.length - 1 ? 0 : currentImageIndex + 1);
-    showImage();
-  });
+    photoGallery.querySelector('.carousel-control-prev').addEventListener('click', () => {
+      photoGallery.dataset.activeImage = (parseInt(photoGallery.dataset.activeImage, 10) === 0 ? images.length - 1 : parseInt(photoGallery.dataset.activeImage, 10) - 1);
+      showImage(photoGallery, parseInt(photoGallery.dataset.activeImage, 10));
+    });
 
-  document.querySelector('.photo-gallery .previous').addEventListener('click', () => {
-    currentImageIndex = (currentImageIndex === 0 ? images.length - 1 : currentImageIndex - 1);
-    showImage();
-  });
-}
+    photoGallery.querySelector('.carousel-control-next').addEventListener('click', () => {
+      photoGallery.dataset.activeImage = (parseInt(photoGallery.dataset.activeImage, 10) >= images.length - 1 ? 0 : parseInt(photoGallery.dataset.activeImage, 10) + 1);
+      showImage(photoGallery, parseInt(photoGallery.dataset.activeImage, 10));
+    });
 
-function showImage() {
-  const images = document.querySelectorAll('.photo-gallery .image');
+    const indicators = photoGallery.querySelectorAll('.carousel-indicators button');
 
-  for(let i = 0; i < images.length; i++) {
-    if(i !== currentImageIndex) {
-      images[i].classList.remove('active');
+    for(let j=0; j<indicators.length; j++) {
+      indicators[j].addEventListener('click', () => {
+        photoGallery.dataset.activeImage = parseInt(indicators[j].dataset.bsTarget, 10);
+        showImage(photoGallery, parseInt(photoGallery.dataset.activeImage, 10));
+      });
     }
   }
+}
 
-  images[currentImageIndex].classList.add('active');
+function showImage(photoGallery, activeIndex) {
+  const images = photoGallery.querySelectorAll('.carousel-item');
+  const indicators = photoGallery.querySelectorAll('.carousel-indicators button');
+
+  for(let i=0; i<images.length; i++) {
+    images[i].classList.remove('active');
+    indicators[i].classList.remove('active');
+  }
+
+  images[activeIndex].classList.add('active');
+  indicators[activeIndex].classList.add('active');
 }

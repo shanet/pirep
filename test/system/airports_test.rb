@@ -43,7 +43,7 @@ class AirportsTest < ApplicationSystemTestCase
 
     # Has photos
     expected_photo_path = URI.parse(url_for(@airport.photos.first)).path
-    actual_photo_path = URI.parse(find('.photo-gallery img')[:src]).path
+    actual_photo_path = URI.parse(find('.carousel img')[:src]).path
     assert_equal expected_photo_path, actual_photo_path
 
     # Has airport map
@@ -150,10 +150,10 @@ class AirportsTest < ApplicationSystemTestCase
   test 'scrolls photos' do
     visit airport_path(@airport.code)
 
-    within('.photo-gallery') do
-      images = all('img', visible: false)
-      previous_button = find('.previous')
-      next_button = find('.next')
+    within('.carousel') do
+      images = all('.carousel-item', visible: false)
+      previous_button = find('.carousel-control-prev')
+      next_button = find('.carousel-control-next')
 
       # The first image should be shown by default
       assert_image_shown images.first
@@ -173,13 +173,20 @@ class AirportsTest < ApplicationSystemTestCase
       # Going forward from the end should wrap around to the first image
       next_button.click
       assert_image_shown images.first
+
+      # Clicking on an indicator should jump to that image
+      all('.carousel-indicators button').last.click
+      assert_image_shown images.last
+
+      # Images with attributions should display it
+      assert_equal @airport.all_photos.last[:attribution], first('.carousel-caption').text, 'Attribution not present for image'
     end
   end
 
   test 'upload photo' do
     visit airport_path(@airport.code)
 
-    assert_difference -> {all('.photo-gallery img', visible: false).count} do
+    assert_difference -> {all('.carousel img', visible: false).count} do
       click_on 'Add Photo'
       find('#upload-photo-form input[type="file"]').set(Rails.root.join('test/fixtures/files/image.png'))
       click_on 'Upload Photo'
