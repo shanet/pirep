@@ -33,7 +33,7 @@ export function initializeDrawer() {
   // Zoom out/in
   document.querySelector(`#${DRAWER_CONTENT_ID} .zoom-btn`).addEventListener('click', zoomAirport);
 
-  photoGallery.initializePhotoGallery();
+  photoGallery.initializePhotoGalleries();
   textareaEditors.initEditors();
 }
 

@@ -1,48 +1,21 @@
-.photo-gallery {
-  position: relative;
-
-  .image {
+.carousel {
+  img {
     display: none;
     height: 300px;
     object-fit: cover;
     width: 100%;
-
-    &.active {
-      display: block;
-    }
   }
 
-  .previous,
-  .next {
-    cursor: pointer;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    width: 200px;
-
-    &:hover a {
-      background-color: rgba(0, 0, 0, .8);
-    }
-
-    a {
-      border-radius: 0 3px 3px 0;
-      color: $white;
-      font-size: 18px;
-      margin: -20px 5px;
-      padding: 10px;
-      position: absolute;
-      top: 50%;
-      transition: .6s ease;
-      width: auto;
-    }
+  .carousel-control-prev,
+  .carousel-control-next {
+    transition: 1s;
   }
 
-  .next {
-    border-radius: 3px 0 0 3px;
-    right: 0;
+  .carousel-control-prev:hover {
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .75) 100%);
+  }
 
-    a {
-      right: 0;
-    }
+  .carousel-control-next:hover {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .75) 100%);
   }
 }

@@ -1,16 +1,29 @@
-<div class="photo-gallery">
+<div class="carousel">
   <% photos.each_with_index do |photo, index| %>
-    <img class="image <%= index == 0 ? 'active' : '' %> <%= defined?(border) ? 'img-thumbnail' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? url_for(photo) : photo[:url] %>">
+    <div class="carousel-inner">
+      <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
+        <img class="d-block <%= defined?(border) ? 'img-thumbnail' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? url_for(photo) : photo[:url] %>">
+
+        <% if photo.is_a?(Hash) && photo[:attribution].present? %>
+          <div class="carousel-caption d-none d-md-block">
+            <%= photo[:attribution] %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   <% end %>
 
-  <%# Don't show the previous and next controls if there's only one image %>
-  <% if photos.count > 1 %>
-    <div class="previous">
-      <a class="<%= defined?(border) ? '' : 'mx-0' %>"><i class="fas fa-chevron-left"></i></a>
-    </div>
+  <div class="carousel-indicators">
+    <% photos.each_with_index do |photo, index| %>
+      <button type="button" data-bs-target="<%= index %>"<% if index == 0 %> class="active"<% end %>></button>
+    <% end %>
+  </div>
 
-    <div class="next">
-      <a class="<%= defined?(border) ? '' : 'mx-0' %>"><i class="fas fa-chevron-right"></i></a>
-    </div>
-  <% end %>
+  <button class="carousel-control-prev <%= defined?(border) ? 'm-1' : '' %>" type="button">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+
+  <button class="carousel-control-next <%= defined?(border) ? 'm-1' : '' %>" type="button">
+    <span class="carousel-control-next-icon"></span>
+  </button>
 </div>

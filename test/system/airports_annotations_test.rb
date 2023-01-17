@@ -54,7 +54,7 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
   test 'restore and edit annotations' do
     visit airport_path(@annotated_airport)
 
-    # The annotation outside the bounds of the container should not be present
+    all('.annotation') # Use an `all` call here to wait a bit longer to give the map time to initialize
     assert_selector '.annotation', count: @annotated_airport.annotations.count
 
     # All annotations should be in editing mode when enabled
