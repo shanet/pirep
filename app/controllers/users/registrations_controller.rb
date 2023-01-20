@@ -86,6 +86,6 @@ protected
   end
 
   def layout_for_action
-    return (action_name == :new ? 'devise' : 'application')
+    return (action_name == :new ? 'application' : 'devise')
   end
 end

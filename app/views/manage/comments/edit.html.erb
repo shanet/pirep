@@ -1,4 +1,7 @@
-<% @breadcrumbs = [['Comments', manage_comments_path], [@comment.short_id, manage_comment_path(@comment)], ['Edit']] %>
+<%
+  @title = "Comment #{@comment.short_id}"
+  @breadcrumbs = [['Comments', manage_comments_path], [@comment.short_id, manage_comment_path(@comment)], ['Edit']]
+%>
 
 <h1 class="display-6">Edit Comment</h1>
 

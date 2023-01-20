@@ -1,4 +1,7 @@
-<% @breadcrumbs = [['Airports', manage_airports_path], [@airport.code]] %>
+<%
+  @title = @airport.code
+  @breadcrumbs = [['Airports', manage_airports_path], [@airport.code]]
+%>
 
 <div class="row">
   <div class="col-8">

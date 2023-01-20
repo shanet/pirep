@@ -1,4 +1,7 @@
-<% @breadcrumbs = [[@airport.code, airport_path(@airport)], ['History']] %>
+<%
+  @title = "#{@airport.code} History"
+  @breadcrumbs = [[@airport.code, airport_path(@airport)], ['History']]
+%>
 
 <%= render 'airports/header/header', subtitle: 'Revision History', hide_cover_image_dropdown: true %>
 

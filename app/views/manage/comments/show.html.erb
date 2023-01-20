@@ -1,4 +1,7 @@
-<% @breadcrumbs = [['Comments', manage_comments_path], [@comment.short_id]] %>
+<%
+  @title = "Comment #{@comment.short_id}"
+  @breadcrumbs = [['Comments', manage_comments_path], [@comment.short_id]]
+%>
 
 <div class="row">
   <div class="col-8">

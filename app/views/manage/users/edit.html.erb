@@ -1,4 +1,5 @@
 <%
+  @title = "User #{user_label(@user)}"
   @breadcrumbs = [['Users', manage_users_path], [user_label(@user), manage_user_path(@user)], ['Edit']]
 
   user_types = [
