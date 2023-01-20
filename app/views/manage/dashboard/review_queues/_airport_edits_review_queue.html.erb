@@ -12,6 +12,7 @@
   <div class="list-group list-group-flush">
     <% if versions.any? %>
       <% versions.limit(queue_limit).each do |version| %>
+        <% next unless version.object_changes %>
         <%= render 'manage/dashboard/review_queues/airport_edit_row', version: version %>
       <% end %>
 
