@@ -136,6 +136,16 @@ class SearchesTest < ActiveSupport::TestCase
     assert count.is_a?(Integer), 'Did not return integer for count of search results'
   end
 
+  test 'handles queries with special characters' do
+    assert Search.query('!@#$%^&*()_-=+|/\\{}[];:\'"`~.,<>?', Airport, wildcard: true).empty?, 'Did not handle search query with special characters'
+  end
+
+  test 'handles extremely long query' do
+    assert_nothing_raised do
+      Search.query('a ' * 1_000, Airport, wildcard: true)
+    end
+  end
+
 private
 
   def assert_search_rank_ordering(results)
