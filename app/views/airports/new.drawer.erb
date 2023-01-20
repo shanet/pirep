@@ -3,7 +3,7 @@
 
 <div class="row mt-2">
   <div class="col mb-3">
-    <%= form_with(model: @airport, id: 'new-airport', local: true) do |form| %>
+    <%= form_with(model: @airport, id: 'new-airport', local: false) do |form| %>
       <%= render partial: 'shared/record_errors', formats: :html, locals: {record: form.object} %>
 
       <div class="mb-3">

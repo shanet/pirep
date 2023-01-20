@@ -2,5 +2,5 @@
   <%# Redirect on success %>
   window.location = "<%= root_path %>";
 <% else %>
-  <%= render 'devise/shared/ajax_errors', form_element_id: 'registration-form', record: resource %>
+  <%= render 'shared/ajax_errors', form_element_id: 'registration-form', record: resource %>
 <% end %>

@@ -7,5 +7,11 @@
   errors.classList.add('ajax-errors');
   errors.innerHTML = `<%= render 'shared/record_errors', record: record %>`;
 
-  document.getElementById("<%= form_element_id %>").prepend(errors);
+  const target = document.getElementById("<%= form_element_id %>");
+
+  <% if defined?(insert_before) %>
+    target.parentNode.insertBefore(errors, target);
+  <% else %>
+    target.prepend(errors);
+  <% end %>
 }

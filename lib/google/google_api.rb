@@ -36,8 +36,8 @@ module GoogleApi
 
         photos << {url: response.headers[:location], attribution: photo['html_attribution']&.first}
       end
-    rescue
-      # TODO: report error to sentry
+    rescue => error
+      Sentry.capture_exception(error)
       return []
     end
   end
