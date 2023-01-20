@@ -1,269 +1,261 @@
 Rails.configuration.sectional_charts = {
   # Continential US
-  #
-  # The order here is important to ensure the proper overlap between neighboring charts.
-  # They are ordered in rows right to left from top-right (Haliax) to bottom-left (Brownsville).
-  halifax: {
-    archive: 'Halifax.zip',
-    filename: 'Halifax SEC.tif',
-    bounding_box: [-69.3042811, 43.5526379, -60.6248382, 48.2187551],
-  },
-  montreal: {
-    archive: 'Montreal.zip',
-    filename: 'Montreal SEC.tif',
-    bounding_box: [-77.3064648, 43.9208312, -68.3369328, 48.2156321],
-  },
-  lake_huron: {
-    archive: 'Lake_Huron.zip',
-    filename: 'Lake Huron SEC.tif',
-    bounding_box: [-85.3040691, 43.9195602, -76.3358869, 48.2171498],
-  },
-  green_bay: {
-    archive: 'Green_Bay.zip',
-    filename: 'Green Bay SEC.tif',
-    bounding_box: [-93.3133946, 43.9190472, -84.316315, 48.3356471],
-  },
-  twin_cities: {
-    archive: 'Twin_Cities.zip',
-    filename: 'Twin Cities SEC.tif',
-    bounding_box: [-101.3382474, 44.405018, -92.2669922, 49.0245225],
-  },
-  billings: {
-    archive: 'Billings.zip',
-    filename: 'Billings SEC.tif',
-    bounding_box: [-109.3369135, 44.4043173, -100.2730797, 49.0213015],
-  },
-  great_falls: {
-    archive: 'Great_Falls.zip',
-    filename: 'Great Falls SEC.tif',
-    bounding_box: [-117.336362, 44.406005, -108.267849, 49.0164353],
-  },
-  seattle: {
-    archive: 'Seattle.zip',
-    filename: 'Seattle SEC.tif',
-    bounding_box: [-125.3378861, 44.4049085, -116.2736886, 49.01638],
-  },
-
-  new_york: {
-    archive: 'New_York.zip',
-    filename: 'New York SEC.tif',
-    bounding_box: [-77.2850118, 39.926167, -68.6530107, 44.2118842],
-  },
-  detroit: {
-    archive: 'Detroit.zip',
-    filename: 'Detroit SEC.tif',
-    bounding_box: [-85.2823252, 39.9242674, -76.6402788, 44.1991724],
-  },
-  chicago: {
-    archive: 'Chicago.zip',
-    filename: 'Chicago SEC.tif',
-    bounding_box: [-93.2823565, 39.9246572, -84.6444073, 44.1942214],
-  },
-  omaha: {
-    archive: 'Omaha.zip',
-    filename: 'Omaha SEC.tif',
-    bounding_box: [-101.306099, 39.923674, -92.6249366, 44.5285109],
-  },
-  cheyenne: {
-    archive: 'Cheyenne.zip',
-    filename: 'Cheyenne SEC.tif',
-    bounding_box: [-109.3076224, 39.9251044, -100.6185816, 44.5272313],
-  },
-  salt_lake_city: {
-    archive: 'Salt_Lake_City.zip',
-    filename: 'Salt Lake City SEC.tif',
-    bounding_box: [-117.3055726, 39.9249412, -108.6206512, 44.5236113],
-  },
-  klamath_falls: {
-    archive: 'Klamath_Falls.zip',
-    filename: 'Klamath Falls SEC.tif',
-    bounding_box: [-125.3061451, 39.92517, -116.6270444, 44.5294905],
-  },
-
-  washington: {
-    archive: 'Washington.zip',
-    filename: 'Washington SEC.tif',
-    bounding_box: [-79.1966861, 35.9465606, -71.6596589, 40.2243358],
-  },
-  cincinnati: {
-    archive: 'Cincinnati.zip',
-    filename: 'Cincinnati SEC.tif',
-    bounding_box: [-85.1957193, 35.9467387, -77.7170835, 40.2402541],
-  },
-  st_louis: {
-    archive: 'St_Louis.zip',
-    filename: 'St Louis SEC.tif',
-    bounding_box: [-91.1972622, 35.9492499, -83.7443011, 40.241944],
-  },
-  kansas_city: {
-    archive: 'Kansas_City.zip',
-    filename: 'Kansas City SEC.tif',
-    bounding_box: [-97.2004249, 35.9495873, -89.7146753, 40.2262392],
-  },
-  wichita: {
-    archive: 'Wichita.zip',
-    filename: 'Wichita SEC.tif',
-    bounding_box: [-104.1948413, 35.9454468, -96.6296011, 40.2372955],
-  },
-  denver: {
-    archive: 'Denver.zip',
-    filename: 'Denver SEC.tif',
-    bounding_box: [-111.2076127, 35.5835769, -103.7323775, 40.0675584],
-  },
-  las_vegas: {
-    archive: 'Las_Vegas.zip',
-    filename: 'Las Vegas SEC.tif',
-    bounding_box: [-118.2078426, 35.5815239, -110.70019, 40.0657608],
-  },
-  san_francisco: {
-    archive: 'San_Francisco.zip',
-    filename: 'San Francisco SEC.tif',
-    bounding_box: [-125.2006604, 35.9470132, -117.6527801, 40.2085448],
-  },
-
-  charlotte: {
-    archive: 'Charlotte.zip',
-    filename: 'Charlotte SEC.tif',
-    bounding_box: [-82.1732607, 31.947316, -74.9435421, 36.2357435],
+  albuquerque: {
+    archive: 'Albuquerque.zip',
+    filename: 'Albuquerque SEC.tif',
+    bounding_box: [-109.1831905, 31.9460701, -101.781149, 36.2243607],
   },
   atlanta: {
     archive: 'Atlanta.zip',
     filename: 'Atlanta SEC.tif',
     bounding_box: [-88.186108, 31.9475007, -80.7759948, 36.2090096],
   },
-  memphis: {
-    archive: 'Memphis.zip',
-    filename: 'Memphis SEC.tif',
-    bounding_box: [-95.1861902, 31.9467178, -87.7739182, 36.2327687],
-  },
-  dallas_ft_worth: {
-    archive: 'Dallas-Ft_Worth.zip',
-    filename: 'Dallas-Ft Worth SEC.tif',
-    bounding_box: [-102.1862045, 31.9476892, -94.779702, 36.2234347],
-  },
-  albuquerque: {
-    archive: 'Albuquerque.zip',
-    filename: 'Albuquerque SEC.tif',
-    bounding_box: [-109.1831905, 31.9460701, -101.781149, 36.2243607],
-  },
-  phoenix: {
-    archive: 'Phoenix.zip',
-    filename: 'Phoenix SEC.tif',
-    bounding_box: [-116.1910631, 31.2658758, -108.747054, 35.6914429],
-  },
-  los_angeles: {
-    archive: 'Los_Angeles.zip',
-    filename: 'Los Angeles SEC.tif',
-    bounding_box: [-122.3105084, 31.9412668, -114.5508769, 36.0875941],
-  },
-
-  jacksonville: {
-    archive: 'Jacksonville.zip',
-    filename: 'Jacksonville SEC.tif',
-    bounding_box: [-85.1212828, 27.9588144, -78.433951, 32.242651],
-  },
-  new_orleans: {
-    archive: 'New_Orleans.zip',
-    filename: 'New Orleans SEC.tif',
-    bounding_box: [-91.1189459, 27.9582419, -84.4427018, 32.2342433],
-  },
-  houston: {
-    archive: 'Houston.zip',
-    filename: 'Houston SEC.tif',
-    bounding_box: [-97.1209012, 27.9598658, -90.4496381, 32.2323637],
-  },
-  san_antonio: {
-    archive: 'San_Antonio.zip',
-    filename: 'San Antonio SEC.tif',
-    bounding_box: [-103.1214652, 27.9562038, -96.3603537, 32.2371014],
-  },
-  el_paso: {
-    archive: 'El_Paso.zip',
-    filename: 'El Paso SEC.tif',
-    bounding_box: [-109.118829, 27.9576038, -102.4444274, 32.2345108],
-  },
-
-  miami: {
-    archive: 'Miami.zip',
-    filename: 'Miami SEC.tif',
-    bounding_box: [-83.1276045, 23.9578706, -76.3371967, 28.495424],
+  billings: {
+    archive: 'Billings.zip',
+    filename: 'Billings SEC.tif',
+    bounding_box: [-109.3369135, 44.4043173, -100.2730797, 49.0213015],
   },
   brownsville: {
     archive: 'Brownsville.zip',
     filename: 'Brownsville SEC.tif',
     bounding_box: [-103.1163639, 23.9624798, -96.5794134, 28.2381364],
   },
+  charlotte: {
+    archive: 'Charlotte.zip',
+    filename: 'Charlotte SEC.tif',
+    bounding_box: [-82.1732607, 31.947316, -74.9435421, 36.2357435],
+  },
+  cheyenne: {
+    archive: 'Cheyenne.zip',
+    filename: 'Cheyenne SEC.tif',
+    bounding_box: [-109.3076224, 39.9251044, -100.6185816, 44.5272313],
+  },
+  chicago: {
+    archive: 'Chicago.zip',
+    filename: 'Chicago SEC.tif',
+    bounding_box: [-93.2823565, 39.9246572, -84.6444073, 44.1942214],
+  },
+  cincinnati: {
+    archive: 'Cincinnati.zip',
+    filename: 'Cincinnati SEC.tif',
+    bounding_box: [-85.1957193, 35.9467387, -77.7170835, 40.2402541],
+  },
+  dallas_ft_worth: {
+    archive: 'Dallas-Ft_Worth.zip',
+    filename: 'Dallas-Ft Worth SEC.tif',
+    bounding_box: [-102.1862045, 31.9476892, -94.779702, 36.2234347],
+  },
+  denver: {
+    archive: 'Denver.zip',
+    filename: 'Denver SEC.tif',
+    bounding_box: [-111.2076127, 35.5835769, -103.7323775, 40.0675584],
+  },
+  detroit: {
+    archive: 'Detroit.zip',
+    filename: 'Detroit SEC.tif',
+    bounding_box: [-85.2823252, 39.9242674, -76.6402788, 44.1991724],
+  },
+  el_paso: {
+    archive: 'El_Paso.zip',
+    filename: 'El Paso SEC.tif',
+    bounding_box: [-109.118829, 27.9576038, -102.4444274, 32.2345108],
+  },
+  great_falls: {
+    archive: 'Great_Falls.zip',
+    filename: 'Great Falls SEC.tif',
+    bounding_box: [-117.336362, 44.406005, -108.267849, 49.0164353],
+  },
+  green_bay: {
+    archive: 'Green_Bay.zip',
+    filename: 'Green Bay SEC.tif',
+    bounding_box: [-93.3133946, 43.9190472, -84.316315, 48.3356471],
+  },
+  halifax: {
+    archive: 'Halifax.zip',
+    filename: 'Halifax SEC.tif',
+    bounding_box: [-69.3042811, 43.5526379, -60.6248382, 48.2187551],
+  },
+  houston: {
+    archive: 'Houston.zip',
+    filename: 'Houston SEC.tif',
+    bounding_box: [-97.1209012, 27.9598658, -90.4496381, 32.2323637],
+  },
+  jacksonville: {
+    archive: 'Jacksonville.zip',
+    filename: 'Jacksonville SEC.tif',
+    bounding_box: [-85.1212828, 27.9588144, -78.433951, 32.242651],
+  },
+  kansas_city: {
+    archive: 'Kansas_City.zip',
+    filename: 'Kansas City SEC.tif',
+    bounding_box: [-97.2004249, 35.9495873, -89.7146753, 40.2262392],
+  },
+  klamath_falls: {
+    archive: 'Klamath_Falls.zip',
+    filename: 'Klamath Falls SEC.tif',
+    bounding_box: [-125.3061451, 39.92517, -116.6270444, 44.5294905],
+  },
+  lake_huron: {
+    archive: 'Lake_Huron.zip',
+    filename: 'Lake Huron SEC.tif',
+    bounding_box: [-85.3040691, 43.9195602, -76.3358869, 48.2171498],
+  },
+  las_vegas: {
+    archive: 'Las_Vegas.zip',
+    filename: 'Las Vegas SEC.tif',
+    bounding_box: [-118.2078426, 35.5815239, -110.70019, 40.0657608],
+  },
+  los_angeles: {
+    archive: 'Los_Angeles.zip',
+    filename: 'Los Angeles SEC.tif',
+    bounding_box: [-122.3105084, 31.9412668, -114.5508769, 36.0875941],
+  },
+  memphis: {
+    archive: 'Memphis.zip',
+    filename: 'Memphis SEC.tif',
+    bounding_box: [-95.1861902, 31.9467178, -87.7739182, 36.2327687],
+  },
+  miami: {
+    archive: 'Miami.zip',
+    filename: 'Miami SEC.tif',
+    bounding_box: [-83.1276045, 23.9578706, -76.3371967, 28.495424],
+  },
+  montreal: {
+    archive: 'Montreal.zip',
+    filename: 'Montreal SEC.tif',
+    bounding_box: [-77.3064648, 43.9208312, -68.3369328, 48.2156321],
+  },
+  new_orleans: {
+    archive: 'New_Orleans.zip',
+    filename: 'New Orleans SEC.tif',
+    bounding_box: [-91.1189459, 27.9582419, -84.4427018, 32.2342433],
+  },
+  new_york: {
+    archive: 'New_York.zip',
+    filename: 'New York SEC.tif',
+    bounding_box: [-77.2850118, 39.926167, -68.6530107, 44.2118842],
+  },
+  omaha: {
+    archive: 'Omaha.zip',
+    filename: 'Omaha SEC.tif',
+    bounding_box: [-101.306099, 39.923674, -92.6249366, 44.5285109],
+  },
+  phoenix: {
+    archive: 'Phoenix.zip',
+    filename: 'Phoenix SEC.tif',
+    bounding_box: [-116.1910631, 31.2658758, -108.747054, 35.6914429],
+  },
+  salt_lake_city: {
+    archive: 'Salt_Lake_City.zip',
+    filename: 'Salt Lake City SEC.tif',
+    bounding_box: [-117.3055726, 39.9249412, -108.6206512, 44.5236113],
+  },
+  san_antonio: {
+    archive: 'San_Antonio.zip',
+    filename: 'San Antonio SEC.tif',
+    bounding_box: [-103.1214652, 27.9562038, -96.3603537, 32.2371014],
+  },
+  san_francisco: {
+    archive: 'San_Francisco.zip',
+    filename: 'San Francisco SEC.tif',
+    bounding_box: [-125.2006604, 35.9470132, -117.6527801, 40.2085448],
+  },
+  seattle: {
+    archive: 'Seattle.zip',
+    filename: 'Seattle SEC.tif',
+    bounding_box: [-125.3378861, 44.4049085, -116.2736886, 49.01638],
+  },
+  st_louis: {
+    archive: 'St_Louis.zip',
+    filename: 'St Louis SEC.tif',
+    bounding_box: [-91.1972622, 35.9492499, -83.7443011, 40.241944],
+  },
+  twin_cities: {
+    archive: 'Twin_Cities.zip',
+    filename: 'Twin Cities SEC.tif',
+    bounding_box: [-101.3382474, 44.405018, -92.2669922, 49.0245225],
+  },
+  washington: {
+    archive: 'Washington.zip',
+    filename: 'Washington SEC.tif',
+    bounding_box: [-79.1966861, 35.9465606, -71.6596589, 40.2243358],
+  },
+  wichita: {
+    archive: 'Wichita.zip',
+    filename: 'Wichita SEC.tif',
+    bounding_box: [-104.1948413, 35.9454468, -96.6296011, 40.2372955],
+  },
 
   # Alaska
-  point_barrow: {
-    archive: 'Point_Barrow.zip',
-    filename: 'Point Barrow SEC.tif',
-    bounding_box: [-158.7307989, 67.8047005, -139.1501914, 72.0988825],
-  },
-  cape_lisburne: {
-    archive: 'Cape_Lisburne.zip',
-    filename: 'Cape Lisburne SEC.tif',
-    bounding_box: [-172.9684675, 67.8051495, -154.9510469, 72.1227863],
-  },
-  dawson: {
-    archive: 'Dawson.zip',
-    filename: 'Dawson SEC.tif',
-    bounding_box: [-146.1671105, 63.849068, -130.7247982, 68.1250495],
-  },
-  fairbanks: {
-    archive: 'Fairbanks.zip',
-    filename: 'Fairbanks SEC.tif',
-    bounding_box: [-159.1682847, 63.8493161, -143.7323474, 68.1276488],
-  },
-  nome: {
-    archive: 'Nome.zip',
-    filename: 'Nome SEC.tif',
-    bounding_box: [-172.7098028, 63.8369072, -156.6617338, 68.1168622],
-  },
   anchorage: {
     archive: 'Anchorage.zip',
     filename: 'Anchorage SEC.tif',
     bounding_box: [-152.2420725, 59.8603386, -139.3449105, 64.1570625],
-  },
-  mcgrath: {
-    archive: 'McGrath.zip',
-    filename: 'McGrath SEC.tif',
-    bounding_box: [-162.740768, 59.8624277, -149.8954106, 64.1517769],
   },
   bethel: {
     archive: 'Bethel.zip',
     filename: 'Bethel SEC.tif',
     bounding_box: [-173.8722179, 59.5538338, -160.3211795, 64.1442169],
   },
-  seward: {
-    archive: 'Seward.zip',
-    filename: 'Seward SEC.tif',
-    bounding_box: [-152.9265913, 59.0894754, -139.9579931, 61.4556512],
-  },
-  juneau: {
-    archive: 'Juneau.zip',
-    filename: 'Juneau SEC.tif',
-    bounding_box: [-141.6968685, 55.8732122, -129.7110844, 60.1621043],
-  },
-  kodiak: {
-    archive: 'Kodiak.zip',
-    filename: 'Kodiak SEC.tif',
-    bounding_box: [-162.6613995, 55.6030899, -150.7055431, 60.1491559],
-  },
-  ketchikan: {
-    archive: 'Ketchikan.zip',
-    filename: 'Ketchikan SEC.tif',
-    bounding_box: [-139.4593378, 51.9058426, -129.257354, 56.1592074],
+  cape_lisburne: {
+    archive: 'Cape_Lisburne.zip',
+    filename: 'Cape Lisburne SEC.tif',
+    bounding_box: [-172.9684675, 67.8051495, -154.9510469, 72.1227863],
   },
   cold_bay: {
     archive: 'Cold_Bay.zip',
     filename: 'Cold Bay SEC.tif',
     bounding_box: [-164.2556053, 53.834451, -154.0860067, 56.1693458],
   },
+  dawson: {
+    archive: 'Dawson.zip',
+    filename: 'Dawson SEC.tif',
+    bounding_box: [-146.1671105, 63.849068, -130.7247982, 68.1250495],
+  },
   dutch_harbor: {
     archive: 'Dutch_Harbor.zip',
     filename: 'Dutch Harbor SEC.tif',
     bounding_box: [-173.4594969, 51.9004498, -163.0941263, 56.1594243],
+  },
+  fairbanks: {
+    archive: 'Fairbanks.zip',
+    filename: 'Fairbanks SEC.tif',
+    bounding_box: [-159.1682847, 63.8493161, -143.7323474, 68.1276488],
+  },
+  juneau: {
+    archive: 'Juneau.zip',
+    filename: 'Juneau SEC.tif',
+    bounding_box: [-141.6968685, 55.8732122, -129.7110844, 60.1621043],
+  },
+  ketchikan: {
+    archive: 'Ketchikan.zip',
+    filename: 'Ketchikan SEC.tif',
+    bounding_box: [-139.4593378, 51.9058426, -129.257354, 56.1592074],
+  },
+  kodiak: {
+    archive: 'Kodiak.zip',
+    filename: 'Kodiak SEC.tif',
+    bounding_box: [-162.6613995, 55.6030899, -150.7055431, 60.1491559],
+  },
+  mcgrath: {
+    archive: 'McGrath.zip',
+    filename: 'McGrath SEC.tif',
+    bounding_box: [-162.740768, 59.8624277, -149.8954106, 64.1517769],
+  },
+  nome: {
+    archive: 'Nome.zip',
+    filename: 'Nome SEC.tif',
+    bounding_box: [-172.7098028, 63.8369072, -156.6617338, 68.1168622],
+  },
+  point_barrow: {
+    archive: 'Point_Barrow.zip',
+    filename: 'Point Barrow SEC.tif',
+    bounding_box: [-158.7307989, 67.8047005, -139.1501914, 72.0988825],
+  },
+  seward: {
+    archive: 'Seward.zip',
+    filename: 'Seward SEC.tif',
+    bounding_box: [-152.9265913, 59.0894754, -139.9579931, 61.4556512],
   },
   western_aleutian_islands_east_east: {
     archive: 'Western_Aleutian_Islands.zip',
