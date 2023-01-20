@@ -1,10 +1,10 @@
 <% @breadcrumbs = [['Activity']] %>
 
-<div class="row">
-  <div class="col-6 col-md-3"><%= render 'meter', label: 'Total Edits', value: Action.where(type: Action.edited_actions).count %></div>
-  <div class="col-6 col-md-3"><%= render 'meter', label: 'Total Comments', value: Comment.count %></div>
-  <div class="col-6 col-md-3"><%= render 'meter', label: 'Edits Today', value: Action.where(type: Action.edited_actions).where('created_at > ?', 1.day.ago).count %></div>
-  <div class="col-6 col-md-3"><%= render 'meter', label: 'Active Users Today', value: Users::User.where('last_seen_at > ?', 1.day.ago).count %></div>
+<div class="row g-3 mt-1">
+  <%= render 'meter', label: 'Total Edits', value: Action.where(type: Action.edited_actions).count %>
+  <%= render 'meter', label: 'Total Comments', value: Comment.count %>
+  <%= render 'meter', label: 'Edits Today', value: Action.where(type: Action.edited_actions).where('created_at > ?', 1.day.ago).count %>
+  <%= render 'meter', label: 'Active Users Today', value: Users::User.where('last_seen_at > ?', 1.day.ago).count %>
 </div>
 
 <div class="row">
