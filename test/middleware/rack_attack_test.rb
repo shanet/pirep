@@ -21,7 +21,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
   test 'throttles airport creates' do
     with_rack_attack do
-      assert_throttles airports_path(format: :js), :post, Rails.configuration.rack_attack_write_limit, **{airport: attributes_for(:airport)}
+      assert_throttles airports_path(format: :js), :post, Rails.configuration.rack_attack_write_limit, airport: attributes_for(:airport)
     end
   end
 

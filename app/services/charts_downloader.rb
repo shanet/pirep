@@ -99,12 +99,12 @@ private
     Rails.logger.info('Swapping tiles directories')
 
     # Move the current tiles to a previous directory
-    if File.exist?(Rails.root.join("#{tiles_directory_prefix}/current"))
-      File.rename(Rails.root.join("#{tiles_directory_prefix}/current"), Rails.root.join("#{tiles_directory_prefix}/previous"))
+    if Rails.root.join("#{tiles_directory_prefix}/current").exist?
+      Rails.root.join("#{tiles_directory_prefix}/current").rename(Rails.root.join("#{tiles_directory_prefix}/previous"))
     end
 
     # Swap in the new tiles
-    File.rename(Rails.root.join("#{tiles_directory_prefix}/next"), Rails.root.join("#{tiles_directory_prefix}/current"))
+    Rails.root.join("#{tiles_directory_prefix}/next").rename(Rails.root.join("#{tiles_directory_prefix}/current"))
 
     # Clean up the old tiles
     FileUtils.rm_rf(Rails.root.join("#{tiles_directory_prefix}/previous"))

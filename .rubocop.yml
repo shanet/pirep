@@ -78,6 +78,9 @@ Naming/RescuedExceptionsVariableName:
 
 # --------------------------------------
 
+Rails/ActionOrder:
+  Enabled: false
+
 Rails/I18nLocaleTexts:
   Enabled: false
 
