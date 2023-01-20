@@ -6,8 +6,8 @@ class TagsController < ApplicationController
     if @tag.destroy
       Action.create!(type: :tag_removed, actionable: @tag, user: active_user, version: @tag.versions.last).persisted?
       render :destroy
-    else # rubocop:disable Style/EmptyElse
-      # TODO: error handle
+    else
+      render :error_response
     end
   end
 
@@ -17,19 +17,15 @@ class TagsController < ApplicationController
 
     case version.event
       when 'create'
-        if version.item.destroy
-          redirect_to airport_path(version.item.airport), notice: 'Tag removed'
-        else # rubocop:disable Style/EmptyElse
-          # TODO: error handle
-        end
+        # This is an admin only action and if it fails it's likely something complex that we shouldn't try to gracefully recover from
+        version.item.destroy!
+        redirect_to airport_path(version.item.airport), notice: 'Tag removed'
       when 'destroy'
         tag = version.reify
 
-        if tag.save
-          redirect_to airport_path(tag.airport), notice: 'Tag added'
-        else # rubocop:disable Style/EmptyElse
-          # TODO: error handle
-        end
+        # This is an admin only action and if it fails it's likely something complex that we shouldn't try to gracefully recover from
+        if tag.save!
+        redirect_to airport_path(tag.airport), notice: 'Tag added'
     end
   end
 

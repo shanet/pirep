@@ -165,6 +165,9 @@ class Airport < ApplicationRecord
     airport.ownership_type = :PR
     airport.tags << Tag.new(name: :unmapped)
 
+    # All unmapped airports must be privately owned. If it was publicly owned it would be listed in the FAA database.
+    airport.tags << Tag.new(name: :private_)
+
     # Tag closed airports as closed
     airport.tags << Tag.new(name: :closed) if state == 'closed'
 

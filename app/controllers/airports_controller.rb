@@ -31,9 +31,11 @@ class AirportsController < ApplicationController
       FetchAirportBoundingBoxJob.perform_later(@airport)
 
       Action.create!(type: :airport_added, actionable: @airport, user: active_user)
-      redirect_to airport_path(@airport.code), notice: 'New airport added to map, please fill out any known additional information about it.'
-    else # rubocop:disable Style/EmptyElse
-      # TODO: error handle
+      flash[:notice] = 'New airport added to map, please fill out any known additional information about it.'
+      render :create
+    else
+      @form_element_id = 'new-airport'
+      render :error_response
     end
   end
 
@@ -84,11 +86,9 @@ class AirportsController < ApplicationController
     @airport = PaperTrail::Version.find(params[:version_id]).reify
     authorize @airport
 
-    if @airport.save
-      redirect_to airport_path(@airport.code), notice: 'Airport reverted to previous version'
-    else # rubocop:disable Style/EmptyElse
-      # TODO: error handle
-    end
+    # This is an admin only action and if it fails it's likely something complex that we shouldn't try to gracefully recover from
+    @airport.save!
+    redirect_to airport_path(@airport.code), notice: 'Airport reverted to previous version'
   end
 
   def annotations

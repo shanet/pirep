@@ -12,6 +12,9 @@ class AirportTest < ActiveSupport::TestCase
     assert_equal 'PR', airport.facility_use
     assert_equal 'PR', airport.ownership_type
 
+    assert :unmapped.in?(airport.tags.map(&:name)), 'Unmapped airport not tagged as such'
+    assert :private_.in?(airport.tags.map(&:name)), 'Unmapped airport not tagged private'
+
     airport.save!
 
     # Creating another unmapped airport should use the next unmapped airport code
