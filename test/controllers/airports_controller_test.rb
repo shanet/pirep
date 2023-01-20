@@ -25,7 +25,7 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
   test 'create airport' do
     assert_difference('Airport.count') do
       assert_difference('Action.where(type: :airport_added).count') do
-        post airports_path(params: {airport: {
+        post airports_path(format: :js, params: {airport: {
           name: 'Unmapped airport',
           latitude: @airport.latitude,
           longitude: @airport.longitude,
@@ -34,7 +34,7 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
           landing_rights: :private_,
         }})
 
-        assert_redirected_to airport_path(Airport.last.code)
+        assert_response :success
       end
     end
   end

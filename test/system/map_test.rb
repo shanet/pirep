@@ -79,7 +79,7 @@ class MapTest < ApplicationSystemTestCase
     # Showing heliports should display the heliport
     click_filter('heliport')
     assert_equal 2, displayed_airports.count, 'Heliports not shown'
-    assert displayed_airports.map {|airport| airport['code']}.include?(heliport.code)
+    assert displayed_airports.pluck('code').include?(heliport.code)
 
     # Deselecting airports should hide the airport leaving only the heliport
     click_filter('airport')
@@ -251,8 +251,9 @@ class MapTest < ApplicationSystemTestCase
       find('#airport_landing_requirements').fill_in(with: 'Call 867-5309')
 
       click_on 'Submit'
-      assert_equal airport_path(Airport.last.code), current_path, 'Not redirected to new airport on form submit'
     end
+
+    assert_selector '.alert', text: 'New airport added to map'
   end
 
   test 'displays annotations for airport' do
@@ -316,7 +317,7 @@ private
   end
 
   def displayed_airports
-    return evaluate_script("mapbox.getSource('airports')._data.features").map {|airport| airport['properties']}
+    return evaluate_script("mapbox.getSource('airports')._data.features").pluck('properties')
   end
 
   def chart_layer_shown?(chart_layer)
