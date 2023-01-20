@@ -4,7 +4,7 @@
 
 require 'json'
 
-ARGV.each_with_index do |file, index|
+ARGV.each_with_index do |file, _index|
   info = JSON.parse(`gdalinfo -json "#{file}"`)
 
   coordinates = {
