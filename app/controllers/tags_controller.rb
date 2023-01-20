@@ -24,7 +24,7 @@ class TagsController < ApplicationController
         tag = version.reify
 
         # This is an admin only action and if it fails it's likely something complex that we shouldn't try to gracefully recover from
-        if tag.save!
+        tag.save!
         redirect_to airport_path(tag.airport), notice: 'Tag added'
     end
   end

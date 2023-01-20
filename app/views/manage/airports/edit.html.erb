@@ -1,4 +1,5 @@
 <%
+  @title = @airport.code
   @breadcrumbs = [['Airports', manage_airports_path], [@airport.code, manage_airport_path(@airport)], ['Edit']]
 
   # Filter out any hidden facilitiy types

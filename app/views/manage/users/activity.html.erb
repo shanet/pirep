@@ -1,4 +1,7 @@
-<% @breadcrumbs = [['Users', manage_users_path], [user_label(@user), manage_user_path(@user)], ['Activity']] %>
+<%
+  @title = "User #{user_label(@user)}"
+  @breadcrumbs = [['Users', manage_users_path], [user_label(@user), manage_user_path(@user)], ['Activity']]
+%>
 
 <h1 class="display-6">Activity for <%= user_label(@user) %></h1>
 
