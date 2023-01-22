@@ -23,7 +23,7 @@ class Users::Unknown < Users::User
 
   private_class_method def self.randomize_credentials(user)
     # Users must have email addresses and password so provide some dummy values for unknown users
-    user.email = "#{SecureRandom.uuid}@pirep.io"
+    user.email = "#{SecureRandom.uuid}@#{Rails.configuration.domain}"
     user.password = SecureRandom.uuid
   end
 end

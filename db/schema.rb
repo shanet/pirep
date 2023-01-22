@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_16_031323) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_14_073209) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -109,6 +109,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_16_031323) do
     t.datetime "reviewed_at", precision: nil
     t.index ["airport_id"], name: "index_comments_on_airport_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "faa_data_cycles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "airports"
+    t.string "charts"
+    t.string "diagrams"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "good_job_processes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

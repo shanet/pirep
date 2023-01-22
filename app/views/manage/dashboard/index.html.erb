@@ -4,9 +4,7 @@
   <%= render 'meter', label: 'Total Airports', value: Airport.count %>
   <%= render 'meter', label: 'Contributed Airports', value: Airport.count - Airport.joins(:tags).where('tags.name': :empty).count %>
   <%= render 'meter', label: 'Users', value: Users::User.count %>
-
-  <%# Use an airport we know will be open to get the current data cycle that has been loaded into the DB (allow for nils here in test) %>
-  <%= render 'meter', label: 'FAA Data Cycle', value: Airport.find_by(code: 'SEA')&.faa_data_cycle&.strftime('%Y-%m-%d') %>
+  <%= render 'meter', label: 'FAA Data Cycle', value: Rails.configuration.faa_data_cycle.current(:airports) %>
 </div>
 
 <div class="row mb-3">

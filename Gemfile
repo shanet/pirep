@@ -17,6 +17,7 @@ gem 'sprockets-rails'
 # Third party gems
 gem 'activerecord-cte'
 gem 'amazing_print'
+gem 'aws-sdk-s3'
 gem 'brakeman'
 gem 'bundler-audit'
 gem 'devise'
@@ -35,7 +36,11 @@ gem 'sentry-rails'
 gem 'sentry-ruby'
 
 group :development, :test do
+  gem 'aws-sdk-codedeploy'
+  gem 'aws-sdk-codepipeline'
+  gem 'aws-sdk-ecs'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'cli-ui'
   gem 'rubocop'
   gem 'rubocop-rails'
 end

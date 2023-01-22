@@ -4,8 +4,8 @@ $handle-size: 25px;
 $light-grey: #eee;
 $map-fixed-offset: 10px;
 
-// Tell FontAwesome to look under /assets for its font files
-$fa-font-path: 'assets';
+// Tell FontAwesome to look under /fontawesome for its font files (relative to /vendor/assets/fonts)
+$fa-font-path: 'fontawesome';
 
 // Bootstrap customizations
 $offcanvas-horizontal-width: 70vw;

@@ -3,6 +3,8 @@ ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
 
+Aws.config[:stub_responses] = true
+
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
 
@@ -27,6 +29,15 @@ class ActiveSupport::TestCase
     yield
   ensure
     Rack::Attack.enabled = was_enabled
+  end
+
+  def with_airports_cache
+    was_enabled = AirportGeojsonDumper.enabled
+    AirportGeojsonDumper.enabled = true
+    yield
+  ensure
+    AirportGeojsonDumper.enabled = was_enabled
+    AirportGeojsonDumper.new.clear_cache!
   end
 end
 

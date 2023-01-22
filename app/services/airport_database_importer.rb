@@ -14,7 +14,7 @@ class AirportDatabaseImporter
 
   def initialize(airports)
     @airports = airports
-    @current_data_cycle = FaaApi.client.current_data_cycle
+    @current_data_cycle = FaaApi.client.current_data_cycle(:airports)
     @bounding_box_calculator = AirportBoundingBoxCalculator.new
   end
 

@@ -1,0 +1,69 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com
+      - apt-get update
+      - apt-get install --yes jq
+
+  pre_build:
+    commands:
+      # Log into Docker Hub to avoid being rate limited on the base image pull with an anonymous pull
+      - echo "Logging into Docker"
+      - echo "$DOCKER_HUB_PASSWORD" | docker login --username $DOCKER_HUB_USERNAME --password-stdin
+
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+
+  build:
+    commands:
+      - echo "Building image"
+      - DOCKER_BUILDKIT=1 docker build --tag "$ECR_REPOSITORY_URL:$IMAGE_TAG" .
+      - docker tag "$ECR_REPOSITORY_URL:$IMAGE_TAG" "$ECR_REPOSITORY_URL:latest"
+
+      - echo "Building AppSpec file"
+      - envsubst < _appspec_jobs.template.yml > appspec_jobs.yml
+      - envsubst < _appspec_web.template.yml > appspec_web.yml
+
+      # The `<IMAGE_URI>` placeholder will be replaced with the image URI defined below in `imageDetail.json` by CodeDeploy. However, brackets are not valid characters in
+      # the task definition image field so in order to keep the task definition defined through Terraform we need to use a secondary placeholder that is replaced with the
+      # CodeDeploy placeholder. Didn't really think that one out, did you Amazon?
+      #
+      # https://docs.aws.amazon.com/codepipeline/latest/userguide/action-reference-ECSbluegreen.html#action-reference-ECSbluegreen-input
+      - echo "Exporting task definitions"
+      - aws ecs describe-task-definition --task-definition "$TASK_DEFINITION_JOBS_ARN" | jq ".taskDefinition" | sed 's/IMAGE_PLACEHOLDER/<IMAGE_URI>/'> task_definition_jobs.json
+      - aws ecs describe-task-definition --task-definition "$TASK_DEFINITION_WEB_ARN" | jq ".taskDefinition" | sed 's/IMAGE_PLACEHOLDER/<IMAGE_URI>/'> task_definition_web.json
+
+  post_build:
+    commands:
+      - echo "Logging into ECR"
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 176997720438.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+
+      - echo "Pushing image to ECR"
+      - docker push $ECR_REPOSITORY_URL:$IMAGE_TAG
+      - docker push $ECR_REPOSITORY_URL:latest
+
+      # This value will be inserted into the task definition's image field by CodeDeploy
+      # https://docs.aws.amazon.com/codepipeline/latest/userguide/file-reference.html#file-reference-ecs-bluegreen
+      - echo "Writing image tag to file"
+      - "echo \"{\\\"ImageURI\\\": \\\"$ECR_REPOSITORY_URL:$IMAGE_TAG\\\"}\" > imageDetail.json"
+
+      # For debugging if needed
+      - echo "Generated task definitions"
+      - cat task_definition_jobs.json
+      - cat task_definition_web.json
+
+      - echo "Generated appspecs"
+      - cat appspec_jobs.yml
+      - cat appspec_web.yml
+
+      - echo "Generated imageDetail"
+      - cat imageDetail.json
+
+artifacts:
+  files:
+    - appspec_jobs.yml
+    - appspec_web.yml
+    - imageDetail.json
+    - task_definition_jobs.json
+    - task_definition_web.json

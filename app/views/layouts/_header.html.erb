@@ -13,6 +13,7 @@
           <li class="nav-item"><%= link_to 'Airports', manage_airports_path, class: 'nav-link' %></li>
           <li class="nav-item"><%= link_to 'Comments', manage_comments_path, class: 'nav-link' %></li>
           <li class="nav-item"><%= link_to 'Users', manage_users_path, class: 'nav-link' %></li>
+          <li class="nav-item"><%= link_to 'Jobs', GoodJob::Engine.routes.url_helpers.root_path, class: 'nav-link' %></li>
         <% elsif Manage::DashboardPolicy.new(current_user, nil).index? %>
           <li class="nav-item"><%= link_to 'Manage', manage_root_path, class: 'nav-link' %></li>
         <% end %>

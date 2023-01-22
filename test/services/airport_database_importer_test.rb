@@ -26,7 +26,7 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
     assert_equal parsed_airport[:fuel_types].split(','), airport.fuel_types
     assert_equal parsed_airport[:activation_date], airport.activation_date
     assert_equal :public_, airport.landing_rights
-    assert_equal FaaApi.client.current_data_cycle, airport.faa_data_cycle
+    assert_equal FaaApi.client.current_data_cycle(:airports), airport.faa_data_cycle
     assert_equal true, airport.bbox_checked
     assert_equal 48.8436501, airport.bbox_ne_latitude
     assert_equal(-117.2839675, airport.bbox_ne_longitude)
@@ -65,7 +65,7 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
     airport = Airport.last
 
     assert_equal 'New Airport Name', airport.name, 'Airport name not updated on re-import'
-    assert_equal FaaApi.client.current_data_cycle, airport.faa_data_cycle, 'Airport data cycle not updated on re-import'
+    assert_equal FaaApi.client.current_data_cycle(:airports), airport.faa_data_cycle, 'Airport data cycle not updated on re-import'
     assert_not airport.closed?, 'Airport incorrectly marked as closed on re-import'
     assert_nil airport.bbox_ne_latitude, 'Airport bounding box incorrectly updated'
   end

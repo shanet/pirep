@@ -7,7 +7,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/controllers/manage/dashboard_controller.rb",
-      "line": 28,
+      "line": 41,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Action.select(\"#{action_foreign_key} AS join_id\", \"COUNT(id) AS rank\")",
       "render_path": null,
@@ -18,6 +18,9 @@
       },
       "user_input": "action_foreign_key",
       "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
       "note": "The only values in this query are non-user changable constants"
     },
     {
@@ -38,6 +41,9 @@
       },
       "user_input": "File.open(File.join(directory, \"database.tar.gz\"), \"wb\").path",
       "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
       "note": ""
     },
     {
@@ -58,9 +64,35 @@
       },
       "user_input": "File.open(File.join(directory, \"database.tar.gz.sha256\"), \"w\").path",
       "confidence": "Medium",
+      "cwe_id": [
+        77
+      ],
       "note": ""
+    },
+    {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "a626cce093021f08d76a7102b6aa08b970498e414d18922301e1935898ce2134",
+      "check_name": "FileAccess",
+      "message": "Model attribute used in file name",
+      "file": "app/services/airport_geojson_dumper.rb",
+      "line": 15,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "FileUtils.mkdir_p(File.dirname(File.join(File.join(*(Rails.configuration.efs_path or [Rails.public_path, \"assets\"])), \"airports_cache\", \"airports-*.json\".gsub(\"*\", Digest::SHA256.hexdigest(Airport.geojson.to_json))).to_s))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "AirportGeojsonDumper",
+        "method": "write_to_file"
+      },
+      "user_input": "Airport.geojson.to_json",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": "Impractical to control digest output"
     }
   ],
-  "updated": "2022-10-24 23:48:26 -0700",
-  "brakeman_version": "5.2.3"
+  "updated": "2023-02-11 22:21:01 -0800",
+  "brakeman_version": "5.4.0"
 }

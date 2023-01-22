@@ -24,7 +24,7 @@ jobs:
 
       # Ghostscript is needed for ImageMagick to work with PDFs
       - name: Install Packages
-        run: sudo apt-get install --yes gdal-bin ghostscript python3-gdal
+        run: sudo apt-get install --yes gdal-bin ghostscript gpg python3-gdal
 
       # The version of ImagMagick installed by default has a policy to prevent processing PDFs due to a security issue with GhostScript.
       # This was fixed and the policy should be removed in future versions of ImageMagick. At which point this step could be removed as well.
@@ -36,6 +36,19 @@ jobs:
         with:
           ruby-version: 3.1.3
           bundler-cache: true
+
+      - name: Install Golang
+        uses: actions/setup-go@v3
+        with:
+          go-version: ^1 # We don't particularly care about the Go version, but one needs to be specified for $GOBIN to be set (https://github.com/actions/setup-go/issues/49)
+
+      - name: Install Terraform
+        run: |
+          curl https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+          sudo apt-get update && sudo apt-get install terraform
+
+          go install github.com/shanet/terraform-lexicographical-lint@latest
 
       - name: Install Yarn
         uses: actions/setup-node@v3

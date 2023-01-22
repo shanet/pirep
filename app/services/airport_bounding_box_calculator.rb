@@ -14,7 +14,7 @@ class AirportBoundingBoxCalculator
 
     return calculate_bounding_box(parsed_response)
   rescue Exceptions::OpenStreetMapsQueryFailed
-    Rails.logger.warning "Bounding box query failed for #{airport.code}"
+    Rails.logger.warn "Bounding box query failed for #{airport.code}"
     return empty_bounding_box
   end
 

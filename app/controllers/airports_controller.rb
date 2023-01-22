@@ -9,9 +9,11 @@ class AirportsController < ApplicationController
   def index
     authorize :airport, :index?
 
-    # This is stored as a static asset in production since dumping all airports to JSON takes a while
-    if Rails.env.production?
-      redirect_to URI.join('https:////', Rails.configuration.asset_host || '', 'airports.json').to_s
+    # This is stored as a cached asset in production since dumping all airports to JSON takes a while
+    cache = AirportGeojsonDumper.cached
+
+    if cache
+      redirect_to "#{Rails.configuration.action_controller.asset_host || ''}#{cache}", allow_other_host: true
     else
       render json: Airport.geojson.to_json
     end
@@ -31,6 +33,10 @@ class AirportsController < ApplicationController
       FetchAirportBoundingBoxJob.perform_later(@airport)
 
       Action.create!(type: :airport_added, actionable: @airport, user: active_user)
+
+      # Schedule an airport cache refresh so the new airport shows up on the map before the next refresh cycle
+      AirportGeojsonDumperJob.perform_later
+
       flash[:notice] = 'New airport added to map, please fill out any known additional information about it.'
       render :create
     else
@@ -50,6 +56,11 @@ class AirportsController < ApplicationController
     if @airport.update(airport_params) && @airport.photos.attach(params[:airport][:photos] || [])
       touch_author
       create_actions
+
+      # Schedule an airport cache refresh if the tags changed so the changes are reflected on the map before the next refresh cycle
+      if airport_params['tags_attributes']
+        AirportGeojsonDumperJob.perform_later
+      end
 
       if request.xhr?
         # Add one second to avoid a time conflict with the version that was just created
