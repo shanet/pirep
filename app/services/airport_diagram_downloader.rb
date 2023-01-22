@@ -1,3 +1,4 @@
+require 'exceptions'
 require 'faa/faa_api'
 
 class AirportDiagramDownloader
@@ -45,24 +46,35 @@ private
 
   def convert_diagrams_to_images(directory, diagrams)
     # Convert the PDFs to images so we can display them on the webpages
-    diagrams.each do |file|
+    diagrams.each_with_index do |file, index|
       path = File.join(directory, file)
-      Rails.logger.info('Converting airport diagram %s' % path)
+      Rails.logger.info("[#{index}/#{diagrams.count}] Converting airport diagram #{path}")
       system('convert', '-flatten', '-density', '200', path, converted_diagram_filename(path))
     end
   end
 
   def copy_diagrams(directory, diagrams)
-    diagrams.each do |file|
+    diagrams.each_with_index do |file, index|
       filename = converted_diagram_filename(file)
-      path = File.join(directory, filename)
+      source_path = File.join(directory, filename)
+      destination_path = "diagrams/#{Rails.configuration.faa_data_cycle.next(:diagrams)}"
 
       if Rails.env.production?
-        # TODO: upload to s3
+        key = File.join(Rails.configuration.cdn_content_path, destination_path, filename)
+        Rails.logger.info("[#{index}/#{diagrams.count}] Uploading airport diagram to S3 with key #{key}")
+
+        response = Aws::S3::Client.new.put_object(
+          body: File.open(source_path, 'r'),
+          bucket: Rails.configuration.asset_bucket,
+          content_type: 'image/png',
+          key: key
+        )
+
+        raise Exceptions::DiagramUploadFailed, response.to_h unless response.etag
       else
-        diagrams_path = Rails.public_path.join('assets/diagrams/')
+        diagrams_path = Rails.public_path.join('assets', destination_path)
         FileUtils.mkdir_p(diagrams_path)
-        FileUtils.mv(path, File.join(diagrams_path, filename))
+        FileUtils.mv(source_path, File.join(diagrams_path, filename))
       end
     end
   end

@@ -16,7 +16,7 @@ class ChartsDownloaderTest < ActiveSupport::TestCase
 
     # Assert that tiles were generated for each zoom level
     (0..11).each do |zoom_level| # rubocop:disable Style/EachForSimpleLoop
-      assert Rails.root.join("public/assets/tiles_test/test/current/#{zoom_level}").exist?, "Missing tiles for zoom level #{zoom_level}"
+      assert Rails.root.join("public/assets/tiles_test/current/test/#{zoom_level}").exist?, "Missing tiles for zoom level #{zoom_level}"
     end
   end
 end

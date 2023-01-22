@@ -1,22 +1,23 @@
 # Rails-ujs will apply a nonce value to any inline JavaScript
 Rails.configuration.content_security_policy_nonce_generator = ->(_request) {SecureRandom.base64(32)}
-Rails.configuration.content_security_policy_nonce_directives = ['script-src']
+Rails.configuration.content_security_policy_nonce_directives = ['script-src', 'style-src']
 
 Rails.configuration.content_security_policy do |policy|
   # All hosts that are allowed to load content onto the pages
   hosts = [
-    Rails.configuration.asset_host.presence || :self,
+    Rails.configuration.action_controller.asset_host.presence&.gsub('https://', '') || :self,
+    Rails.configuration.try(:tiles_host).presence&.gsub('https://', ''), # rubocop:disable Rails/SafeNavigation
     'api.mapbox.com',
     'events.mapbox.com',
     'sentry.io',
-  ]
+  ].compact
 
   policy.base_uri(:self)
-  policy.connect_src(*(hosts + [:self]))
+  policy.connect_src(*(hosts + ['*.ingest.sentry.io', :self]))
   policy.default_src(*(hosts + [:self]))
   policy.font_src(*hosts)
   policy.form_action(:self)
-  policy.img_src(*(hosts + ['www.gravatar.com', :data]))
+  policy.img_src(*(hosts + ['www.gravatar.com', '*.googleusercontent.com', :data, :self]))
   policy.object_src(:none)
   policy.script_src(*hosts)
   policy.style_src(*hosts)

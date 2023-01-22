@@ -1,7 +1,7 @@
 // JavaScript
 // ---------------------------------------------
 //= link_tree ../javascripts .js
-//= link_tree ../../../vendor/javascript .js
+//= link_tree ../../../vendor/assets/javascripts .js
 
 
 // CSS
@@ -11,4 +11,9 @@
 
 // Images
 // ---------------------------------------------
-//= link_tree ../images .png
+//= link_tree ../images
+
+
+// Fonts
+// ---------------------------------------------
+//= link_tree ../../../vendor/assets/fonts

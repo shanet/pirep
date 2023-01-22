@@ -1,0 +1,49 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com
+      - apt-get update
+      - apt-get install --yes jq
+
+  build:
+    commands:
+      - echo "Registering new task definition"
+      - IMAGE=$(cat $CODEBUILD_SRC_DIR_build/imageDetail.json | jq --raw-output ".ImageURI")
+      - echo "Using image $IMAGE"
+
+      # Get the source task definition, substitute in the built image from the build stage, and register a new task definition to be used for the migrations task
+      # It really shouldn't be this hard to clone a damn task definition...
+      - |
+        aws ecs describe-task-definition --task-definition "$TASK_DEFINITION_ARN" | \
+        jq ".taskDefinition | .containerDefinitions[0].image = \"$IMAGE\" | \
+        del(.taskDefinitionArn) | del(.revision) | del(.status) | del(.requiresAttributes) | del(.compatibilities) | del(.registeredAt) | del(.registeredBy)" > task_definition.json
+      - cat task_definition.json
+
+      - MIGRATION_TASK_DEFINITION_ARN=$(aws ecs register-task-definition --cli-input-json file://task_definition.json | jq --raw-output ".taskDefinition.taskDefinitionArn")
+      - echo "Migration task definition - $MIGRATION_TASK_DEFINITION_ARN"
+
+      - echo "Getting ECS service network configuration"
+      - NETWORK_CONFIGURATION=$(aws ecs describe-services --cluster $ECS_CLUSTER_NAME --services $ECS_SERVICE_NAME | jq --compact-output ".services[0].networkConfiguration")
+
+      - echo "Starting migrations task"
+      - |
+        TASK_ARN=$(aws ecs run-task \
+          --cluster $ECS_CLUSTER_NAME \
+          --enable-execute-command \
+          --launch-type FARGATE \
+          --task-definition $MIGRATION_TASK_DEFINITION_ARN \
+          --overrides "$MIGRATION_COMMAND" \
+          --network-configuration "$NETWORK_CONFIGURATION" \
+          | jq --raw-output ".tasks[0].taskArn" \
+        )
+
+      - echo "Waiting for migration to finish (task $TASK_ARN)"
+      - aws ecs wait tasks-stopped --cluster $ECS_CLUSTER_NAME --tasks "$TASK_ARN"
+
+      - echo "Getting exit code of migration"
+      - EXIT_CODE=$(aws ecs describe-tasks --cluster $ECS_CLUSTER_NAME --tasks "$TASK_ARN" | jq ".tasks[0].containers[0].exitCode")
+
+      - echo "Migration code exit code - $EXIT_CODE"
+      - exit $EXIT_CODE

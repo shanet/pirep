@@ -27,6 +27,25 @@ module ApplicationHelper
     return "https://www.gravatar.com/avatar/#{hash}#{size ? "?s=#{size}" : ''}"
   end
 
+  def faa_data_content_url(product, filename: nil, path: nil)
+    host = (product == :charts ? Rails.configuration.try(:tiles_host) : Rails.configuration.action_controller.asset_host) # rubocop:disable Rails/SafeNavigation
+
+    return File.join(
+      (host.presence || ''),
+      (Rails.configuration.try(:cdn_content_path).presence || 'assets'), # rubocop:disable Rails/SafeNavigation
+      (path || product).to_s,
+      Rails.configuration.faa_data_cycle.current(product),
+      (filename || '')
+    ).to_s
+  end
+
+  # Use the CDN for attached files if we have one set
+  def cdn_url_for(record)
+    return "#{Rails.configuration.action_controller.asset_host}/#{record.key}" if Rails.configuration.action_controller.asset_host.present?
+
+    return url_for(record)
+  end
+
   def render_markdown(text)
     return '' if text.blank?
 

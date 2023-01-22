@@ -5,11 +5,21 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     @airport = create(:airport, code: 'PAE')
   end
 
-  test 'lists airports' do
+  test 'lists airports without cache' do
     get airports_path
 
     assert_response :success
     assert_equal @airport.code, JSON.parse(response.body).first['properties']['code'], 'Airport not included in airports index'
+  end
+
+  test 'lists airports with cache' do
+    with_airports_cache do
+      # Writing the GeoJSON dump to a file should result in a redirect to that asset rather than geenrating it dynamically
+      AirportGeojsonDumper.new.write_to_file
+
+      get airports_path
+      assert_redirected_to AirportGeojsonDumper.cached
+    end
   end
 
   test 'new airport' do
@@ -23,18 +33,22 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'create airport' do
-    assert_difference('Airport.count') do
-      assert_difference('Action.where(type: :airport_added).count') do
-        post airports_path(format: :js, params: {airport: {
-          name: 'Unmapped airport',
-          latitude: @airport.latitude,
-          longitude: @airport.longitude,
-          elevation: @airport.elevation,
-          state: 'closed',
-          landing_rights: :private_,
-        }})
+    with_airports_cache do
+      assert_difference('Airport.count') do
+        assert_difference('Action.where(type: :airport_added).count') do
+          assert_enqueued_with(job: AirportGeojsonDumperJob) do
+            post airports_path(format: :js, params: {airport: {
+              name: 'Unmapped airport',
+              latitude: @airport.latitude,
+              longitude: @airport.longitude,
+              elevation: @airport.elevation,
+              state: 'closed',
+              landing_rights: :private_,
+            }})
 
-        assert_response :success
+            assert_response :success
+          end
+        end
       end
     end
   end
@@ -88,8 +102,11 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     # If there's a signed in user a new unknown user should not be created
     assert_difference('Users::Unknown.count', 0) do
       assert_difference('Action.where(type: :airport_edited).count') do
-        patch airport_path(@airport), params: {airport: {description: 'description'}}
-        assert_redirected_to airport_path(@airport.code)
+        # Not updating the tags should not trigger a GeoJSON dump
+        assert_no_enqueued_jobs(only: AirportGeojsonDumperJob) do
+          patch airport_path(@airport), params: {airport: {description: 'description'}}
+          assert_redirected_to airport_path(@airport.code)
+        end
       end
     end
 
@@ -107,10 +124,13 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
 
   test 'update airport tags' do
     assert_difference('Action.where(type: :tag_added).count') do
-      patch airport_path(@airport), params: {airport: {tags_attributes: {'0': {name: :camping, selected: true}}}}
+      # Updating the tags should trigger a GeoJSON dump
+      assert_enqueued_with(job: AirportGeojsonDumperJob) do
+        patch airport_path(@airport), params: {airport: {tags_attributes: {'0': {name: :camping, selected: true}}}}
 
-      assert_redirected_to airport_path(@airport.code)
-      assert_equal :camping, @airport.reload.tags.last.name, 'Did not save tag'
+        assert_redirected_to airport_path(@airport.code)
+        assert_equal :camping, @airport.reload.tags.last.name, 'Did not save tag'
+      end
     end
   end
 

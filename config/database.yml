@@ -16,8 +16,8 @@ test:
 
 production:
   <<: *default
-  database: <%= ENV['RDS_DATABASE'] %>
-  username: <%= ENV['RDS_USERNAME'] %>
-  password: "<%= ENV['RDS_PASSWORD'] %>"
-  host: <%= ENV['RDS_HOSTNAME'] %>
-  port: <%= ENV['RDS_PORT'] %>
+  database: pirep_production
+  host: <%= ENV['DATABASE_ENDPOINT'] %>
+  password: "<%= ENV['DATABASE_PASSWORD'] %>"
+  port: 5432
+  username: <%= ENV['DATABASE_USERNAME'] %>

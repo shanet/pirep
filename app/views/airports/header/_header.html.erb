@@ -5,7 +5,7 @@
     <h3><%= @airport.code %> - <%= @airport.name.titleize %></h3>
   </div>
 
-  <div class="airport-subheader <%= cover_image ? '' : "theme-#{@airport.theme} mb-3" %>">
+  <div class="airport-subheader <%= cover_image ? '' : "theme-#{@airport.theme}" %>">
     <div class="container-lg d-flex justify-content-center justify-content-md-between align-items-center py-2">
       <div class="d-none d-md-block">
         <%= render 'airports/header/left_actions', color: (cover_image ? :light : :dark) %>
@@ -25,6 +25,9 @@
     </div>
   </div>
 </div>
+
+<%# This is a bit hacky, but we need a spacer below the header that must be a separate element to avoid messing up the formatting of the header %>
+<div class="mb-md-3"></div>
 
 <div class="container-lg">
   <div class="row">

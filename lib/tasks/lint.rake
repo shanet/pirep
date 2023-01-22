@@ -6,28 +6,44 @@ task :lint do
   sh 'rails lint:erb', verbose: false
   sh 'rails lint:css', verbose: false
   sh 'rails lint:js', verbose: false
+  sh 'rails lint:terraform', verbose: false
   sh 'rails lint:security', verbose: false
 end
 
 namespace :lint do
   desc 'Run Ruby linter'
   task :ruby do
-    sh 'bundle exec rubocop %s' % [(autocorrect? ? '--autocorrect' : '--parallel')], verbose: false
+    sh "bundle exec rubocop #{autocorrect? ? '--autocorrect' : '--parallel'}", verbose: false
   end
 
   desc 'Run ERB linter'
   task :erb do
-    sh 'bundle exec erblint %s "app/views/**/*.*.erb"' % [(autocorrect? ? '--autocorrect' : '')], verbose: false
+    sh "bundle exec erblint #{autocorrect? ? '--autocorrect' : ''} \"app/views/**/*.*.erb\"", verbose: false
   end
 
   desc 'Run CSS linter'
   task :css do
-    sh 'yarn run stylelint %s "app/assets/stylesheets/**/*.{css,scss}"' % [(autocorrect? ? '--fix' : '')], verbose: false
+    sh "yarn run stylelint #{autocorrect? ? '--fix' : ''} \"app/assets/stylesheets/**/*.{css,scss}\"", verbose: false
   end
 
   desc 'Run JavaScript linter'
   task :js do
-    sh 'yarn run eslint %s "app/assets/javascripts/**/*.js"' % [(autocorrect? ? '--fix' : '')], verbose: false
+    sh "yarn run eslint #{autocorrect? ? '--fix' : ''} \"app/assets/javascripts/**/*.js\"", verbose: false
+  end
+
+  desc 'Run Terraform formatter'
+  task :terraform do
+    sh "terraform fmt --recursive #{ENV['CI'] ? '--diff --check' : ''} terraform", verbose: false
+
+    # Check that the linter is installed
+    sh 'which terraform-lexicographical-lint > /dev/null 2>&1', verbose: false do |success, _result|
+      next if success
+
+      warn 'terraform-lexicographical-lint not found or $GOBIN not in $PATH. Install with: go install github.com/shanet/terraform-lexicographical-lint@latest'
+      exit 1
+    end
+
+    sh 'terraform-lexicographical-lint terraform', verbose: false
   end
 
   desc 'Run security audits'
@@ -44,10 +60,6 @@ namespace :lint do
   def autocorrect?
     return ARGV&.first == 'fix'
   end
-end
-
-task :fix do
-  # Dummy task for the `fix` argument
 end
 
 # rubocop:enable Rails/RakeEnvironment

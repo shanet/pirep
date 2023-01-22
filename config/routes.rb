@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root 'map#index'
   get :map, to: 'map#index'
+  get :health, to: 'meta#health'
 
   devise_for :user, class_name: 'Users::User', controllers: {
     confirmations: 'users/confirmations',
@@ -14,6 +15,11 @@ Rails.application.routes.draw do
     get 'user', to: 'users/registrations#show'
     get 'user/activity', to: 'users/registrations#activity', as: :activity_user
     patch 'user/timezone', to: 'users/registrations#update_timezone', as: :update_timezone_user
+  end
+
+  # Enable the GoodJob dashboard
+  authenticate :user, ->(user) {user.admin?} do
+    mount GoodJob::Engine => 'good_job'
   end
 
   namespace :manage do

@@ -1,0 +1,48 @@
+- essential: true
+  image: "${image}"
+  name: "${name_prefix}"
+  command: ${command}
+
+  portMappings:
+   - containerPort: ${port}
+     protocol: tcp
+
+  logConfiguration:
+    logDriver: awslogs
+    options:
+      awslogs-group: "${log_group_name}"
+      awslogs-region: "${aws_region}"
+      awslogs-stream-prefix: ecs
+
+  linuxParameters:
+    initProcessEnabled: true
+
+  environment:
+    - name: PORT
+      value: "${port}"
+
+  mountPoints:
+    - containerPath: /mnt/efs
+      sourceVolume: efs
+
+  secrets:
+    # Static environment variables are defined and managed through Terraform in the secretsmanager module.
+    # Dynamic enviroment variables are added directly to the defined dynamic secretsmanager secret in the AWS console.
+    - name: DATABASE_ENDPOINT
+      valueFrom: "${enviroment_variables_secret_static}:database_endpoint::"
+    - name: DATABASE_PASSWORD
+      valueFrom: "${enviroment_variables_secret_static}:database_password::"
+    - name: DATABASE_USERNAME
+      valueFrom: "${enviroment_variables_secret_static}:database_username::"
+    - name: RAILS_ASSET_BUCKET
+      valueFrom: "${enviroment_variables_secret_static}:rails_asset_bucket::"
+    - name: RAILS_ASSET_HOST
+      valueFrom: "${enviroment_variables_secret_static}:rails_asset_host::"
+    - name: RAILS_MASTER_KEY
+      valueFrom: "${enviroment_variables_secret_dynamic}:rails_master_key::"
+    - name: RAILS_TILES_HOST
+      valueFrom: "${enviroment_variables_secret_static}:rails_tiles_host::"
+    - name: SMTP_PASSWORD
+      valueFrom: "${enviroment_variables_secret_static}:smtp_password::"
+    - name: SMTP_USERNAME
+      valueFrom: "${enviroment_variables_secret_static}:smtp_username::"

@@ -1,0 +1,25 @@
+# File types
+**/*.log
+**/*.mmdb
+**/*.key
+
+# Specific files
+Dockerfile
+LICENSE
+
+# Hidden directories
+.faa_cache
+.git
+.github
+
+# All other directories
+app/assets/builds/*
+node_modules
+public/assets
+public/packs
+public/packs-test
+storage/*
+terraform
+tmp/cache/*
+tmp/pids/*
+tmp/storage/*

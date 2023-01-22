@@ -134,7 +134,7 @@ function showFilterGroupHoverText(filterLabel) {
 
 function hideFilterGroupHoverText(filterLabel) {
   const span = filterLabel.querySelector('span');
-  span.innerText = span.innerText.substring(0, FILTER_GROUP_HOVER_TEXT.length + 1);
+  span.innerText = span.innerText.replace(FILTER_GROUP_HOVER_TEXT, '');
 }
 
 function initFilterLabels() {

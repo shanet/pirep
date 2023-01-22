@@ -1,28 +1,35 @@
 require 'etc'
 require 'exceptions'
-require 'open3'
 require 'faa/faa_api'
+require 'open3'
 
 class ChartsDownloader
-  def download_and_convert(chart_type, charts_to_download=nil)
+  def download_and_convert(chart_type, charts_to_download: nil, upload_to_s3: Rails.env.production?)
     verify_gdal_binaries_exist
-    tiles_directory_prefix = "public/assets/tiles#{Rails.env.test? ? '_test' : ''}/#{chart_type}"
+    faa_client = FaaApi.client
+
+    tiles_directory_prefix = "tiles#{Rails.env.test? ? '_test' : ''}/#{Rails.configuration.faa_data_cycle.next(:charts)}/#{chart_type}"
+    output_directory = Rails.root.join("public/assets/#{tiles_directory_prefix}").to_s
 
     Dir.mktmpdir do |tmp_directory|
       method = api_method_for_chart_type(chart_type)
       raise Exceptions::UnknownChartType unless method
 
-      charts = FaaApi.client.send(method, tmp_directory, charts_to_download)
+      charts = faa_client.send(method, tmp_directory, charts_to_download)
 
       vrt_files = charts.map do |chart_name, chart_image|
         preprocess_chart_for_tiles(chart_type, chart_name, chart_image, tmp_directory)
       end
 
-      generate_tiles_for_chart_type(chart_type, vrt_files, tmp_directory, Rails.root.join("#{tiles_directory_prefix}/next").to_s)
+      generate_tiles_for_chart_type(chart_type, vrt_files, tmp_directory, output_directory)
     end
 
-    activate_new_tiles(tiles_directory_prefix)
-    Rails.logger.info("#{chart_type.to_s.titleize} chart download complete")
+    Rails.logger.info("#{chart_type.to_s.titleize} chart tiling complete")
+    return unless upload_to_s3
+
+    Rails.logger.info("Uploading #{chart_type} charts to S3")
+    upload_tiles_to_s3(output_directory, tiles_directory_prefix)
+    Rails.logger.info("#{chart_type.to_s.titleize} chart upload to S3 complete")
   end
 
 private
@@ -90,24 +97,26 @@ private
     FileUtils.mkdir_p(output_directory)
 
     Rails.logger.info("Executing gdal2tiles.py for #{chart_type} charts")
-    unless execute_command('gdal2tiles.py', '--zoom', "#{min_zoom_level(chart_type)}-11", "--processes=#{thread_count}", '--webviewer=none', vrt_path, output_directory) # rubocop:disable Style/GuardClause
+    unless execute_command('gdal2tiles.py', '--zoom', "#{min_zoom_level(chart_type)}-11", "--processes=#{thread_count}", '--webviewer=none', '--exclude', vrt_path, output_directory) # rubocop:disable Style/GuardClause
       raise Exceptions::ChartTilesGenerationFailed, "gdal2tiles.py for #{chart_type}"
     end
   end
 
-  def activate_new_tiles(tiles_directory_prefix)
-    Rails.logger.info('Swapping tiles directories')
+  def upload_tiles_to_s3(tiles_directory, key_prefix)
+    Dir.glob(File.join(tiles_directory, '**/*')).each do |file|
+      next unless File.file?(file)
 
-    # Move the current tiles to a previous directory
-    if Rails.root.join("#{tiles_directory_prefix}/current").exist?
-      Rails.root.join("#{tiles_directory_prefix}/current").rename(Rails.root.join("#{tiles_directory_prefix}/previous"))
+      key = File.join(Rails.configuration.cdn_content_path, key_prefix, file.gsub(tiles_directory, ''))
+
+      response = Aws::S3::Client.new.put_object(
+        body: File.open(file, 'r'),
+        bucket: Rails.configuration.asset_bucket,
+        content_type: 'image/png',
+        key: key
+      )
+
+      raise Exceptions::ChartUploadFailed, response.to_h unless response.etag
     end
-
-    # Swap in the new tiles
-    Rails.root.join("#{tiles_directory_prefix}/next").rename(Rails.root.join("#{tiles_directory_prefix}/current"))
-
-    # Clean up the old tiles
-    FileUtils.rm_rf(Rails.root.join("#{tiles_directory_prefix}/previous"))
   end
 
   def execute_command(*command)
@@ -138,7 +147,6 @@ private
     return {
       sectional: :sectional_charts,
       terminal: :terminal_area_charts,
-      caribbean: :caribbean_charts,
       **(Rails.env.test? ? {test: :test_charts} : {}),
     }[chart_type]
   end

@@ -1,0 +1,10 @@
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+
+      Properties:
+        TaskDefinition: "<TASK_DEFINITION>"
+
+        LoadBalancerInfo:
+          ContainerName: "$ECS_SERVICE_NAME_JOBS"
+          ContainerPort: $PORT

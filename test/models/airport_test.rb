@@ -117,6 +117,10 @@ class AirportTest < ActiveSupport::TestCase
     assert @airport.all_photos.last.is_a?(Hash), 'Google API photo not last'
   end
 
+  test 'has customized photo key' do
+    assert_match(/uploads\/airport_photos\/\d{4}\/\d{2}\/\d{2}\/.+.png/, @airport.photos.first.key, 'Unexpected airport photo customized key')
+  end
+
   test 'has correct theme' do
     # The theme is based on the airport code so set it to something specific first
     @airport.update!(code: 'PAE')

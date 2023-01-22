@@ -2,7 +2,7 @@
   <% photos.each_with_index do |photo, index| %>
     <div class="carousel-inner">
       <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
-        <img class="d-block <%= defined?(border) ? 'img-thumbnail' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? url_for(photo) : photo[:url] %>">
+        <img class="d-block <%= defined?(border) ? 'img-thumbnail' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? cdn_url_for(photo) : photo[:url] %>">
 
         <% if photo.is_a?(Hash) && photo[:attribution].present? %>
           <div class="carousel-caption d-none d-md-block">

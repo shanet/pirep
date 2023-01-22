@@ -4,8 +4,6 @@
 # and recreated between test runs. Don't rely on the data there!
 
 Rails.application.configure do
-  # Settings specified here will take precedence over those in config/application.rb.
-
   config.cache_classes = false
   config.action_view.cache_template_loading = true
 
@@ -50,4 +48,6 @@ Rails.application.configure do
 
   Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
   Rack::Attack.enabled = false
+
+  config.active_job.queue_adapter = :test
 end

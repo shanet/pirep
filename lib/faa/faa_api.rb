@@ -11,6 +11,13 @@ module FaaApi
     # https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/
     AIRPORT_DIAGRAM_ARCHIVES = ['A', 'B', 'C', 'D', 'E']
 
+    # New data is available every 28 or 56 days depending on the product
+    CYCLE_LENGTHS = {
+      airports: 28.days,
+      charts: 56.days,
+      diagrams: 28.days,
+    }
+
     def airport_data(destination_directory)
       archive_path = download_airport_data_archive(destination_directory)
       extract_archive(destination_directory, archive_path)
@@ -24,17 +31,17 @@ module FaaApi
     end
 
     def airport_diagrams(destination_directory)
-      AIRPORT_DIAGRAM_ARCHIVES.each do |archive_index| # rubocop:disable Lint/UnreachableLoop
+      AIRPORT_DIAGRAM_ARCHIVES.each do |archive_index|
         archive_path = download_airport_diagram_archive(archive_index, destination_directory)
         extract_archive(destination_directory, archive_path)
-
-        # Return the path to the metadata index
-        return File.join(destination_directory, 'd-TPP_Metafile.xml')
       end
+
+      # Return the path to the metadata index
+      return File.join(destination_directory, 'd-TPP_Metafile.xml')
     end
 
-    def charts(destination_directory, chart_type, charts_config, charts_to_download=nil)
-      # Only download the given charts if specified
+    def charts(destination_directory, charts_config, charts_to_download=nil)
+      # Only download the given charts if specified (ensure these are pulled out in the same order as they are defined)
       charts_to_download = (charts_to_download ? charts_config.select {|key, _value| key.in?(Array(charts_to_download))} : charts_config)
 
       charts = {}
@@ -43,7 +50,7 @@ module FaaApi
         # Don't download any chart that is in an inset of another chart
         next if chart[:inset]
 
-        chart_path = download_chart(chart[:archive], chart_type, destination_directory)
+        chart_path = download_chart(chart[:archive], chart[:type], destination_directory)
         extract_archive(destination_directory, chart_path)
         charts[key] = File.join(destination_directory, chart[:filename])
 
@@ -70,20 +77,22 @@ module FaaApi
       end
     end
 
-    def current_data_cycle
+    def current_data_cycle(product)
       # Objects of this class should not live longer than a data cycle so we can memoize this
-      return @current_data_cycle if defined? @current_data_cycle
+      return @current_data_cycle[product] if defined?(@current_data_cycle) && @current_data_cycle&.[](product)
 
-      # New data is available every 28 days
+      raise Exceptions::UnknownFaaProductType unless CYCLE_LENGTHS[product]
+
       # It may be worth updating the seed date periodically so we don't have to do as many iterations here
-      cycle_length = 28.days
       next_cycle = Date.new(2020, 9, 10)
 
       # Iterate from the start cycle until we hit the current date than back up one cycle for the current one
-      next_cycle += cycle_length while Date.current >= next_cycle
+      next_cycle += CYCLE_LENGTHS[product] while Date.current >= next_cycle
 
-      @current_data_cycle = next_cycle - cycle_length
-      return @current_data_cycle
+      @current_data_cycle ||= {}
+      @current_data_cycle[product] = next_cycle - CYCLE_LENGTHS[product]
+
+      return @current_data_cycle[product]
     end
 
     def shapefile_path(chart_type, chart_name)
@@ -95,7 +104,7 @@ module FaaApi
     include Base
 
     def download_airport_data_archive(destination_directory)
-      response = Faraday.get("https://nfdc.faa.gov/webContent/28DaySub/extra/#{current_data_cycle.strftime('%d_%b_%Y')}_APT_CSV.zip")
+      response = Faraday.get("https://nfdc.faa.gov/webContent/28DaySub/extra/#{current_data_cycle(:airports).strftime('%d_%b_%Y')}_APT_CSV.zip")
       raise Exceptions::AirportDatabaseDownloadFailed unless response.success?
 
       # Write archive to disk
@@ -106,12 +115,24 @@ module FaaApi
     end
 
     def download_airport_diagram_archive(archive, destination_directory)
-      response = Faraday.get("https://aeronav.faa.gov/upload_313-d/terminal/DDTPP#{archive}_#{current_data_cycle.strftime('%y%m%d')}.zip")
+      output_filename = "archive_#{archive}.zip"
+
+      # Try to use a cache if running in development so we don't need to download these large files multiple times
+      if Rails.env.development?
+        cached_diagrams = cached_archive(:diagrams, output_filename)
+        return cached_diagrams if cached_diagrams
+      end
+
+      Rails.logger.info("Downloading diagram archive \"#{archive}\"")
+      response = Faraday.get("https://aeronav.faa.gov/upload_313-d/terminal/DDTPP#{archive}_#{current_data_cycle(:diagrams).strftime('%y%m%d')}.zip")
       raise Exceptions::AirportDatabaseDownloadFailed unless response.success?
 
       # Write archive to disk
-      archive_path = File.join(destination_directory, "archive_#{archive}.zip")
+      archive_path = File.join(destination_directory, output_filename)
       File.binwrite(archive_path, response.body)
+
+      # Write the archive to the development cache
+      cached_archive(:diagrams, "archive_#{archive}.zip", response.body) if Rails.env.development?
 
       return archive_path
     end
@@ -119,29 +140,41 @@ module FaaApi
     def download_chart(chart, chart_type, destination_directory)
       Rails.logger.info("Downloading #{chart_type}/#{chart} chart archive")
 
-      charts_cycle = current_data_cycle.strftime('%m-%d-%Y')
-      cached_chart = Rails.root.join('.charts_cache', charts_cycle, chart_type.to_s, chart)
-
       # Try to use a cache if running in development so we don't need to download these large files multiple times
-      if Rails.env.development? && cached_chart.exist?
-        Rails.logger.info('Using cached chart archive, delete .charts_cache to bust cache')
-        return cached_chart
-      else
-        response = Faraday.get("https://aeronav.faa.gov/visual/#{charts_cycle}/#{chart_download_path(chart_type)}/#{chart}")
-        raise Exceptions::ChartDownloadFailed unless response.success?
-
-        # Write archive to disk
-        chart_path = File.join(destination_directory, chart)
-        File.binwrite(chart_path, response.body)
-
-        # Also write the chart to the development cache
-        if Rails.env.development?
-          FileUtils.mkdir_p(Rails.root.join('.charts_cache', charts_cycle, chart_type).to_s)
-          File.binwrite(Rails.root.join('.charts_cache', charts_cycle, chart_type, chart).to_s, response.body)
-        end
-
-        return chart_path
+      if Rails.env.development?
+        cached_chart = cached_archive(:charts, "#{chart_type}/#{chart}")
+        return cached_chart if cached_chart
       end
+
+      charts_cycle = current_data_cycle(:charts).strftime('%m-%d-%Y')
+
+      response = Faraday.get("https://aeronav.faa.gov/visual/#{charts_cycle}/#{chart_download_path(chart_type)}/#{chart}")
+      raise Exceptions::ChartDownloadFailed(response.body) unless response.success?
+
+      # Write archive to disk
+      chart_path = File.join(destination_directory, chart)
+      File.binwrite(chart_path, response.body)
+
+      # Write the chart to the development cache
+      cached_archive(:charts, "#{chart_type}/#{chart}", response.body) if Rails.env.development?
+
+      return chart_path
+    end
+
+    def cached_archive(product, filename)
+      cached_archive = Rails.root.join('.faa_cache', product.to_s, filename)
+
+      if File.exist?(cached_archive)
+        Rails.logger.info('Using cached archive, delete .faa_cache to bust cache')
+        return cached_archive
+      end
+
+      return nil
+    end
+
+    def cache_archive(product, filename, file)
+      FileUtils.mkdir_p(Rails.root.join('.faa_cache', product.to_s, filename).to_s)
+      File.binwrite(Rails.root.join('.faa_cache', product.to_s, filename).to_s, file)
     end
 
     def chart_download_path(chart_type)
@@ -153,15 +186,11 @@ module FaaApi
     end
 
     def sectional_charts(destination_directory, charts_to_download=nil)
-      return charts(destination_directory, :sectional, Rails.configuration.sectional_charts, charts_to_download)
+      return charts(destination_directory, Rails.configuration.sectional_charts, charts_to_download)
     end
 
     def terminal_area_charts(destination_directory, charts_to_download=nil)
-      return charts(destination_directory, :terminal, Rails.configuration.terminal_area_charts, charts_to_download)
-    end
-
-    def caribbean_charts(destination_directory, charts_to_download=nil)
-      return charts(destination_directory, :caribbean, Rails.configuration.caribbean_charts, charts_to_download)
+      return charts(destination_directory, Rails.configuration.terminal_area_charts, charts_to_download)
     end
 
     def chart_shapefile(chart_type, chart_name)
@@ -185,19 +214,15 @@ module FaaApi
     end
 
     def sectional_charts(destination_directory, charts_to_download=nil)
-      return charts(destination_directory, :test, Rails.configuration.test_charts, charts_to_download)
+      return charts(destination_directory, Rails.configuration.test_charts, charts_to_download)
     end
 
     def terminal_area_charts(destination_directory, charts_to_download=nil)
-      return charts(destination_directory, :test, Rails.configuration.test_charts, charts_to_download)
-    end
-
-    def caribbean_charts(destination_directory, charts_to_download=nil)
-      return charts(destination_directory, :test, Rails.configuration.test_charts, charts_to_download)
+      return charts(destination_directory, Rails.configuration.test_charts, charts_to_download)
     end
 
     def test_charts(destination_directory, charts_to_download=nil)
-      return charts(destination_directory, :test, Rails.configuration.test_charts, charts_to_download)
+      return charts(destination_directory, Rails.configuration.test_charts, charts_to_download)
     end
 
     def chart_shapefile(*)
