@@ -328,6 +328,8 @@ GEM
       sentry-ruby (~> 5.7.0)
     sentry-ruby (5.7.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
+    skylight (5.3.4)
+      activesupport (>= 5.2.0)
     smart_properties (1.17.0)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
@@ -402,6 +404,7 @@ DEPENDENCIES
   selenium-webdriver (>= 4.6.1)
   sentry-rails
   sentry-ruby
+  skylight
   sprockets-rails
   webdrivers
 

@@ -34,6 +34,7 @@ gem 'rack-attack'
 gem 'rubyzip'
 gem 'sentry-rails'
 gem 'sentry-ruby'
+gem 'skylight'
 
 group :development, :test do
   gem 'aws-sdk-codedeploy'
