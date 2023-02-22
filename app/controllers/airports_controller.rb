@@ -1,6 +1,5 @@
 class AirportsController < ApplicationController
   include SearchQueryable
-  include Skylight::Helpers
 
   layout 'blank'
 
@@ -19,7 +18,6 @@ class AirportsController < ApplicationController
       render json: Airport.geojson.to_json
     end
   end
-  instrument_method :index
 
   def new
     @airport = Airport.new

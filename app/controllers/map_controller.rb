@@ -1,8 +1,6 @@
 require 'maxmind/maxmind_db'
 
 class MapController < ApplicationController
-  include Skylight::Helpers
-
   layout 'map'
 
   def index
@@ -14,5 +12,4 @@ class MapController < ApplicationController
     @center = geoip || {latitude: 39.82834557323, longitude: -98.57944574225633}
     @zoom_level = (geoip ? 7.5 : 4)
   end
-  instrument_method :index
 end
