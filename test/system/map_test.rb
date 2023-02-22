@@ -27,7 +27,7 @@ class MapTest < ApplicationSystemTestCase
       assert_selector '.airport-drawer-header', text: "#{@airport.code} - #{@airport.name.titleize}"
 
       # Has photos
-      expected_photo_path = URI.parse(url_for(@airport.photos.first)).path
+      expected_photo_path = URI.parse(url_for(@airport.contributed_photos.first)).path
       actual_photo_path = URI.parse(find('.carousel img')[:src]).path
       assert_equal expected_photo_path, actual_photo_path
 

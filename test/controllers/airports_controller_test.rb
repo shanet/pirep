@@ -114,7 +114,7 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'updates airport photos' do
-    assert_difference('@airport.photos.count', 1) do
+    assert_difference('@airport.contributed_photos.count', 1) do
       assert_difference('Action.where(type: :airport_photo_uploaded).count') do
         patch airport_path(@airport), params: {airport: {photos: [Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png')]}}
         assert_redirected_to airport_path(@airport.code)
@@ -203,5 +203,16 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     get annotations_airport_path(@airport)
     assert_response :success, 'Failed to get airport annotations'
     assert_equal @airport.annotations.length, JSON.parse(response.body).size, 'Incorrect number of annotations returned'
+  end
+
+  test 'uncached_photo_gallery' do
+    # Initially uncached photos should be returned with a 200 response
+    get uncached_photo_gallery_airport_path(@airport, params: {border: true})
+    assert_response :success
+
+    # After the external photos are updated the response should be a 204 to denote there's nothing new
+    @airport.update!(external_photos_updated_at: Time.zone.now)
+    get uncached_photo_gallery_airport_path(@airport)
+    assert_response :no_content
   end
 end

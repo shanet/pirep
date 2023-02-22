@@ -1,29 +1,42 @@
-<div class="carousel">
-  <% photos.each_with_index do |photo, index| %>
-    <div class="carousel-inner">
-      <div class="carousel-item <%= index == 0 ? 'active' : '' %>">
-        <img class="d-block <%= defined?(border) ? 'img-thumbnail' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? cdn_url_for(photo) : photo[:url] %>">
+<div class="carousel" data-uncached-photo-gallery-path="<%= uncached_photo_gallery_airport_path(@airport, border: defined?(border).present?) %>">
+  <% if photo_groups.any? {|_group, photos| photos.any?} %>
+    <% counter = 0 %>
 
-        <% if photo.is_a?(Hash) && photo[:attribution].present? %>
-          <div class="carousel-caption d-none d-md-block">
-            <%= photo[:attribution] %>
+    <% photo_groups.each do |group, photos| %>
+      <% photos.each do |photo| %>
+        <div class="carousel-inner" data-photo-group="<%= group %>">
+          <div class="carousel-item <%= counter == 0 ? 'active' : '' %>">
+            <img class="d-block <%= defined?(border) && border ? 'img-thumbnail' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? cdn_url_for(photo) : photo[:url] %>">
+
+            <% if photo.is_a?(Hash) && photo[:attribution].present? %>
+              <div class="carousel-caption d-none d-md-block">
+                <%= photo[:attribution] %>
+              </div>
+            <% end %>
           </div>
-        <% end %>
-      </div>
-    </div>
-  <% end %>
+        </div>
 
-  <div class="carousel-indicators">
-    <% photos.each_with_index do |photo, index| %>
-      <button type="button" data-bs-target="<%= index %>"<% if index == 0 %> class="active"<% end %>></button>
+        <% counter += 1 %>
+      <% end %>
     <% end %>
-  </div>
 
-  <button class="carousel-control-prev <%= defined?(border) ? 'm-1' : '' %>" type="button">
-    <span class="carousel-control-prev-icon"></span>
-  </button>
+    <div class="carousel-indicators">
+      <% counter = 0 %>
 
-  <button class="carousel-control-next <%= defined?(border) ? 'm-1' : '' %>" type="button">
-    <span class="carousel-control-next-icon"></span>
-  </button>
+      <% photo_groups.each do |_group, photos| %>
+        <% photos.each do |_photo| %>
+          <button type="button" data-bs-target="<%= counter %>"<% if counter == 0 %> class="active"<% end %>></button>
+          <% counter += 1 %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <button class="carousel-control-prev <%= defined?(border) && border ? 'm-1' : '' %>" type="button">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <button class="carousel-control-next <%= defined?(border) && border ? 'm-1' : '' %>" type="button">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  <% end %>
 </div>

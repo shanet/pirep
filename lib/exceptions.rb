@@ -6,6 +6,7 @@ module Exceptions
   class DiagramUploadFailed < StandardError; end
   class FaaDataImporterTaskFailed < StandardError; end
   class GdalBinaryNotFound < StandardError; end
+  class GooglePhotosQueryFailed < StandardError; end
   class MaxmindDatabaseChecksumDownloadFailed < StandardError; end
   class MaxmindDatabaseDownloadFailed < StandardError; end
   class MaxmindDatabaseIntegrityCheckFailed < StandardError; end

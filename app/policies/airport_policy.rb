@@ -38,4 +38,8 @@ class AirportPolicy < ApplicationPolicy
   def annotations?
     return true
   end
+
+  def uncached_photo_gallery?
+    return true
+  end
 end

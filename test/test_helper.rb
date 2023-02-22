@@ -6,6 +6,7 @@ require 'rails/test_help'
 Aws.config[:stub_responses] = true
 
 class ActiveSupport::TestCase
+  include ActiveJob::TestHelper
   include FactoryBot::Syntax::Methods
 
   # Run tests in parallel with specified workers

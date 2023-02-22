@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_14_073209) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_19_083756) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -95,6 +95,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_14_073209) do
     t.string "fuel_types", array: true
     t.datetime "locked_at", precision: nil
     t.string "cover_image", default: "default", null: false
+    t.datetime "external_photos_updated_at", precision: nil
     t.index ["code"], name: "index_airports_on_code", unique: true
   end
 

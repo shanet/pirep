@@ -112,13 +112,37 @@ class AirportTest < ActiveSupport::TestCase
     end
   end
 
-  test 'puts uploaded photos before third party photos' do
-    assert @airport.all_photos.first.is_a?(ActiveStorage::Attachment), 'Uploaded photo not first'
-    assert @airport.all_photos.last.is_a?(Hash), 'Google API photo not last'
+  test 'gets uncached external photos' do
+    assert_enqueued_with(job: AirportPhotosCacherJob) do
+      uncached_photos = @airport.uncached_external_photos
+
+      assert uncached_photos.is_a?(Array), 'Uncached photos not returned'
+      assert uncached_photos.first[:url].present?, 'Uncached photo URL not returned'
+      assert uncached_photos.first[:attribution].present?, 'Uncached photo attribution not returned'
+    end
+  end
+
+  test 'does not fetch external photos before cache expiration' do
+    @airport.update!(external_photos_updated_at: 2.months.ago)
+
+    assert_enqueued_with(job: AirportPhotosCacherJob) do
+      assert_not_nil @airport.uncached_external_photos, 'Uncached photos not returned'
+    end
+
+    @airport.update!(external_photos_updated_at: Time.zone.now)
+
+    assert_no_enqueued_jobs do
+      assert_nil @airport.uncached_external_photos, 'Uncached photos returned'
+    end
+  end
+
+  test 'puts contributed photos before external photos' do
+    assert_equal :contributed, @airport.all_photos.keys.first, 'Contributed photo not first'
+    assert_equal :external, @airport.all_photos.keys.last, 'External photo not last'
   end
 
   test 'has customized photo key' do
-    assert_match(/uploads\/airport_photos\/\d{4}\/\d{2}\/\d{2}\/.+.png/, @airport.photos.first.key, 'Unexpected airport photo customized key')
+    assert_match(/uploads\/airport_photos\/contributed\/#{@airport.code.downcase}\/.+.png/, @airport.contributed_photos.first.key, 'Unexpected airport photo customized key')
   end
 
   test 'has correct theme' do

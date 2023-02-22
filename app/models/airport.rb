@@ -133,7 +133,8 @@ class Airport < ApplicationRecord
   enum facility_type: FACILITY_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
   enum landing_rights: LANDING_RIGHTS_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
 
-  has_many_attached_with :photos, path: -> {"uploads/airport_photos/#{Time.zone.now.strftime('%Y/%m/%d')}"}
+  has_many_attached_with :contributed_photos, path: -> {"uploads/airport_photos/contributed/#{code.downcase}"}
+  has_many_attached_with :external_photos, path: -> {"uploads/airport_photos/external/#{code.downcase}"}
 
   # Rank airport codes above names to prioritize searching by airport code
   # Also rank public airports over private airports
@@ -276,7 +277,19 @@ class Airport < ApplicationRecord
   end
 
   def all_photos
-    return @all_photos ||= photos.order(created_at: :desc) + GoogleApi.client.place_photos('%s - %s Airport' % [code, name], latitude, longitude)
+    return {
+      contributed: contributed_photos.order(created_at: :desc),
+      external: external_photos.order(created_at: :asc),
+    }
+  end
+
+  def uncached_external_photos(force_update: false)
+    return nil if external_photos_updated_at && external_photos_updated_at > 1.month.ago && !force_update
+
+    Rails.logger.info("Updating external photos cache for #{code}")
+    photos = GoogleApi.client.place_photos("#{code} - #{name} Airport", latitude, longitude)
+    AirportPhotosCacherJob.perform_later(self, photos)
+    return photos
   end
 
   def unselected_tag_names
