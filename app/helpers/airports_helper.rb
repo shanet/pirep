@@ -47,4 +47,13 @@ module AirportsHelper
     # Annotations are stored as JSONB arrays so we need to convert them to a string before passing them into the diff generator
     return annotations.map {|annotation| "#{annotation['label']}: (#{annotation['latitude']}, #{annotation['longitude']})"}.join("\n")
   end
+
+  def opengraph_description(airport)
+    if airport.description.present?
+      return airport.description.split("\n")[0...2].join("\n")
+    end
+
+    return "#{airport.name.titleize} is a #{Airport::FACILITY_USES[airport.facility_use.to_sym].downcase} airport located in #{airport.city.titleize}, #{airport.state}. " \
+      "Help us collect information on this airport at Pirep!"
+  end
 end

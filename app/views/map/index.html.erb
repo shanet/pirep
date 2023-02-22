@@ -1,4 +1,13 @@
-<% airport_path_placeholder = '_airport_code_' %>
+<%
+  @opengraph = {
+    description: 'Pirep is a free, collaborative database of all public and private airports located within the United States. All pilots are welcome to contribute, edit, and improve any airport they have local knowledge about, no registration required.',
+    image_url: image_url('logo.png'),
+    page_url: root_url,
+    title: 'Pirep.io - Collaborative airport database',
+  }
+
+  airport_path_placeholder = '_airport_code_'
+%>
 
 <div id="controls">
   <div id="grid">

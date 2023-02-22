@@ -294,6 +294,13 @@ class MapTest < ApplicationSystemTestCase
     assert_equal 0, map_pitch, 'Map pitch not reset'
   end
 
+  test 'has opengraph tags' do
+    visit map_path
+
+    # Sanity check on the Opengraph meta tags being present
+    assert find('meta[property="og:title"]', visible: false)[:content].present?, 'Opengraph tags not present'
+  end
+
 private
 
   def open_airport(airport)
