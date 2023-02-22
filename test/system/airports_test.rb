@@ -42,7 +42,7 @@ class AirportsTest < ApplicationSystemTestCase
     end
 
     # Has photos
-    expected_photo_path = URI.parse(url_for(@airport.photos.first)).path
+    expected_photo_path = URI.parse(url_for(@airport.contributed_photos.first)).path
     actual_photo_path = URI.parse(find('.carousel img')[:src]).path
     assert_equal expected_photo_path, actual_photo_path
 
@@ -177,9 +177,40 @@ class AirportsTest < ApplicationSystemTestCase
       # Clicking on an indicator should jump to that image
       all('.carousel-indicators button').last.click
       assert_image_shown images.last
+    end
+  end
 
-      # Images with attributions should display it
-      assert_equal @airport.all_photos.last[:attribution], first('.carousel-caption').text, 'Attribution not present for image'
+  test 'fetches uncached photos' do
+    # Add an external photo to act as something that was already cached
+    @airport.external_photos.attach(Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png'))
+    @airport.update!(external_photos_updated_at: Time.zone.now)
+
+    visit airport_path(@airport.code)
+
+    within('.carousel') do
+      images = all('img', visible: false)
+
+      assert_equal 2, images.count, 'Wrong photos displayed by default'
+      assert_equal url_for(@airport.contributed_photos.first), images.first[:src]
+      assert_equal url_for(@airport.external_photos.first), images.last[:src]
+    end
+
+    # Removing the cache timestamp should now return uncached photos to display
+    @airport.update!(external_photos_updated_at: nil)
+
+    visit current_path
+
+    within('.carousel') do
+      images = all('img', visible: false)
+
+      # The first photo should still be the contributed photo, the second and third should be direct links to the external photos
+      assert_equal 3, images.count, 'Contributed photo not included with uncached external photos'
+      assert_equal url_for(@airport.contributed_photos.first), images[0][:src]
+      assert_equal 'https://example.com/image1.jpg', images[1][:src]
+      assert_equal 'https://example.com/image2.jpg', images[2][:src]
+
+      # Images with attributions should display it (these will currently on display on uncached photos)
+      assert first('.carousel-caption', visible: false).text(:all).present?, 'Attribution not present for image'
     end
   end
 

@@ -49,6 +49,7 @@ rules:
   no-use-before-define:
     - error
     - functions: false
+  no-param-reassign: off
   object-curly-spacing:
     - error
     - never

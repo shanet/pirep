@@ -6,29 +6,49 @@ export function initializePhotoGalleries() {
   const photoGalleries = document.getElementsByClassName('carousel');
 
   for(let i=0; i<photoGalleries.length; i++) {
-    const photoGallery = photoGalleries[i];
-    const images = photoGallery.querySelectorAll('.carousel-item');
-    photoGallery.dataset.activeImage = 0;
-
-    photoGallery.querySelector('.carousel-control-prev').addEventListener('click', () => {
-      photoGallery.dataset.activeImage = (parseInt(photoGallery.dataset.activeImage, 10) === 0 ? images.length - 1 : parseInt(photoGallery.dataset.activeImage, 10) - 1);
-      showImage(photoGallery, parseInt(photoGallery.dataset.activeImage, 10));
-    });
-
-    photoGallery.querySelector('.carousel-control-next').addEventListener('click', () => {
-      photoGallery.dataset.activeImage = (parseInt(photoGallery.dataset.activeImage, 10) >= images.length - 1 ? 0 : parseInt(photoGallery.dataset.activeImage, 10) + 1);
-      showImage(photoGallery, parseInt(photoGallery.dataset.activeImage, 10));
-    });
-
-    const indicators = photoGallery.querySelectorAll('.carousel-indicators button');
-
-    for(let j=0; j<indicators.length; j++) {
-      indicators[j].addEventListener('click', () => {
-        photoGallery.dataset.activeImage = parseInt(indicators[j].dataset.bsTarget, 10);
-        showImage(photoGallery, parseInt(photoGallery.dataset.activeImage, 10));
-      });
-    }
+    initializePhotoGallery(photoGalleries[i]);
+    fetchUncachedPhotoGallery(photoGalleries[i]);
   }
+}
+
+function initializePhotoGallery(photoGallery) {
+  const images = photoGallery.querySelectorAll('.carousel-item');
+  photoGallery.dataset.activeImage = 0;
+
+  // Don't do anything if there aren't any photos in the gallery
+  if(images.length === 0) return;
+
+  photoGallery.querySelector('.carousel-control-prev').addEventListener('click', () => {
+    photoGallery.dataset.activeImage = (parseInt(photoGallery.dataset.activeImage, 10) === 0 ? images.length - 1 : parseInt(photoGallery.dataset.activeImage, 10) - 1);
+    showImage(photoGallery, parseInt(photoGallery.dataset.activeImage, 10));
+  });
+
+  photoGallery.querySelector('.carousel-control-next').addEventListener('click', () => {
+    photoGallery.dataset.activeImage = (parseInt(photoGallery.dataset.activeImage, 10) >= images.length - 1 ? 0 : parseInt(photoGallery.dataset.activeImage, 10) + 1);
+    showImage(photoGallery, parseInt(photoGallery.dataset.activeImage, 10));
+  });
+
+  const indicators = photoGallery.querySelectorAll('.carousel-indicators button');
+
+  for(let j=0; j<indicators.length; j++) {
+    indicators[j].addEventListener('click', () => {
+      photoGallery.dataset.activeImage = parseInt(indicators[j].dataset.bsTarget, 10);
+      showImage(photoGallery, parseInt(photoGallery.dataset.activeImage, 10));
+    });
+  }
+}
+
+async function fetchUncachedPhotoGallery(photoGallery) {
+  const {uncachedPhotoGalleryPath} = photoGallery.dataset;
+  const response = await fetch(uncachedPhotoGalleryPath);
+
+  // A response without any uncached photos will be a 204 No-Content
+  if(response.status !== 200) return;
+
+  const body = await response.text();
+  const parent = photoGallery.parentNode;
+  photoGallery.outerHTML = body;
+  initializePhotoGallery(parent.querySelector('.carousel'));
 }
 
 function showImage(photoGallery, activeIndex) {

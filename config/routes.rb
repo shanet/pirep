@@ -54,6 +54,7 @@ Rails.application.routes.draw do
       get 'preview/:version_id', action: :preview, as: :preview
       patch 'revert/:version_id', action: :revert, as: :revert
       get 'annotations', as: :annotations
+      get 'uncached_photo_gallery', as: :uncached_photo_gallery
     end
   end
 

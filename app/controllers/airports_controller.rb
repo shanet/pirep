@@ -1,9 +1,10 @@
 class AirportsController < ApplicationController
   include SearchQueryable
+  include Skylight::Helpers
 
   layout 'blank'
 
-  before_action :set_airport, only: [:update, :history]
+  before_action :set_airport, only: [:update, :history, :uncached_photo_gallery]
   before_action :set_airport_by_code, only: [:show, :annotations]
 
   def index
@@ -18,6 +19,7 @@ class AirportsController < ApplicationController
       render json: Airport.geojson.to_json
     end
   end
+  instrument_method :index
 
   def new
     @airport = Airport.new
@@ -53,7 +55,7 @@ class AirportsController < ApplicationController
     # Ensure that the update won't overwrite a change that another user already made
     return head(:conflict) if airport_write_conflict?(@airport, params[:airport][:rendered_at])
 
-    if @airport.update(airport_params) && @airport.photos.attach(params[:airport][:photos] || [])
+    if @airport.update(airport_params) && @airport.contributed_photos.attach(params[:airport][:photos] || [])
       touch_author
       create_actions
 
@@ -106,6 +108,16 @@ class AirportsController < ApplicationController
     return not_found unless @airport
 
     render json: @airport.annotations
+  end
+
+  def uncached_photo_gallery
+    return not_found unless @airport
+
+    @uncached_external_photos = @airport.uncached_external_photos
+    return head :no_content unless @uncached_external_photos
+
+    @border = ActiveModel::Type::Boolean.new.cast(params[:border])
+    render :uncached_photo_gallery, layout: false
   end
 
 private

@@ -23,7 +23,7 @@
 <% if @airport.all_photos.any? %>
   <div class="row">
     <div class="col-sm p-0">
-      <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photos: @airport.all_photos} %>
+      <%= render partial: 'airports/photo_gallery', formats: :html, locals: {photo_groups: @airport.all_photos} %>
     </div>
   </div>
 <% end %>
