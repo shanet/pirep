@@ -1,4 +1,13 @@
-<% @title = @airport.code %>
+<%
+  @title = @airport.code
+  @opengraph = {
+    description: opengraph_description(@airport),
+    image_url: (@airport.contributed_photos.any? ? cdn_url_for(@airport.contributed_photos.first) : image_url('logo.png')),
+    page_url: airport_url(@airport),
+    title: "#{@airport.code} - #{@airport.name.titleize} (Pirep)",
+  }
+%>
+
 <%= render 'airports/header/header' %>
 
 <div class="container-lg">

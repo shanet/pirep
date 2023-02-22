@@ -4,6 +4,14 @@
 <%= csp_meta_tag %>
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 
+<% if defined?(@opengraph) %>
+  <meta property="og:description" content="<%= @opengraph[:description] %>">
+  <meta property="og:image" content="<%= @opengraph[:image_url] %>">
+  <meta property="og:title" content="<%= @opengraph[:title] %>">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="<%= @opengraph[:page_url] %>">
+<% end %>
+
 <%= stylesheet_link_tag 'application', media: 'all' %>
 <%= render 'layouts/sentry' %>
 <%= render 'layouts/timezone' %>

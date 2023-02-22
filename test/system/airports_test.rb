@@ -256,6 +256,13 @@ class AirportsTest < ApplicationSystemTestCase
     assert_equal 'forest', @airport.reload.cover_image, 'Cover image not updated on airport'
   end
 
+  test 'has opengraph tags' do
+    visit airport_path(@airport.code)
+
+    # Sanity check on the Opengraph meta tags being present
+    assert_equal @airport.description, find('meta[property="og:description"]', visible: false)[:content], 'Unexpected Opengraph description'
+  end
+
 private
 
   def assert_editor_has_text(label, property, text)
