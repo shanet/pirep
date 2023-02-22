@@ -16,14 +16,18 @@ class Users::Unknown < Users::User
     return false
   end
 
+  # No passwored is needed since these users can't log in
+  def password_required?
+    return false
+  end
+
   # Don't send a confirmation email to unknown users since we don't know their email address
   def send_confirmation_notification?
     return false
   end
 
   private_class_method def self.randomize_credentials(user)
-    # Users must have email addresses and password so provide some dummy values for unknown users
+    # All users must have an email address so provide a dummy values for unknown users
     user.email = "#{SecureRandom.uuid}@#{Rails.configuration.domain}"
-    user.password = SecureRandom.uuid
   end
 end
