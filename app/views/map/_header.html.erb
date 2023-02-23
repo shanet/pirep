@@ -15,7 +15,7 @@
     <% if user_signed_in? && current_user.admin? %>
       <span><%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_root_path, class: 'ps-2' %></span> |
     <% else %>
-      <span class="ps-2"><%= image_tag 'logo.png' %></span> |
+      <span class="ps-2"><%= image_tag 'logo_small.png' %></span> |
     <% end %>
 
     <% if user_signed_in? %>
@@ -38,7 +38,7 @@
       <% if user_signed_in? && current_user.admin? %>
         <li class="list-group-item"><%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_root_path %></li>
       <% else %>
-        <li class="list-group-item"><%= image_tag 'logo.png' %></li>
+        <li class="list-group-item"><%= image_tag 'logo_small.png' %></li>
       <% end %>
 
       <% if user_signed_in? %>

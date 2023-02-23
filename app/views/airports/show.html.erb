@@ -2,7 +2,7 @@
   @title = @airport.code
   @opengraph = {
     description: opengraph_description(@airport),
-    image_url: (@airport.contributed_photos.any? ? cdn_url_for(@airport.contributed_photos.first) : image_url('logo.png')),
+    image_url:opengraph_image(@airport),
     page_url: airport_url(@airport),
     title: "#{@airport.code} - #{@airport.name.titleize} (Pirep)",
   }

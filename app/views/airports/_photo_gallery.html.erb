@@ -6,7 +6,7 @@
       <% photos.each do |photo| %>
         <div class="carousel-inner" data-photo-group="<%= group %>">
           <div class="carousel-item <%= counter == 0 ? 'active' : '' %>">
-            <img class="d-block <%= defined?(border) && border ? 'img-thumbnail' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? cdn_url_for(photo) : photo[:url] %>">
+            <img class="d-block <%= defined?(border) && border ? 'img-thumbnail large' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? cdn_url_for(photo) : photo[:url] %>">
 
             <% if photo.is_a?(Hash) && photo[:attribution].present? %>
               <div class="carousel-caption d-none d-md-block">
