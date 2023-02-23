@@ -35,6 +35,8 @@ private
       when :json
         render json: {error: status.to_s, message: message}, status: status
       else
+        # These are static pages so skip the CSP
+        headers.merge!('Content-Security-Policy' => '')
         render file: Rails.public_path.join('errors', "#{status_code}.html"), formats: [:html], status: status, layout: false
     end
   end

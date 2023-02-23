@@ -56,4 +56,12 @@ module AirportsHelper
     return "#{airport.name.titleize} is a #{Airport::FACILITY_USES[airport.facility_use.to_sym].downcase} airport located in #{airport.city.titleize}, #{airport.state}. " \
       "Help us collect information on this airport at Pirep!"
   end
+
+  def opengraph_image(airport)
+    return cdn_url_for(@airport.contributed_photos.first) if @airport.contributed_photos.any?
+
+    return cdn_url_for(@airport.external_photos.first) if @airport.external_photos.any?
+
+    return image_url('icon_small.png')
+  end
 end

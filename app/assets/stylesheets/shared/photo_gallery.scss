@@ -1,9 +1,13 @@
 .carousel {
   img {
     display: none;
-    height: 350px;
+    height: 300px;
     object-fit: cover;
     width: 100%;
+
+    &.large {
+      height: 350px;
+    }
   }
 
   .carousel-control-prev,

@@ -3,6 +3,7 @@
 <%= csrf_meta_tags %>
 <%= csp_meta_tag %>
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<link rel="icon" type="image/x-icon" href="<%= image_path('favicon.png') %>">
 
 <% if defined?(@opengraph) %>
   <meta property="og:description" content="<%= @opengraph[:description] %>">
