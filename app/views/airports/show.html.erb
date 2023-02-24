@@ -1,8 +1,9 @@
 <%
   @title = @airport.code
+
   @opengraph = {
     description: opengraph_description(@airport),
-    image_url:opengraph_image(@airport),
+    image_url: opengraph_image(@airport),
     page_url: airport_url(@airport),
     title: "#{@airport.code} - #{@airport.name.titleize} (Pirep)",
   }

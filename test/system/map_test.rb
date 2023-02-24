@@ -31,6 +31,9 @@ class MapTest < ApplicationSystemTestCase
       actual_photo_path = URI.parse(find('.carousel img')[:src]).path
       assert_equal expected_photo_path, actual_photo_path
 
+      # Does not have featured photo form
+      assert_no_selector '.carousel-item .featured'
+
       # Has elevation
       assert_selector '.statistics-box', text: "#{number_with_delimiter(@airport.elevation, delimiter: ',')}ft"
 

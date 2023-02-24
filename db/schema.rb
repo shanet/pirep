@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_19_083756) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_23_075120) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -30,17 +30,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_19_083756) do
     t.index ["version_id"], name: "index_actions_on_version_id"
   end
 
-  create_table "active_storage_attachments", force: :cascade do |t|
+  create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
     t.uuid "record_id", null: false
-    t.bigint "blob_id", null: false
+    t.uuid "blob_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "active_storage_blobs", force: :cascade do |t|
+  create_table "active_storage_blobs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "key", null: false
     t.string "filename", null: false
     t.string "content_type"
@@ -52,8 +52,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_19_083756) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
-    t.bigint "blob_id", null: false
+  create_table "active_storage_variant_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
@@ -96,7 +96,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_19_083756) do
     t.datetime "locked_at", precision: nil
     t.string "cover_image", default: "default", null: false
     t.datetime "external_photos_updated_at", precision: nil
+    t.uuid "featured_photo_id"
     t.index ["code"], name: "index_airports_on_code", unique: true
+    t.index ["featured_photo_id"], name: "index_airports_on_featured_photo_id"
   end
 
   create_table "comments", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
@@ -265,6 +267,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_19_083756) do
   add_foreign_key "actions", "versions"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "airports", "active_storage_attachments", column: "featured_photo_id", on_delete: :nullify
   add_foreign_key "comments", "airports"
   add_foreign_key "comments", "users"
   add_foreign_key "remarks", "airports"

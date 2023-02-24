@@ -145,6 +145,7 @@ private
       :landing_requirements,
       :annotations,
       :cover_image,
+      :featured_photo_id,
       tags_attributes: [:name]
     )
   end

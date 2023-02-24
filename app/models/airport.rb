@@ -278,9 +278,18 @@ class Airport < ApplicationRecord
 
   def all_photos
     return {
+      featured: [featured_photo].compact,
       contributed: contributed_photos.order(created_at: :desc),
       external: external_photos.order(created_at: :asc),
     }
+  end
+
+  def featured_photo
+    return contributed_photos.find_by(id: featured_photo_id) || external_photos.find_by(id: featured_photo_id)
+  end
+
+  def featured_photo=(photo)
+    self[:featured_photo_id] = photo&.id
   end
 
   def uncached_external_photos(force_update: false)

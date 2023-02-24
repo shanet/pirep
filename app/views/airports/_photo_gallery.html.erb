@@ -1,20 +1,25 @@
-<div class="carousel" data-uncached-photo-gallery-path="<%= uncached_photo_gallery_airport_path(@airport, border: defined?(border).present?) %>">
+<% show_border = defined?(border) && border %>
+
+<div class="carousel" data-uncached-photo-gallery-path="<%= uncached_photo_gallery_airport_path(@airport, border: show_border) %>">
   <% if photo_groups.any? {|_group, photos| photos.any?} %>
     <% counter = 0 %>
 
     <% photo_groups.each do |group, photos| %>
       <% photos.each do |photo| %>
-        <div class="carousel-inner" data-photo-group="<%= group %>">
-          <div class="carousel-item <%= counter == 0 ? 'active' : '' %>">
-            <img class="d-block <%= defined?(border) && border ? 'img-thumbnail large' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? cdn_url_for(photo) : photo[:url] %>">
+        <%
+          featured_photo = (photo == @airport.featured_photo)
 
-            <% if photo.is_a?(Hash) && photo[:attribution].present? %>
-              <div class="carousel-caption d-none d-md-block">
-                <%= photo[:attribution] %>
-              </div>
-            <% end %>
-          </div>
-        </div>
+          # Don't display the featured photo twice (it will be present in one of the other photo groups)
+          next if featured_photo && group != :featured
+        %>
+
+        <%= render 'airports/photo_gallery_image',
+          photo: photo,
+          group: group,
+          featured: featured_photo,
+          active: (counter == 0),
+          size: (show_border ? :large : :small),
+          featured_form: show_border %>
 
         <% counter += 1 %>
       <% end %>
@@ -23,19 +28,21 @@
     <div class="carousel-indicators">
       <% counter = 0 %>
 
-      <% photo_groups.each do |_group, photos| %>
-        <% photos.each do |_photo| %>
+      <% photo_groups.each do |group, photos| %>
+        <% photos.each do |photo| %>
+          <% next if photo == @airport.featured_photo && group != :featured %>
+
           <button type="button" data-bs-target="<%= counter %>"<% if counter == 0 %> class="active"<% end %>></button>
           <% counter += 1 %>
         <% end %>
       <% end %>
     </div>
 
-    <button class="carousel-control-prev <%= defined?(border) && border ? 'm-1' : '' %>" type="button">
+    <button class="carousel-control-prev <%= show_border ? 'm-1' : '' %>" type="button">
       <span class="carousel-control-prev-icon"></span>
     </button>
 
-    <button class="carousel-control-next <%= defined?(border) && border ? 'm-1' : '' %>" type="button">
+    <button class="carousel-control-next <%= show_border ? 'm-1' : '' %>" type="button">
       <span class="carousel-control-next-icon"></span>
     </button>
   <% end %>

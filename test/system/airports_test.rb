@@ -41,10 +41,11 @@ class AirportsTest < ApplicationSystemTestCase
       assert_selector '.EasyMDEContainer', text: text
     end
 
-    # Has photos
+    # Has photos with featured photo form
     expected_photo_path = URI.parse(url_for(@airport.contributed_photos.first)).path
     actual_photo_path = URI.parse(find('.carousel img')[:src]).path
     assert_equal expected_photo_path, actual_photo_path
+    assert_selector '.carousel-item .featured'
 
     # Has airport map
     assert_selector '#airport-map'
@@ -222,6 +223,19 @@ class AirportsTest < ApplicationSystemTestCase
       find('#upload-photo-form input[type="file"]').set(Rails.root.join('test/fixtures/files/image.png'))
       click_on 'Upload Photo'
     end
+  end
+
+  test 'set featured photo' do
+    3.times {@airport.contributed_photos.attach(Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png'))}
+
+    visit airport_path(@airport.code)
+
+    # Go to the third image and set it as the featured image
+    find('.carousel-indicators button[data-bs-target="2"]').click
+    find('.carousel-item .featured').click
+
+    assert_equal url_for(@airport.reload.featured_photo), find('.carousel-item img')[:src], 'Unexpected featured photo'
+    assert_equal 'Featured Photo', find('.carousel-item .featured.disable').text, 'First photo not set as featured with disabled button'
   end
 
   test 'leave a comment' do
