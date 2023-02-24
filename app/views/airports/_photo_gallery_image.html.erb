@@ -1,0 +1,18 @@
+<div class="carousel-inner" data-photo-group="<%= group %>">
+  <div class="carousel-item <%= active ? 'active' : '' %>">
+    <%# Only attachments can be set as featured photos; skip this for uncached photos %>
+    <% if featured_form && photo.is_a?(ActiveStorage::Attachment) %>
+      <%= button_to "<i class=\"fa-star #{featured ? 'fa-solid' : 'fa-regular'}\"></i> #{featured ? 'Featured Photo' : 'Set Featured'}".html_safe,
+        airport_path(@airport, params: {airport: {featured_photo_id: photo.id}}), method: :patch,
+        class: "featured position-absolute end-0 btn btn-sm btn-light #{featured ? 'disable' : ''}" %>
+    <% end %>
+
+    <img class="d-block <%= size == :large ? 'img-thumbnail large' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? cdn_url_for(photo) : photo[:url] %>">
+
+    <% if photo.is_a?(Hash) && photo[:attribution].present? %>
+      <div class="carousel-caption d-none d-md-block">
+        <%= photo[:attribution] %>
+      </div>
+    <% end %>
+  </div>
+</div>

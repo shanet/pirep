@@ -1,4 +1,6 @@
 module AirportsHelper
+  include ApplicationHelper
+
   def textarea_editor_height(size)
     case size
       when :large
@@ -53,14 +55,20 @@ module AirportsHelper
       return airport.description.split("\n")[0...2].join("\n")
     end
 
-    return "#{airport.name.titleize} is a #{Airport::FACILITY_USES[airport.facility_use.to_sym].downcase} airport located in #{airport.city.titleize}, #{airport.state}. " \
-      "Help us collect information on this airport at Pirep!"
+    help_text = 'Help us collect information on this airport at Pirep!'
+
+    # Unmapped airports don't have city/state info so the text below won't work for them
+    return "#{airport.name.titleize} is an unmapped airport. #{help_text}" if airport.unmapped?
+
+    return "#{airport.name.titleize} is a #{Airport::FACILITY_USES[airport.facility_use.to_sym].downcase} airport located in #{airport.city.titleize}, #{airport.state}. #{help_text}"
   end
 
   def opengraph_image(airport)
-    return cdn_url_for(@airport.contributed_photos.first) if @airport.contributed_photos.any?
+    return cdn_url_for(airport.featured_photo) if airport.featured_photo
 
-    return cdn_url_for(@airport.external_photos.first) if @airport.external_photos.any?
+    return cdn_url_for(airport.contributed_photos.first) if airport.contributed_photos.any?
+
+    return cdn_url_for(airport.external_photos.first) if airport.external_photos.any?
 
     return image_url('icon_small.png')
   end

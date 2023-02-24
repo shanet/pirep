@@ -1,5 +1,5 @@
 <%
-  user = Users::User.find(version.whodunnit)
+  user = Users::User.find_by(id: version.whodunnit)
   airport = (version.item_type == 'Tag' ? Airport.find(version.airport_id) : version.item)
 %>
 
@@ -9,10 +9,12 @@
         <%= link_to airport.code, manage_airport_path(airport) %> |
         <%= link_to 'History', history_airport_path(airport, anchor: "version-#{version.id}") %> |
 
-        <% if user.unknown? %>
+        <% if user&.unknown? %>
           <%= link_to user.ip_address, manage_user_path(user) %>
-        <% else %>
+        <% elsif user %>
           <%= link_to user.email, manage_user_path(user) %>
+        <% else %>
+          Deleted user
         <% end %>
 
         <br><small class="text-muted"><%= time_ago_in_words(version.created_at).capitalize %> ago</small>

@@ -94,9 +94,10 @@ function showSearchResults(results) {
     node.dataset.zoomLevel = JSON.stringify(result.zoom_level);
     resultsList.appendChild(node);
 
-    // Show airport when result is clicked (use mousedown to since blur will take precedence over click)
+    // Show airport when result is clicked (use mousedown since blur will take precedence over click)
     node.addEventListener('mousedown', () => {
       openAirport(node.dataset);
+      hideSearchResults();
     });
 
     /* eslint-disable no-loop-func */

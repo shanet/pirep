@@ -1,1 +1,1 @@
-<%= render partial: 'airports/photo_gallery', locals: {photo_groups: {contributed: @airport.contributed_photos, external: @uncached_external_photos}, border: @border} %>
+<%= render partial: 'airports/photo_gallery', locals: {photo_groups: @airport.all_photos.merge({external: @uncached_external_photos}), border: @border} %>

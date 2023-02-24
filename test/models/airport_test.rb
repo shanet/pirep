@@ -137,8 +137,22 @@ class AirportTest < ActiveSupport::TestCase
   end
 
   test 'puts contributed photos before external photos' do
-    assert_equal :contributed, @airport.all_photos.keys.first, 'Contributed photo not first'
-    assert_equal :external, @airport.all_photos.keys.last, 'External photo not last'
+    assert_equal :featured, @airport.all_photos.keys.first, 'Featured photo not first'
+    assert_equal :contributed, @airport.all_photos.keys.second, 'Contributed photos not second'
+    assert_equal :external, @airport.all_photos.keys.last, 'External photos not last'
+  end
+
+  test 'has featured photo' do
+    # By default the featured photo should be an empty array if missing
+    assert @airport.all_photos[:featured].empty?
+
+    @airport.update!(featured_photo: @airport.contributed_photos.first)
+    assert_equal 1, @airport.all_photos[:featured].count
+    assert_equal @airport.contributed_photos.first, @airport.all_photos[:featured].first
+
+    # Removing the photo should also clear the featured photo
+    @airport.contributed_photos.purge
+    assert @airport.all_photos[:featured].empty?
   end
 
   test 'has customized photo key' do
