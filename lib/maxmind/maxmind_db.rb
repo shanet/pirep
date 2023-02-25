@@ -51,7 +51,6 @@ module MaxmindDb
         FileUtils.cp(File.join(directory, 'database/GeoLite2-City.mmdb'), DATABASE_PATH)
 
         @maxmind_database = nil
-        initialize_database
       end
 
       Rails.logger.info('Updated Maxmind database')
