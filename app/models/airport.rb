@@ -12,8 +12,6 @@ class Airport < ApplicationRecord
 
   accepts_nested_attributes_for :tags
 
-  after_save :remove_empty_tag!
-
   FACILITY_TYPES = {
     airport: {
       label: 'Airports',
@@ -141,7 +139,9 @@ class Airport < ApplicationRecord
   searchable({column: :code, weight: ['facility_use = \'PU\'', :A, :B]})
   searchable({column: :name, weight: ['facility_use = \'PU\'', :C, :D]})
 
-  after_update {VersionsCollatorJob.perform_later(self)}
+  # Only run version collation after an update if one of the columns we create versions for was changed (airport database updates are much faster without these running)
+  after_update :collate_versions!, if: Proc.new {|airport| HISTORY_COLUMNS.keys.select {|column| send("#{column}_changed?")}.any?}
+  after_save :remove_empty_tag!
 
   def self.geojson
     return Airport.includes(:tags).map(&:to_geojson)
@@ -241,6 +241,10 @@ class Airport < ApplicationRecord
     return if empty?
 
     tags.where(name: :empty).destroy_all
+  end
+
+  def collate_versions!
+    VersionsCollatorJob.perform_later(self)
   end
 
   def closed?
