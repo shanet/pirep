@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between mb-2 landing-rights-form">
   <% Airport::LANDING_RIGHTS_TYPES.each_with_index do |(key, configuration), index| %>
-    <%= form.radio_button :landing_rights, key, class: 'btn-check', checked: (index == 0) %>
+    <%= form.radio_button :landing_rights, key, class: 'btn-check', checked: (@airport.landing_rights == key) %>
 
     <%= form.label :landing_rights, value: key, class: "btn btn-outline-#{configuration[:button]} #{index == 0 ? '' : 'ms-2'}" do %>
       <i class="fas fa-<%= configuration[:icon] %>"></i><br>
@@ -11,8 +11,7 @@
 
 <% Airport::LANDING_RIGHTS_TYPES.each do |key, configuration| %>
   <% next unless configuration[:has_requirements] %>
-
   <%= form.label :landing_requirements, "#{configuration[:long_requirements_label]}:", data: {landing_rights_type: key}, class: (@airport.landing_rights == key ? '' : 'd-none') %>
 <% end %>
 
-<%= form.text_area :landing_requirements, class: 'form-control d-none' %>
+<%= form.text_area :landing_requirements, class: "form-control #{Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights.to_sym][:has_requirements] ? '' : 'd-none'}" %>
