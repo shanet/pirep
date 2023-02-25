@@ -210,7 +210,7 @@ def parse_arguments
 
   OptionParser.new do |parser|
     parser.on('-b', '--branch ARG', String) {|branch| options[:branch] = branch}
-  end.parse!(ARGV[1..])
+  end.parse!(ARGV.any? ? ARGV[1..] : ARGV)
 
   return options
 end
