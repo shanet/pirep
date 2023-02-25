@@ -6,8 +6,9 @@ class ApplicationController < ActionController::Base
   before_action :touch_user
   after_action :verify_authorized
 
-  rescue_from ActionController::RoutingError, with: :render_not_found
-  rescue_from ActionController::BadRequest, with: :render_bad_request
+  rescue_from ActionController::RoutingError, with: :not_found
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  rescue_from ActionController::BadRequest, with: :bad_request
   rescue_from Pundit::NotAuthorizedError, with: :forbidden
 
 private
