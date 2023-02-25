@@ -2,11 +2,13 @@ ENV['RAILS_ENV'] ||= 'test'
 
 require_relative '../config/environment'
 require 'rails/test_help'
+require 'active_support/testing/method_call_assertions'
 
 Aws.config[:stub_responses] = true
 
 class ActiveSupport::TestCase
   include ActiveJob::TestHelper
+  include ActiveSupport::Testing::MethodCallAssertions
   include FactoryBot::Syntax::Methods
 
   # Run tests in parallel with specified workers
