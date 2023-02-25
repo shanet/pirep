@@ -140,7 +140,7 @@ class Airport < ApplicationRecord
   searchable({column: :name, weight: ['facility_use = \'PU\'', :C, :D]})
 
   # Only run version collation after an update if one of the columns we create versions for was changed (airport database updates are much faster without these running)
-  after_update :collate_versions!, if: Proc.new {|airport| HISTORY_COLUMNS.keys.select {|column| send("#{column}_changed?")}.any?}
+  after_update :collate_versions!, if: proc {HISTORY_COLUMNS.keys.select {|column| send("#{column}_changed?")}.any?}
   after_save :remove_empty_tag!
 
   def self.geojson
