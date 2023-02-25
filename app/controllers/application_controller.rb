@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
   before_action :touch_user
   after_action :verify_authorized
 
-  rescue_from ActionController::RoutingError, with: :not_found
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
   rescue_from ActionController::BadRequest, with: :bad_request
   rescue_from Pundit::NotAuthorizedError, with: :forbidden
@@ -38,7 +37,7 @@ private
       else
         # These are static pages so skip the CSP
         headers.merge!('Content-Security-Policy' => '')
-        render file: Rails.public_path.join('errors', "#{status_code}.html"), formats: [:html], status: status, layout: false
+        render file: Rails.public_path.join("#{status_code}.html"), formats: [:html], status: status, layout: false
     end
   end
 
