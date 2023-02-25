@@ -11,9 +11,11 @@
     <% if defined? show_edit_form %>
       <div class="small my-1">
         <% if @airport.landing_rights == :private_ %>
-          Is this airport actually open to the public with or without restrictions? Or perhaps the owner is happy for pilots to stop by with prior permission?
-        <% elsif @airport.landing_requirements.present? %>
+          Is this airport privately owned but open to the public with or without restrictions? Or perhaps the owner is simply happy for pilots to stop by with prior permission?
+        <% elsif @airport.landing_rights == :restricted && @airport.landing_requirements.present? %>
           <%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:short_requirements_label] %>: <%= @airport.landing_requirements %>
+        <% elsif @airport.ownership_type.to_sym == :PR && @airport.landing_rights == :public_ %>
+          This airport is privately owned but open to the public.
        <% end %>
       </div>
 
