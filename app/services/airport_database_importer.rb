@@ -12,10 +12,10 @@ class AirportDatabaseImporter
 
   MILITARY_OWNERSHIP_TYPES = Set.new(['MA', 'MN', 'MR', 'CG'])
 
-  def initialize(airports)
+  def initialize(airports, bounding_box_calculator: AirportBoundingBoxCalculator.new)
     @airports = airports
     @current_data_cycle = FaaApi.client.current_data_cycle(:airports)
-    @bounding_box_calculator = AirportBoundingBoxCalculator.new
+    @bounding_box_calculator = bounding_box_calculator
   end
 
   def load_database
@@ -23,7 +23,7 @@ class AirportDatabaseImporter
       airport = update_airport(airport_code, airport_data)
 
       update_tags(airport)
-      update_bounding_box(airport)
+      update_bounding_box(airport) if @bounding_box_calculator
 
       (airport_data[:runways] || []).each do |runway|
         update_runway(airport, runway)

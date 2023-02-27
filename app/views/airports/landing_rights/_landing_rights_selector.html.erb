@@ -14,4 +14,4 @@
   <%= form.label :landing_requirements, "#{configuration[:long_requirements_label]}:", data: {landing_rights_type: key}, class: (@airport.landing_rights == key ? '' : 'd-none') %>
 <% end %>
 
-<%= form.text_area :landing_requirements, class: "form-control #{Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights.to_sym][:has_requirements] ? '' : 'd-none'}" %>
+<%= form.text_area :landing_requirements, class: "form-control #{Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights&.to_sym]&.[](:has_requirements) ? '' : 'd-none'}" %>

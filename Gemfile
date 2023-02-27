@@ -41,7 +41,7 @@ group :development, :test do
   gem 'aws-sdk-codepipeline'
   gem 'aws-sdk-ecs'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'cli-ui'
+  gem 'cli-ui', git: 'https://github.com/shanet/cli-ui', branch: 'consistent_stdout'
   gem 'rubocop'
   gem 'rubocop-rails'
 end
