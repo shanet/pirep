@@ -1,14 +1,9 @@
 require 'test_helper'
 
 class ChartsDownloaderTest < ActiveSupport::TestCase
-  setup do
-    # Create a `current` directory to ensure that the tiles generation code handles its existance properly
-    FileUtils.mkdir_p(Rails.public_path.join('assets/tiles_test/test/current'))
-  end
-
   teardown do
     # Clean up the tiles directory
-    FileUtils.rm_rf(Rails.public_path.join('assets/tiles_test/test'))
+    FileUtils.rm_rf(Rails.public_path.join('assets/tiles_test/current/test'))
   end
 
   test 'creates tiles from geotiff' do
