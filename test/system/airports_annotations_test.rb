@@ -10,7 +10,7 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
   end
 
   test 'add annotation' do
-    visit airport_path(@airport)
+    visit_airport(@airport)
     start_editing_annotations
 
     # Assert that the help text is shown in editing mode
@@ -52,7 +52,7 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
   end
 
   test 'restore and edit annotations' do
-    visit airport_path(@annotated_airport)
+    visit_airport(@annotated_airport)
 
     all('.annotation') # Use an `all` call here to wait a bit longer to give the map time to initialize
     assert_selector '.annotation', count: @annotated_airport.annotations.count
@@ -73,11 +73,16 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
   test 'ignores invalid annotations' do
     airport = create(:airport, annotations: [{label: 'Blackhole', latitude: 999, longitude: 999}])
 
-    visit airport_path(airport)
+    visit_airport(airport)
     assert_no_selector '.annotation'
   end
 
 private
+
+  def visit_airport(airport)
+    visit airport_path(airport)
+    wait_for_map_ready('airport-map')
+  end
 
   def start_editing_annotations
     find('#annotations-editing').click

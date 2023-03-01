@@ -23,4 +23,14 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   # Silence some annoying "Capybara starting Puma..." while running tests
   Capybara.server = :puma, {Silent: true}
+
+  def wait_for_map_ready(id='map')
+    # Once the map is fully ready to use it will populate a data attribute
+    # Mapbox runs incredibly slow on CI so give it a bunch of time before failing
+    find("##{id}[data-ready=\"true\"]", wait: (ENV['CI'] ? 300 : 60))
+  rescue Capybara::ElementNotFound => error
+    # Something may have prevented Mapbox from initalizing, it would he helpful to print the browser logs in this case
+    warn page.driver.browser.logs.get(:browser)
+    raise error
+  end
 end

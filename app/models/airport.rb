@@ -10,7 +10,20 @@ class Airport < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :actions, as: :actionable, dependent: :destroy
 
+  belongs_to :featured_photo, class_name: 'ActiveStorage::Attachment', optional: true
+  has_many_attached_with :contributed_photos, path: -> {"uploads/airport_photos/contributed/#{code.downcase}"}
+  has_many_attached_with :external_photos, path: -> {"uploads/airport_photos/external/#{code.downcase}"}
+
   accepts_nested_attributes_for :tags
+
+  # Rank airport codes above names to prioritize searching by airport code
+  # Also rank public airports over private airports
+  searchable({column: :code, weight: ['facility_use = \'PU\'', :A, :B]})
+  searchable({column: :name, weight: ['facility_use = \'PU\'', :C, :D]})
+
+  # Only run version collation after an update if one of the columns we create versions for was changed (airport database updates are much faster without these running)
+  after_update :collate_versions!, if: proc {HISTORY_COLUMNS.keys.select {|column| send("#{column}_changed?")}.any?}
+  after_save :remove_empty_tag!
 
   FACILITY_TYPES = {
     airport: {
@@ -117,6 +130,9 @@ class Airport < ApplicationRecord
   # Only create versions when there's a change to one of the columns listed above
   has_paper_trail only: self::HISTORY_COLUMNS.keys
 
+  enum facility_type: FACILITY_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
+  enum landing_rights: LANDING_RIGHTS_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
+
   validates :code, uniqueness: true, presence: true
   validates :name, presence: true
   validates :latitude, numericality: {}
@@ -127,21 +143,6 @@ class Airport < ApplicationRecord
   validates :ownership_type, inclusion: {in: OWNERSHIP_TYPES.keys.map(&:to_s)}
   validates :cover_image, inclusion: {in: COVER_IMAGES.keys.map(&:to_s)}
   validates :state, length: {is: 2}, if: -> {state.present?}
-
-  enum facility_type: FACILITY_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
-  enum landing_rights: LANDING_RIGHTS_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
-
-  has_many_attached_with :contributed_photos, path: -> {"uploads/airport_photos/contributed/#{code.downcase}"}
-  has_many_attached_with :external_photos, path: -> {"uploads/airport_photos/external/#{code.downcase}"}
-
-  # Rank airport codes above names to prioritize searching by airport code
-  # Also rank public airports over private airports
-  searchable({column: :code, weight: ['facility_use = \'PU\'', :A, :B]})
-  searchable({column: :name, weight: ['facility_use = \'PU\'', :C, :D]})
-
-  # Only run version collation after an update if one of the columns we create versions for was changed (airport database updates are much faster without these running)
-  after_update :collate_versions!, if: proc {HISTORY_COLUMNS.keys.select {|column| send("#{column}_changed?")}.any?}
-  after_save :remove_empty_tag!
 
   def self.geojson
     return Airport.includes(:tags).map(&:to_geojson)

@@ -345,14 +345,4 @@ private
   def map_location
     return evaluate_script('mapbox.getCenter()')
   end
-
-  def wait_for_map_ready
-    # Once the map is fully ready to use it will populate a data attribute
-    # Mapbox runs incredibly slow on CI so give it a bunch of time before failing
-    find('#map[data-ready="true"]', wait: (ENV['CI'] ? 300 : 60))
-  rescue Capybara::ElementNotFound => error
-    # Something may have prevented Mapbox from initalizing, it would he helpful to print the browser logs in this case
-    warn page.driver.browser.logs.get(:browser)
-    raise error
-  end
 end

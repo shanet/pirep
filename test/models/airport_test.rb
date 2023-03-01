@@ -163,12 +163,12 @@ class AirportTest < ActiveSupport::TestCase
     assert @airport.all_photos[:featured].empty?
 
     @airport.update!(featured_photo: @airport.contributed_photos.first)
-    assert_equal 1, @airport.all_photos[:featured].count
-    assert_equal @airport.contributed_photos.first, @airport.all_photos[:featured].first
+    assert_equal 1, @airport.all_photos[:featured].count, 'Featured photo not returned'
+    assert_equal @airport.contributed_photos.first, @airport.all_photos[:featured].first, 'Featured photo not first'
 
     # Removing the photo should also clear the featured photo
     @airport.contributed_photos.purge
-    assert @airport.all_photos[:featured].empty?
+    assert @airport.all_photos[:featured].empty?, 'Featured photo set after deletion'
   end
 
   test 'has customized photo key' do
