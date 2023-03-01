@@ -6,6 +6,13 @@ require 'active_support/testing/method_call_assertions'
 
 Aws.config[:stub_responses] = true
 
+Minitest.after_run do
+  # Clean up the tiles directories (multiple are created with unique names to prevent test threads from stepping on one another)
+  Rails.public_path.glob('assets/tiles_test_*') do |directory|
+    FileUtils.rm_rf(directory)
+  end
+end
+
 class ActiveSupport::TestCase
   include ActiveJob::TestHelper
   include ActiveSupport::Testing::MethodCallAssertions

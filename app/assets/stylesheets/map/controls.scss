@@ -5,6 +5,7 @@ $drawer-translate-length: calc(100% - (#{$drawer-width} + #{$handle-size} / 2));
 
 #controls {
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   pointer-events: none;
   position: absolute;
@@ -47,6 +48,7 @@ $drawer-translate-length: calc(100% - (#{$drawer-width} + #{$handle-size} / 2));
       grid-template-columns: 1fr auto 1fr;
       grid-template-rows: auto 1fr;
       height: 100vh;
+      height: 100dvh;
       width: 100%;
 
       @include media-breakpoint-down(md) {

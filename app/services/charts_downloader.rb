@@ -8,7 +8,7 @@ class ChartsDownloader
     verify_gdal_binaries_exist
     faa_client = FaaApi.client
 
-    tiles_directory_prefix = "tiles#{Rails.env.test? ? '_test' : ''}/#{Rails.configuration.faa_data_cycle.next(:charts)}/#{chart_type}"
+    tiles_directory_prefix = "tiles#{Rails.env.test? ? "_test_#{SecureRandom.hex}" : ''}/#{Rails.configuration.faa_data_cycle.next(:charts)}/#{chart_type}"
     output_directory = Rails.root.join("public/assets/#{tiles_directory_prefix}").to_s
 
     Dir.mktmpdir do |tmp_directory|
@@ -25,11 +25,13 @@ class ChartsDownloader
     end
 
     Rails.logger.info("#{chart_type.to_s.titleize} chart tiling complete")
-    return unless upload_to_s3
+    return output_directory unless upload_to_s3
 
     Rails.logger.info("Uploading #{chart_type} charts to S3")
     upload_tiles_to_s3(output_directory, tiles_directory_prefix)
     Rails.logger.info("#{chart_type.to_s.titleize} chart upload to S3 complete")
+
+    return output_directory
   end
 
 private

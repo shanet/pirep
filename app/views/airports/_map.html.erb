@@ -14,6 +14,7 @@
     data-bounding-box="<%= @airport.bounding_box.to_json %>"
     data-center-latitude="<%= @airport.latitude %>"
     data-center-longitude="<%= @airport.longitude %>"
+    data-is-test="<%= Rails.env.test? %>"
     data-mapbox-api-key="<%= Rails.application.credentials.mapbox_api_key %>"
     data-annotations="<%= (@airport.annotations || []).to_json %>"
     data-zoom-level="<%= @airport.zoom_level %>"></div>

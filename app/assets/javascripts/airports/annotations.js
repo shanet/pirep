@@ -42,6 +42,8 @@ function initMap() {
   map.on('load', () => {
     restoreAnnotations();
   });
+
+  map.on('sourcedata', exposeObjectsForTesting);
 }
 
 function initEditingSwitch() {
@@ -124,4 +126,12 @@ function showAnnotationsStatus(message, isSuccess, timeout) {
   setTimeout(() => {
     status.classList.replace('show', 'hide');
   }, timeout || 3000);
+}
+
+function exposeObjectsForTesting() {
+  // Don't expose anything if not running tests
+  if(!mapElement.dataset.isTest) return;
+
+  // Let the tests know that the map is fully ready to use (once we have the airports layer shown)
+  mapElement.dataset.ready = true;
 }
