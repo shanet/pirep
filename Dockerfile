@@ -17,8 +17,8 @@ RUN apt-get install --yes \
   dnsutils \
   gnupg \
   htop \
-  imagemagick \
   libpq-dev \
+  libvips \
   nano \
   unzip \
   zsh
@@ -61,10 +61,6 @@ RUN SECRET_KEY_BASE=1 bundle exec rails assets:precompile
 # # -----------------------------------------------------------------------------
 # Do everything above in a separate stage so we can only copy out the compiled assets and discard all the other junk we don't need to run the application
 FROM base AS final
-
-# The version of ImagMagick installed by default has a policy to prevent processing PDFs due to a security issue with GhostScript.
-# This was fixed and the policy should be removed in future versions of ImageMagick. At which point this step could be removed as well.
-RUN rm /etc/ImageMagick-6/policy.xml
 
 # The UID and GID should match the values in the EFS config (efs.tf)
 RUN addgroup --gid 1000 pirep

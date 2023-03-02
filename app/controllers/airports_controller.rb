@@ -53,7 +53,7 @@ class AirportsController < ApplicationController
     # Ensure that the update won't overwrite a change that another user already made
     return head(:conflict) if airport_write_conflict?(@airport, params[:airport][:rendered_at])
 
-    if @airport.update(airport_params) && @airport.contributed_photos.attach(params[:airport][:photos] || [])
+    if @airport.update(airport_params) && @airport.attach_contributed_photos((params[:airport][:photos] || []).compact_blank)
       touch_author
       create_actions
 
@@ -69,7 +69,7 @@ class AirportsController < ApplicationController
         redirect_to airport_path(@airport.code)
       end
     else
-      (request.xhr? ? head(:internal_server_error) : internal_server_error)
+      (request.xhr? ? render(json: @airport.errors.full_messages) : render(:show))
     end
   end
 

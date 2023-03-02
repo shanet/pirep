@@ -143,6 +143,7 @@ class Airport < ApplicationRecord
   validates :ownership_type, inclusion: {in: OWNERSHIP_TYPES.keys.map(&:to_s)}
   validates :cover_image, inclusion: {in: COVER_IMAGES.keys.map(&:to_s)}
   validates :state, length: {is: 2}, if: -> {state.present?}
+  validate :contributed_photos_size_and_filetype
 
   def self.geojson
     return Airport.includes(:tags).map(&:to_geojson)
@@ -281,16 +282,37 @@ class Airport < ApplicationRecord
     return self[:landing_rights]&.to_sym
   end
 
+  def attach_contributed_photos(photos)
+    # Before attaching images downsize them, normalize to JPG, and strip EXIF data. To save on storage costs we ideally
+    # don't want/need to be storing large source images that are never displayed. Using Rails' ActiveStorage variants it
+    # will store the source images as well as make it extremely difficult to control the S3 keys and be served through
+    # the CDN. Preprocessing the images before attaching them avoids all of these problems.
+    photos.each do |photo|
+      source = "#{photo.tempfile.path}_src"
+      FileUtils.cp(photo.tempfile.path, source)
+
+      ImageProcessing::Vips.source(source)
+        .resize_to_limit(1500, 1500)
+        .convert('jpg')
+        .saver(strip: true, quality: 80)
+        .call(destination: photo.tempfile.path)
+    end
+
+    return contributed_photos.attach(photos)
+  end
+
   def all_photos
     return {
       featured: [featured_photo].compact,
-      contributed: contributed_photos.order(created_at: :desc),
+      contributed: (contributed_photos.attachments.is_a?(Array) ? reload.contributed_photos : contributed_photos).order(created_at: :desc),
       external: external_photos.order(created_at: :asc),
     }
   end
 
   def featured_photo
-    return contributed_photos.find_by(id: featured_photo_id) || external_photos.find_by(id: featured_photo_id)
+    # If there was an error uploading a new photo and the airport page is being displayed again contributed photos will be
+    # an array. However, we want the collection proxy object to query against so perform a reload to get this object instead.
+    return (contributed_photos.attachments.is_a?(Array) ? reload.contributed_photos : contributed_photos).find_by(id: featured_photo_id) || external_photos.find_by(id: featured_photo_id)
   end
 
   def featured_photo=(photo)
@@ -298,7 +320,7 @@ class Airport < ApplicationRecord
   end
 
   def uncached_external_photos(force_update: false)
-    return nil if external_photos_updated_at && external_photos_updated_at > 1.month.ago && !force_update
+    return nil if external_photos_updated_at && !force_update
 
     Rails.logger.info("Updating external photos cache for #{code}")
     photos = GoogleApi.client.place_photos("#{code} - #{name} Airport", latitude, longitude)
@@ -361,5 +383,17 @@ class Airport < ApplicationRecord
 
   def created_by
     return Users::User.find_by(id: versions.find_by(event: 'create')&.whodunnit)
+  end
+
+  def contributed_photos_size_and_filetype
+    contributed_photos.each do |photo|
+      if photo.blob.byte_size > 5.megabytes
+        errors.add(:contributed_photos, 'must be under 5mb in size')
+      end
+
+      unless photo.content_type.in?(['image/jpeg', 'image/png'])
+        errors.add(:contributed_photos, 'must a JPG or PNG file')
+      end
+    end
   end
 end

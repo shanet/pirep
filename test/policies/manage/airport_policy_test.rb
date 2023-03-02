@@ -2,7 +2,7 @@ require 'policy_test'
 
 module Manage
   class AirportPolicyTest < PolicyTest
-    ['index', 'search', 'show', 'edit', 'update', 'destroy', 'update_version'].each do |action|
+    ['index', 'search', 'show', 'edit', 'update', 'destroy', 'destroy_attachment', 'update_version'].each do |action|
       test action do
         assert_allows_admin :manage_airport, action
       end

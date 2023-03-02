@@ -23,6 +23,10 @@ class Manage::AirportPolicy < ApplicationPolicy
     return admin?
   end
 
+  def destroy_attachment?
+    return admin?
+  end
+
   def update_version?
     return admin?
   end

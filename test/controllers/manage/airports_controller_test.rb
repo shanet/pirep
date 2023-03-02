@@ -31,6 +31,20 @@ class Manage::AirportsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to manage_airport_path(@airport)
   end
 
+  test 'destroy' do
+    assert_difference('Airport.count', -1) do
+      delete manage_airport_path(@airport)
+      assert_redirected_to manage_airports_path
+    end
+  end
+
+  test 'destroy_attachment' do
+    assert_difference('ActiveStorage::Attachment.count', -1) do
+      delete destroy_attachment_manage_airport_path(@airport, type: :contributed_photos, attachment_id: @airport.contributed_photos.first.id)
+      assert_redirected_to manage_airport_path(@airport)
+    end
+  end
+
   test 'update_version' do
     with_versioning do
       @airport.update!(description: 'making a version')

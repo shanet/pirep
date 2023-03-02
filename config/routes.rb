@@ -34,6 +34,7 @@ Rails.application.routes.draw do
 
       member do
         patch 'version/:version_id', action: :update_version, as: :version
+        delete 'attachment/:type/:attachment_id', action: :destroy_attachment, as: :destroy_attachment
       end
     end
 
