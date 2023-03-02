@@ -1,6 +1,6 @@
 class Manage::AirportsController < ApplicationController
   include SearchQueryable
-  before_action :set_airport, only: [:show, :edit, :update, :destroy, :update_version]
+  before_action :set_airport, only: [:show, :edit, :update, :destroy, :destroy_attachment, :update_version]
 
   def index
     @airports = policy_scope(Airport.order(:code).page(params[:page]), policy_scope_class: Manage::AirportPolicy::Scope)
@@ -35,6 +35,19 @@ class Manage::AirportsController < ApplicationController
       redirect_to manage_airports_path, notice: 'Airport deleted successfully'
     else
       redirect_to manage_airport_path(@airport)
+    end
+  end
+
+  def destroy_attachment
+    method = (params[:type] == 'contributed_photos' ? :contributed_photos : :external_photos)
+
+    attachment = @airport.send(method).find(params[:attachment_id])
+    redirect_to(manage_airport_path(@airport), alert: 'Attachment not found') unless attachment
+
+    if attachment.purge
+      redirect_to manage_airport_path(@airport), notice: 'Attachment deleted'
+    else
+      redirect_to manage_airport_path(@airport), alert: 'Failed to delete attachment'
     end
   end
 

@@ -26,6 +26,7 @@ gem 'erb_lint', '>= 0.0.35'
 gem 'faraday'
 gem 'foreman'
 gem 'good_job'
+gem 'image_processing'
 gem 'kramdown'
 gem 'maxmind-geoip2'
 gem 'paper_trail'
@@ -41,7 +42,7 @@ group :development, :test do
   gem 'aws-sdk-codepipeline'
   gem 'aws-sdk-ecs'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'cli-ui', git: 'https://github.com/shanet/cli-ui', branch: 'consistent_stdout'
+  gem 'cli-ui', git: 'https://github.com/shopify/cli-ui'
   gem 'rubocop'
   gem 'rubocop-rails'
 end

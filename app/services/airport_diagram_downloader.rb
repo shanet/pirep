@@ -49,7 +49,7 @@ private
     diagrams.each_with_index do |file, index|
       path = File.join(directory, file)
       Rails.logger.info("[#{index}/#{diagrams.count}] Converting airport diagram #{path}")
-      system('convert', '-flatten', '-density', '200', path, converted_diagram_filename(path))
+      ImageProcessing::Vips.source(path).resize_to_fit(1000, 1500).convert('png').call(destination: converted_diagram_filename(path))
     end
   end
 

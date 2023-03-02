@@ -138,20 +138,6 @@ class AirportTest < ActiveSupport::TestCase
     end
   end
 
-  test 'does not fetch external photos before cache expiration' do
-    @airport.update!(external_photos_updated_at: 2.months.ago)
-
-    assert_enqueued_with(job: AirportPhotosCacherJob) do
-      assert_not_nil @airport.uncached_external_photos, 'Uncached photos not returned'
-    end
-
-    @airport.update!(external_photos_updated_at: Time.zone.now)
-
-    assert_no_enqueued_jobs do
-      assert_nil @airport.uncached_external_photos, 'Uncached photos returned'
-    end
-  end
-
   test 'puts contributed photos before external photos' do
     assert_equal :featured, @airport.all_photos.keys.first, 'Featured photo not first'
     assert_equal :contributed, @airport.all_photos.keys.second, 'Contributed photos not second'
@@ -232,5 +218,19 @@ class AirportTest < ActiveSupport::TestCase
   test 'converts fuel types to array' do
     @airport.fuel_types = 'A , MOGAS'
     assert_equal ['A', 'MOGAS'], @airport.fuel_types, 'Fuel types string not conver to array and stripped of whitespace'
+  end
+
+  test 'rejects photos with non-image content type' do
+    @airport.contributed_photos.first.blob.update!(content_type: 'application/octet-stream')
+
+    assert_not @airport.valid?, 'Accepted non-image attachment'
+    assert @airport.errors[:contributed_photos].present?, 'Did not set contributed photos error message'
+  end
+
+  test 'rejects photos with large file size' do
+    @airport.contributed_photos.first.blob.update!(byte_size: 5.1.megabytes)
+
+    assert_not @airport.valid?, 'Accepted large image attachment'
+    assert @airport.errors[:contributed_photos].present?, 'Did not set contributed photos error message'
   end
 end

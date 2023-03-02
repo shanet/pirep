@@ -22,7 +22,8 @@ For the frontend, Pirep makes use of only vanilla JavaScript. Through the use of
 
 * Ruby (the expected version is defined with `.ruby-version`)
 * Postgres (14.6 is currently used, fairly standard SQL is used everywhere so other minor versions should be fine)
-* [GDAL](https://gdal.org/) version >= 3.6.2 for generating sectional chart map tiles (older versions will generate bad looking map tiles)
+* [GDAL](https://gdal.org) version >= 3.6.2 for generating sectional chart map tiles (older versions will generate bad looking map tiles)
+* [libvips](https://www.libvips.org) for converting airport diagram PDFs to PNGs and processing user photo uploads
 * Yarn version 1.x
 
 Pirep's development has been done on Linux. Other operating systems may work but have not been tested.

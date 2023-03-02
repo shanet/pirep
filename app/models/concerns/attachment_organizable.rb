@@ -3,8 +3,8 @@ module AttachmentOrganizable
   extend ActiveSupport::Concern
 
   class_methods do
-    def has_many_attached_with(name, path:) # rubocop:disable Naming/PredicateName
-      has_many_attached name
+    def has_many_attached_with(name, path:, &block) # rubocop:disable Naming/PredicateName
+      has_many_attached(name, &block)
 
       define_method "#{name}=" do |attachable|
         action = super(attachable)
