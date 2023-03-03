@@ -13,10 +13,10 @@ variable "iam_role_task" {}
 variable "name_prefix" {}
 variable "security_group_ecs" {}
 variable "security_group_efs" {}
+variable "service_port" {}
 variable "subnets" { type = list(string) }
 variable "target_group_arn_jobs" {}
 variable "target_group_arn_web" {}
-variable "web_port" {}
 
 resource "aws_ecs_cluster" "this" {
   name = var.name_prefix
@@ -38,7 +38,7 @@ module "service_jobs" {
   iam_role_task                       = var.iam_role_task
   memory                              = 1024 # mb (the jobs service needs more memory for processing charts)
   name_prefix                         = "${var.name_prefix}-jobs"
-  port                                = var.web_port
+  port                                = var.service_port
   security_group                      = var.security_group_ecs
   subnets                             = var.subnets
   target_group_arn                    = var.target_group_arn_jobs
@@ -60,7 +60,7 @@ module "service_web" {
   iam_role_task                       = var.iam_role_task
   memory                              = 1024 # mb
   name_prefix                         = "${var.name_prefix}-web"
-  port                                = var.web_port
+  port                                = var.service_port
   security_group                      = var.security_group_ecs
   subnets                             = var.subnets
   target_group_arn                    = var.target_group_arn_web
@@ -84,7 +84,7 @@ module "task_definition_importer" {
   image                               = "${var.ecr_repository_url}:latest"
   memory                              = 8192 # mb
   name_prefix                         = "${var.name_prefix}-importer"
-  port                                = var.web_port
+  port                                = var.service_port
   storage                             = 50 # gb
 }
 

@@ -1,18 +1,9 @@
 variable "name_prefix" {}
+variable "service_port" {}
 variable "vpc_id" {}
-variable "web_port" {}
 
-resource "aws_security_group" "load_balancer_jobs" {
-  name   = "${var.name_prefix}-load_balancer_jobs"
-  vpc_id = var.vpc_id
-
-  tags = {
-    Name = "${var.name_prefix}-load_balancer_jobs"
-  }
-}
-
-resource "aws_security_group" "load_balancer_web" {
-  name   = "${var.name_prefix}-load_balancer_web"
+resource "aws_security_group" "load_balancer" {
+  name   = "${var.name_prefix}-load_balancer"
   vpc_id = var.vpc_id
 
   # Incoming traffic from internet
@@ -31,19 +22,17 @@ resource "aws_security_group" "load_balancer_web" {
   }
 
   tags = {
-    Name = "${var.name_prefix}-load_balancer_web"
+    Name = "${var.name_prefix}-load_balancer"
   }
 }
 
 # Health check traffi from load balancers to ECSc
 resource "aws_security_group_rule" "health_check" {
-  for_each = toset([aws_security_group.load_balancer_jobs.id, aws_security_group.load_balancer_web.id])
-
-  from_port                = var.web_port
+  from_port                = var.service_port
   protocol                 = "TCP"
-  security_group_id        = each.value
+  security_group_id        = aws_security_group.load_balancer.id
   source_security_group_id = aws_security_group.ecs.id
-  to_port                  = var.web_port
+  to_port                  = var.service_port
   type                     = "egress"
 }
 
@@ -59,10 +48,10 @@ resource "aws_security_group" "ecs" {
   }
 
   ingress {
-    from_port       = var.web_port
+    from_port       = var.service_port
     protocol        = "TCP"
-    security_groups = [aws_security_group.load_balancer_jobs.id, aws_security_group.load_balancer_web.id]
-    to_port         = var.web_port
+    security_groups = [aws_security_group.load_balancer.id]
+    to_port         = var.service_port
   }
 
   tags = {
@@ -117,12 +106,8 @@ resource "aws_security_group" "rds" {
   }
 }
 
-output "load_balancer_jobs" {
-  value = aws_security_group.load_balancer_jobs
-}
-
-output "load_balancer_web" {
-  value = aws_security_group.load_balancer_web
+output "load_balancer" {
+  value = aws_security_group.load_balancer
 }
 
 output "ecs" {
