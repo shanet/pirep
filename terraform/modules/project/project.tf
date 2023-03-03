@@ -125,6 +125,8 @@ module "iam" {
   cloudwatch_log_groups        = [module.cloudwatch.log_group_jobs.arn, module.cloudwatch.log_group_web.arn]
   deployment_bucket            = module.codesuite.deployment_bucket.arn
   ecr_repository               = module.ecr.repository.arn
+  ecs_cluster                  = module.ecs.cluster.arn
+  ecs_service_jobs             = module.ecs.service_jobs.id
   enviroment_variables_secrets = [module.secretsmanager.secret_dynamic.arn, module.secretsmanager.secret_static.arn]
   name_prefix                  = local.name_prefix
 }

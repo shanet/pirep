@@ -44,7 +44,7 @@ private
 
   def run_task(cluster, task_definition, network_configuration)
     response = ecs.run_task(cluster: cluster, enable_execute_command: true, launch_type: 'FARGATE', task_definition: task_definition, network_configuration: network_configuration)
-    task_arn = response&.tasks&.first&.containers&.task_arn
+    task_arn = response&.tasks&.first&.containers&.first&.task_arn
 
     # Stub this in test
     task_arn ||= '' if Rails.env.test?
