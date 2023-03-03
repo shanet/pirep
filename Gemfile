@@ -17,6 +17,7 @@ gem 'sprockets-rails'
 # Third party gems
 gem 'activerecord-cte'
 gem 'amazing_print'
+gem 'aws-sdk-ecs'
 gem 'aws-sdk-s3'
 gem 'brakeman'
 gem 'bundler-audit'
