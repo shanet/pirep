@@ -70,10 +70,10 @@ resource "aws_s3_object" "root_object" {
 }
 
 resource "aws_s3_object" "empty_map_tile" {
-  source       = "${path.module}/empty_map_tile.png"
+  source       = "${path.module}/empty_map_tile.webp"
   bucket       = aws_s3_bucket.assets.bucket
-  content_type = "image/png"
-  key          = "empty_map_tile.png"
+  content_type = "image/webp"
+  key          = "empty_map_tile.webp"
 }
 
 output "assets_bucket" {
