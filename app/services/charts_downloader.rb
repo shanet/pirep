@@ -107,7 +107,7 @@ private
                            '--tiledriver=WEBP',
                            '--webp-quality=50',
                            vrt_path,
-                           output_directory) # rubocop:disable Style/GuardClause
+                           output_directory)
 
       raise Exceptions::ChartTilesGenerationFailed, "gdal2tiles.py for #{chart_type}"
     end

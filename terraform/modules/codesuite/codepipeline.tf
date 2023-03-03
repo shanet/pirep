@@ -19,7 +19,7 @@ resource "aws_codepipeline" "this" {
       version          = "1"
 
       configuration = {
-        BranchName           = "devops"
+        BranchName           = "master"
         ConnectionArn        = aws_codestarconnections_connection.github.arn
         DetectChanges        = false
         FullRepositoryId     = var.github_repository

@@ -9,6 +9,9 @@ class Seeds
   end
 
   def perform
+    # Log everything to stdout so progress can be monitored
+    log_to_stdout!
+
     create_admin
     import_config = prompt_for_imports
 
@@ -104,7 +107,13 @@ private
   end
 
   def chart_options(chart_type)
-    return [ALL_CHARTS] + Rails.configuration.send(Rails.env.test? ? :test_charts : chart_type).keys.map(&:to_s)
+    return [ALL_CHARTS] + Rails.configuration.send(Rails.env.test? ? :test_charts : chart_type).keys.map(&:to_s).sort
+  end
+
+  def log_to_stdout!
+    logger = ActiveSupport::Logger.new($stdout)
+    logger.formatter = Rails.configuration.log_formatter
+    Rails.logger = ActiveSupport::TaggedLogging.new(logger)
   end
 end
 # rubocop:enable Rails/Output
