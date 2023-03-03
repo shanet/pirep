@@ -5,7 +5,7 @@ variable "iam_role_codebuild_arn" {}
 variable "iam_role_codedeploy_arn" {}
 variable "iam_role_codepipeline_arn" {}
 variable "name_prefix" {}
-variable "port" {}
+variable "service_port" {}
 
 variable "services" { type = map(
   object({

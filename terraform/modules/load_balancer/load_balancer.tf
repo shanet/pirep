@@ -1,11 +1,11 @@
 variable "certificate_arn" { default = null }
-variable "health_check_path" {}
+variable "health_check_path_jobs" {}
+variable "health_check_path_web" {}
 variable "name_prefix" {}
-variable "publicly_accessible" { default = true }
 variable "security_group" { default = null }
+variable "service_port" {}
 variable "subnets" { type = list(string) }
 variable "vpc_id" {}
-variable "web_port" {}
 
 resource "aws_lb" "load_balancer" {
   name            = var.name_prefix
@@ -13,72 +13,54 @@ resource "aws_lb" "load_balancer" {
   subnets         = var.subnets
 }
 
-module "target_group_blue" {
-  source = "./target_group"
+module "service_jobs" {
+  source = "./service"
 
-  health_check_path = var.health_check_path
-  name_prefix       = "${var.name_prefix}-blue"
-  port              = var.web_port
-  protocol          = "HTTP"
-  vpc_id            = var.vpc_id
+  certificate_arn     = var.certificate_arn
+  health_check_path   = var.health_check_path_jobs
+  listener_port_http  = null
+  listener_port_https = 444
+  load_balancer       = aws_lb.load_balancer.arn
+  name_prefix         = "${var.name_prefix}-jobs"
+  service_port        = var.service_port
+  vpc_id              = var.vpc_id
 }
 
-module "target_group_green" {
-  source = "./target_group"
+module "service_web" {
+  source = "./service"
 
-  health_check_path = var.health_check_path
-  name_prefix       = "${var.name_prefix}-green"
-  port              = var.web_port
-  protocol          = "HTTP"
-  vpc_id            = var.vpc_id
-}
-
-resource "aws_lb_listener" "https" {
   certificate_arn   = var.certificate_arn
-  load_balancer_arn = aws_lb.load_balancer.arn
-  port              = 443
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
-
-  default_action {
-    target_group_arn = module.target_group_green.target_group.arn
-    type             = "forward"
-  }
-
-  # The blue/green deployments will swap this attribute so ignore changes on it
-  lifecycle {
-    ignore_changes = [default_action.0.target_group_arn]
-  }
-}
-
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.load_balancer.arn
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    type = "redirect"
-
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }
-  }
+  health_check_path = var.health_check_path_web
+  load_balancer     = aws_lb.load_balancer.arn
+  name_prefix       = "${var.name_prefix}-web"
+  service_port      = var.service_port
+  vpc_id            = var.vpc_id
 }
 
 output "load_balancer" {
   value = aws_lb.load_balancer
 }
 
-output "target_group_blue" {
-  value = module.target_group_blue.target_group
+output "target_group_jobs_blue" {
+  value = module.service_jobs.target_group_blue
 }
 
-output "target_group_green" {
-  value = module.target_group_green.target_group
+output "target_group_jobs_green" {
+  value = module.service_jobs.target_group_green
 }
 
-output "listener" {
-  value = aws_lb_listener.https
+output "target_group_web_blue" {
+  value = module.service_web.target_group_blue
+}
+
+output "target_group_web_green" {
+  value = module.service_web.target_group_green
+}
+
+output "listener_jobs" {
+  value = module.service_jobs.listener
+}
+
+output "listener_web" {
+  value = module.service_web.listener
 }

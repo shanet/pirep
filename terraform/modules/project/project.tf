@@ -15,7 +15,7 @@ locals {
   domain_tiles_cdn  = "tiles.${var.domain}"
   github_repository = "shanet/pirep"
   name_prefix       = "pirep-${var.enviroment}"
-  web_port          = 8080
+  service_port      = 8080
 }
 
 # Cloudfront requires that certificates used with it be located in us-east-1
@@ -68,23 +68,23 @@ module "codesuite" {
   iam_role_codedeploy_arn   = module.iam.codedeploy_role.arn
   iam_role_codepipeline_arn = module.iam.codepipeline_role.arn
   name_prefix               = local.name_prefix
-  port                      = local.web_port
+  service_port              = local.service_port
 
   services = {
     jobs = {
       ecs_service_name           = module.ecs.service_jobs.name
-      load_balancer_listener_arn = module.load_balancer_jobs.listener.arn
+      load_balancer_listener_arn = module.load_balancer.listener_jobs.arn
       name_prefix                = "${local.name_prefix}-jobs"
-      target_group_blue_name     = module.load_balancer_jobs.target_group_blue.name
-      target_group_green_name    = module.load_balancer_jobs.target_group_green.name
+      target_group_blue_name     = module.load_balancer.target_group_jobs_blue.name
+      target_group_green_name    = module.load_balancer.target_group_jobs_green.name
       task_definition_arn        = module.ecs.task_definition_jobs.arn
     },
     web = {
       ecs_service_name           = module.ecs.service_web.name
-      load_balancer_listener_arn = module.load_balancer_web.listener.arn
+      load_balancer_listener_arn = module.load_balancer.listener_web.arn
       name_prefix                = "${local.name_prefix}-web"
-      target_group_blue_name     = module.load_balancer_web.target_group_blue.name
-      target_group_green_name    = module.load_balancer_web.target_group_green.name
+      target_group_blue_name     = module.load_balancer.target_group_web_blue.name
+      target_group_green_name    = module.load_balancer.target_group_web_green.name
       task_definition_arn        = module.ecs.task_definition_web.arn
     }
   }
@@ -107,10 +107,10 @@ module "ecs" {
   name_prefix                         = local.name_prefix
   security_group_ecs                  = module.security_groups.ecs.id
   security_group_efs                  = module.security_groups.efs.id
+  service_port                        = local.service_port
   subnets                             = [for subnet in module.vpc.public_subnets : subnet.id]
-  target_group_arn_jobs               = module.load_balancer_jobs.target_group_green.arn
-  target_group_arn_web                = module.load_balancer_web.target_group_green.arn
-  web_port                            = local.web_port
+  target_group_arn_jobs               = module.load_balancer.target_group_jobs_green.arn
+  target_group_arn_web                = module.load_balancer.target_group_web_green.arn
 
   cloudwatch_log_groups = {
     jobs = module.cloudwatch.log_group_jobs.name,
@@ -129,28 +129,17 @@ module "iam" {
   name_prefix                  = local.name_prefix
 }
 
-module "load_balancer_jobs" {
+module "load_balancer" {
   source = "../load_balancer"
 
-  certificate_arn   = module.acm_us_west_2.certificate_arn
-  health_check_path = "/status"
-  name_prefix       = "${local.name_prefix}-jobs"
-  security_group    = module.security_groups.load_balancer_jobs.id
-  subnets           = [for subnet in module.vpc.public_subnets : subnet.id]
-  vpc_id            = module.vpc.vpc.id
-  web_port          = local.web_port
-}
-
-module "load_balancer_web" {
-  source = "../load_balancer"
-
-  certificate_arn   = module.acm_us_west_2.certificate_arn
-  health_check_path = "/health"
-  name_prefix       = "${local.name_prefix}-web"
-  security_group    = module.security_groups.load_balancer_web.id
-  subnets           = [for subnet in module.vpc.public_subnets : subnet.id]
-  vpc_id            = module.vpc.vpc.id
-  web_port          = local.web_port
+  certificate_arn        = module.acm_us_west_2.certificate_arn
+  health_check_path_jobs = "/status"
+  health_check_path_web  = "/health"
+  name_prefix            = local.name_prefix
+  security_group         = module.security_groups.load_balancer.id
+  service_port           = local.service_port
+  subnets                = [for subnet in module.vpc.public_subnets : subnet.id]
+  vpc_id                 = module.vpc.vpc.id
 }
 
 module "rds" {
@@ -171,8 +160,8 @@ module "route53" {
   domain_apex               = var.domain
   domain_cdn_assets         = local.domain_assets_cdn
   domain_cdn_tiles          = local.domain_tiles_cdn
-  load_balancer_dns_name    = module.load_balancer_web.load_balancer.dns_name
-  load_balancer_dns_zone_id = module.load_balancer_web.load_balancer.zone_id
+  load_balancer_dns_name    = module.load_balancer.load_balancer.dns_name
+  load_balancer_dns_zone_id = module.load_balancer.load_balancer.zone_id
   name_prefix               = local.name_prefix
 }
 
@@ -200,9 +189,9 @@ module "secretsmanager" {
 module "security_groups" {
   source = "../security_groups"
 
-  name_prefix = local.name_prefix
-  vpc_id      = module.vpc.vpc.id
-  web_port    = local.web_port
+  name_prefix  = local.name_prefix
+  service_port = local.service_port
+  vpc_id       = module.vpc.vpc.id
 }
 
 module "ses" {

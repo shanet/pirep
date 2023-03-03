@@ -44,7 +44,7 @@ resource "aws_codebuild_project" "image" {
 
     environment_variable {
       name  = "PORT"
-      value = var.port
+      value = var.service_port
     }
 
     environment_variable {
