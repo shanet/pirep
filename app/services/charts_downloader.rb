@@ -99,7 +99,16 @@ private
     FileUtils.mkdir_p(output_directory)
 
     Rails.logger.info("Executing gdal2tiles.py for #{chart_type} charts")
-    unless execute_command('gdal2tiles.py', '--zoom', "#{min_zoom_level(chart_type)}-11", "--processes=#{thread_count}", '--webviewer=none', '--exclude', vrt_path, output_directory) # rubocop:disable Style/GuardClause
+    unless execute_command('gdal2tiles.py',
+                           '--zoom', "#{min_zoom_level(chart_type)}-11",
+                           "--processes=#{thread_count}",
+                           '--webviewer=none',
+                           '--exclude',
+                           '--tiledriver=WEBP',
+                           '--webp-quality=50',
+                           vrt_path,
+                           output_directory) # rubocop:disable Style/GuardClause
+
       raise Exceptions::ChartTilesGenerationFailed, "gdal2tiles.py for #{chart_type}"
     end
   end
@@ -113,7 +122,7 @@ private
       response = Aws::S3::Client.new.put_object(
         body: File.open(file, 'r'),
         bucket: Rails.configuration.asset_bucket,
-        content_type: 'image/png',
+        content_type: 'image/webp',
         key: key
       )
 

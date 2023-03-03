@@ -85,7 +85,7 @@ function addChartLayersToMap() {
         scheme: 'tms',
         // In test there needs to be some asset to request to avoid a "no route exists" error. Since no tiles may be
         // generated use a dummy image as a tile. This will make for an odd looking map but that won't matter in tests.
-        tiles: [mapElement.dataset.isTest === 'true' ? mapElement.dataset.tilesPathTest : `${mapElement.dataset.tilesPath}${chartLayer}/{z}/{x}/{y}.png`],
+        tiles: [mapElement.dataset.isTest === 'true' ? mapElement.dataset.tilesPathTest : `${mapElement.dataset.tilesPath}${chartLayer}/{z}/{x}/{y}.webp`],
         tileSize: 256,
         type: 'raster',
       },
