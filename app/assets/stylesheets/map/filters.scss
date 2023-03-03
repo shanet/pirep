@@ -11,12 +11,11 @@
 }
 
 #filters {
-  display: grid;
   grid-template-areas: 'header' 'filters' 'footer';
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
-  height: 100%;
   margin-left: $map-fixed-offset;
+  max-height: 100%;
   width: 36px;
 
   #filters-header,

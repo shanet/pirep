@@ -188,8 +188,16 @@ class MapTest < ApplicationSystemTestCase
     open_airport(@airport)
 
     within('.airport-drawer-header') do
-      # Wait for zoom animation to finish
       click_on 'Zoom In'
+
+      # Wait for the zoom level in the URL to be updated or the map won't return to the zoom level when returning to the page
+      # Capybara's synchronize method will keep re-running while an exception is raised. Since there's nothing to key off
+      # of for a URL param change, this is the best we can do.
+      first('div').synchronize do
+        # These are floats so compare the difference between them rather than equality
+        url_zoom_level = current_url.split('#').last.split('/').first.to_f
+        raise Capybara::ElementNotFound if (url_zoom_level - default_zoom_level).abs < 0.1
+      end
 
       click_on 'More'
     end
