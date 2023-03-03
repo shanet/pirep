@@ -24,9 +24,30 @@ data "aws_iam_policy_document" "ecs_task_role_policy" {
 
   statement {
     actions = ["s3:*"]
+
     resources = [
       var.assets_bucket_arn,
       "${var.assets_bucket_arn}/*",
+    ]
+  }
+
+  # Allow the ECS service to start the importer task
+  statement {
+    actions   = ["ecs:DescribeServices"]
+    resources = [var.ecs_service_jobs]
+  }
+
+  statement {
+    actions   = ["ecs:ListTaskDefinitions", "ecs:RunTask"]
+    resources = ["*"]
+  }
+
+  statement {
+    actions = ["iam:PassRole"]
+
+    resources = [
+      aws_iam_role.ecs_execution_role.arn,
+      aws_iam_role.ecs_task_role.arn,
     ]
   }
 }

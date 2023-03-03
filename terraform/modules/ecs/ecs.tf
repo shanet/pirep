@@ -28,7 +28,7 @@ module "service_jobs" {
   cloudwatch_log_group                = var.cloudwatch_log_groups.jobs
   container_command                   = "[bundle, exec, good_job, start]"
   container_count                     = 1
-  cpu                                 = 512 # 1 vCPU
+  cpu                                 = 512 # 0.5 vCPU
   ecs_cluster                         = aws_ecs_cluster.this.id
   efs_access_point                    = aws_efs_access_point.this.id
   efs_volume                          = aws_efs_file_system.this.id
@@ -36,7 +36,7 @@ module "service_jobs" {
   enviroment_variables_secret_static  = var.enviroment_variables_secret_static
   iam_role_execution                  = var.iam_role_execution
   iam_role_task                       = var.iam_role_task
-  memory                              = 1024 # mb (the jobs service needs more memory for processing charts)
+  memory                              = 1024 # mb
   name_prefix                         = "${var.name_prefix}-jobs"
   port                                = var.service_port
   security_group                      = var.security_group_ecs
@@ -50,7 +50,7 @@ module "service_web" {
   cloudwatch_log_group                = var.cloudwatch_log_groups.web
   container_command                   = "[puma, --config, config/puma.rb]"
   container_count                     = 1
-  cpu                                 = 512 # .5 vCPU
+  cpu                                 = 512 # 0.5 vCPU
   ecs_cluster                         = aws_ecs_cluster.this.id
   efs_access_point                    = aws_efs_access_point.this.id
   efs_volume                          = aws_efs_file_system.this.id

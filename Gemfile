@@ -41,7 +41,6 @@ gem 'skylight'
 group :development, :test do
   gem 'aws-sdk-codedeploy'
   gem 'aws-sdk-codepipeline'
-  gem 'aws-sdk-ecs'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'cli-ui', git: 'https://github.com/shopify/cli-ui'
   gem 'rubocop'
