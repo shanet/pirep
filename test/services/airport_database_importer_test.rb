@@ -47,16 +47,20 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
 
   test 'import updates existing airport' do
     AirportDatabaseImporter.new({parsed_airport[:airport_code] => parsed_airport}).load_database
+    airport = Airport.last
 
     # Set the FAA data cycle to something old to ensure it gets updated properly
     # Also clear the bounding box to ensure it doesn't get updated again
-    Airport.last.update!(faa_data_cycle: 1.month.ago, bbox_ne_latitude: nil)
+    airport.update!(faa_data_cycle: 1.month.ago, bbox_ne_latitude: nil, landing_rights: :restricted)
 
     assert_difference('Airport.count', 0) do
       assert_difference('Runway.count', 0) do
         assert_difference('Remark.count', 0) do
           assert_difference('Tag.count', 0) do
             AirportDatabaseImporter.new({parsed_airport[:airport_code] => parsed_airport(airport_name: 'New Airport Name')}).load_database
+
+            # An existing airport should not have it's landing rights overwritten as they can be changed by users
+            assert_equal :restricted, airport.reload.landing_rights, 'Overwrite landing rights on existing airport'
           end
         end
       end
