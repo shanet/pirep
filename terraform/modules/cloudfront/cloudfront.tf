@@ -33,7 +33,6 @@ resource "aws_cloudfront_distribution" "assets" {
     target_origin_id           = local.origin_id_web
     viewer_protocol_policy     = "redirect-to-https"
 
-
     forwarded_values {
       headers      = local.headers
       query_string = false
