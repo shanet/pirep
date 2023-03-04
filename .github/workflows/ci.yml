@@ -19,14 +19,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Update Apt
+      # Install a newer version of GDAL (version >= 3.6.2, we may be able to go back to the default in a future Ubuntu version)
+      - name: Update GDAL
         run: |
-          # Install a newer version of GDAL (version >= 3.6.2, we may be able to go back to the default in a future Ubuntu version)
-          sudo add-apt-repository ppa:ubuntugis/ppa
-          sudo apt-get update
+          echo "deb http://archive.ubuntu.com/ubuntu/ lunar main universe" | sudo tee /etc/apt/sources.list.d/lunar.list > /dev/null
 
       - name: Install Packages
-        run: sudo apt-get install --yes gdal-bin gpg libvips python3-gdal
+        run: sudo apt-get update && sudo apt-get install --yes gdal-bin gpg lsb-release libvips python3-gdal
 
       - name: Install Ruby & Gems
         uses: ruby/setup-ruby@v1
@@ -41,7 +40,7 @@ jobs:
 
       - name: Install Terraform
         run: |
-          curl https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+          curl https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor > /usr/share/keyrings/hashicorp-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
           sudo apt-get update && sudo apt-get install terraform
 
