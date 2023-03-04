@@ -69,7 +69,7 @@ private
       faa_data_cycle:  @current_data_cycle,
 
       # The landing rights are configurable by users so we don't want to overwrite this field unless the airport is first being created
-      **(airport.persisted? ? {} : {landing_rights: (airport_data[:facility_use] == 'PR' ? :private_ : :public_)}),
+      **(airport.persisted? ? {} : {landing_rights: (airport_data[:facility_use] == 'PR' ? :private_ : :public_)}), # rubocop:disable Style/NestedTernaryOperator
     })
     # rubocop:enable Layout/HashAlignment
 
