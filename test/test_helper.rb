@@ -7,9 +7,11 @@ require 'active_support/testing/method_call_assertions'
 Aws.config[:stub_responses] = true
 
 Minitest.after_run do
-  # Clean up the tiles directories (multiple are created with unique names to prevent test threads from stepping on one another)
-  Rails.public_path.glob('assets/tiles_test_*') do |directory|
-    FileUtils.rm_rf(directory)
+  # Clean up the asset directories (multiple are created with unique names to prevent test threads from stepping on one another)
+  ['assets/tiles_test_*', 'assets/airports_cache_test_*'].each do |pattern|
+    Rails.public_path.glob(pattern) do |directory|
+      FileUtils.rm_rf(directory)
+    end
   end
 end
 
@@ -39,15 +41,6 @@ class ActiveSupport::TestCase
     yield
   ensure
     Rack::Attack.enabled = was_enabled
-  end
-
-  def with_airports_cache
-    was_enabled = AirportGeojsonDumper.enabled
-    AirportGeojsonDumper.enabled = true
-    yield
-  ensure
-    AirportGeojsonDumper.enabled = was_enabled
-    AirportGeojsonDumper.new.clear_cache!
   end
 end
 
