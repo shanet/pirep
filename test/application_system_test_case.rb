@@ -15,8 +15,8 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     options.add_argument('--ozone-platform-hint=auto') if ENV['XDG_SESSION_TYPE'] == 'wayland'
   end
 
-  # CI on GitHub actions runs wayyyyyyy slower so give it more time before failing a test
-  Capybara.default_max_wait_time = 60 if ENV['CI']
+  # CI on GitHub actions runs wayyyyyyy slower due to lack of GPU acceleration and Mapbox needing WebGL so give it more time before failing a test
+  Capybara.default_max_wait_time = 120 if ENV['CI']
 
   # We'll get far fewer flakes without animations
   Capybara.disable_animation = true
