@@ -169,6 +169,7 @@ class Airport < ApplicationRecord
     airport.facility_use = :PR
     airport.facility_type = :airport
     airport.ownership_type = :PR
+    airport.landing_rights ||= :private_
     airport.tags << Tag.new(name: :unmapped)
 
     # All unmapped airports must be privately owned. If it was publicly owned it would be listed in the FAA database.
