@@ -11,6 +11,7 @@ class AirportTest < ActiveSupport::TestCase
     assert_equal 'airport', airport.facility_type
     assert_equal 'PR', airport.facility_use
     assert_equal 'PR', airport.ownership_type
+    assert_equal :public_, airport.landing_rights
 
     assert :unmapped.in?(airport.tags.map(&:name)), 'Unmapped airport not tagged as such'
     assert :private_.in?(airport.tags.map(&:name)), 'Unmapped airport not tagged private'
@@ -20,6 +21,7 @@ class AirportTest < ActiveSupport::TestCase
     # Creating another unmapped airport should use the next unmapped airport code
     airport2 = Airport.new_unmapped({})
     assert_equal 'UNM02', airport2.code, 'Unmapped airport not given a unique code'
+    assert_equal :private_, airport2.landing_rights, 'Unmapped airport did not default to private landing rights'
   end
 
   test 'does not return hidden facility types' do
