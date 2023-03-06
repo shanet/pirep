@@ -7,8 +7,9 @@
   </div>
 
   <div class="row">
-    <div class="col-sm py-2 d-flex">
-      <span class="flex-fill"><%= @airport.latitude.round(7) %>, <%= @airport.longitude.round(7) %></span>
+    <div class="col-sm py-2 d-flex align-items-center">
+      <span class="flex-fill ms-2 ms-md-0"><%= @airport.latitude.round(7) %>, <%= @airport.longitude.round(7) %></span>
+
       <button
         type="button"
         class="btn btn-secondary btn-sm zoom-btn"
