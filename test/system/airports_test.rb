@@ -309,7 +309,7 @@ private
         assert editor[:class].include?('editing'), 'Editor not in edit mode'
 
         # Select all the text currently in the editor, delete it, and then enter the given text
-        find('textarea', visible: false).send_keys([(/darwin/ =~ RUBY_PLATFORM ? :meta : :control), 'a'], :backspace, text)
+        find('div[contenteditable="true"]', visible: false).send_keys([(/darwin/ =~ RUBY_PLATFORM ? :meta : :control), 'a'], :backspace, text)
       end
     end
 
