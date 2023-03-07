@@ -2,13 +2,13 @@ import 'mapbox-gl';
 
 export const EMPTY_LABEL = '[empty]';
 
-const annotations = [];
+const annotations = {};
 
 export function addAnnotationToMap(map, latitude, longitude, labelValue, options) {
   // This is kind of hacky, but since MapBox does not track markers internally we need to track them ourselves.
-  // This means giving them a unique ID. There's a good way in native JS to get a UUID or anything guaranteed to
+  // This means giving them a unique ID. There's not a good way in native JS to get a UUID or anything guaranteed to
   // be unique so instead we can simply use the array index that the marker is stored in as a unique ID.
-  const annotationId = annotations.length;
+  const annotationId = String(Object.keys(annotations).length);
 
   const annotation = createAnnotation(map, labelValue, annotationId, options);
 
@@ -27,7 +27,7 @@ export function addAnnotationToMap(map, latitude, longitude, labelValue, options
 
   marker.togglePopup();
   marker.getElement().dataset.annotationId = annotationId;
-  annotations.push(marker);
+  annotations[annotationId] = marker;
 
   // If the popup is ever closed immediately reopen it as we don't want it to ever close
   popup.on('close', () => {
@@ -71,26 +71,30 @@ function createAnnotation(map, labelValue, id, options) {
   const deleteButton = annotation.querySelector('button.delete');
   const label = annotation.querySelector('.label');
 
-  // Set the label value when its input field is changed
-  labelInput.addEventListener('change', () => {
+  const updateLabel = () => {
     annotation.querySelector('.label').textContent = (labelInput.value === '' ? EMPTY_LABEL : labelInput.value);
-  });
+  };
+
+  // Set the label value when its input field is changed
+  labelInput.addEventListener('change', updateLabel);
 
   // If enter is pressed on the input field, disable editing mode, and save the annotations
   labelInput.addEventListener('keydown', (event) => {
     if(event.key !== 'Enter') return;
+    updateLabel();
     toggleAnnotationEditingMode(id, false);
     options.saveCallback();
   });
 
   saveButton.addEventListener('click', () => {
+    updateLabel();
     toggleAnnotationEditingMode(id, false);
     options.saveCallback();
   });
 
   deleteButton.addEventListener('click', () => {
     annotations[id].remove();
-    annotations.splice(id, 1);
+    delete annotations[id];
     options.saveCallback();
   });
 
@@ -132,11 +136,10 @@ function isEditing(map) {
 }
 
 export function removeAllAnnotations() {
-  annotations.forEach((annotation) => {
-    annotation.remove();
+  Object.keys(annotations).forEach((annotationId) => {
+    annotations[annotationId].remove();
+    delete annotations[annotationId];
   });
-
-  annotations.length = 0;
 }
 
 // These functions are here mostly to provide an abstraction layer between the backing data structure for annotations and anything using this module
@@ -145,11 +148,5 @@ export function getAnnotation(id) {
 }
 
 export function allAnnotations() {
-  const annotationsMap = {};
-
-  for(let i=0; i<annotations.length; i++) {
-    annotationsMap[i] = annotations[i];
-  }
-
-  return annotationsMap;
+  return annotations;
 }
