@@ -24,7 +24,14 @@ class Manage::AirportsController < ApplicationController
 
   def update
     if @airport.update(airport_params)
-      redirect_to manage_airport_path(@airport), notice: 'Airport updated successfully'
+      if request.xhr?
+        @record_id = @airport.id
+        render 'shared/manage/remove_review_record'
+      else
+        redirect_to manage_airport_path(@airport), notice: 'Airport updated successfully'
+      end
+    elsif request.xhr?
+      render 'shared/manage/remove_review_record_error'
     else
       render :edit
     end
