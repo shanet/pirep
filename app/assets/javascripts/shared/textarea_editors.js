@@ -35,6 +35,8 @@ function initEditor(textarea) {
     minHeight: (textarea.dataset.height || undefined),
     showIcons: ['code', 'table', 'horizontal-rule'],
     spellChecker: false,
+    nativeSpellcheck: true,
+    inputStyle: 'contenteditable',
     status: false,
   });
 
