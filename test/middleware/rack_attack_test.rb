@@ -32,6 +32,21 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
   end
 
+  # Routes under /manage should not be throttled
+  test 'does not throttles manage airport updates' do
+    airport = create(:airport)
+    sign_in create(:admin)
+
+    with_rack_attack do
+      freeze_time do
+        (Rails.configuration.rack_attack_write_limit * 2).times do
+          patch manage_airport_path(airport, params: {airport: {reviewed_at: Time.zone.now}})
+          assert_response :redirect
+        end
+      end
+    end
+  end
+
   test 'throttles comment creates' do
     with_rack_attack do
       assert_throttles comments_path, :post, Rails.configuration.rack_attack_write_limit,
