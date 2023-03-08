@@ -16,7 +16,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   end
 
   # CI on GitHub actions runs wayyyyyyy slower due to lack of GPU acceleration and Mapbox needing WebGL so give it more time before failing a test
-  Capybara.default_max_wait_time = 300 if ENV['CI']
+  Capybara.default_max_wait_time = 60 if ENV['CI']
 
   # We'll get far fewer flakes without animations
   Capybara.disable_animation = true

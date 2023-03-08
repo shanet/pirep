@@ -42,8 +42,6 @@ function initMap() {
   map.on('load', () => {
     restoreAnnotations();
   });
-
-  map.on('sourcedata', exposeObjectsForTesting);
 }
 
 function initEditingSwitch() {
@@ -78,11 +76,17 @@ function isEditing() {
 
 function restoreAnnotations() {
   const annotationsJson = JSON.parse(mapElement.dataset.annotations);
-  if(!annotationsJson) return;
 
-  for(let i=0; i<annotationsJson.length; i++) {
+  for(let i=0; i<(annotationsJson?.length || 0); i++) {
+    // Ignore invalid markers
+  console.log(annotationsJson[i]);
+    if(annotationsJson[i].latitude < -90 || annotationsJson[i].latitude > 90) continue;
+    if(annotationsJson[i].longitude < -180 || annotationsJson[i].longitude > 180) continue;
+
     annotationFactory.addAnnotationToMap(map, annotationsJson[i].latitude, annotationsJson[i].longitude, annotationsJson[i].label, {editing: false, saveCallback: saveAnnotations});
   }
+
+  exposeObjectsForTesting();
 }
 
 function saveAnnotations() {

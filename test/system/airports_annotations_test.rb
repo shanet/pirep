@@ -54,7 +54,6 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
   test 'restore and edit annotations' do
     visit_airport(@annotated_airport)
 
-    all('.annotation') # Use an `all` call here to wait a bit longer to give the map time to initialize
     assert_selector '.annotation', count: @annotated_airport.annotations.count
 
     # All annotations should be in editing mode when enabled
