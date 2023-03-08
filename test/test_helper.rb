@@ -8,10 +8,8 @@ Aws.config[:stub_responses] = true
 
 Minitest.after_run do
   # Clean up the asset directories (multiple are created with unique names to prevent test threads from stepping on one another)
-  ['assets/tiles_test_*', 'assets/airports_cache_test_*'].each do |pattern|
-    Rails.public_path.glob(pattern) do |directory|
-      FileUtils.rm_rf(directory)
-    end
+  Rails.public_path.glob('assets/tiles_test_*') do |directory|
+    FileUtils.rm_rf(directory)
   end
 end
 
@@ -41,6 +39,14 @@ class ActiveSupport::TestCase
     yield
   ensure
     Rack::Attack.enabled = was_enabled
+  end
+
+  def with_caching
+    cache_store = Rails.cache
+    Rails.cache = ActiveSupport::Cache::MemoryStore.new
+    yield
+  ensure
+    Rails.cache = cache_store
   end
 end
 
