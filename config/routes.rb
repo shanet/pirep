@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root 'map#index'
   get :map, to: 'map#index'
   get :health, to: 'meta#health'
+  get :sitemap, to: 'meta#sitemap'
 
   devise_for :user, class_name: 'Users::User', controllers: {
     confirmations: 'users/confirmations',
