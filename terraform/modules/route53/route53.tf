@@ -38,6 +38,17 @@ resource "aws_route53_record" "www" {
   }
 }
 
+resource "aws_route53_record" "txt" {
+  name    = var.domain_apex
+  ttl     = 3600
+  type    = "TXT"
+  zone_id = aws_route53_zone.this.zone_id
+
+  records = [
+    "google-site-verification=hEIpW2Doi7_UWFay2Kinm93oQ3J6bPjxay_Vc96wCXo",
+  ]
+}
+
 resource "aws_route53_record" "cdn_assets" {
   name    = var.domain_cdn_assets
   type    = "A"

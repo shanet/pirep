@@ -1,0 +1,4 @@
+<%= root_url %>
+<% Airport.pluck(:code).each do |airport_code| %>
+<%= airport_url(airport_code) %>
+<% end %>
