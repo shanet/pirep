@@ -6,6 +6,7 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'lists airports without cache' do
+    AirportGeojsonDumper.new.clear_cache!
     get airports_path
 
     assert_response :success
@@ -18,6 +19,8 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
 
     get airports_path
     assert_redirected_to AirportGeojsonDumper.cached
+  ensure
+    AirportGeojsonDumper.new.clear_cache!
   end
 
   test 'new airport' do
