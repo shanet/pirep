@@ -79,7 +79,6 @@ function restoreAnnotations() {
 
   for(let i=0; i<(annotationsJson?.length || 0); i++) {
     // Ignore invalid markers
-  console.log(annotationsJson[i]);
     if(annotationsJson[i].latitude < -90 || annotationsJson[i].latitude > 90) continue;
     if(annotationsJson[i].longitude < -180 || annotationsJson[i].longitude > 180) continue;
 

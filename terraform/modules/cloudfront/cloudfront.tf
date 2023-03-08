@@ -35,7 +35,7 @@ resource "aws_cloudfront_distribution" "assets" {
 
     forwarded_values {
       headers      = local.headers
-      query_string = false
+      query_string = true
 
       cookies {
         forward = "none"
