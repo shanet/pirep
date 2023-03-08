@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <% Airport.pluck(:code, :updated_at).each do |airport| %>
+    <url>
+      <loc><%= airport_url(airport.first) %></loc>
+      <lastmod><%= airport.last.strftime('%Y-%m-%d') %></lastmod>
+    </url>
+  <% end %>
+</urlset>

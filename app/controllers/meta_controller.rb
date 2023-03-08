@@ -9,7 +9,8 @@ class MetaController < ApplicationController
 
   def sitemap
     authorize :sitemap, policy_class: MetaPolicy
-    render :sitemap, layout: false, formats: [:text]
+    response.headers['Content-Type'] = 'text/xml'
+    render :sitemap, layout: false, formats: [:xml]
   end
 
 private

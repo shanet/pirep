@@ -33,3 +33,6 @@ linters:
 
   NoJavascriptTagHelper:
     enabled: false
+
+exclude:
+  - "**/*.xml.erb"
