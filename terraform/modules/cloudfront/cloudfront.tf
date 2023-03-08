@@ -29,13 +29,14 @@ resource "aws_cloudfront_distribution" "assets" {
     cached_methods             = local.http_methods
     compress                   = true
     default_ttl                = 86400 # seconds (1 day)
+    min_ttl                    = 86400 # seconds (1 day)
     response_headers_policy_id = aws_cloudfront_response_headers_policy.this.id
     target_origin_id           = local.origin_id_web
     viewer_protocol_policy     = "redirect-to-https"
 
     forwarded_values {
       headers      = local.headers
-      query_string = true
+      query_string = false
 
       cookies {
         forward = "none"
