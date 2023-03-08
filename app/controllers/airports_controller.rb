@@ -8,15 +8,7 @@ class AirportsController < ApplicationController
 
   def index
     authorize :airport, :index?
-
-    # This is stored as a cached asset in production since dumping all airports to JSON takes a while
-    cache = AirportGeojsonDumper.cached
-
-    if cache
-      redirect_to "#{Rails.configuration.action_controller.asset_host || ''}#{cache}", allow_other_host: true
-    else
-      render json: Airport.geojson.to_json
-    end
+    render json: Airport.geojson.to_json
   end
 
   def new
@@ -34,8 +26,8 @@ class AirportsController < ApplicationController
 
       Action.create!(type: :airport_added, actionable: @airport, user: active_user)
 
-      # Schedule an airport cache refresh so the new airport shows up on the map before the next refresh cycle
-      AirportGeojsonDumperJob.perform_later
+      # Clear the airport cache refresh so the new airport shows up on the map before the next refresh cycle
+      AirportGeojsonCacher.update_digest
 
       flash[:notice] = 'New airport added to map, please fill out any known additional information about it.'
       render :create
@@ -57,9 +49,9 @@ class AirportsController < ApplicationController
       touch_author
       create_actions
 
-      # Schedule an airport cache refresh if the tags changed so the changes are reflected on the map before the next refresh cycle
+      # Clears the airports cache if the tags changed so the changes are reflected on the map before the next refresh cycle
       if airport_params['tags_attributes']
-        AirportGeojsonDumperJob.perform_later
+        AirportGeojsonCacher.update_digest
       end
 
       if request.xhr?

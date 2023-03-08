@@ -28,7 +28,7 @@ Rails.application.configure do
   else
     config.action_controller.perform_caching = false
 
-    config.cache_store = :null_store
+    config.cache_store = :memory_store
   end
 
   # Treat missing tiles as 204s instead of 404s for performance (in prod this is handled by the CDN)

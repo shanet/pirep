@@ -5,19 +5,11 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     @airport = create(:airport, code: 'PAE')
   end
 
-  test 'lists airports without cache' do
+  test 'lists airports' do
     get airports_path
 
     assert_response :success
     assert_equal @airport.code, JSON.parse(response.body).first['properties']['code'], 'Airport not included in airports index'
-  end
-
-  test 'lists airports with cache' do
-    # Writing the GeoJSON dump to a file should result in a redirect to that asset rather than geenrating it dynamically
-    AirportGeojsonDumper.new.write_to_file
-
-    get airports_path
-    assert_redirected_to AirportGeojsonDumper.cached
   end
 
   test 'new airport' do
@@ -33,7 +25,7 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
   test 'create airport' do
     assert_difference('Airport.count') do
       assert_difference('Action.where(type: :airport_added).count') do
-        assert_enqueued_with(job: AirportGeojsonDumperJob) do
+        assert_airports_cache_updated do
           post airports_path(format: :js, params: {airport: {
             name: 'Unmapped airport',
             latitude: @airport.latitude,
@@ -98,8 +90,8 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     # If there's a signed in user a new unknown user should not be created
     assert_difference('Users::Unknown.count', 0) do
       assert_difference('Action.where(type: :airport_edited).count') do
-        # Not updating the tags should not trigger a GeoJSON dump
-        assert_no_enqueued_jobs(only: AirportGeojsonDumperJob) do
+        # Not updating the tags should not trigger a GeoJSON cache clear
+        assert_airports_cache_not_updated do
           patch airport_path(@airport), params: {airport: {description: 'description'}}
           assert_redirected_to airport_path(@airport.code)
         end
@@ -120,8 +112,8 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
 
   test 'update airport tags' do
     assert_difference('Action.where(type: :tag_added).count') do
-      # Updating the tags should trigger a GeoJSON dump
-      assert_enqueued_with(job: AirportGeojsonDumperJob) do
+      # Updating the tags should trigger a GeoJSON cache clear
+      assert_airports_cache_updated do
         patch airport_path(@airport), params: {airport: {tags_attributes: {'0': {name: :camping, selected: true}}}}
 
         assert_redirected_to airport_path(@airport.code)
@@ -210,5 +202,23 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     @airport.update!(external_photos_updated_at: Time.zone.now)
     get uncached_photo_gallery_airport_path(@airport)
     assert_response :no_content
+  end
+
+private
+
+  def assert_airports_cache_updated
+    with_caching do
+      previous_digest = AirportGeojsonCacher.read_digest
+      yield
+      assert_not_equal previous_digest, AirportGeojsonCacher.read_digest, 'Airports GeoJSON cache not updated'
+    end
+  end
+
+  def assert_airports_cache_not_updated
+    with_caching do
+      previous_digest = AirportGeojsonCacher.read_digest
+      yield
+      assert_equal previous_digest, AirportGeojsonCacher.read_digest, 'Airports GeoJSON cache updated'
+    end
   end
 end
