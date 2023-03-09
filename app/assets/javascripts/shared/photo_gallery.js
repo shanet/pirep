@@ -49,6 +49,9 @@ async function fetchUncachedPhotoGallery(photoGallery) {
   const parent = photoGallery.parentNode;
   photoGallery.outerHTML = body;
   initializePhotoGallery(parent.querySelector('.carousel'));
+
+  // Provide an attribute to tell tests when the uncached photos have been loaded
+  parent.querySelector('.carousel').setAttribute('data-uncached-photos-loaded', 'true');
 }
 
 function showImage(photoGallery, activeIndex) {
