@@ -218,7 +218,7 @@ class AirportsTest < ApplicationSystemTestCase
   test 'upload photo' do
     visit airport_path(@airport.code)
 
-    assert_difference -> {all('.carousel img', visible: false).count} do
+    assert_difference -> {all('.carousel[data-uncached-photos-loaded="true"] img', visible: false).count} do
       click_on 'Add Photo'
       find('#upload-photo-form input[type="file"]').set(Rails.root.join('test/fixtures/files/image.png'))
       click_on 'Upload Photo'
