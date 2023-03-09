@@ -57,12 +57,20 @@ function initMapBackButton() {
   const mapBackButtons = document.getElementsByClassName('map-back');
 
   for(let i=0; i<mapBackButtons.length; i++) {
-    // If there is no href attribute set it means we want to call `history.back` for the link but this has to be done
+    const button = mapBackButtons[i];
+
+    // If there is a referer attribute set it means we want to call `history.back` for the link but this has to be done
     // in a JavaScript module rather than in the link attribute itself because of the CSP not allowing inline JavaScript.
-    if(mapBackButtons[i].getAttribute('href') === '') {
-      mapBackButtons[i].addEventListener('click', (event) => {
-        window.history.back();
-        event.preventDefault();
+    if(button.dataset.referer) {
+      button.addEventListener('click', (event) => {
+        // When opening a new tab/window the referer will be set, but there's no history to go back to. If that's the
+        // case we want to go back to the referer link directly.
+        if(window.history.length > 1) {
+          window.history.back();
+          event.preventDefault();
+        } else {
+          button.href = button.dataset.referer;
+        }
       });
     }
   }
