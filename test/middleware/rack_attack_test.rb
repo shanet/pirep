@@ -66,6 +66,22 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'clears cache' do
+    with_rack_attack do
+      assert_equal 0, Rack::Attack.cache.store.size, 'Rack::Attack cache not empty'
+      get airport_path(create(:airport))
+
+      travel_to(1.day.from_now) do
+        # Make another request. The previous one should be expired and the new one should not. After clearing the cache there should only be one still valid key.
+        get airport_path(create(:airport))
+        assert_equal 2, Rack::Attack.cache.store.size, 'Rack::Attack cache empty'
+
+        RackAttackCacheCleanerJob.perform_now
+        assert_equal 1, Rack::Attack.cache.store.size, 'Rack::Attack cache not empty'
+      end
+    end
+  end
+
 private
 
   def assert_throttles(path, method, num_requests, expected_response: :success, **params)

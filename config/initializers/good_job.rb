@@ -11,5 +11,11 @@ Rails.configuration.good_job = {
       cron: '0 5 * * 3,6', # Midnight ET Wednesday & Saturday
       class: 'MaxmindDbUpdaterJob',
     },
+
+    # Clean up the Rack::Attack cache periodically to keep it from accumlating throttle records
+    rack_attack_cache_clean: {
+      cron: '0 6 * * *', # Every day
+      class: 'RackAttackCacheCleanerJob',
+    },
   },
 }
