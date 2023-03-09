@@ -3,6 +3,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
 require 'active_support/testing/method_call_assertions'
+require_relative Rails.root.join('lib/active_support/cache/store/postgres_cache_store')
 
 Aws.config[:stub_responses] = true
 
@@ -36,11 +37,14 @@ class ActiveSupport::TestCase
   end
 
   def with_rack_attack
+    cache_store = Rack::Attack.cache.store
     was_enabled = Rack::Attack.enabled
+    Rack::Attack.cache.store = ActiveSupport::Cache::PostgresCacheStore.new
     Rack::Attack.enabled = true
     yield
   ensure
     Rack::Attack.enabled = was_enabled
+    Rack::Attack.cache.store = cache_store
   end
 end
 
