@@ -99,18 +99,15 @@ class AirportTest < ActiveSupport::TestCase
   end
 
   test 'collates versions when history-enabled column is changed' do
-    # We need to manually trigger the callbacks here since doing a `update!` call won't process the after_update callback in this block
-    assert_called(@airport, :collate_versions!) do
-      @airport.description = 'changed'
-      @airport.run_callbacks(:update)
+    assert_enqueued_with(job: VersionsCollatorJob) do
+      @airport.update(description: 'changed')
     end
 
-    # Reset the changes above so the [column]_changed? methods return false
+    # Reset the changes above so the [column]_previously_changed? methods return false
     @airport.reload
 
-    assert_called(@airport, :collate_versions!, times: 0) do
-      @airport.faa_data_cycle = Time.zone.now
-      @airport.run_callbacks(:update)
+    assert_no_enqueued_jobs(only: VersionsCollatorJob) do
+      @airport.update!(faa_data_cycle: Time.zone.now)
     end
   end
 
