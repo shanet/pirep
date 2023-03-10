@@ -1,4 +1,4 @@
-FROM ruby:3.1.3-slim-bullseye AS base
+FROM ruby:3.2.1-slim-bullseye AS base
 
 ARG PORT=8080
 
@@ -7,7 +7,8 @@ ENV \
   GOOD_JOB_PROBE_PORT=${PORT} \
   RAILS_ENV=production \
   RAILS_LOG_TO_STDOUT=true \
-  RAILS_SERVE_STATIC_FILES=true
+  RAILS_SERVE_STATIC_FILES=true \
+  RUBY_YJIT_ENABLE=1
 
 WORKDIR /srv/http
 
@@ -17,6 +18,7 @@ RUN apt-get install --yes \
   dnsutils \
   gnupg \
   htop \
+  libjemalloc2 \
   libpq-dev \
   libvips \
   nano \
@@ -61,6 +63,9 @@ RUN SECRET_KEY_BASE=1 bundle exec rails assets:precompile
 # # -----------------------------------------------------------------------------
 # Do everything above in a separate stage so we can only copy out the compiled assets and discard all the other junk we don't need to run the application
 FROM base AS final
+
+# Use jemalloc
+ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
 
 # The UID and GID should match the values in the EFS config (efs.tf)
 RUN addgroup --gid 1000 pirep
