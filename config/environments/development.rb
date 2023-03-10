@@ -1,4 +1,3 @@
-require 'active_support/cache/store/postgres_cache_store'
 require_relative Rails.root.join('lib/middleware/missing_map_tiles_middleware')
 
 Rails.application.configure do
