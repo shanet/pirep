@@ -1,5 +1,8 @@
 Rails.configuration.good_job = {
   enable_cron: true,
+  max_threads: 2,
+  on_thread_error: ->(error) {Sentry.capture_exception(error)},
+
   cron: {
     airports_geojson_dump: {
       cron: '0 * * * *', # Every hour
