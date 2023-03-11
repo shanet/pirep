@@ -53,9 +53,9 @@ class Manage::AirportsController < ApplicationController
 
     # This method seems to return nil for success when the S3 backend is used in production
     if attachment.purge.is_a? FalseClass
-      redirect_to manage_airport_path(@airport), notice: 'Attachment deleted'
-    else
       redirect_to manage_airport_path(@airport), alert: 'Failed to delete attachment'
+    else
+      redirect_to manage_airport_path(@airport), notice: 'Attachment deleted'
     end
   end
 
