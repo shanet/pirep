@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :tag do
-    name {Tag::TAGS.keys.first}
+    name {:food}
     airport
   end
 end

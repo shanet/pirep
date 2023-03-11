@@ -19,6 +19,11 @@ class Tag < ApplicationRecord
       icon: 'lock',
       theme: 'red',
     },
+    restricted: {
+      label: 'Restricted',
+      icon: 'key',
+      theme: 'orange',
+    },
     unmapped: {
       label: 'Unmapped',
       icon: 'map-marked-alt',
@@ -60,12 +65,6 @@ class Tag < ApplicationRecord
       theme: 'blue',
       addable: true,
     },
-    hot_springs: {
-      label: 'Hot Springs',
-      icon: 'hot-tub',
-      theme: 'orange',
-      addable: true,
-    },
     golfing: {
       label: 'Golfing',
       icon: 'golf-ball',
@@ -78,10 +77,22 @@ class Tag < ApplicationRecord
       theme: 'cyan',
       addable: true,
     },
+    hot_springs: {
+      label: 'Hot Springs',
+      icon: 'hot-tub',
+      theme: 'orange',
+      addable: true,
+    },
     museum: {
       label: 'Museum',
       icon: 'landmark',
       theme: 'indigo',
+      addable: true,
+    },
+    airpark: {
+      label: 'Airpark',
+      icon: 'home',
+      theme: 'orange',
       addable: true,
     },
     closed: {
@@ -89,11 +100,10 @@ class Tag < ApplicationRecord
       icon: 'times-circle',
       theme: 'brown',
     },
-    airpark: {
-      label: 'Airpark',
-      icon: 'home',
-      theme: 'orange',
-      addable: true,
+    populated: {
+      label: 'Populated',
+      icon: 'book',
+      theme: 'green',
     },
     empty: {
       label: 'Empty',

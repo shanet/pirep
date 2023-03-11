@@ -5,6 +5,10 @@ class TagsController < ApplicationController
 
     if @tag.destroy
       Action.create!(type: :tag_removed, actionable: @tag, user: active_user, version: @tag.versions.last).persisted?
+
+      # Schedule a geojson dump so the tag is removed from the map
+      AirportGeojsonDumperJob.perform_later
+
       render :destroy
     else
       render :error_response

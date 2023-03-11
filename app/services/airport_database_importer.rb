@@ -79,7 +79,7 @@ private
   def update_tags(airport)
     # Tag public and private airports
     # Skip military airports as those are all private so there's no need to tag them
-    if !airport.ownership_type.in?(MILITARY_OWNERSHIP_TYPES) && airport.tags.where(name: [:private_, :public_]).count == 0
+    if !airport.ownership_type.in?(MILITARY_OWNERSHIP_TYPES) && airport.tags.where(name: [:private_, :public_, :restricted]).count == 0
       tag = (airport.facility_use == 'PR' ? :private_ : :public_)
       airport.tags << Tag.new(name: tag)
     end
