@@ -21,6 +21,8 @@ class Airport < ApplicationRecord
   searchable({column: :code, weight: ['facility_use = \'PU\'', :A, :B]})
   searchable({column: :name, weight: ['facility_use = \'PU\'', :C, :D]})
 
+  before_save :update_landing_rights_tag, if: :landing_rights_changed?
+
   # Only run version collation after an update if one of the columns we create versions for was changed (airport database updates are much faster without these running)
   after_update :collate_versions!, if: proc {HISTORY_COLUMNS.keys.select {|column| send("#{column}_previously_changed?")}.any?}
   after_save :remove_empty_tag!
@@ -143,7 +145,7 @@ class Airport < ApplicationRecord
   validates :ownership_type, inclusion: {in: OWNERSHIP_TYPES.keys.map(&:to_s)}
   validates :cover_image, inclusion: {in: COVER_IMAGES.keys.map(&:to_s)}
   validates :state, length: {is: 2}, if: -> {state.present?}
-  validate :contributed_photos_size_and_filetype
+  validate :validate_contributed_photos_size_and_filetype
 
   def self.geojson
     return Airport.includes(:tags).map(&:to_geojson)
@@ -171,9 +173,6 @@ class Airport < ApplicationRecord
     airport.ownership_type = :PR
     airport.landing_rights ||= :private_
     airport.tags << Tag.new(name: :unmapped)
-
-    # All unmapped airports must be privately owned. If it was publicly owned it would be listed in the FAA database.
-    airport.tags << Tag.new(name: :private_)
 
     # Tag closed airports as closed
     airport.tags << Tag.new(name: :closed) if state == 'closed'
@@ -204,6 +203,11 @@ class Airport < ApplicationRecord
   end
 
   def to_geojson
+    tag_names = tags.pluck(:name)
+
+    # Add a "psuedo-tag" filtering non-empty airports
+    tag_names << 'populated' unless tag_names.include?('empty')
+
     return {
       # Mapbox requires IDs to be integers (even though the RFC says strings are okay!)
       # so we need a hash function that returns a 32bit number. CRC32 should do the job.
@@ -215,7 +219,7 @@ class Airport < ApplicationRecord
       },
       properties: {
         code: code,
-        tags: tags.pluck(:name),
+        tags: tag_names,
         facility_type: facility_type,
       },
     }
@@ -244,6 +248,18 @@ class Airport < ApplicationRecord
     return if empty?
 
     tags.where(name: :empty).destroy_all
+  end
+
+  def update_landing_rights_tag
+    # Remove tags other than the selected landing right value as the tag should match the selected landing rights value
+    remove_tags = LANDING_RIGHTS_TYPES.keys
+    remove_tags.delete(landing_rights)
+
+    tags.where(name: remove_tags).delete_all
+    tags << Tag.new(name: landing_rights)
+
+    # Schedule a geojson dump so the tags are reflected on the map
+    AirportGeojsonDumperJob.perform_later
   end
 
   def collate_versions!
@@ -386,7 +402,7 @@ class Airport < ApplicationRecord
     return Users::User.find_by(id: versions.find_by(event: 'create')&.whodunnit)
   end
 
-  def contributed_photos_size_and_filetype
+  def validate_contributed_photos_size_and_filetype
     contributed_photos.each do |photo|
       if photo.blob.byte_size > 5.megabytes
         errors.add(:contributed_photos, 'must be under 5mb in size')

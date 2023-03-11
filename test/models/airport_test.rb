@@ -6,20 +6,22 @@ class AirportTest < ActiveSupport::TestCase
   end
 
   test 'populates new unmapped airport' do
-    airport = Airport.new_unmapped(attributes_for(:airport))
+    airport = Airport.new_unmapped(attributes_for(:airport, landing_rights: :restricted))
+    airport.save!
+
     assert_equal 'UNM01', airport.code
     assert_equal 'airport', airport.facility_type
     assert_equal 'PR', airport.facility_use
     assert_equal 'PR', airport.ownership_type
-    assert_equal :public_, airport.landing_rights
+    assert_equal :restricted, airport.landing_rights
 
     assert :unmapped.in?(airport.tags.map(&:name)), 'Unmapped airport not tagged as such'
-    assert :private_.in?(airport.tags.map(&:name)), 'Unmapped airport not tagged private'
-
-    airport.save!
+    assert :restricted.in?(airport.tags.map(&:name)), 'Unmapped airport not tagged restricted'
 
     # Creating another unmapped airport should use the next unmapped airport code
-    airport2 = Airport.new_unmapped({})
+    airport2 = Airport.new_unmapped(attributes_for(:airport, landing_rights: nil))
+    airport2.save!
+
     assert_equal 'UNM02', airport2.code, 'Unmapped airport not given a unique code'
     assert_equal :private_, airport2.landing_rights, 'Unmapped airport did not default to private landing rights'
   end
@@ -38,7 +40,7 @@ class AirportTest < ActiveSupport::TestCase
       },
       properties: {
         code: @airport.code,
-        tags: [],
+        tags: ['public_', 'populated'],
         facility_type: 'airport',
       },
     }
@@ -89,7 +91,27 @@ class AirportTest < ActiveSupport::TestCase
     # Adding a description should make the airport non-empty and remove the empty tag on save
     assert airport.empty?
     airport.update!(description: 'description')
-    assert airport.reload.tags.empty?, 'Empty tag not removed from airport'
+    assert_not airport.reload.tags.map(&:name).include?(:empty), 'Empty tag not removed from airport'
+  end
+
+  test 'updates tags when landing rights change' do
+    airport = create(:airport)
+    assert_equal 1, airport.tags.count, 'Airport has multiple tags'
+    assert_equal :public_, airport.tags.first.name, 'Public tag not added to airport'
+
+    assert_enqueued_with(job: AirportGeojsonDumperJob) do
+      airport.update!(landing_rights: :restricted)
+      airport = airport.reload
+      assert_equal 1, airport.tags.count, 'Airport has multiple tags'
+      assert_equal :restricted, airport.tags.first.name, 'Public tag not added to airport'
+    end
+
+    assert_enqueued_with(job: AirportGeojsonDumperJob) do
+      airport.update!(landing_rights: :private_)
+      airport = airport.reload
+      assert_equal 1, airport.tags.count, 'Airport has multiple tags'
+      assert_equal :private_, airport.tags.first.name, 'Public tag not added to airport'
+    end
   end
 
   test 'unselected tag names' do

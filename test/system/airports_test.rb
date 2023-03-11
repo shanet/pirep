@@ -63,8 +63,8 @@ class AirportsTest < ApplicationSystemTestCase
   test 'add tag' do
     visit airport_path(@airport.code)
 
-    # There should be two tags by default (one from factory and "edit tags" button)
-    assert_equal 2, all('.tag-square').count
+    # There should be three tags by default (two from the factory and the "edit tags" button)
+    assert_equal 3, all('.tag-square').count
 
     # Add the first and last tag
     find('.tag-square.add').click
@@ -74,15 +74,15 @@ class AirportsTest < ApplicationSystemTestCase
 
     click_on 'Add Tags'
 
-    # There should now be three tags plus the "edit tags" button
-    assert_equal 4, all('.tag-square').count, 'Tags not added'
+    # There should now be four tags plus the "edit tags" button
+    assert_equal 5, all('.tag-square').count, 'Tags not added'
   end
 
   test 'remove tag' do
     visit airport_path(@airport.code)
 
-    # There should be two tags by default (one from factory and "edit tags" button)
-    assert_equal 2, all('.tag-square').count
+    # There should be three tags by default (two from the factory and the "edit tags" button)
+    assert_equal 3, all('.tag-square').count
 
     # Remove the first tag
     find('.tag-square.add').click

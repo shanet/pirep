@@ -60,7 +60,7 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
             AirportDatabaseImporter.new({parsed_airport[:airport_code] => parsed_airport(airport_name: 'New Airport Name')}).load_database
 
             # An existing airport should not have it's landing rights overwritten as they can be changed by users
-            assert_equal :restricted, airport.reload.landing_rights, 'Overwrite landing rights on existing airport'
+            assert_equal :restricted, airport.reload.landing_rights, 'Overwrote landing rights on existing airport'
           end
         end
       end

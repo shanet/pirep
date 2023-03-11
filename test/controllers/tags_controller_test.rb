@@ -3,8 +3,10 @@ require 'test_helper'
 class TagsControllerTest < ActionDispatch::IntegrationTest
   test 'destroy' do
     assert_difference('Action.where(type: :tag_removed).count') do
-      delete tag_path(id: create(:tag), format: :js)
-      assert_response :success
+      assert_enqueued_with(job: AirportGeojsonDumperJob) do
+        delete tag_path(id: create(:tag), format: :js)
+        assert_response :success
+      end
     end
   end
 
@@ -15,7 +17,7 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
       airport = create(:airport)
       tag = create(:tag, airport: airport)
 
-      assert_equal 1, airport.tags.count, 'Airport has no tags'
+      assert_equal 2, airport.tags.count, 'Airport has no tags'
 
       # Revert the tag creation and expect the airport to have no tags
       assert_difference('airport.tags.count', -1) do
