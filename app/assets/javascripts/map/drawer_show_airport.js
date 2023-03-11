@@ -9,10 +9,14 @@ import * as utils from 'shared/utils';
 
 const DRAWER_CONTENT_ID = 'drawer-show-airport';
 
+let currentAirport;
 let previousZoomLevel;
 let wereSectionalLayersShown;
 
 export async function loadDrawer(airportCode) {
+  // Don't re-load the drawer if the requested airport is the one already shown
+  if(currentAirport === airportCode) return DRAWER_CONTENT_ID;
+
   // Get the path to request airport info from dynamically
   // This means swapping out a placeholder value with the airport code we want to get
   const {showAirportPath} = document.getElementById('map').dataset;
@@ -26,6 +30,8 @@ export async function loadDrawer(airportCode) {
 
   document.getElementById(DRAWER_CONTENT_ID).innerHTML = await response.text();
 
+  // Don't update the current airport until the requested airport has been successfully loaded
+  currentAirport = airportCode;
   return DRAWER_CONTENT_ID;
 }
 
