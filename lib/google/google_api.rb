@@ -1,3 +1,4 @@
+require 'haversine'
 require 'exceptions'
 
 module GoogleApi
@@ -7,24 +8,47 @@ module GoogleApi
 
   class Service
     API_HOST = 'https://maps.googleapis.com/maps/api/place'
+    PLACE_RADIUS = 2000 # meters
 
     def place_photos(query, latitude, longitude)
-      response = Faraday.get('%s/findplacefromtext/json' % API_HOST, {
+      # First first "places" near the given coordinates for the given query
+      response = Faraday.get("#{API_HOST}/findplacefromtext/json", {
         key: Rails.application.credentials.google_api_key,
         input: query,
         inputtype: :textquery,
-        locationbias: 'circle:1500@%s,%s' % [latitude, longitude],
-        fields: :place_id,
+        locationbias: "circle:#{PLACE_RADIUS}@#{latitude},#{longitude}",
+        fields: [:place_id, :geometry].join(','),
       })
 
       raise Exceptions::GooglePhotosQueryFailed unless response.success?
 
-      results = JSON.parse(response.body)['candidates']
-      return [] if results.empty?
+      candidates = JSON.parse(response.body)['candidates']
 
-      response = Faraday.get('%s/details/json' % API_HOST, {
+      if candidates.empty?
+        Rails.logger.info("No place candidates found for query #{query}, #{latitude}, #{longitude}")
+        return []
+      end
+
+      # Reject anything not located around the given coordinates. The location bias specified above is just that: a bias. It won't prevent
+      # Google from returning photos from a wildly different area if no better results exist. In our case, we know exactly the location
+      # we're interested in so reject anything not in that area.
+      result = candidates.find do |candidate|
+        candidate_latitude = candidate.dig('geometry', 'location', 'lat')
+        candidate_longitude = candidate.dig('geometry', 'location', 'lng')
+        next false unless candidate_latitude && candidate_longitude
+
+        next Haversine.new.distance(latitude, longitude, candidate_latitude, candidate_longitude) < PLACE_RADIUS # meters
+      end
+
+      # Don't return anything if no acceptable location was found as the probability of the photos being correct is extremely low
+      unless result
+        Rails.logger.info("All place candidates filtered for query #{query}, #{latitude}, #{longitude}")
+        return []
+      end
+
+      response = Faraday.get("#{API_HOST}/details/json", {
         key: Rails.application.credentials.google_api_key,
-        place_id: results.first['place_id'],
+        place_id: result['place_id'],
         fields: :photo,
       })
 
@@ -34,7 +58,7 @@ module GoogleApi
       return [] unless result['photos']
 
       return result['photos'].reduce([]) do |photos, photo|
-        response = Faraday.get('%s/photo' % API_HOST, {
+        response = Faraday.get("#{API_HOST}/photo", {
           key: Rails.application.credentials.google_api_key,
           photoreference: photo['photo_reference'],
           maxwidth: 1000, # px
