@@ -71,6 +71,8 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: System Test Failure Screenshots
-          path: tmp/screenshots/*.png
+          name: Test Failure Artifacts
           retention-days: 1
+          path: |
+            log/test.log
+            tmp/screenshots/*.png
