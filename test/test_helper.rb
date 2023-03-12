@@ -46,6 +46,15 @@ class ActiveSupport::TestCase
     Rack::Attack.enabled = was_enabled
     Rack::Attack.cache.store = cache_store
   end
+
+  def with_airport_geojson_cache
+    was_enabled = AirportGeojsonDumper.enabled
+    AirportGeojsonDumper.enabled = true
+    yield
+  ensure
+    AirportGeojsonDumper.enabled = was_enabled
+    AirportGeojsonDumper.new.clear_cache!
+  end
 end
 
 # Include Devise helpers for signing in/out users

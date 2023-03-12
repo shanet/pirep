@@ -6,7 +6,6 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'lists airports without cache' do
-    AirportGeojsonDumper.new.clear_cache!
     get airports_path
 
     assert_response :success
@@ -14,13 +13,13 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'lists airports with cache' do
-    # Writing the GeoJSON dump to a file should result in a redirect to that asset rather than geenrating it dynamically
-    AirportGeojsonDumper.new.write_to_file
+    with_airport_geojson_cache do
+      # Writing the GeoJSON dump to a file should result in a redirect to that asset rather than geenrating it dynamically
+      AirportGeojsonDumper.new.write_to_file
 
-    get airports_path
-    assert_redirected_to AirportGeojsonDumper.cached
-  ensure
-    AirportGeojsonDumper.new.clear_cache!
+      get airports_path
+      assert_redirected_to AirportGeojsonDumper.cached
+    end
   end
 
   test 'new airport' do
