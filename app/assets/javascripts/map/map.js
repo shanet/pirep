@@ -134,6 +134,12 @@ function addEventHandlersToMap() {
 
   map.on('pitchend', set3dButtonLabel);
 
+  // If coming from an airport page the zoom level may have a default value. We want to clear
+  // this as soon as the zoom is changed on the map as Mapbox stores its own state in the URL.
+  map.on('zoomstart', () => {
+    urlSearchParams.setZoomLevel(null);
+  });
+
   map.on('error', (error) => {
     // Since the chart layers are not rectangles we can't use a bounding box for them. Instead, the server is configured to return
     // a 204 response to denote a tile with no content. This is faster than a 404 since Mapbox seems to not try to parse the response
