@@ -36,11 +36,16 @@ export async function loadDrawer(airportCode) {
 }
 
 export function initializeDrawer() {
+  // Don't re-initialize a drawer that was already opened, closed, and then re-opened
+  if(document.querySelector(`#${DRAWER_CONTENT_ID}`).dataset.initialized === 'true') return;
+
   // Zoom out/in
   document.querySelector(`#${DRAWER_CONTENT_ID} .zoom-btn`).addEventListener('click', zoomAirport);
 
   photoGallery.initializePhotoGalleries();
   textareaEditors.initEditors();
+
+  document.querySelector(`#${DRAWER_CONTENT_ID}`).dataset.initialized = 'true';
 }
 
 function zoomAirport(event) {

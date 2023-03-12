@@ -48,6 +48,27 @@ class MapTest < ApplicationSystemTestCase
     end
   end
 
+  test 'opens, closes, and re-opens airport drawer' do
+    visit map_path
+    wait_for_map_ready
+    open_airport(@airport)
+
+    within('#drawer-content') do
+      assert_selector '.EasyMDEContainer', count: 1
+      click_on 'Zoom In'
+    end
+
+    # Closing and re-open the drawer
+    find('#airport-drawer .handle > button').click
+    open_airport(@airport)
+
+    # Upon the re-opening the drawer, there should still be one description field and the zoom button label was not changed
+    within('#drawer-content') do
+      assert_selector '.EasyMDEContainer', count: 1
+      click_on 'Zoom Out'
+    end
+  end
+
   # The login drawer should be open by default when the `#login` anchor is present in the URL
   test 'opens login drawer' do
     visit map_path(params: {drawer: :login})
