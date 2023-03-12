@@ -32,6 +32,8 @@ export async function loadDrawer(airportCode) {
 
   // Don't update the current airport until the requested airport has been successfully loaded
   currentAirport = airportCode;
+  document.querySelector(`#${DRAWER_CONTENT_ID}`).dataset.initialized = null;
+
   return DRAWER_CONTENT_ID;
 }
 
