@@ -3,6 +3,14 @@ class AirportGeojsonDumper
   DIRECTORY = "airports_cache#{Rails.env.test? ? "_test_#{SecureRandom.uuid}" : ''}"
   FILENAME_PATTERN = 'airports-*.json'
 
+  # Disable caching of airport geojson in test since even though the cache file is isolated per-process
+  # above, leaving old data from one test in the cache will cause difficult to track down problems
+  @enabled = !Rails.env.test?
+
+  class << self
+    attr_accessor :enabled
+  end
+
   def write_to_file
     geojson = Airport.geojson.to_json
 
@@ -29,6 +37,8 @@ class AirportGeojsonDumper
   end
 
   def self.cached
+    return nil unless @enabled
+
     return Rails.public_path.join('assets', DIRECTORY).glob(FILENAME_PATTERN).first&.to_s&.gsub(Rails.public_path.to_s, '')
   end
 
