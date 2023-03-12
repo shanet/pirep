@@ -1,7 +1,8 @@
 <%= javascript_tag nonce: true do %>
   document.addEventListener('DOMContentLoaded', () => {
     <% flash.each do |type, message| %>
-      window.showFlash("<%= flash_to_class(type)[:class] %>", "<%= message %>");
+      <%# Make flashes persistent in tests so they don't disappear after the timeout causing test flakes %>
+      window.showFlash("<%= flash_to_class(type)[:class] %>", "<%= message %>", <%= Rails.env.test? %>);
     <% end %>
   }, {once: true});
 <% end %>
