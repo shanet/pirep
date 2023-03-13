@@ -1,8 +1,9 @@
 <%# If we're given a referrer from the map, use it as it will include the full query string with the map state. The JavaScript on the
-    page will first try to use the history API in this case since this preserves the Mapbox state and fallback to the referer otherwise. %>
+    page will first try to use the history API in this case since this preserves the Mapbox state and fallback to the referer otherwise.
+    If not referrer is available, link directly to the map index with an anchor that matches Mapbox's state anchor of `zoom/latitude/longitude` %>
 
 <%= link_to '<i class="fa-solid fa-chevron-left me-1"></i>Map'.html_safe,
-  root_path(airport: @airport.code, zoom: 9),
+  root_path(airport: @airport.code, anchor: "9/#{@airport.latitude}/#{@airport.longitude}"),
   class: "map-back btn btn-sm btn-outline-#{color}",
   data: {'history': (URI(request.referer || '').path == root_path)} %>
 
