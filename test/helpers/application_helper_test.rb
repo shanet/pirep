@@ -9,9 +9,10 @@ class ApplicationTest < ActionView::TestCase
 
   test 'format timestamps handles user\'s timezone' do
     assert_equal 'UTC', format_timestamp(Time.zone.now, format: '%Z'), 'Timestamp did not default to UTC'
-
     @current_user = create(:known, timezone: 'America/New_York')
-    assert_equal 'EST', format_timestamp(Time.zone.now, format: '%Z'), 'Timestamp not in user\'s timezone'
+
+    timezone = (Time.now(in: ActiveSupport::TimeZone.new('America/New York')).dst? ? 'EDT' : 'EST')
+    assert_equal timezone, format_timestamp(Time.zone.now, format: '%Z'), 'Timestamp not in user\'s timezone'
   end
 
   test 'does not allow XSS in markdown' do
