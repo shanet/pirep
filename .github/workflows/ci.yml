@@ -25,7 +25,7 @@ jobs:
           echo "deb http://archive.ubuntu.com/ubuntu/ lunar main universe" | sudo tee /etc/apt/sources.list.d/lunar.list
 
       - name: Install Packages
-        run: sudo apt-get update && sudo apt-get install --yes gdal-bin gpg lsb-release libvips python3-gdal
+        run: sudo apt-get update && sudo apt-get install --yes gdal-bin gpg lsb-release libvips python3-gdal tzdata
 
       - name: Install Ruby & Gems
         uses: ruby/setup-ruby@v1
