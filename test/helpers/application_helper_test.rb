@@ -11,13 +11,13 @@ class ApplicationTest < ActionView::TestCase
     assert_equal 'UTC', format_timestamp(Time.zone.now, format: '%Z'), 'Timestamp did not default to UTC'
     @current_user = create(:known, timezone: 'America/New_York')
 
-    timezone = (Time.now(in: ActiveSupport::TimeZone.new('America/New York')).dst? ? 'EDT' : 'EST')
+    timezone = (Time.now(in: TZInfo::Timezone.get('America/New_York')).dst? ? 'EDT' : 'EST')
     assert_equal timezone, format_timestamp(Time.zone.now, format: '%Z'), 'Timestamp not in user\'s timezone'
   end
 
   test 'does not allow XSS in markdown' do
     markdown = render_markdown('<script>alert("uh oh!")</script>')
-    assert_not markdown.include?('script'), 'Markdown rendered let script tags through'
+    assert_not markdown.include?('script'), 'Markdown rendering let script tags through'
   end
 
   test 'user label' do
