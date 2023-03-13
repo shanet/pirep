@@ -5,6 +5,9 @@ Pirep is a free, collaborative database of all public and private airports locat
 
 While there are a handful of other websites that contain databases like this, none of them allow for open contributions. Pirep brings together information from a multitude of public sources combined with user contributions to create a database of local airport knowledge accessible in one location. The main navigation for the website is the map which encourages exploration of new destinations pilots may have not considered visiting before.
 
+[![CI](https://github.com/shanet/pirep/actions/workflows/ci.yml/badge.svg)](https://github.com/shanet/pirep/actions/workflows/ci.yml)
+[![View performance data on Skylight](https://badges.skylight.io/typical/71SQvzBzGg2M.svg?token=7Bj4x27asMBxs2BZlnIRqX-yJrQ5LCCojLJwpfAg8e4)](https://www.skylight.io/app/applications/71SQvzBzGg2M)
+
 ## Philosophy
 
 Pirep is intended to be a minimalist website. It's development adheres to the following high-level principles:
@@ -20,8 +23,8 @@ For the frontend, Pirep makes use of only vanilla JavaScript. Through the use of
 
 ### Prerequisites
 
-* Ruby (the expected version is defined with `.ruby-version`)
-* Postgres (14.6 is currently used, fairly standard SQL is used everywhere so other minor versions should be fine)
+* Ruby (the expected version is defined in `.ruby-version`)
+* Postgres (14.6 is currently used, but fairly standard SQL is used everywhere so other minor versions should be fine too)
 * [GDAL](https://gdal.org) version >= 3.6.2 for generating sectional chart map tiles (older versions will generate bad looking map tiles)
 * [libvips](https://www.libvips.org) for converting airport diagram PDFs to PNGs and processing user photo uploads
 * Yarn version 1.x
