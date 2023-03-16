@@ -1,3 +1,6 @@
+![](/public/error_logo.png?raw=true#gh-light-mode-only)
+![](/public/error_logo_light.png?raw=true#gh-dark-mode-only)
+
 Pirep
 =====
 
@@ -6,7 +9,7 @@ Pirep is a free, collaborative database of all public and private airports locat
 While there are a handful of other websites that contain databases like this, none of them allow for open contributions. Pirep brings together information from a multitude of public sources combined with user contributions to create a database of local airport knowledge accessible in one location. The main navigation for the website is the map which encourages exploration of new destinations pilots may have not considered visiting before.
 
 [![CI](https://github.com/shanet/pirep/actions/workflows/ci.yml/badge.svg)](https://github.com/shanet/pirep/actions/workflows/ci.yml)
-[![View performance data on Skylight](https://badges.skylight.io/typical/71SQvzBzGg2M.svg?token=7Bj4x27asMBxs2BZlnIRqX-yJrQ5LCCojLJwpfAg8e4)](https://www.skylight.io/app/applications/71SQvzBzGg2M)
+[![View performance data on Skylight](https://badges.skylight.io/typical/71SQvzBzGg2M.svg?token=7Bj4x27asMBxs2BZlnIRqX-yJrQ5LCCojLJwpfAg8e4)](https://oss.skylight.io/app/applications/71SQvzBzGg2M/recent/5m/endpoints)
 
 ## Philosophy
 
