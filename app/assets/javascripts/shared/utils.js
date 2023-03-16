@@ -52,3 +52,8 @@ function getActiveBreakpoint() {
   // This reads the content property form a pseudo-element on a meta tag which will have the current Bootstrap breakpoint, see `breakpoints.scss`
   return getComputedStyle(document.querySelector('meta.breakpoint'), ':before').getPropertyValue('content').replaceAll('"', '');
 }
+
+export function isWebGlAvailable() {
+  const canvas = document.createElement('canvas');
+  return (canvas.getContext('webgl') instanceof WebGLRenderingContext);
+}

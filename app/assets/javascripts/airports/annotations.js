@@ -2,13 +2,14 @@ import 'mapbox-gl';
 import Rails from '@rails/ujs';
 
 import * as annotationFactory from 'shared/annotation_factory';
+import * as utils from 'shared/utils';
 
 let mapElement = null;
 let map = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   mapElement = document.getElementById('airport-map');
-  if(!mapElement) return;
+  if(!mapElement || !utils.isWebGlAvailable()) return;
 
   initMap();
   initEditingSwitch();

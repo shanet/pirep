@@ -33,6 +33,11 @@ let fetchingAnnotations = false;
 document.addEventListener('DOMContentLoaded', () => {
   if(!document.getElementById('map')) return;
 
+  if(!utils.isWebGlAvailable()) {
+    flashes.show(flashes.FLASH_ERROR, 'Your browser does not support WebGL which is required for this website.', true);
+    return;
+  }
+
   initMap();
 
   map.on('load', () => {
@@ -42,6 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
     add3dTerrain();
   });
 }, {once: true});
+
+function isWebGlAvailable() {
+  const canvas = document.createElement('canvas');
+  return (canvas.getContext('webgl') instanceof WebGLRenderingContext);
+}
 
 function initMap() {
   mapElement = document.getElementById('map');
