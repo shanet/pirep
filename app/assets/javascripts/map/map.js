@@ -48,11 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 }, {once: true});
 
-function isWebGlAvailable() {
-  const canvas = document.createElement('canvas');
-  return (canvas.getContext('webgl') instanceof WebGLRenderingContext);
-}
-
 function initMap() {
   mapElement = document.getElementById('map');
   mapboxgl.accessToken = mapElement.dataset.mapboxApiKey; // eslint-disable-line no-undef
