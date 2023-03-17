@@ -62,7 +62,7 @@ class Search < ApplicationRecord
 
     # If we're given multiple models to search return search records directly. If we're only given one particular model then we can return that model's records
     # This allows to return an ActiveRecord Relation object if needed for further querying or by passing an array with multiple models for display in a mixed
-    # global search results page or simply as away to get the underlying search records for a given search term.
+    # global search results page or simply as a way to get the underlying search records for a given search term.
     search_query = if models.is_a? Array
                      select("#{table_name}.*", rank_column).where(searchable_type: models.map(&:name))
                    else
