@@ -207,6 +207,9 @@ GEM
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
+    jit_preloader (2.0.0)
+      activerecord (>= 7, < 8)
+      activesupport
     jmespath (1.6.2)
     json (2.6.3)
     kramdown (2.4.0)
@@ -401,6 +404,7 @@ DEPENDENCIES
   image_processing
   importmap-rails
   jbuilder (~> 2.7)
+  jit_preloader
   kramdown
   listen (~> 3.2)
   maxmind-geoip2
