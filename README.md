@@ -13,7 +13,7 @@ While there are a handful of other websites that contain databases like this, no
 
 ## Philosophy
 
-Pirep is intended to be a minimalist website. It's development adheres to the following high-level principles:
+Pirep is intended to be a minimalist website. Its development adheres to the following high-level principles:
 
 * Prefer a heavy backend with a lightweight frontend.
 * Use third party libraries sparingly and only where strictly necessary to avoid bloat and abandonware.
