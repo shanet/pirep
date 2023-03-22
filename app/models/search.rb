@@ -19,7 +19,7 @@ class Search < ApplicationRecord
     statements = [
       # Drop and create a new temporary search table by copying the structure of the existing one
       "DROP TABLE IF EXISTS #{TABLE_NEXT}",
-      "CREATE TABLE #{TABLE_NEXT} (LIKE #{TABLE_CURRENT} including defaults including constraints including indexes)",
+      "CREATE TABLE #{TABLE_NEXT} (LIKE #{TABLE_CURRENT} INCLUDING DEFAULTS INCLUDING CONSTRAINTS INCLUDING INDEXES)",
 
       # Insert the search records for all models (note that `UNION ALL` won't check for duplicates here)
       "INSERT INTO #{TABLE_NEXT} (searchable_id, searchable_type, term_vector, term, coordinates) #{search_records.join("\nUNION ALL\n")}",
