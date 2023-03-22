@@ -89,6 +89,8 @@ class AirportsController < ApplicationController
 
   def preview
     @airport = PaperTrail::Version.find(params[:version_id]).reify
+    return not_found unless @airport
+
     authorize @airport
     render :show
   end
@@ -109,6 +111,9 @@ class AirportsController < ApplicationController
   end
 
   def uncached_photo_gallery
+    # If the request is from a spider don't do anything. The Google Place Photos API is kind of expensive.
+    return head :no_content if spider?
+
     return not_found unless @airport
 
     @uncached_external_photos = @airport.uncached_external_photos

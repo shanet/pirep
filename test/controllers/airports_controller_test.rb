@@ -213,4 +213,9 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     get uncached_photo_gallery_airport_path(@airport)
     assert_response :no_content
   end
+
+  test 'uncached_photo_gallery, returns no content for spiders' do
+    get uncached_photo_gallery_airport_path(@airport), headers: {HTTP_USER_AGENT: 'Googlebot/2.1; http://www.google.com/bot.html'}
+    assert_response :no_content
+  end
 end
