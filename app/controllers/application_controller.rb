@@ -65,4 +65,10 @@ private
 
     Sentry.set_user(id: current_user.id)
   end
+
+  def spider?
+    # This isn't perfect, but well behaved spiders will usually have a URL in their user agent.
+    # If it doesn't, it's probably not a well behaved spider anyway so there's not much in playing games with it.
+    return !(request.env['HTTP_USER_AGENT'] =~ /.*https?:\/\/.*/).nil?
+  end
 end
