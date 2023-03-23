@@ -26,7 +26,7 @@ resource "aws_security_group" "load_balancer" {
   }
 }
 
-# Health check traffi from load balancers to ECSc
+# Health check traffic from load balancers to ECS
 resource "aws_security_group_rule" "health_check" {
   from_port                = var.service_port
   protocol                 = "TCP"
