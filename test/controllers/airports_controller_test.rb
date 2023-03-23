@@ -64,6 +64,9 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     get airport_path("K#{@airport.code}")
     assert_response :success, 'Failed to get airport by ICAO code'
 
+    get airport_path("P#{@airport.code}")
+    assert_response :success, 'Failed to get airport by ICAO code'
+
     get airport_path(@airport, format: :drawer)
     assert_response :success, 'Failed to get airport page as drawer'
   end
