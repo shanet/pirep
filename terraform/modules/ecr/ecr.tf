@@ -26,8 +26,6 @@ resource "aws_ecr_lifecycle_policy" "this" {
       }
     ]
   })
-
-  #depends_on = [aws_ecr_repository.this]
 }
 
 output "repository" {
