@@ -9,7 +9,7 @@ class Manage::DashboardTest < ApplicationSystemTestCase
     sign_in :admin
     visit manage_root_path
 
-    # Apporving a recore from the review queue should remove it from the queue
+    # Apporving a record from the review queue should remove it from the queue
     find(".review-record[data-record-id=\"#{@comment.id}\"] form button").click
     assert_no_selector ".review-record[data-record-id=\"#{@comment.id}\"]"
   end
