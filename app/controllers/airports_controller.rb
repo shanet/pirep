@@ -89,7 +89,11 @@ class AirportsController < ApplicationController
 
   def preview
     @airport = PaperTrail::Version.find(params[:version_id]).reify
-    return not_found unless @airport
+
+    unless @airport
+      skip_authorization
+      return not_found
+    end
 
     authorize @airport
     render :show
