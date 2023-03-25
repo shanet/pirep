@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     get 'activity', to: 'dashboard#activity', as: :activity
     patch 'update_read_only', to: 'dashboard#update_read_only', as: :update_read_only
 
+    resources :attachments, only: [:index, :destroy]
     resources :comments
 
     resources :airports do

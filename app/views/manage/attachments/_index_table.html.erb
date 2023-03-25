@@ -1,0 +1,25 @@
+<table class="table table-striped table-hover image-table">
+  <thead>
+    <tr>
+      <th>Photo</th>
+      <th>Airport</th>
+      <th>Created at</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @attachments.each do |attachment| %>
+      <tr>
+          <td><img class="img-thumbnail" src="<%= cdn_url_for(attachment) %>"></td>
+          <td><%= link_to attachment.record.name.titleize, manage_airport_path(attachment.record_id) %></td>
+          <td><%= format_timestamp attachment.created_at %></td>
+          <td>
+            <%= button_to '<i class="fa-regular fa-trash-can"></i> Delete'.html_safe, manage_attachment_path(attachment), method: :delete,
+              class: 'btn btn-outline-danger btn-sm',
+              data: {confirm: 'Are you sure you want to permanently delete this photo?'} %>
+          </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
