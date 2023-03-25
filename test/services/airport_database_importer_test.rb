@@ -13,6 +13,7 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
     # Check airport attributes created as expected
     assert_equal parsed_airport[:airport_code], airport.code
     assert_equal parsed_airport[:airport_name], airport.name
+    assert_equal parsed_airport[:icao_code], airport.icao_code
     assert_equal 'airport', airport.facility_type
     assert_equal parsed_airport[:facility_use], airport.facility_use
     assert_equal parsed_airport[:ownership_type], airport.ownership_type
@@ -91,6 +92,7 @@ private
     return {
       airport_code: 'PAE',
       airport_name: 'SNOHOMISH COUNTY (PAINE FLD)',
+      icao_code: 'KPAE',
       facility_type: 'A',
       facility_use: 'PU',
       ownership_type: 'PU',

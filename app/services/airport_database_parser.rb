@@ -4,6 +4,7 @@ require 'faa/faa_api'
 class AirportDatabaseParser
   def initialize
     @airports = {}
+    @faa_to_icao = YAML.safe_load(Rails.root.join('db/faa_to_icao_mapping.yml').read)
   end
 
   def download_and_parse
@@ -36,9 +37,12 @@ private
     # Anything without an airport ID is either malformed or a blank line in the CSV
     return if row['ARPT_ID'].blank?
 
+    faa_code = row['ARPT_ID'].upcase
+
     # rubocop:disable Layout/HashAlignment
-    @airports[row['ARPT_ID'].upcase] = {
+    @airports[faa_code] = {
       airport_name:    row['ARPT_NAME'],
+      icao_code:       @faa_to_icao[faa_code],
       facility_type:   row['SITE_TYPE_CODE'].upcase,
       facility_use:    row['FACILITY_USE_CODE'].upcase,
       ownership_type:  row['OWNERSHIP_TYPE_CODE'].upcase,

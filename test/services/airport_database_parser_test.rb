@@ -12,6 +12,7 @@ private
     return {
       'PAE' => {
         airport_name: 'SNOHOMISH COUNTY (PAINE FLD)',
+        icao_code: 'KPAE',
         facility_type: 'A',
         facility_use: 'PU',
         ownership_type: 'PU',
