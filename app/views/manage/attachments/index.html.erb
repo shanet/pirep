@@ -1,0 +1,17 @@
+<%
+  @title = 'Photos'
+  @breadcrumbs = [['Photos']]
+%>
+
+<div class="row">
+  <div class="col-12">
+    <h1 class="display-6">All Contributed Photos</h1>
+  </div>
+</div>
+
+<% if @attachments.any? %>
+  <%= render 'index_table' %>
+  <%= render 'shared/pagination', records: @attachments, path: :manage_attachments_path %>
+<% else %>
+  <%= render 'shared/empty_view', label: 'No photos exist.' %>
+<% end %>

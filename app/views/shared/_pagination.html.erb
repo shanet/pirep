@@ -1,5 +1,5 @@
 <%
-  total_records ||= records.klass.count
+  total_records ||= records.limit(nil).offset(nil).count
   path_query ||= {}
 
   page = (params[:page] || 0).to_i
