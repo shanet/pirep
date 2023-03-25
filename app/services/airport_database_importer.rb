@@ -53,6 +53,7 @@ private
     airport.update!({
       code:            airport_code,
       name:            airport_data[:airport_name],
+      icao_code:       airport_data[:icao_code],
       facility_type:   airport_data[:facility_type],
       facility_use:    airport_data[:facility_use],
       ownership_type:  airport_data[:ownership_type],

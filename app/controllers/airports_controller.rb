@@ -135,7 +135,7 @@ private
   end
 
   def set_airport_by_code
-    @airport = Airport.find_by(code: params[:id].upcase) || Airport.find_by(code: params[:id].upcase.gsub(/^[K|P]/, '')) || Airport.find(params[:id])
+    @airport = Airport.find_by(code: params[:id].upcase) || Airport.find_by(icao_code: params[:id].upcase) || Airport.find(params[:id])
     authorize @airport
   end
 

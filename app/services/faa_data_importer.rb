@@ -1,10 +1,11 @@
 class FaaDataImporter
-  def initialize(force_update: false)
+  def initialize(products: nil, force_update: false)
+    @products = Array(products || [:airports, :diagrams, :charts])
     @force_update = force_update
   end
 
   def import!
-    [:airports, :diagrams, :charts].each do |product|
+    @products.each do |product|
       import_product!(product)
     end
 
