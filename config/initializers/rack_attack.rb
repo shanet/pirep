@@ -19,7 +19,7 @@ READ_THROTTLED_PATHS = [
 BLACKLISTED_IPS = []
 
 Rails.configuration.rack_attack_write_limit = 10 # requests
-Rails.configuration.rack_attack_read_limit = 120 # requests
+Rails.configuration.rack_attack_read_limit = 240 # requests
 
 # Throttle anyone making excessive changes to resources
 Rack::Attack.throttle('limit excessive writes', limit: Rails.configuration.rack_attack_write_limit, period: 60) do |request|
