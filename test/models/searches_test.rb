@@ -11,8 +11,8 @@ class SearchesTest < ActiveSupport::TestCase
   end
 
   test 'indexes records' do
-    assert_equal 2, Search.where(searchable: @public_airport).count
-    assert_equal 2, Search.where(searchable: @private_airport).count
+    assert_equal 3, Search.where(searchable: @public_airport).count
+    assert_equal 3, Search.where(searchable: @private_airport).count
     assert_equal 2, Search.where(searchable: @known_user).count
     assert_equal 3, Search.where(searchable: @unknown_user).count
 
@@ -23,8 +23,8 @@ class SearchesTest < ActiveSupport::TestCase
   end
 
   test 'indexes new record' do
-    # Creating a new record should index it by default
-    assert_difference('Search.count', 2) do
+    # Creating a new record should index it by default (the airports model has three search records in particular)
+    assert_difference('Search.count', 3) do
       create(:airport)
     end
   end
