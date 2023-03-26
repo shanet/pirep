@@ -19,6 +19,7 @@ class Airport < ApplicationRecord
   # Rank airport codes above names to prioritize searching by airport code
   # Also rank public airports over private airports
   searchable({column: :code, weight: ['facility_use = \'PU\'', :A, :B]})
+  searchable({column: :icao_code, weight: ['facility_use = \'PU\'', :A, :B]})
   searchable({column: :name, weight: ['facility_use = \'PU\'', :C, :D]})
 
   before_save :update_landing_rights_tag, if: :landing_rights_changed?
