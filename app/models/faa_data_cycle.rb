@@ -35,10 +35,11 @@ class FaaDataCycle < ApplicationRecord
     # In development/test we don't want the assets to expire so always return a static string
     return CURRENT if stub
 
-    # If there is no cached data cycle return the next one (this is a long running object though so don't cache the db response)
-    self.class.uncached do
-      return send(product) || send(:next, product, stub: stub)
-    end
+    # This is a long living object so we should reload it before getting the new data in the event that it was updated elsewhere
+    reload
+
+    # If there is no cached data cycle return the next one
+    return send(product) || send(:next, product, stub: stub)
   end
 
   def next(product, stub: !Rails.env.production?)
