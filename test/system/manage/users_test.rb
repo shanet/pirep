@@ -11,7 +11,7 @@ class Manage::UsersTest < ApplicationSystemTestCase
 
     find('#users_user_locked_at + a').click
 
-    # The Ruby and JavaScript ISO8601 formats are slightly different with milliseconds so just do a starts with check here and drop the timezone ("Z")
-    assert find_field('users_user_locked_at', with: /.+Z$/).value.start_with?(Time.zone.now.iso8601.gsub('Z', ''))
+    timestamp = DateTime.parse(find_field('users_user_locked_at', with: /.+Z$/).value)
+    assert_in_delta timestamp.to_i, Time.zone.now.to_i, 1.minute
   end
 end
