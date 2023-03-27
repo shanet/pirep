@@ -161,11 +161,12 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'searches airports' do
-    # Searching with the K prefix should drop it and return the same results as without it
-    get search_airports_path(query: "K#{@airport.code}", latitude: @airport.latitude, longitude: @airport.longitude)
+    [@airport.code, @airport.icao_code].each do |query|
+      get search_airports_path(query: query, latitude: @airport.latitude, longitude: @airport.longitude)
 
-    assert_response :success
-    assert_equal @airport.code, JSON.parse(response.body).first['code'], 'Airport not returned from search'
+      assert_response :success
+      assert_equal @airport.code, JSON.parse(response.body).first['code'], 'Airport not returned from search'
+    end
   end
 
   test 'history' do

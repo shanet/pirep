@@ -14,6 +14,7 @@
 
       <% if @user.unknown? %>
         <li class="list-group-item"><strong>IP Address:</strong> <%= @user.ip_address %></li>
+        <li class="list-group-item"><strong>Location:</strong> <%= google_maps_location_link(@user.ip_address) %></li>
       <% else %>
         <li class="list-group-item"><strong>Name:</strong> <%= @user.name %></li>
         <li class="list-group-item"><strong>Email Address:</strong> <%= @user.email %></li>
