@@ -1,6 +1,4 @@
 class AirportsController < ApplicationController
-  include SearchQueryable
-
   layout 'blank'
 
   before_action :set_airport, only: [:update, :history, :uncached_photo_gallery]
@@ -78,7 +76,10 @@ class AirportsController < ApplicationController
 
     coordinates = (params['latitude'] && params['longitude'] ? {latitude: params['latitude'].to_f, longitude: params['longitude'].to_f} : nil)
 
-    results = Search.query(preprocess_query, Airport, coordinates, wildcard: true).limit(10).uniq
+    # Don't use wildcard searches if searching by an airport code (3 or 4 letters) as this will yield odd results for FAA codes that start with an ICAO prefix
+    wildcard = !params['query'].length.in?([3, 4])
+
+    results = Search.query(params['query'], Airport, coordinates, wildcard: wildcard).limit(10).uniq
     render json: results.map {|airport| {code: airport.code, label: airport.name, bounding_box: airport.bounding_box, zoom_level: airport.zoom_level}}
   end
 

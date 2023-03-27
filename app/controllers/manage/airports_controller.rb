@@ -1,5 +1,4 @@
 class Manage::AirportsController < ApplicationController
-  include SearchQueryable
   before_action :set_airport, only: [:show, :edit, :update, :destroy, :destroy_attachment, :update_version]
 
   def index
@@ -8,7 +7,10 @@ class Manage::AirportsController < ApplicationController
   end
 
   def search
-    results = Search.query(preprocess_query, Airport, wildcard: true)
+    # Don't use wildcard searches if searching by an airport code (3 or 4 letters) as this will yield odd results for FAA codes that start with an ICAO prefix
+    wildcard = !params['query'].length.in?([3, 4])
+
+    results = Search.query(params['query'], Airport, wildcard: wildcard)
 
     @total_records = results.count(Airport.table_name)
     @airports = policy_scope(results.page(params[:page]), policy_scope_class: Manage::AirportPolicy::Scope)

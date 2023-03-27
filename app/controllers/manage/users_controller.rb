@@ -1,6 +1,4 @@
 class Manage::UsersController < ApplicationController
-  include SearchQueryable
-
   before_action :set_user, only: [:show, :edit, :update, :destroy, :activity]
 
   def index
@@ -9,7 +7,7 @@ class Manage::UsersController < ApplicationController
   end
 
   def search
-    results = Search.query(preprocess_query, Users::User, wildcard: true)
+    results = Search.query(params['query'], Users::User, wildcard: true)
 
     @total_records = results.count(Users::User.table_name)
     @users = policy_scope(results.page(params[:page]), policy_scope_class: Manage::UserPolicy::Scope)
