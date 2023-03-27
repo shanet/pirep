@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         break;
       case 13: { // Enter
         // Open the airport when a result is entered (ignore anything out of range or without an airport code like the "no results" element)
-        if(selectedSearchResultIndex > 0 && selectedSearchResultIndex < resultsList.childNodes.length && resultsList.childNodes[selectedSearchResultIndex].dataset.airportCode) {
+        if(selectedSearchResultIndex >= 0 && selectedSearchResultIndex < resultsList.childNodes.length && resultsList.childNodes[selectedSearchResultIndex].dataset.airportCode) {
           openAirport(resultsList.childNodes[selectedSearchResultIndex].dataset);
         }
 
