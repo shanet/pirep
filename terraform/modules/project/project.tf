@@ -137,6 +137,7 @@ module "load_balancer" {
   certificate_arn        = module.acm_us_west_2.certificate_arn
   health_check_path_jobs = "/status"
   health_check_path_web  = "/health"
+  logs_bucket            = module.s3.logs_bucket.id
   name_prefix            = local.name_prefix
   security_group         = module.security_groups.load_balancer.id
   service_port           = local.service_port

@@ -1,6 +1,3 @@
-variable "cloudfront_distributions" { type = list(string) }
-variable "name_prefix" {}
-
 resource "aws_s3_bucket" "assets" {
   bucket = "${var.name_prefix}-assets"
 }
@@ -60,7 +57,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "assets" {
   }
 }
 
-
 # Default root object for the CDN so directory listings are not exposed
 resource "aws_s3_object" "root_object" {
   source       = "${path.module}/index.html"
@@ -74,16 +70,4 @@ resource "aws_s3_object" "empty_map_tile" {
   bucket       = aws_s3_bucket.assets.bucket
   content_type = "image/webp"
   key          = "empty_map_tile.webp"
-}
-
-output "assets_bucket" {
-  value = aws_s3_bucket.assets
-}
-
-output "root_object_key" {
-  value = aws_s3_object.root_object.key
-}
-
-output "empty_map_tile_object_key" {
-  value = aws_s3_object.empty_map_tile.key
 }
