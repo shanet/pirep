@@ -6,6 +6,7 @@
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+access_logs.html
 
 # Ignore pidfiles, but keep the directory
 /tmp/pids/*
