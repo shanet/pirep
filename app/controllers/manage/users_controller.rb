@@ -2,7 +2,7 @@ class Manage::UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :activity]
 
   def index
-    @users = policy_scope(Users::User.order(:updated_at).page(params[:page]), policy_scope_class: Manage::UserPolicy::Scope)
+    @users = policy_scope(Users::User.order(updated_at: :desc).page(params[:page]), policy_scope_class: Manage::UserPolicy::Scope)
     authorize @users, policy_class: Manage::UserPolicy
   end
 
