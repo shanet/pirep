@@ -2,7 +2,7 @@ class Manage::CommentsController < ApplicationController
   before_action :set_comment, only: [:show, :edit, :update, :destroy]
 
   def index
-    @comments = policy_scope(Comment.order(:created_at).page(params[:page]), policy_scope_class: Manage::CommentPolicy::Scope)
+    @comments = policy_scope(Comment.order(created_at: :desc).page(params[:page]), policy_scope_class: Manage::CommentPolicy::Scope)
     authorize @comments, policy_class: Manage::CommentPolicy
   end
 
