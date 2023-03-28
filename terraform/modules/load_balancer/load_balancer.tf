@@ -1,6 +1,7 @@
 variable "certificate_arn" { default = null }
 variable "health_check_path_jobs" {}
 variable "health_check_path_web" {}
+variable "logs_bucket" {}
 variable "name_prefix" {}
 variable "security_group" { default = null }
 variable "service_port" {}
@@ -11,6 +12,12 @@ resource "aws_lb" "load_balancer" {
   name            = var.name_prefix
   security_groups = [var.security_group]
   subnets         = var.subnets
+
+  access_logs {
+    bucket  = var.logs_bucket
+    enabled = true
+    prefix  = "load_balancer"
+  }
 }
 
 module "service_jobs" {
