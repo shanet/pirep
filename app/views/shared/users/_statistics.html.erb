@@ -5,7 +5,7 @@
   </div>
 
   <div class="col-4 text-center">
-    <h3><%= Action.where(user: user, type: :airport_edited).distinct(:actionable).count %></h3>
+    <h3><%= Action.where(user: user, type: :airport_edited).select(:actionable_id).distinct.count %></h3>
     <h6>Airports Edited</h6>
   </div>
 
