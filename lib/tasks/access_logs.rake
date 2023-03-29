@@ -30,9 +30,9 @@ def analyze_logs(logs_directory)
   `goaccess \
     --agent-list \
     --ignore-crawlers \
-    --enable-panel=GEO_LOCATION \
+    --enable-panel GEO_LOCATION \
     --geoip-database #{Rails.root.join('lib/maxmind/geolite2_city.mmdb')} \
-    --config-file #{Rails.root.join('lib/tasks/goaccess.conf')} \
+    --log-format AWSALB \
     #{logs.join(' ')} \
     > #{output} \
   `
