@@ -13,19 +13,20 @@ task :access_logs do # rubocop:disable Rails/RakeEnvironment
 end
 
 def download_logs(destination)
-  return system("aws s3 sync #{LOGS_PATH} #{destination}")
+  return system("aws s3 sync --size-only #{LOGS_PATH} #{destination}")
 end
 
 def analyze_logs(logs_directory)
+  input = "#{logs_directory}/combined.log"
+  output = "#{logs_directory}/report.html"
+
   Dir.glob("#{logs_directory}/**/*.log.gz") do |log|
     puts "Decompressing #{log}"
     `gunzip --force #{log}`
+    `cat #{log.gsub(/\.gz$/, '')} >> #{input}`
   end
 
-  logs = Dir.glob("#{logs_directory}/**/*.log")
-
   puts 'Generating report'
-  output = 'access_logs.html'
 
   `goaccess \
     --agent-list \
@@ -33,8 +34,7 @@ def analyze_logs(logs_directory)
     --enable-panel GEO_LOCATION \
     --geoip-database #{Rails.root.join('lib/maxmind/geolite2_city.mmdb')} \
     --log-format AWSALB \
-    #{logs.join(' ')} \
-    > #{output} \
+    #{input} > #{output} \
   `
 
   puts "#{'=' * 80}\nReport written to #{output}"
