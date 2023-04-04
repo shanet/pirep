@@ -1,4 +1,5 @@
 require:
+  - rubocop-capybara
   - rubocop-rails
 
 AllCops:
@@ -74,6 +75,9 @@ Metrics/PerceivedComplexity:
 
 # --------------------------------------
 
+Naming/BlockForwarding:
+  EnforcedStyle: explicit
+
 Naming/RescuedExceptionsVariableName:
   PreferredName: error
 
@@ -123,6 +127,9 @@ Style/FormatStringToken:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
+
 Style/IfUnlessModifier:
   Enabled: false
 
@@ -140,6 +147,9 @@ Style/RegexpLiteral:
 
 Style/RescueStandardError:
   EnforcedStyle: implicit
+
+Style/Semicolon:
+  Enabled: false
 
 Style/SymbolArray:
   EnforcedStyle: brackets

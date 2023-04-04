@@ -45,6 +45,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'cli-ui', git: 'https://github.com/shopify/cli-ui'
   gem 'rubocop'
+  gem 'rubocop-capybara'
   gem 'rubocop-rails'
 end
 

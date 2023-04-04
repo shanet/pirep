@@ -33,7 +33,7 @@ def analyze_logs(logs_directory)
     --ignore-crawlers \
     --enable-panel GEO_LOCATION \
     --geoip-database #{Rails.root.join('lib/maxmind/geolite2_city.mmdb')} \
-    --log-format AWSALB \
+    --log-format AWSALB
     #{input} > #{output} \
   `
 

@@ -19,7 +19,7 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
     # Add an annotation, fill in the textfield, and save it
     find('#airport-map canvas').click
     find('.annotation input[type="text"]').set(@label)
-    find('.annotation button.save').click
+    find('.annotation button.save').click # rubocop:disable Capybara/SpecificActions
 
     # Wait for the saved text to be shown and then check that the backend saved the new annotation
     assert_equal @label, find('.annotation .label').text, 'Annotation\'s label not set to entered value'
@@ -44,7 +44,7 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
 
     # Test deleting the annotation
     start_editing_annotations
-    find('.annotation button.delete').click
+    find('.annotation button.delete').click # rubocop:disable Capybara/SpecificActions
 
     assert_no_selector('annotation')
     assert_selector '.airport-annotations-saved'
@@ -61,7 +61,7 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
     assert_selector '.annotation.editing', count: @annotated_airport.annotations.count
 
     # Saving one annotation should leave the remaining ones in editing mode
-    find('.annotation button.save', match: :first).click
+    find('.annotation button.save', match: :first).click # rubocop:disable Capybara/SpecificActions
     assert_selector '.annotation.editing', count: @annotated_airport.annotations.count - 1
 
     # All annotations should be taken out of editing mode when the toggle switch is flipped
@@ -84,12 +84,12 @@ private
   end
 
   def start_editing_annotations
-    find('#annotations-editing').click
+    find_by_id('annotations-editing').click
     assert_selector '#airport-map.editing'
   end
 
   def stop_editing_annotations
-    find('#annotations-editing').click
+    find_by_id('annotations-editing').click
     assert_selector '.airport-annotations-saved'
     assert_no_selector '#airport-map.editing'
   end

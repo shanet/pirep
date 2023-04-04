@@ -28,7 +28,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
   test 'throttles airport updates' do
     with_rack_attack do
       assert_throttles airport_path(create(:airport)), :patch, Rails.configuration.rack_attack_write_limit,
-                       expected_response: :redirect, **{airport: {description: ''}}
+                       expected_response: :redirect, airport: {description: ''}
     end
   end
 
@@ -50,7 +50,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
   test 'throttles comment creates' do
     with_rack_attack do
       assert_throttles comments_path, :post, Rails.configuration.rack_attack_write_limit,
-                       expected_response: :redirect, **{comment: {body: 'a', airport_id: create(:airport).id}}
+                       expected_response: :redirect, comment: {body: 'a', airport_id: create(:airport).id}
     end
   end
 

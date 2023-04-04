@@ -150,12 +150,12 @@ class MapTest < ApplicationSystemTestCase
 
     assert chart_layer_shown?(:sectional), 'Sectional layer not shown by default'
 
-    find('#layer-switcher').click
+    find_by_id('layer-switcher').click
     assert_not chart_layer_shown?(:sectional), 'Satellite layer not shown'
     assert_equal 'layer=satellite', URI.parse(current_url).query, 'Layer URL parameter not set'
 
     # Toggle back to the sectional layer
-    find('#layer-switcher').click
+    find_by_id('layer-switcher').click
     assert chart_layer_shown?(:sectional), 'Sectional layer not shown again'
     assert_empty URI.parse(current_url).query, 'Layer URL parameter not removed'
   end
@@ -169,7 +169,7 @@ class MapTest < ApplicationSystemTestCase
 
     # Zoom into the airport then switch back to chart view to confirm that the terminal area chart is shown when zoomed in sufficiently
     click_on 'Zoom In'
-    find('#layer-switcher').click
+    find_by_id('layer-switcher').click
     assert chart_layer_shown?(:terminal), 'Terminal area chart not shown when zoomed in'
   end
 
@@ -193,7 +193,7 @@ class MapTest < ApplicationSystemTestCase
     assert_not 'layer=satellite'.in?(URI.parse(current_url).query), 'Layer URL parameter not removed'
 
     # Zooming in when satellite view is set should return to satellite view
-    find('#layer-switcher').click
+    find_by_id('layer-switcher').click
     click_on 'Zoom In'
     assert 'layer=satellite'.in?(URI.parse(current_url).query), 'Layer URL parameter not set'
     click_on 'Zoom Out'
@@ -205,7 +205,7 @@ class MapTest < ApplicationSystemTestCase
     wait_for_map_ready
 
     default_zoom_level = map_zoom_level
-    find('#layer-switcher').click
+    find_by_id('layer-switcher').click
     open_airport(@airport)
 
     within('.airport-drawer-header') do
@@ -268,19 +268,19 @@ class MapTest < ApplicationSystemTestCase
     visit map_path
     wait_for_map_ready
 
-    find('#new-airport-button').click
+    find_by_id('new-airport-button').click
 
     # Select a location for the new airport on the map
-    find('button.select-coordinates').click
-    find('#map').click(x: 0, y: 0)
+    find('button.select-coordinates').click # rubocop:disable Capybara/SpecificActions
+    find_by_id('map').click(x: 0, y: 0)
     assert_equal 16, map_zoom_level, 'Map not zoomed in on selected coordinates'
 
     within('#new-airport') do
       assert_match(/Location: -?\d+(\.\d+)?, -?\d+(\.\d+)? \/ \d+ft/, find('.coordinates').text, 'Location label not set on selection')
 
-      find('#airport_name').fill_in(with: 'Secret Airport')
+      find_by_id('airport_name').fill_in(with: 'Secret Airport')
       find('#airport_landing_rights_restricted + label').click
-      find('#airport_landing_requirements').fill_in(with: 'Call 867-5309')
+      find_by_id('airport_landing_requirements').fill_in(with: 'Call 867-5309')
 
       click_on 'Submit'
     end
@@ -317,11 +317,11 @@ class MapTest < ApplicationSystemTestCase
 
     assert_selector '#map-pitch-button', text: '3D'
 
-    find('#map-pitch-button').click
+    find_by_id('map-pitch-button').click
     assert_selector '#map-pitch-button', text: '2D'
     assert_equal 45, map_pitch, 'Map not in 3D mode'
 
-    find('#map-pitch-button').click
+    find_by_id('map-pitch-button').click
     assert_selector '#map-pitch-button', text: '3D'
     assert_equal 0, map_pitch, 'Map pitch not reset'
   end
@@ -340,11 +340,11 @@ private
 
     # Selenium uses the in-view center point of the element as the origin but the values from Mapbox are based
     # on the origin at the top-left so we need to adjust by subtracting the radius to the center of the element
-    size = find('#map').native.size
+    size = find_by_id('map').native.size
     coordinates['x'] -= size[:width] / 2
     coordinates['y'] -= size[:height] / 2
 
-    find('#map').click(x: coordinates['x'].to_i, y: coordinates['y'].to_i)
+    find_by_id('map').click(x: coordinates['x'].to_i, y: coordinates['y'].to_i)
   end
 
   def click_filter(filter_name)
