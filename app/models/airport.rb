@@ -340,9 +340,17 @@ class Airport < ApplicationRecord
   def uncached_external_photos(force_update: false)
     return nil if external_photos_updated_at && !force_update
 
-    Rails.logger.info("Updating external photos cache for #{code}")
     photos = GoogleApi.client.place_photos("#{code} - #{name} Airport", latitude, longitude)
-    AirportPhotosCacherJob.perform_later(self, photos)
+
+    # Don't enqueue a new job if there's one already queded to prevent duplicate photos from being saved
+    with_lock do
+      if !external_photos_enqueued_at || external_photos_enqueued_at < 10.minutes.ago || force_update
+        Rails.logger.info("Updating external photos cache for #{code}")
+        AirportPhotosCacherJob.perform_later(self, photos)
+        update!(external_photos_enqueued_at: Time.zone.now)
+      end
+    end
+
     return photos
   end
 
