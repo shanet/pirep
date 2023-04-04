@@ -8,7 +8,7 @@ class VersionsCollator
   # Combine versions created in a short time period into one version to make for a more comphrensive and useful history display
   def collate!
     # Only consider versions from the previous day so we're not attempting to collate possibly an entire lengthy history
-    cursor = @record.versions.where('created_at > ?', 1.day.ago).each
+    cursor = @record.versions.where('created_at > ?', 1.day.ago).lock!.each
     return if cursor.size == 0 # rubocop:disable Style/ZeroLengthPredicate
 
     version = cursor.next
@@ -52,7 +52,7 @@ private
 
     # Write the collated changes to the first version in the batch and discard the rest
     ActiveRecord::Base.transaction do
-      batch.lock!.each_with_index do |version, index|
+      batch.each_with_index do |version, index|
         if index == 0
           version.update!(object_changes: collated_changes)
         else

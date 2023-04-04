@@ -29,8 +29,8 @@ class AirportPhotosCacherJob < ApplicationJob
 
   def self.enqueued_for_airport?(airport)
     return GoodJob::Job.where('serialized_params @> ?', {job_class: self.class.name.to_s}.to_json)
-      .where('serialized_params @> ?', {arguments: [{_aj_globalid: "gid://pirep/Airport/#{airport.id}"}]}.to_json)
-      .where(finished_at: nil).any?
+        .where('serialized_params @> ?', {arguments: [{_aj_globalid: "gid://pirep/Airport/#{airport.id}"}]}.to_json)
+        .where(finished_at: nil).any?
   end
 
 private
