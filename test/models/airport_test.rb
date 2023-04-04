@@ -159,6 +159,23 @@ class AirportTest < ActiveSupport::TestCase
     end
   end
 
+  test 'does not cache external photos twice' do
+    assert_enqueued_with(job: AirportPhotosCacherJob) do
+      @airport.uncached_external_photos
+
+      assert_no_enqueued_jobs do
+        @airport.uncached_external_photos
+      end
+
+      # It should enqueue a job beyond the timeout period
+      travel(11.minutes) do
+        assert_enqueued_with(job: AirportPhotosCacherJob) do
+          @airport.uncached_external_photos
+        end
+      end
+    end
+  end
+
   test 'puts contributed photos before external photos' do
     assert_equal :featured, @airport.all_photos.keys.first, 'Featured photo not first'
     assert_equal :contributed, @airport.all_photos.keys.second, 'Contributed photos not second'

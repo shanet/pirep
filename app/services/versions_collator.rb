@@ -52,7 +52,7 @@ private
 
     # Write the collated changes to the first version in the batch and discard the rest
     ActiveRecord::Base.transaction do
-      batch.each_with_index do |version, index|
+      batch.lock!.each_with_index do |version, index|
         if index == 0
           version.update!(object_changes: collated_changes)
         else

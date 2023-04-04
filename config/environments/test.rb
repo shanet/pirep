@@ -48,6 +48,4 @@ Rails.application.configure do
 
   Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
   Rack::Attack.enabled = false
-
-  config.active_job.queue_adapter = :test
 end
