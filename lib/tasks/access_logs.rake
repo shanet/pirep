@@ -33,10 +33,9 @@ def analyze_logs(logs_directory)
     --ignore-crawlers \
     --enable-panel GEO_LOCATION \
     --geoip-database #{Rails.root.join('lib/maxmind/geolite2_city.mmdb')} \
-    --log-format AWSALB
-    #{input} > #{output} \
+    --log-format AWSALB #{input} > #{output} \
   `
 
   puts "#{'=' * 80}\nReport written to #{output}"
-  `xdg-open access_logs.html`
+  `xdg-open #{output}`
 end
