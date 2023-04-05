@@ -2,6 +2,7 @@ import 'mapbox-gl';
 import Rails from '@rails/ujs';
 
 import * as annotationFactory from 'shared/annotation_factory';
+import * as mapUtils from 'shared/map_utils';
 import * as utils from 'shared/utils';
 
 let mapElement = null;
@@ -42,6 +43,7 @@ function initMap() {
 
   map.on('load', () => {
     restoreAnnotations();
+    mapUtils.add3dTerrain(map);
   });
 }
 
