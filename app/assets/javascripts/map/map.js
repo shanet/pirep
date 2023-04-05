@@ -5,6 +5,7 @@ import * as annotationFactory from 'shared/annotation_factory';
 import * as drawer from 'map/drawer';
 import * as filters from 'map/filters';
 import * as flashes from 'map/flashes';
+import * as mapUtils from 'shared/map_utils';
 import * as newAirportDrawer from 'map/drawer_new_airport';
 import * as urlSearchParams from 'map/url_search_params';
 import * as utils from 'shared/utils';
@@ -44,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchAirports();
     addChartLayersToMap();
     addEventHandlersToMap();
-    add3dTerrain();
+    mapUtils.add3dTerrain(map);
   });
 }, {once: true});
 
@@ -165,23 +166,6 @@ function addEventHandlersToMap() {
 function initialAirportAnnotationsFetch() {
   fetchAirportAnnotations();
   map.off('idle', initialAirportAnnotationsFetch);
-}
-
-function add3dTerrain() {
-  map.addSource('dem', {
-    type: 'raster-dem',
-    url: 'mapbox://mapbox.terrain-rgb',
-  });
-
-  map.setTerrain({source: 'dem'});
-
-  map.setFog({
-    range: [0.8, 8],
-    color: '#dc9f9f',
-    'horizon-blend': 0.5,
-    'high-color': '#245bde',
-    'space-color': '#000000',
-  });
 }
 
 async function fetchAirports() {
