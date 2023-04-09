@@ -13,6 +13,9 @@
   <%= javascript_tag nonce: true do %>
     Sentry.init({
       dsn: '<%= Rails.application.credentials.sentry_dsn_frontend %>',
+
+      // Filter out the annoying "fetch is aborted" errors Safari throws when moving around the map
+      ignoreErrors: ['AbortError: Fetch is aborted'],
     });
 
     <% if current_user %>

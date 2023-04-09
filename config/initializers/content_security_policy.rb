@@ -13,6 +13,7 @@ Rails.configuration.content_security_policy do |policy|
   ].compact
 
   policy.base_uri(:self)
+  policy.child_src(:blob)
   policy.connect_src(*(hosts + ['*.ingest.sentry.io', :self]))
   policy.default_src(*(hosts + [:self]))
   policy.font_src(*hosts)
