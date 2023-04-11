@@ -14,22 +14,24 @@ class VersionsCollator
     version = cursor.next
     batch = [(version.event == 'update' ? version : nil)].compact
 
-    loop do
-      version = cursor.next
+    ActiveRecord::Base.transaction do
+      loop do
+        version = cursor.next
 
-      # Don't collate creation/deletion events
-      next unless version.event == 'update'
+        # Don't collate creation/deletion events
+        next unless version.event == 'update'
 
-      # If the version was created by the same user and is within the collation period as the previous version group it together in that batch
-      if version.created_at - (batch.last&.created_at || 0) < PERIOD && version.whodunnit == batch.last&.whodunnit
-        batch << version
-      else
-        process_batch!(batch)
-        batch = [version]
+        # If the version was created by the same user and is within the collation period as the previous version group it together in that batch
+        if version.created_at - (batch.last&.created_at || 0) < PERIOD && version.whodunnit == batch.last&.whodunnit
+          batch << version
+        else
+          process_batch!(batch)
+          batch = [version]
+        end
       end
-    end
 
-    process_batch!(batch)
+      process_batch!(batch)
+    end
   end
 
 private
@@ -51,15 +53,13 @@ private
     end
 
     # Write the collated changes to the first version in the batch and discard the rest
-    ActiveRecord::Base.transaction do
-      batch.each_with_index do |version, index|
-        if index == 0
-          version.update!(object_changes: collated_changes)
-        else
-          # Reassign any actions that reference the current version to the first version in the batch
-          Action.where(version: version).update!(version: batch.first)
-          version.destroy!
-        end
+    batch.each_with_index do |version, index|
+      if index == 0
+        version.update!(object_changes: collated_changes)
+      else
+        # Reassign any actions that reference the current version to the first version in the batch
+        Action.where(version: version).update!(version: batch.first)
+        version.destroy!
       end
     end
   end
