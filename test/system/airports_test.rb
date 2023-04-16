@@ -144,10 +144,12 @@ class AirportsTest < ApplicationSystemTestCase
         @airport.update!(description: 'blerg')
       end
 
-      _editor, card = update_editor('Description', 'Description edit2')
+      travel_to(1.minute.ago) do
+        _editor, card = update_editor('Description', 'Description edit2')
 
-      within(card) do
-        assert_selector '.status-indicator.text-danger'
+        within(card) do
+          assert_selector '.status-indicator.text-danger'
+        end
       end
     end
   end
