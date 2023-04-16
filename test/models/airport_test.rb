@@ -85,6 +85,12 @@ class AirportTest < ActiveSupport::TestCase
     assert_not airport.empty?, 'Airport not empty with description field added'
   end
 
+  test 'airport is not empty if annotation added' do
+    airport = create(:airport, :empty)
+    airport.update!(annotations: [{'label' => 'foo', 'latitude' => 48.0, 'longitude' => -122.0}])
+    assert_not airport.empty?, 'Airport not empty with annotation added'
+  end
+
   test 'removes empty tag when no longer empty' do
     airport = create(:airport, :empty)
 
@@ -256,6 +262,14 @@ class AirportTest < ActiveSupport::TestCase
   test 'converts fuel types to array' do
     @airport.fuel_types = 'A , MOGAS'
     assert_equal ['A', 'MOGAS'], @airport.fuel_types, 'Fuel types string not conver to array and stripped of whitespace'
+  end
+
+  test 'converts annotations to array' do
+    @airport.annotations = '[{"label": "foo", "latitude": 48.0, "longitude": -122.0}]'
+    assert_equal [{'label' => 'foo', 'latitude' => 48.0, 'longitude' => -122.0}], @airport.annotations, 'Annotations JSON string not parsed'
+
+    @airport.annotations = []
+    assert_nil @airport.annotations, 'Empty annotations array not set to nil'
   end
 
   test 'rejects photos with non-image content type' do

@@ -194,6 +194,10 @@ class Airport < ApplicationRecord
   def annotations=(value)
     # Patch requests will send the annotations as a string so we need to parse it for it to be properly saved as a JSONB object
     value = JSON.parse(value) if value.is_a?(String)
+
+    # Always make no annotations be nil rather than empty arrays
+    value = nil if value&.empty?
+
     super
   end
 
@@ -241,6 +245,7 @@ class Airport < ApplicationRecord
       :landing_fees,
       :transient_parking,
       :wifi,
+      :annotations,
     ].map {|column| send(column).present?}.none?
   end
 
