@@ -26,6 +26,10 @@ class AirportsTest < ApplicationSystemTestCase
       assert_selector '.statistics-box', text: "Runway #{runway.number}: #{number_with_delimiter(runway.length, delimiter: ',')}ft"
     end
 
+    # Has fuel info
+    assert_selector '.statistics-box', text: "Fuel: #{@airport.fuel_types.join(', ')} (prices)"
+    assert_selector ".statistics-box a[href=\"http://www.100ll.com/searchresults.php?searchfor=#{@airport.icao_code}\"]"
+
     # Has landing rights
     assert_selector '.landing-rights', text: Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:long_description]
 

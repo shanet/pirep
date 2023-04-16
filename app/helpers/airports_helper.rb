@@ -72,4 +72,29 @@ module AirportsHelper
 
     return image_url('icon_small.png')
   end
+
+  def fuel_label(airport)
+    if airport.fuel_types&.any?
+      fuel_url = link_to('(prices)', "http://www.100ll.com/searchresults.php?searchfor=#{airport.icao_code || airport.code}", target: :_blank, rel: 'noopener')
+      return "#{airport.fuel_types.join(', ')} #{fuel_url}".html_safe
+    end
+
+    return 'None'
+  end
+
+  def ios?(request)
+    # This assumes that the browser isn't changing the user agent (like Firefox for iOS does). But that works in most cases,
+    # and this functionality isn't critical so it should be sufficient. This may be worth revisiting if Apple ever stops
+    # being dicks and lets third party rendering engines run on iOS.
+    return !(request.user_agent =~ /iPhone|iPad/).nil?
+  end
+
+  def foreflight_url(airport)
+    url = 'foreflightmobile://maps/search?q='
+
+    # There's no code to link to for an unmapped airport so use it's coordinates directly
+    return "#{url}#{airport.latitude}/#{airport.longitude}" if airport.unmapped?
+
+    return "#{url}APT@#{airport.icao_code || airport.code}"
+  end
 end

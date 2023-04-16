@@ -45,7 +45,7 @@
 
   <div class="col-<%= drawer ? 12 : 6 %>">
     <%= render partial: 'airports/statistics/statistics_box', locals: {
-      label: 'Fuel available', value: (@airport.fuel_types&.any? ? @airport.fuel_types.join(', ') : 'None'), icon: 'gas-pump', theme: (@airport.fuel_types&.any? ? 'blue-grey' : :red)
+      label: 'Fuel', value: fuel_label(@airport), icon: 'gas-pump', theme: (@airport.fuel_types&.any? ? 'blue-grey' : :red)
     } %>
   </div>
 
@@ -53,6 +53,14 @@
     <div class="col-<%= drawer ? 12 : 6 %>">
       <%= render partial: 'airports/statistics/statistics_box', locals: {
         label: "Runway #{runway.number}", value: runway.length, units: :ft, icon: :road, theme: runway.length_threat_level
+      } %>
+    </div>
+  <% end %>
+
+  <% if ios?(request) %>
+    <div class="col-<%= drawer ? 12 : 6 %>">
+      <%= render partial: 'airports/statistics/statistics_box', locals: {
+        label: link_to('Open in ForeFlight', foreflight_url(@airport)), value: nil, icon: 'up-right-from-square', theme: :blue
       } %>
     </div>
   <% end %>

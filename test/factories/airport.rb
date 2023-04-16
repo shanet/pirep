@@ -54,6 +54,12 @@ FactoryBot.define do
       end
     end
 
+    trait :unmapped do
+      after(:create) do |airport, _evaluator|
+        create(:tag, name: :unmapped, airport: airport)
+      end
+    end
+
     trait :no_bounding_box do
       bbox_ne_latitude  {nil}
       bbox_ne_longitude {nil}
