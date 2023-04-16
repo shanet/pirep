@@ -48,6 +48,7 @@ FactoryBot.define do
       landing_fees      {nil}
       transient_parking {nil}
       wifi              {nil}
+      annotations       {nil}
 
       after(:create) do |airport, _evaluator|
         create(:tag, name: :empty, airport: airport)

@@ -48,7 +48,7 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
 
     assert_no_selector('annotation')
     assert_selector '.airport-annotations-saved'
-    assert_equal [], @airport.reload.annotations, 'Deleted annotation not removed from backend'
+    assert_nil @airport.reload.annotations, 'Deleted annotation not removed from backend'
   end
 
   test 'restore and edit annotations' do
