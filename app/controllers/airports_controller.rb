@@ -80,7 +80,7 @@ class AirportsController < ApplicationController
     wildcard = !params['query'].length.in?([3, 4])
 
     results = Search.query(params['query'], Airport, coordinates, wildcard: wildcard).limit(10).uniq
-    render json: results.map {|airport| {code: airport.code, label: airport.name, bounding_box: airport.bounding_box, zoom_level: airport.zoom_level}}
+    render json: results.map {|airport| {code: airport.code, label: airport.name&.titleize, bounding_box: airport.bounding_box, zoom_level: airport.zoom_level}}
   end
 
   def history
