@@ -58,4 +58,28 @@ class AirportsHelperTest < ActionView::TestCase
     airport.update!(featured_photo: airport.contributed_photos.first)
     assert_equal cdn_url_for(airport.featured_photo), opengraph_image(airport), 'Did not use featured photo first'
   end
+
+  test 'fuel label' do
+    airport = create(:airport, fuel_types: nil)
+    assert_equal 'None', fuel_label(airport), 'Incorrect fuel label for airport without fuel'
+  end
+
+  test 'ios' do
+    user_agent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Mobile/15E148 Safari/604.1'
+    assert ios?(OpenStruct.new(user_agent: user_agent)), 'Did not detect iOS user agent' # rubocop:disable Style/OpenStructUse
+
+    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 13.3; rv:112.0) Gecko/20100101 Firefox/112.0'
+    assert_not ios?(OpenStruct.new(user_agent: user_agent)), 'Incorrectly detected iOS user agent' # rubocop:disable Style/OpenStructUse
+  end
+
+  test 'foreflight url' do
+    airport = create(:airport)
+    assert_equal "foreflightmobile://maps/search?q=APT@#{airport.icao_code}", foreflight_url(airport), 'Wrong ForeFlight URL for airport with ICAO code'
+
+    airport = create(:airport, icao_code: nil)
+    assert_equal "foreflightmobile://maps/search?q=APT@#{airport.code}", foreflight_url(airport), 'Wrong ForeFlight URL for airport without ICAO code'
+
+    airport = create(:airport, :unmapped)
+    assert_equal "foreflightmobile://maps/search?q=#{airport.latitude}/#{airport.longitude}", foreflight_url(airport), 'Wrong ForeFlight URL for unmapped airport'
+  end
 end

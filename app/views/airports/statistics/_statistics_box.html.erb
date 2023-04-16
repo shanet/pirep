@@ -1,5 +1,5 @@
 <div class="statistics-box theme-<%= theme %> p-1">
-  <i class="fas fa-<%= icon %>"></i> <%= label %>:
+  <i class="fas fa-<%= icon %>"></i> <%= label %><% if value.present? %>:<% end %>
 
   <% if defined?(units) %>
     <%= number_with_delimiter(value, delimiter: ',') %><%= units %>
