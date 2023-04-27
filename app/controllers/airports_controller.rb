@@ -190,7 +190,7 @@ private
     if airport_params.except(:tags_attributes).to_h.any?
       Action.transaction do
         # Lock the version to prevent the versions collation job from deleting it while we're using it here
-        version = @airport.versions.reload.last&.lock!
+        version = @airport.versions.reload.lock!.last
         Action.create!(type: :airport_edited, actionable: @airport, user: active_user, version: version)
       end
     end
