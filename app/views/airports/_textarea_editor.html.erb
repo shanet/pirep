@@ -1,6 +1,9 @@
-<% read_only = defined?(read_only) && read_only %>
+<%
+  read_only = defined?(read_only) && read_only
+  last_updated = model.send("#{column}_updated_at")
+%>
 
-<div class="card my-2">
+<div class="card mt-2">
   <div class="card-header">
     <div class="d-flex justify-content-between align-items-center">
       <span class="flex-shrink-0 me-3"><i class="fas <%= icon %> me-2"></i><%= title.html_safe %></span>
@@ -24,4 +27,10 @@
       <%= form.hidden_field column, {'data-column-field': true} %>
     <% end %>
   </div>
+</div>
+
+<div class="text-end mb-3">
+  <% if last_updated %>
+    <small class="text-muted">Last updated: <%= format_timestamp last_updated %></small>
+  <% end %>
 </div>

@@ -427,4 +427,10 @@ class Airport < ApplicationRecord
       end
     end
   end
+
+  HISTORY_COLUMNS.each_key do |column|
+    define_method "#{column}_updated_at" do
+      versions.where('object_changes ? :column', column: column).reorder(created_at: :desc).limit(1).pick(:created_at)
+    end
+  end
 end

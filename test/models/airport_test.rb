@@ -285,4 +285,20 @@ class AirportTest < ActiveSupport::TestCase
     assert_not @airport.valid?, 'Accepted large image attachment'
     assert @airport.errors[:contributed_photos].present?, 'Did not set contributed photos error message'
   end
+
+  test 'has updated_at timestamps for editable fields' do
+    with_versioning do
+      assert_nil @airport.description_updated_at, 'Timestamp returned for never updated field'
+
+      # Create an earlier version to ensure we're getting the latest version's timestamp
+      travel_to(1.month.ago) do
+        @airport.update!(description: 'foobar1')
+      end
+
+      freeze_time do
+        @airport.update!(description: 'foobar2')
+        assert_in_delta Time.zone.now, @airport.description_updated_at, 1.second, 'Timestamp not returned for updated field'
+      end
+    end
+  end
 end
