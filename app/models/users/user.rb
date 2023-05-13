@@ -5,6 +5,7 @@ class Users::User < ApplicationRecord
 
   has_many :comments, dependent: :destroy
   has_many :actions, dependent: :destroy
+  has_many :pageviews, dependent: :destroy
 
   # Only allow unknown users to have IP addresses to avoid conflicts with known users that are identified by their email addresses
   validates :ip_address, presence: true, if: :unknown?

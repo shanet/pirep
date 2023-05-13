@@ -52,8 +52,15 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'shows airport' do
-    get airport_path(@airport)
-    assert_response :success, 'Failed to get airport by ID'
+    assert_difference('Pageview.count') do
+      get airport_path(@airport), headers: {HTTP_USER_AGENT: 'Mozilla/5.0 (X11; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/111.0.1'}
+      assert_response :success, 'Failed to get airport by ID'
+    end
+
+    assert_difference('Pageview.count') do
+      get airport_path(@airport, format: :drawer), headers: {HTTP_USER_AGENT: 'Mozilla/5.0 (X11; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/111.0.1'}
+      assert_response :success, 'Failed to get airport page as drawer'
+    end
 
     get airport_path(@airport.code)
     assert_response :success, 'Failed to get airport by code'
@@ -66,9 +73,6 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
 
     get airport_path("P#{@airport.code}")
     assert_response :not_found, 'Found airport by invalid ICAO code'
-
-    get airport_path(@airport, format: :drawer)
-    assert_response :success, 'Failed to get airport page as drawer'
   end
 
   test 'updates airport, unknown user' do
