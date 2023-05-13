@@ -1,4 +1,4 @@
-FROM ruby:3.2.1-slim-bullseye AS base
+FROM ruby:3.2.2-slim-bullseye AS base
 
 ARG PORT=8080
 
