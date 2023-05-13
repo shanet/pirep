@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       get 'search', action: :search, as: :search, on: :collection
 
       member do
+        get 'analytics', as: :analytics
         patch 'version/:version_id', action: :update_version, as: :version
         delete 'attachment/:type/:attachment_id', action: :destroy_attachment, as: :destroy_attachment
       end

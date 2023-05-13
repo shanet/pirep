@@ -27,6 +27,10 @@ class Manage::AirportPolicy < ApplicationPolicy
     return admin?
   end
 
+  def analytics?
+    return admin?
+  end
+
   def update_version?
     return admin?
   end

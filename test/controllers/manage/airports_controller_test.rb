@@ -55,4 +55,15 @@ class Manage::AirportsControllerTest < ActionDispatch::IntegrationTest
       assert_in_delta Time.zone.now, @airport.versions.last.reviewed_at, 3.seconds, 'Version not set as reviewed'
     end
   end
+
+  test 'analytics' do
+    # With no pageviews
+    get analytics_manage_airport_path(@airport)
+    assert_response :success
+
+    # With pageviews
+    create(:pageview, record: @airport)
+    get analytics_manage_airport_path(@airport)
+    assert_response :success
+  end
 end

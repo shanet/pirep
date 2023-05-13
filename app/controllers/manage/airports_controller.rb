@@ -1,5 +1,5 @@
 class Manage::AirportsController < ApplicationController
-  before_action :set_airport, only: [:show, :edit, :update, :destroy, :destroy_attachment, :update_version]
+  before_action :set_airport, only: [:show, :edit, :update, :destroy, :destroy_attachment, :analytics, :update_version]
 
   def index
     @airports = policy_scope(Airport.order(:code).page(params[:page]), policy_scope_class: Manage::AirportPolicy::Scope)
@@ -59,6 +59,10 @@ class Manage::AirportsController < ApplicationController
     else
       redirect_to manage_airport_path(@airport), notice: 'Attachment deleted'
     end
+  end
+
+  def analytics
+    @pageviews = policy_scope(@airport.pageviews.page(params[:page]), policy_scope_class: Manage::PageviewPolicy::Scope)
   end
 
   def update_version

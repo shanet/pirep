@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_03_080449) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_01_063557) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -164,6 +164,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_080449) do
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
 
+  create_table "pageviews", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "record_type", null: false
+    t.uuid "record_id", null: false
+    t.uuid "user_id", null: false
+    t.string "user_agent"
+    t.string "browser"
+    t.string "browser_version"
+    t.string "operating_system"
+    t.float "latitude"
+    t.float "longitude"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id"], name: "index_pageviews_on_record"
+    t.index ["user_id"], name: "index_pageviews_on_user_id"
+  end
+
   create_table "postgres_cache_store", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "key", null: false
     t.text "value"
@@ -203,9 +220,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_080449) do
     t.tsvector "term_vector", null: false
     t.string "term", null: false
     t.point "coordinates"
-    t.index ["searchable_id", "searchable_type", "term"], name: "searches_next_searchable_id_searchable_type_term_idx", unique: true
-    t.index ["searchable_type", "searchable_id"], name: "searches_next_searchable_type_searchable_id_idx"
-    t.index ["term_vector"], name: "searches_next_term_vector_idx", using: :gin
+    t.index ["searchable_id", "searchable_type", "term"], name: "searches_next_searchable_id_searchable_type_term_idx1", unique: true
+    t.index ["searchable_type", "searchable_id"], name: "searches_next_searchable_type_searchable_id_idx1"
+    t.index ["term_vector"], name: "searches_next_term_vector_idx1", using: :gin
   end
 
   create_table "tags", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
@@ -272,6 +289,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_080449) do
   add_foreign_key "airports", "active_storage_attachments", column: "featured_photo_id", on_delete: :nullify
   add_foreign_key "comments", "airports"
   add_foreign_key "comments", "users"
+  add_foreign_key "pageviews", "users"
   add_foreign_key "remarks", "airports"
   add_foreign_key "runways", "airports"
   add_foreign_key "tags", "airports"

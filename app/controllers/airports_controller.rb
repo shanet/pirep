@@ -3,6 +3,7 @@ class AirportsController < ApplicationController
 
   before_action :set_airport, only: [:update, :history, :uncached_photo_gallery]
   before_action :set_airport_by_code, only: [:show, :annotations]
+  after_action :record_pageview, only: :show
 
   def index
     authorize :airport, :index?
@@ -214,5 +215,12 @@ private
     end
 
     return false
+  end
+
+  def record_pageview
+    # Skip recording pageviews for spiders
+    return if Pageview.spider?(request.user_agent)
+
+    @airport.pageviews << Pageview.new(user: active_user, ip_address: request.remote_ip, user_agent: request.user_agent)
   end
 end
