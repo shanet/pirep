@@ -1,5 +1,6 @@
 require:
   - rubocop-capybara
+  - rubocop-factory_bot
   - rubocop-rails
 
 AllCops:
@@ -12,7 +13,7 @@ AllCops:
     - vendor/bundle/**/*
   DisplayCopNames: true
   NewCops: enable
-  TargetRubyVersion: 3.2.1
+  TargetRubyVersion: 3.2.2
 
 Rails:
   Enabled: true
