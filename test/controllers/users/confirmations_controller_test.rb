@@ -4,7 +4,7 @@ class Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   setup do
-    @user = create :known, confirmed_at: nil
+    @user = create(:known, confirmed_at: nil)
   end
 
   test 'new' do

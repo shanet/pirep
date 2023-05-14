@@ -44,14 +44,16 @@ group :development, :test do
   gem 'aws-sdk-codedeploy'
   gem 'aws-sdk-codepipeline'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'cli-ui', git: 'https://github.com/shopify/cli-ui'
+  gem 'cli-ui'
   gem 'rubocop'
   gem 'rubocop-capybara'
+  gem 'rubocop-factory_bot'
   gem 'rubocop-rails'
 end
 
 group :development do
-  gem 'better_errors'
+  # This can be updated when https://github.com/BetterErrors/better_errors/issues/516 is resolved
+  gem 'better_errors', '2.9.1'
   gem 'binding_of_caller'
   gem 'listen', '~> 3.2'
 end

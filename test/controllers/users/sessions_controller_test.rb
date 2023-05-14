@@ -5,8 +5,8 @@ class Users::SessionsControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     @password = 'fishsticks'
-    @known = create :known, password: @password
-    @admin = create :admin, password: @password
+    @known = create(:known, password: @password)
+    @admin = create(:admin, password: @password)
   end
 
   test 'new' do

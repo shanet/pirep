@@ -2,7 +2,7 @@ require 'application_system_test_case'
 
 class Manage::NavigationTest < ApplicationSystemTestCase
   test 'has breadcrumbs set' do
-    airport = create :airport
+    airport = create(:airport)
 
     sign_in :admin
     visit edit_manage_airport_path(airport)

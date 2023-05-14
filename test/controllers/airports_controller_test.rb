@@ -9,7 +9,7 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     get airports_path
 
     assert_response :success
-    assert_equal @airport.code, JSON.parse(response.body).first['properties']['code'], 'Airport not included in airports index'
+    assert_equal @airport.code, response.parsed_body.first['properties']['code'], 'Airport not included in airports index'
   end
 
   test 'lists airports with cache' do
@@ -169,7 +169,7 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
       get search_airports_path(query: query, latitude: @airport.latitude, longitude: @airport.longitude)
 
       assert_response :success
-      assert_equal @airport.code, JSON.parse(response.body).first['code'], 'Airport not returned from search'
+      assert_equal @airport.code, response.parsed_body.first['code'], 'Airport not returned from search'
     end
   end
 
@@ -208,7 +208,7 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
   test 'annotations' do
     get annotations_airport_path(@airport)
     assert_response :success, 'Failed to get airport annotations'
-    assert_equal @airport.annotations.length, JSON.parse(response.body).size, 'Incorrect number of annotations returned'
+    assert_equal @airport.annotations.length, response.parsed_body.size, 'Incorrect number of annotations returned'
   end
 
   test 'uncached_photo_gallery' do
