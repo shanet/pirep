@@ -38,6 +38,7 @@ function initEditor(textarea) {
     nativeSpellcheck: true,
     inputStyle: 'contenteditable',
     status: false,
+    toolbarButtonClassPrefix: 'editor', // Avoid conflicts with Bootstrap styles
   });
 
   const container = editorContainer(editor);
@@ -47,7 +48,7 @@ function initEditor(textarea) {
   readMode(editor);
 
   // Enter edit mode when the preview is clicked
-  container.querySelector('.editor-preview').addEventListener('click', (event) => {
+  container.querySelector('.editor-preview-full.editor-preview').addEventListener('click', (event) => {
     // Ignore clicks on links within the preview
     if(event.target.nodeName === 'A') return;
 
