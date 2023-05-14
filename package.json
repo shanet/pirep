@@ -2,18 +2,18 @@
   "name": "pirep",
   "private": true,
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.2.0",
-    "bootstrap": "^5.2.2",
-    "easymde": "^2.13.0",
-    "mapbox-gl": "^2.10.0"
+    "@fortawesome/fontawesome-free": "^6.4.0",
+    "bootstrap": "^5.2.3",
+    "easymde": "^2.18.0",
+    "mapbox-gl": "^2.13.0"
   },
   "version": "0.1.0",
   "devDependencies": {
-    "eslint": "^8.9.0",
+    "eslint": "^8.40.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.4",
-    "stylelint": "^14.5.1",
-    "stylelint-config-twbs-bootstrap": "^3.0.1",
-    "stylelint-order": "^5.0.0"
+    "eslint-plugin-import": "^2.27.5",
+    "stylelint": "^15.6.1",
+    "stylelint-config-twbs-bootstrap": "^10.0.0",
+    "stylelint-order": "^6.0.3"
   }
 }

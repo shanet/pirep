@@ -50,11 +50,6 @@
 .EasyMDEContainer { // stylelint-disable-line selector-class-pattern
   .editor-toolbar {
     display: none;
-
-    // Overwrite a default Bootstrap style that affects the table button width in the editor toolbar
-    button.table {
-      width: 30px;
-    }
   }
 
   &.editing .editor-toolbar {
