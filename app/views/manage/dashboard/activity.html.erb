@@ -6,24 +6,24 @@
 <div class="row g-3 mt-1">
   <%= render 'meter', label: 'Total Edits', value: Action.where(type: Action.edited_actions).count %>
   <%= render 'meter', label: 'Total Comments', value: Comment.count %>
-  <%= render 'meter', label: 'Edits Today', value: Action.where(type: Action.edited_actions).where('created_at > ?', 1.day.ago).count %>
-  <%= render 'meter', label: 'Active Users Today', value: Users::User.where('last_seen_at > ?', 1.day.ago).count %>
+  <%= render 'meter', label: 'Edits Last 30 Days', value: Action.where(type: Action.edited_actions).where('created_at > ?', 30.days.ago).count %>
+  <%= render 'meter', label: 'Active Users Last 30 Days', value: Users::User.where('last_seen_at > ?', 30.days.ago).count %>
 </div>
 
 <div class="row">
   <div class="col-12 col-md-6">
     <%= render 'activity_list', records: @read_airports[:all_time],
-      title: "Top #{@limit} Read Airports &ndash; All Time".html_safe,
+      title: "Top #{@limit} Viewed Airports &ndash; All Time".html_safe,
       count: @read_airports[:all_time].count(Airport.table_name) do |airport| %>
-      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= airport.rank %> edits
+      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= airport.rank %> views
     <% end %>
   </div>
 
   <div class="col-12 col-md-6">
     <%= render 'activity_list', records: @read_airports[:month],
-      title: "Top #{@limit} Read Airports &ndash; Past 30 days".html_safe,
+      title: "Top #{@limit} Viewed Airports &ndash; Past 30 days".html_safe,
       count: @read_airports[:month].count(Airport.table_name) do |airport| %>
-      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= airport.rank %> edits
+      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= airport.rank %> views
     <% end %>
   </div>
 </div>

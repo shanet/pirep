@@ -3,7 +3,7 @@
 <div class="row g-3 mt-1">
   <%= render 'meter', label: 'Total Airports', value: Airport.count %>
   <%= render 'meter', label: 'Contributed Airports', value: Airport.count - Airport.joins(:tags).where('tags.name': :empty).count %>
-  <%= render 'meter', label: 'Registered Users', value: Users::Known.count + Users::Admin.count %>
+  <%= render 'meter', label: 'Pageviews Last 30 Days', value: Pageview.where('created_at > ?', 1.month.ago).count %>
   <%= render 'meter', label: 'FAA Data Cycle', value: Rails.configuration.faa_data_cycle.current(:airports) %>
 </div>
 
