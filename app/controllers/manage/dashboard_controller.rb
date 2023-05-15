@@ -9,14 +9,19 @@ class Manage::DashboardController < ApplicationController
 
     @limit = 10
 
-    @active_airports = {
-      all_time: most_active_records(Airport, :actionable_id, @limit),
-      month: most_active_records(Airport, :actionable_id, @limit, 1.month.ago),
+    @read_airports = {
+      all_time: most_active_records(Airport, Pageview, :record_id, @limit),
+      month: most_active_records(Airport, Pageview, :record_id, @limit, 1.month.ago),
+    }
+
+    @edited_airports = {
+      all_time: most_active_records(Airport, Action, :actionable_id, @limit),
+      month: most_active_records(Airport, Action, :actionable_id, @limit, 1.month.ago),
     }
 
     @active_users = {
-      all_time: most_active_records(Users::User, :user_id, @limit),
-      month: most_active_records(Users::User, :user_id, @limit, 1.month.ago),
+      all_time: most_active_records(Users::User, Action, :user_id, @limit),
+      month: most_active_records(Users::User, Action, :user_id, @limit, 1.month.ago),
     }
   end
 
@@ -34,17 +39,20 @@ class Manage::DashboardController < ApplicationController
 
 private
 
-  def most_active_records(model, action_foreign_key, limit, time_frame=nil)
+  def most_active_records(data_model, event_model, polymorphic_column, limit, time_frame=nil)
     # Remove the third-party CTE gem and use the built-in CTE support in Rails 7.1
     raise if Rails.gem_version.to_s >= '7.1'
 
-    cte = Action.select("#{action_foreign_key} AS join_id", 'COUNT(id) AS rank').group(action_foreign_key)
+    # Events model = The model where the events are stored (Action for user edit actions, Pageview for reads)
+    # Data model = The model to aggregate data and generate a count for (airports, users, etc.)
+
+    cte = event_model.select("#{polymorphic_column} AS join_id", 'COUNT(id) AS rank').group(polymorphic_column)
     cte = cte.where('created_at > ?', time_frame) if time_frame
 
-    return model.with(actions: cte)
-        .select("#{model.table_name}.*", 'actions.rank')
-        .joins("INNER JOIN actions ON actions.join_id = #{model.table_name}.id")
-        .order('actions.rank DESC')
+    return data_model.with(cte: cte)
+        .select("#{data_model.table_name}.*", 'cte.rank')
+        .joins("INNER JOIN cte ON cte.join_id = #{data_model.table_name}.id")
+        .order('cte.rank DESC')
         .limit(limit)
   end
 end
