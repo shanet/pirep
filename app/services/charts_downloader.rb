@@ -105,7 +105,7 @@ private
                            '--webviewer=none',
                            '--exclude',
                            '--tiledriver=WEBP',
-                           '--webp-quality=50',
+                           '--webp-quality=25',
                            vrt_path,
                            output_directory)
 
