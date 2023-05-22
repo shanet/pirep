@@ -123,16 +123,23 @@ class MapTest < ApplicationSystemTestCase
     visit map_path
     wait_for_map_ready
 
-    # By default all airports should be shown
+    # By default all airports should be shown and the populated tag filter should be enabled
     assert_equal 2, displayed_airports.count, 'Not all airports shown by default'
+    assert_selector '.filter[data-filter-group="tags"][data-filter-name="populated"]:not(.disabled)'
 
     # Selecting a tag should show only show airports tagged with that tag
     click_filter('camping')
     assert_equal 1, displayed_airports.count, 'Airports not filtered by tag'
+    assert_selector '.filter[data-filter-group="tags"][data-filter-name="populated"].disabled'
 
     # Selecting another tag should show both again
     click_filter('golfing')
     assert_equal 2, displayed_airports.count, 'Airports not filtered by tag'
+
+    # Disabling the populated filter explicitly should hide all airports
+    click_filter('tags')
+    click_filter('populated')
+    assert_equal 0, displayed_airports.count, 'Airports not filtered by tag'
   end
 
   test 'clear filter group' do
@@ -141,7 +148,15 @@ class MapTest < ApplicationSystemTestCase
 
     assert_equal 1, displayed_airports.count
     click_filter('facility_types')
+    assert_selector '.filter[data-filter-group="facility_types"][data-filter-name="airport"].disabled'
     assert_equal 0, displayed_airports.count
+
+    # Disabling all tag filters should enable the populated filter
+    click_filter('airport')
+    click_filter('food')
+    click_filter('tags')
+    assert_selector '.filter[data-filter-group="tags"][data-filter-name="populated"]:not(.disabled)'
+    assert_equal 1, displayed_airports.count
   end
 
   test 'switches layers' do

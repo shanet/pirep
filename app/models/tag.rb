@@ -9,6 +9,12 @@ class Tag < ApplicationRecord
   has_paper_trail meta: {airport_id: :airport_id}
 
   TAGS = {
+    populated: {
+      label: 'Documented',
+      icon: 'book',
+      theme: 'green',
+      default: true,
+    },
     public_: {
       label: 'Public',
       icon: 'lock-open',
@@ -99,11 +105,6 @@ class Tag < ApplicationRecord
       label: 'Closed',
       icon: 'times-circle',
       theme: 'brown',
-    },
-    populated: {
-      label: 'Populated',
-      icon: 'book',
-      theme: 'green',
     },
     empty: {
       label: 'Empty',
