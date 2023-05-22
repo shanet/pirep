@@ -3,9 +3,12 @@ import * as urlSearchParams from 'map/url_search_params';
 import * as utils from 'map/utils';
 
 const FILTER_GROUP_HOVER_TEXT = ' (clear all)';
+const POPULATED_TAG = 'populated';
+const FILTER_GROUP_TAGS = 'tags';
 
 const enabledFilters = {};
 const filterLabels = {};
+let populatedFilter = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   if(!document.getElementById('filters')) return;
@@ -50,6 +53,9 @@ function initFilters() {
     // Change the color of the filter label as well when hovering over the filter
     filter.addEventListener('mouseenter', () => {filterLabel.classList.add('hover');});
     filter.addEventListener('mouseleave', () => {filterLabel.classList.remove('hover');});
+
+    // Save a reference to the populated tag filter for use in the enable/disable functions below
+    if(filterGroup === FILTER_GROUP_TAGS && filterName === POPULATED_TAG) populatedFilter = filter;
   }
 }
 
@@ -58,6 +64,11 @@ function enableFilter(filter) {
   const {filterLabel} = filterLabels[filterName];
 
   enabledFilters[filterGroup].add(filterName);
+
+  // Disable the populated filter if another tag filter was enabled
+  if(filterGroup === FILTER_GROUP_TAGS && filterName !== POPULATED_TAG) {
+    disableFilter(populatedFilter);
+  }
 
   // Enable all filter elements for the selected filter group/name
   // There are multiple filter elements for the responsive elements on the page
@@ -78,6 +89,11 @@ function disableFilter(filter) {
   const {filterLabel} = filterLabels[filterName];
 
   enabledFilters[filterGroup].delete(filterName);
+
+  // Enable the populated filter when all other tag filters are disabled
+  if(filterGroup === FILTER_GROUP_TAGS && filterName !== POPULATED_TAG && enabledFilters[filterGroup].size === 0) {
+    enableFilter(populatedFilter);
+  }
 
   const filters = document.querySelectorAll(`.filter[data-filter-group="${filterGroup}"][data-filter-name="${filterName}"]`);
 
@@ -276,7 +292,7 @@ export function showAirport(airport) {
   if(!enabledFilters.facility_types.has(airport.properties.facility_type)) return false;
 
   // Show all airports if no filters are selected
-  if(enabledFilters.tags.size === 0) return true;
+  if(enabledFilters.tags.size === 0) return false;
 
   // Filter by tag
   for(let i=0; i<airport.properties.tags.length; i++) {
