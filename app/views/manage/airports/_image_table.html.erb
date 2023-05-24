@@ -14,7 +14,7 @@
           <td><img class="img-thumbnail" src="<%= cdn_url_for(image) %>"></td>
           <td><%= format_timestamp image.created_at %></td>
           <td class="text-end">
-            <%= button_to '<i class="fa-regular fa-trash-can"></i> Delete'.html_safe, destroy_attachment_manage_airport_path(@airport, type: type, attachment_id: image.id),
+            <%= button_to '<i class="fa-regular fa-trash"></i> Delete'.html_safe, destroy_attachment_manage_airport_path(@airport, type: type, attachment_id: image.id),
               method: :delete,
               class: 'btn btn-outline-danger btn-sm',
               data: {confirm: 'Are you sure you want to permanently delete this photo?'} %>

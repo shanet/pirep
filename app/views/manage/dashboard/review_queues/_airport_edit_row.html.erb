@@ -1,13 +1,17 @@
 <%
   user = Users::User.find_by(id: version.whodunnit)
-  airport = (version.item_type == 'Tag' ? Airport.find(version.airport_id) : version.item)
+  airport = (version.item_type == 'Tag' ? Airport.find_by(id: version.airport_id) : version.item)
 %>
 
 <div class="review-record list-group-item" data-record-id="<%= version.id %>">
   <div class="d-flex justify-content-between mb-1">
     <div>
-        <%= link_to airport.code, manage_airport_path(airport) %> |
-        <%= link_to 'History', history_airport_path(airport, anchor: "version-#{version.id}") %> |
+        <% if airport %>
+          <%= link_to airport.code, manage_airport_path(airport) %> |
+          <%= link_to 'History', history_airport_path(airport, anchor: "version-#{version.id}") %> |
+        <% else %>
+          <%= version.object&.[]('code') || 'Deleted Airport' %> |
+        <% end %>
 
         <% if user&.unknown? %>
           <%= link_to user.ip_address, manage_user_path(user) %>
@@ -21,13 +25,17 @@
     </div>
 
     <div class="btn-group">
-      <%= button_to '<i class="fa-solid fa-square-check text-success"></i>'.html_safe, version_manage_airport_path(airport, version.id),
+      <%= button_to '<i class="fa-solid fa-square-check text-success"></i>'.html_safe, manage_version_path(version),
         class: 'border-0 bg-transparent', method: :patch, remote: true, params: {version: {reviewed_at: Time.zone.now}} %>
     </div>
   </div>
 
   <% if version.item_type == Airport.name %>
-    <i class="fa-solid fa-pen-to-square"></i> <%= version.object_changes.keys.map {|key| key.gsub('_', ' ').capitalize}.join(', ') %>
+    <% if version.event == 'destroy' %>
+      <i class="fa-solid fa-trash"></i> Airport deleted
+    <% else %>
+      <i class="fa-solid fa-pen-to-square"></i> <%= version.object_changes.keys.map {|key| key.gsub('_', ' ').capitalize}.join(', ') %>
+    <% end %>
   <% elsif version.item_type == Tag.name %>
     <% if version.event == 'create' %>
       <i class="fa-solid fa-square-plus"></i> Tag added

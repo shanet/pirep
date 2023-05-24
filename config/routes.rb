@@ -30,13 +30,13 @@ Rails.application.routes.draw do
 
     resources :attachments, only: [:index, :destroy]
     resources :comments
+    resources :versions, only: :update
 
     resources :airports do
       get 'search', action: :search, as: :search, on: :collection
 
       member do
         get 'analytics', as: :analytics
-        patch 'version/:version_id', action: :update_version, as: :version
         delete 'attachment/:type/:attachment_id', action: :destroy_attachment, as: :destroy_attachment
       end
     end
