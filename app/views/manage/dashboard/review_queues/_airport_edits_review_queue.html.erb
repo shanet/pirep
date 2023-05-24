@@ -1,6 +1,10 @@
 <%
   queue_limit = 10
-  versions = PaperTrail::Version.where(reviewed_at: nil, item_type: [Airport.name, Tag.name]).where.not(whodunnit: nil).where.not(object_changes: nil).order(created_at: :desc)
+  versions = PaperTrail::Version
+    .where(reviewed_at: nil, item_type: [Airport.name, Tag.name])
+    .where.not(whodunnit: nil)
+    .where.not(object_changes: nil)
+    .order(created_at: :desc)
 %>
 
 <div class="card mt-3">

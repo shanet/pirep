@@ -31,10 +31,6 @@ class Manage::AirportPolicy < ApplicationPolicy
     return admin?
   end
 
-  def update_version?
-    return admin?
-  end
-
   class Scope < Scope
     def resolve
       return (@user.admin? ? scope.all : scope.none)

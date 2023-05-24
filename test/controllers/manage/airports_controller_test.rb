@@ -45,17 +45,6 @@ class Manage::AirportsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test 'update_version' do
-    with_versioning do
-      @airport.update!(description: 'making a version')
-
-      patch version_manage_airport_path(@airport, @airport.versions.last.id), params: {version: {reviewed_at: Time.zone.now}}
-      assert_redirected_to history_airport_path(@airport)
-
-      assert_in_delta Time.zone.now, @airport.versions.last.reviewed_at, 3.seconds, 'Version not set as reviewed'
-    end
-  end
-
   test 'analytics' do
     # With no pageviews
     get analytics_manage_airport_path(@airport)

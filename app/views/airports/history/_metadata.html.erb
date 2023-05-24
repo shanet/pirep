@@ -27,8 +27,8 @@
           <% end %>
         <% end %>
 
-        <% if Manage::AirportPolicy.new(current_user, @airport).update_version? %>
-          <%= button_to (version.reviewed_at ? 'Unapprove' : 'Approve'), version_manage_airport_path(@airport, version.id),
+        <% if Manage::VersionPolicy.new(current_user, version).update? %>
+          <%= button_to (version.reviewed_at ? 'Unapprove' : 'Approve'), manage_version_path(version),
             class: 'btn btn-sm btn-outline-success mt-1',
             method: :patch, params: {version: {reviewed_at: (version.reviewed_at ? nil : Time.zone.now)}} %>
 
