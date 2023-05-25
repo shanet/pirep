@@ -15,7 +15,7 @@
           <td><%= link_to attachment.record.name.titleize, manage_airport_path(attachment.record_id) %></td>
           <td><%= format_timestamp attachment.created_at %></td>
           <td>
-            <%= button_to '<i class="fa-regular fa-trash"></i> Delete'.html_safe, manage_attachment_path(attachment), method: :delete,
+            <%= button_to '<i class="fa-solid fa-trash"></i> Delete'.html_safe, manage_attachment_path(attachment), method: :delete,
               class: 'btn btn-outline-danger btn-sm',
               data: {confirm: 'Are you sure you want to permanently delete this photo?'} %>
           </td>

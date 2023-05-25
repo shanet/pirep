@@ -25,7 +25,7 @@
 
           <% if CommentPolicy.new(current_user, comment).destroy? %>
             <%= button_to comment, method: :delete, data: {confirm: 'Are you sure you want to permanently delete this comment?'}, class: 'btn btn-outline-danger btn-sm' do %>
-              <i class="fas fa-trash"></i> Delete
+              <i class="fa-solid fa-trash"></i> Delete
             <% end %>
           <% end %>
         </div>
