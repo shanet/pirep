@@ -287,6 +287,10 @@ class MapTest < ApplicationSystemTestCase
 
     # Select a location for the new airport on the map
     find('button.select-coordinates').click # rubocop:disable Capybara/SpecificActions
+
+    assert filter_enabled?('public_'), 'Public airport filter not enabled before adding unmapped airport'
+    assert filter_enabled?('private_'), 'Private airport filter not enabled before adding unmapped airport'
+
     find_by_id('map').click(x: 0, y: 0)
     assert_equal 16, map_zoom_level, 'Map not zoomed in on selected coordinates'
 
