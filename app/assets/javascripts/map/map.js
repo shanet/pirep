@@ -7,6 +7,7 @@ import * as filters from 'map/filters';
 import * as flashes from 'map/flashes';
 import * as mapUtils from 'shared/map_utils';
 import * as newAirportDrawer from 'map/drawer_new_airport';
+import * as search from 'map/search';
 import * as urlSearchParams from 'map/url_search_params';
 import * as utils from 'shared/utils';
 
@@ -46,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addChartLayersToMap();
     addEventHandlersToMap();
     mapUtils.add3dTerrain(map);
+    search.enable();
   });
 }, {once: true});
 
@@ -331,7 +333,7 @@ function openAirportFeature(airport, boundingBox, zoomLevel, openDrawer) {
   setAirportMarkerSelected(airport.id);
 
   if(boundingBox) {
-    map.fitBounds(boundingBox, {padding: 100});
+    map.fitBounds(boundingBox, {padding: 150});
   } else {
     // Move the map by the width of the drawer so the selected airport is centered. But only do this on a large screen
     // size since the drawer will cover the full width on small screens and we don't want to move the map in that case.
