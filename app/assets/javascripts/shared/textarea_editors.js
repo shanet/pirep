@@ -34,7 +34,7 @@ function initEditor(textarea) {
     hideIcons: ['image'],
     minHeight: (textarea.dataset.height || undefined),
     showIcons: ['code', 'table', 'horizontal-rule'],
-    spellChecker: false,
+    spellChecker: true,
     nativeSpellcheck: true,
     inputStyle: 'contenteditable',
     status: false,
