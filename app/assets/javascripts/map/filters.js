@@ -3,12 +3,14 @@ import * as urlSearchParams from 'map/url_search_params';
 import * as utils from 'map/utils';
 
 const FILTER_GROUP_HOVER_TEXT = ' (clear all)';
-const POPULATED_TAG = 'populated';
-const FILTER_GROUP_TAGS = 'tags';
+
+export const FILTER_GROUP_TAGS = 'tags';
+export const TAG_POPULATED = 'populated';
+export const TAG_PRIVATE = 'private_';
+export const TAG_PUBLIC = 'public_';
 
 const enabledFilters = {};
 const filterLabels = {};
-let populatedFilter = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   if(!document.getElementById('filters')) return;
@@ -45,29 +47,23 @@ function initFilters() {
       } else {
         enableFilter(filter);
       }
-
-      // Update the map with the new filter state
-      map.filterAirportsOnMap();
     });
 
     // Change the color of the filter label as well when hovering over the filter
     filter.addEventListener('mouseenter', () => {filterLabel.classList.add('hover');});
     filter.addEventListener('mouseleave', () => {filterLabel.classList.remove('hover');});
-
-    // Save a reference to the populated tag filter for use in the enable/disable functions below
-    if(filterGroup === FILTER_GROUP_TAGS && filterName === POPULATED_TAG) populatedFilter = filter;
   }
 }
 
-function enableFilter(filter) {
+export function enableFilter(filter) {
   const {filterName, filterGroup} = filter.dataset;
   const {filterLabel} = filterLabels[filterName];
 
   enabledFilters[filterGroup].add(filterName);
 
   // Disable the populated filter if another tag filter was enabled
-  if(filterGroup === FILTER_GROUP_TAGS && filterName !== POPULATED_TAG) {
-    disableFilter(populatedFilter);
+  if(filterGroup === FILTER_GROUP_TAGS && filterName !== TAG_POPULATED) {
+    disableFilter(getFilter(FILTER_GROUP_TAGS, TAG_POPULATED));
   }
 
   // Enable all filter elements for the selected filter group/name
@@ -82,17 +78,20 @@ function enableFilter(filter) {
   filterLabel.classList.remove('disabled');
 
   urlSearchParams.addFilter(filterGroup, filterName);
+
+  // Update the map with the new filter state
+  map.filterAirportsOnMap();
 }
 
-function disableFilter(filter) {
+export function disableFilter(filter) {
   const {filterName, filterGroup} = filter.dataset;
   const {filterLabel} = filterLabels[filterName];
 
   enabledFilters[filterGroup].delete(filterName);
 
   // Enable the populated filter when all other tag filters are disabled
-  if(filterGroup === FILTER_GROUP_TAGS && filterName !== POPULATED_TAG && enabledFilters[filterGroup].size === 0) {
-    enableFilter(populatedFilter);
+  if(filterGroup === FILTER_GROUP_TAGS && filterName !== TAG_POPULATED && enabledFilters[filterGroup].size === 0) {
+    enableFilter(getFilter(FILTER_GROUP_TAGS, TAG_POPULATED));
   }
 
   const filters = document.querySelectorAll(`.filter[data-filter-group="${filterGroup}"][data-filter-name="${filterName}"]`);
@@ -104,6 +103,9 @@ function disableFilter(filter) {
   filterLabel.classList.add('disabled');
 
   urlSearchParams.removeFilter(filterGroup, filterName);
+
+  // Update the map with the new filter state
+  map.filterAirportsOnMap();
 }
 
 function initFilterGroupLabels() {
@@ -330,4 +332,8 @@ export function openFiltersDrawer() {
 export function closeFiltersDrawer() {
   const drawer = document.getElementById('filters-drawer');
   drawer.style.transform = '';
+}
+
+export function getFilter(filterGroup, filterName) {
+  return document.querySelector(`.filter[data-filter-group="${filterGroup}"][data-filter-name="${filterName}"]`);
 }

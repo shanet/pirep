@@ -1,4 +1,5 @@
 import * as drawer from 'map/drawer';
+import * as filters from 'map/filters';
 import * as flashes from 'map/flashes';
 import * as landingRights from 'airports/landing_rights';
 import * as map from 'map/map';
@@ -28,6 +29,10 @@ export function initializeDrawer() {
     document.getElementById('map').classList.add('adding');
     flashes.show(flashes.FLASH_NOTICE, 'Select the center of the airport on the map.');
     if(utils.isBreakpointDown('sm')) drawer.closeDrawer();
+
+    // Change the filters to show all airports too to prevent people from thinking something is unmapped because it's hidden by the filters
+    filters.enableFilter(filters.getFilter(filters.FILTER_GROUP_TAGS, filters.TAG_PUBLIC));
+    filters.enableFilter(filters.getFilter(filters.FILTER_GROUP_TAGS, filters.TAG_PRIVATE));
   });
 
   landingRights.initLandingRightsForm();
