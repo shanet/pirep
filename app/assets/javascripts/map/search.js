@@ -159,3 +159,10 @@ function clearSearchResultsList() {
     resultsList.removeChild(resultsList.firstChild);
   }
 }
+
+export function enable() {
+  // By default the search is disabled until the map is fully loaded since we can't show search results until that's done anyway
+  const search = document.getElementById('search');
+  search.disabled = false;
+  search.placeholder = 'Search airports';
+}
