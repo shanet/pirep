@@ -161,7 +161,7 @@ module FaaApi
       File.binwrite(chart_path, response.body)
 
       # Write the chart to the development cache
-      cached_archive(:charts, "#{chart_type}/#{chart}", response.body) if Rails.env.development?
+      cache_archive(:charts, "#{chart_type}/#{chart}", response.body) if Rails.env.development?
 
       return chart_path
     end
@@ -178,7 +178,7 @@ module FaaApi
     end
 
     def cache_archive(product, filename, file)
-      FileUtils.mkdir_p(Rails.root.join('.faa_cache', product.to_s, filename).to_s)
+      FileUtils.mkdir_p(Rails.root.join('.faa_cache', product.to_s, File.dirname(filename)).to_s)
       File.binwrite(Rails.root.join('.faa_cache', product.to_s, filename).to_s, file)
     end
 
