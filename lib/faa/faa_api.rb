@@ -109,7 +109,7 @@ module FaaApi
     include Base
 
     def download_airport_data_archive(destination_directory)
-      Rails.logger.info("Downloading airports archive")
+      Rails.logger.info('Downloading airports archive')
       response = Faraday.get("https://nfdc.faa.gov/webContent/28DaySub/extra/#{current_data_cycle(:airports).strftime('%d_%b_%Y')}_APT_CSV.zip")
       raise Exceptions::AirportDatabaseDownloadFailed unless response.success?
 

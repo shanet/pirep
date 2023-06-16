@@ -63,7 +63,7 @@ private
       airports = AirportDatabaseParser.new.download_and_parse
 
       Rails.logger.info('Importing airports')
-      initial_import = !Airport.any?
+      initial_import = Airport.none?
 
       # Disable the bounding box calculation as we'll import those separately below
       report = AirportDatabaseImporter.new(airports, bounding_box_calculator: nil).load_database

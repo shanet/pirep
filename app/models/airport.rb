@@ -26,7 +26,7 @@ class Airport < ApplicationRecord
   before_save :update_landing_rights_tag, if: :landing_rights_changed?
 
   # Only run version collation after an update if one of the columns we create versions for was changed (airport database updates are much faster without these running)
-  after_update :collate_versions!, if: proc {HISTORY_COLUMNS.keys.select {|column| send("#{column}_previously_changed?")}.any?}
+  after_update :collate_versions!, if: proc {HISTORY_COLUMNS.keys.any? {|column| send("#{column}_previously_changed?")}}
   after_save :remove_empty_tag!
 
   FACILITY_TYPES = {

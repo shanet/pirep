@@ -151,7 +151,6 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-
   test 'rejects conflicting airport update' do
     with_versioning do
       @airport.update!(fuel_location: 'over there')
