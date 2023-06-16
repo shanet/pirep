@@ -139,6 +139,19 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'update airport landing rights' do
+    # Updating the landing rights should trigger a GeoJSON dump
+    assert_enqueued_with(job: AirportGeojsonDumperJob) do
+      patch airport_path(@airport), params: {airport: {landing_rights: :restricted}}
+
+      assert_redirected_to airport_path(@airport.code)
+      @airport = @airport.reload
+      assert_equal :restricted, @airport.reload.landing_rights, 'Did not update landing rights'
+      assert_equal :restricted, @airport.reload.tags.last.name, 'Did not add landing rights tag'
+    end
+  end
+
+
   test 'rejects conflicting airport update' do
     with_versioning do
       @airport.update!(fuel_location: 'over there')
