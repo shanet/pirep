@@ -6,8 +6,8 @@
       <% Airport::COVER_IMAGES.each do |cover_image, label| %>
         <% active = @airport.cover_image == cover_image.to_s %>
 
-        <li class="list-group-item list-group-item-action <%= active ? 'active' : '' %>">
-          <a href="#" class="text-decoration-none <%= active ? 'text-light' : 'text-dark' %>" data-cover-image="<%= cover_image %>">
+        <li class="list-group-item list-group-item-action <%= active ? 'active' : '' %>" tabindex="0" data-cover-image="<%= cover_image %>">
+          <a href="#" class="text-decoration-none <%= active ? 'text-light' : 'text-dark' %>">
             <%= label %><% if active %><i class="fa-solid fa-check ms-1"></i><% end %>
           </a>
         </li>
