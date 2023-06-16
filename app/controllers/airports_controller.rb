@@ -56,8 +56,8 @@ class AirportsController < ApplicationController
       touch_author
       create_actions
 
-      # Schedule an airport cache refresh if the tags changed so the changes are reflected on the map before the next refresh cycle
-      if airport_params['tags_attributes']
+      # Schedule an airport cache refresh if the tags/landing rights changed so the changes are reflected on the map before the next refresh cycle
+      if airport_params['tags_attributes'] || airport_params['landing_rights']
         AirportGeojsonDumperJob.perform_later
       end
 

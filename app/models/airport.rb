@@ -264,9 +264,6 @@ class Airport < ApplicationRecord
 
     tags.where(name: remove_tags).delete_all
     tags << Tag.new(name: landing_rights)
-
-    # Schedule a geojson dump so the tags are reflected on the map
-    AirportGeojsonDumperJob.perform_later
   end
 
   def collate_versions!

@@ -105,19 +105,15 @@ class AirportTest < ActiveSupport::TestCase
     assert_equal 1, airport.tags.count, 'Airport has multiple tags'
     assert_equal :public_, airport.tags.first.name, 'Public tag not added to airport'
 
-    assert_enqueued_with(job: AirportGeojsonDumperJob) do
-      airport.update!(landing_rights: :restricted)
-      airport = airport.reload
-      assert_equal 1, airport.tags.count, 'Airport has multiple tags'
-      assert_equal :restricted, airport.tags.first.name, 'Public tag not added to airport'
-    end
+    airport.update!(landing_rights: :restricted)
+    airport = airport.reload
+    assert_equal 1, airport.tags.count, 'Airport has multiple tags'
+    assert_equal :restricted, airport.tags.first.name, 'Public tag not added to airport'
 
-    assert_enqueued_with(job: AirportGeojsonDumperJob) do
-      airport.update!(landing_rights: :private_)
-      airport = airport.reload
-      assert_equal 1, airport.tags.count, 'Airport has multiple tags'
-      assert_equal :private_, airport.tags.first.name, 'Public tag not added to airport'
-    end
+    airport.update!(landing_rights: :private_)
+    airport = airport.reload
+    assert_equal 1, airport.tags.count, 'Airport has multiple tags'
+    assert_equal :private_, airport.tags.first.name, 'Public tag not added to airport'
   end
 
   test 'unselected tag names' do
