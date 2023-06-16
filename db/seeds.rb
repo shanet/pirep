@@ -62,11 +62,20 @@ private
     CLI::UI::Frame.open('Importing airports') do
       airports = AirportDatabaseParser.new.download_and_parse
 
+      Rails.logger.info('Importing airports')
+      initial_import = !Airport.any?
+
       # Disable the bounding box calculation as we'll import those separately below
-      AirportDatabaseImporter.new(airports, bounding_box_calculator: nil).load_database
+      report = AirportDatabaseImporter.new(airports, bounding_box_calculator: nil).load_database
 
       # Import the bounding boxes from a static file to avoid spamming OSM's servers with thousands of requests
       import_bounding_boxes
+
+      # Don't print every airport code on the first import since obviously they're all "new" airports
+      unless initial_import
+        print_airport_import_report('new', report[:new])
+        print_airport_import_report('closed', report[:closed])
+      end
     end
   end
 
@@ -114,6 +123,13 @@ private
     logger = ActiveSupport::Logger.new($stdout)
     logger.formatter = Rails.configuration.log_formatter
     Rails.logger = ActiveSupport::TaggedLogging.new(logger)
+  end
+
+  def print_airport_import_report(label, airport_codes)
+    return puts "No #{label} airports" if airport_codes.empty?
+
+    puts "#{label.titleize} Airports (#{airport_codes.count}):"
+    airport_codes.each {|code| puts "  #{code}"}
   end
 end
 # rubocop:enable Rails/Output

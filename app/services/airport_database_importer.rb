@@ -19,8 +19,11 @@ class AirportDatabaseImporter
   end
 
   def load_database
+    report = {new: [], closed: []}
+
     @airports.each do |airport_code, airport_data|
-      airport = update_airport(airport_code, airport_data)
+      airport, new_airport = update_airport(airport_code, airport_data)
+      report[:new] << airport[:code] if new_airport
 
       update_tags(airport)
       update_bounding_box(airport) if @bounding_box_calculator
@@ -34,13 +37,17 @@ class AirportDatabaseImporter
       end
     end
 
-    tag_closed_airports
+    report[:closed] = tag_closed_airports.map(&:code).sort
+    report[:new].sort!
+
+    return report
   end
 
 private
 
   def update_airport(airport_code, airport_data)
     airport = Airport.find_by(code: airport_code) || Airport.new
+    new_airport = !airport.persisted?
 
     # Normalize the facility type to the options we use for filtering
     if airport_data[:ownership_type].in?(MILITARY_OWNERSHIP_TYPES)
@@ -74,7 +81,7 @@ private
     })
     # rubocop:enable Layout/HashAlignment
 
-    return airport
+    return airport, new_airport
   end
 
   def update_tags(airport)
@@ -140,5 +147,7 @@ private
     closed_airports.each do |airport|
       Tag.create!(name: :closed, airport: airport)
     end
+
+    return closed_airports
   end
 end
