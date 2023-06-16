@@ -83,7 +83,7 @@ function initCoverImageForm() {
       dropdown.querySelector('.dropdown-menu').classList.toggle('d-none');
     });
 
-    const options = dropdown.querySelectorAll('.dropdown-menu li a');
+    const options = dropdown.querySelectorAll('.dropdown-menu li');
     const form = dropdown.querySelector('form');
 
     for(let j=0; j<options.length; j++) {
@@ -97,6 +97,7 @@ function initCoverImageForm() {
     toggleButton.addEventListener('blur', (event) => {
       // Don't close the dropdown if clicking on an option in it
       if(Array.from(options).indexOf(event.relatedTarget) !== -1) return;
+      if(Array.from(options).indexOf(event.relatedTarget?.parentNode) !== -1) return;
 
       dropdown.querySelector('.dropdown-menu').classList.toggle('d-none');
     });
