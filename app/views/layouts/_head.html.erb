@@ -1,4 +1,4 @@
-<title>Pirep<%= " | #{@title}" if defined?(@title) %></title>
+<title><%= "#{@title} | " if defined?(@title) %>Pirep</title>
 
 <%= csrf_meta_tags %>
 <%= csp_meta_tag %>
