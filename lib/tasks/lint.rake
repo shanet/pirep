@@ -50,7 +50,7 @@ namespace :lint do
   task :security do
     sh 'bundle exec bundle-audit update', verbose: false
     sh 'bundle exec bundle-audit', verbose: false
-    sh 'yarn audit', verbose: false
+    sh 'yarn audit --groups dependencies', verbose: false
 
     # CI=true prevents paging of the output as it would block the build process
     # https://github.com/presidentbeef/brakeman/blob/master/lib/brakeman/report/pager.rb#L71

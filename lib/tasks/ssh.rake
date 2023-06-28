@@ -60,7 +60,7 @@ def open_session(cluster, container)
 end
 
 def session_manager_installed?
-  return if system('which session-manager-plugin &> /dev/null')
+  return true if system('which session-manager-plugin &> /dev/null')
 
   warn 'session-manager-plugin binary not found'
   exit 1
