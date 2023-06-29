@@ -252,7 +252,7 @@ async function fetchAirportAnnotations() {
     return;
   }
 
-  // The airport layerr may not be ready yet if the map is panned immediately after loading the page
+  // The airport layer may not be ready yet if the map is panned immediately after loading the page
   if(!map.getLayer(AIRPORT_LAYER)) return;
 
   fetchingAnnotations = true;
