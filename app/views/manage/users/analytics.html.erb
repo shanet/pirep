@@ -1,0 +1,67 @@
+<%
+  @title = "User #{user_label(@user)}"
+  @breadcrumbs = [['Users', manage_users_path], [user_label(@user), manage_user_path(@user)], ['Analytics']]
+%>
+
+<div class="row">
+  <div class="col-12">
+    <h1 class="display-6">Analytics for <%= user_label(@user) %></h1>
+  </div>
+</div>
+
+<div class="row g-3 mt-1 mb-4">
+  <%= render 'manage/dashboard/meter', label: 'Total Pageviews', value: @user.pageviews.count %>
+  <%= render 'manage/dashboard/meter', label: 'Pageviews Last 30 Days', value: @user.pageviews.where('created_at > ?', 1.month.ago).count %>
+</div>
+
+<% if @pageviews.any? %>
+  <div class="row">
+    <div class="col-12">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Airport</th>
+            <th scope="col">Browser</th>
+            <th scope="col">Operating System</th>
+            <th scope="col">IP Address</th>
+            <th scope="col">Location</th>
+            <th scope="col">Timestamp</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @pageviews.order(created_at: :desc).each do |pageview| %>
+            <tr>
+              <td class="border-bottom-0"><%= pageview.short_id %></td>
+
+              <% if !pageview.record %>
+                Deleted
+              <% elsif pageview.record.is_a?(Airport) %>
+                <td class="border-bottom-0"><%= link_to(pageview.record.name.titleize, manage_airport_path(pageview.record)) %></td>
+              <% else %>
+                <td class="border-bottom-0"><%= link_to(pageview.record.class.name.titleize, polymorphic_path(pageview.record)) %></td>
+              <% end %>
+
+              <td class="border-bottom-0"><%= pageview.browser %> <%= pageview.browser_version %></td>
+              <td class="border-bottom-0"><%= pageview.operating_system %></td>
+              <td class="border-bottom-0"><%= pageview.ip_address %></td>
+              <td class="border-bottom-0"><%= google_maps_location_link(pageview.ip_address) %></td>
+              <td class="border-bottom-0"><%= format_timestamp(pageview.created_at) %></td>
+            </tr>
+
+            <tr>
+              <td class="pt-0" colspan="7"><small class="text-muted"><%= pageview.user_agent %></small></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <%= render 'shared/pagination', records: @pageviews, path: :analytics_manage_user_path %>
+<% else %>
+  <div class="my-3">
+    <%= render 'shared/empty_view', label: 'No pageviews exist.', icon: 'fa-solid fa-eye-slash' %>
+  </div>
+<% end %>

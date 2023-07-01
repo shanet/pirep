@@ -46,6 +46,7 @@ Rails.application.routes.draw do
 
       member do
         get 'activity', to: 'users#activity', as: :activity
+        get 'analytics', to: 'users#analytics', as: :analytics
       end
     end
   end

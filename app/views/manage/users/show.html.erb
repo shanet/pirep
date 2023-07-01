@@ -55,6 +55,8 @@
         <%= button_to (@user.reviewed_at.present? ? 'Unapprove' : 'Approve'), manage_user_path(@user),
           class: 'btn btn-success rounded-0 rounded-start', method: :patch, params: {users_user: {reviewed_at: (@user.reviewed_at.present? ? nil : Time.zone.now)}} %>
 
+        <%= link_to 'Analytics', analytics_manage_user_path(@user), class: 'btn btn-primary' %>
+
         <%= link_to 'Edit', edit_manage_user_path(@user), class: 'btn btn-primary' %>
 
         <%= button_to 'Delete', manage_user_path(@user), method: :delete, class: 'btn btn-danger rounded-0 rounded-end',
