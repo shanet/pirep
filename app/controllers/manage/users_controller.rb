@@ -1,5 +1,5 @@
 class Manage::UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :activity]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :activity, :analytics]
 
   def index
     @users = policy_scope(Users::User.order(updated_at: :desc).page(params[:page]), policy_scope_class: Manage::UserPolicy::Scope)
@@ -45,6 +45,10 @@ class Manage::UsersController < ApplicationController
 
   def activity
     @actions = policy_scope(Action.where(user: @user).order(created_at: :desc).page(params[:page]))
+  end
+
+  def analytics
+    @pageviews = policy_scope(@user.pageviews.page(params[:page]), policy_scope_class: Manage::PageviewPolicy::Scope)
   end
 
 private

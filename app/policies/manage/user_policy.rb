@@ -27,6 +27,10 @@ class Manage::UserPolicy < ApplicationPolicy
     return admin?
   end
 
+  def analytics?
+    return admin?
+  end
+
   class Scope < Scope
     def resolve
       return (@user.admin? ? scope.all : scope.none)

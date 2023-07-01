@@ -32,7 +32,24 @@ class Manage::UsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'activity' do
+    # With no actions
     get activity_manage_user_path(@user)
+    assert_response :success
+
+    # With actions
+    create(:action, user: @user)
+    get activity_manage_user_path(@user)
+    assert_response :success
+  end
+
+  test 'analytics' do
+    # With no pageviews
+    get analytics_manage_user_path(@user)
+    assert_response :success
+
+    # With pageviews
+    create(:pageview, user: @user)
+    get analytics_manage_user_path(@user)
     assert_response :success
   end
 end
