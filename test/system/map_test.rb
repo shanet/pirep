@@ -388,7 +388,7 @@ private
   end
 
   def displayed_airports
-    return evaluate_script("mapbox.getSource('airports')._data.features").pluck('properties')
+    return evaluate_script("mapbox.getSource('airports_active')._data.features").pluck('properties')
   end
 
   def chart_layer_shown?(chart_layer)
