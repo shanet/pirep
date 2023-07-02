@@ -69,6 +69,19 @@ class MapTest < ApplicationSystemTestCase
     end
   end
 
+  test 'opens airport drawer for inactive airport' do
+    # Heliports won't be shown by the filters by default
+    heliport = create(:airport, facility_type: :heliport, latitude: @airport.latitude - 0.25)
+
+    visit map_path
+    wait_for_map_ready
+    open_airport(heliport)
+
+    within('#drawer-content') do
+      assert_selector '.airport-drawer-header', text: "#{heliport.code} - #{heliport.name.titleize}"
+    end
+  end
+
   # The login drawer should be open by default when the `#login` anchor is present in the URL
   test 'opens login drawer' do
     visit map_path(params: {drawer: :login})
