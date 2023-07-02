@@ -11,8 +11,15 @@ import * as search from 'map/search';
 import * as urlSearchParams from 'map/url_search_params';
 import * as utils from 'shared/utils';
 
-const AIRPORT_LAYER = 'airports';
+const AIRPORT_ACTIVE_LAYER = 'airports_active';
+const AIRPORT_INACTIVE_LAYER = 'airports_inactive';
+
+const AIRPORT_LAYERS = [AIRPORT_ACTIVE_LAYER, AIRPORT_INACTIVE_LAYER];
 const CHART_LAYERS = ['sectional', 'terminal'];
+
+const MARKER_ACTIVE = 'marker_active';
+const MARKER_INACTIVE = 'marker_inactive';
+const MARKER_SELECTED = 'marker_selected';
 
 let mapElement = null;
 let map = null;
@@ -21,7 +28,13 @@ let map = null;
 let allAirports = [];
 
 // Airports currently displayed on the map (with filters applied)
-const displayedAirports = {
+const activeAirports = {
+  type: 'FeatureCollection',
+  features: [],
+};
+
+// Airports not currently displayed on the map (do not match current filters)
+const inactiveAirports = {
   type: 'FeatureCollection',
   features: [],
 };
@@ -115,26 +128,28 @@ function addEventHandlersToMap() {
   });
 
   // Open the drawer for an airport when its marker is clicked or close if the already open airport is clicked
-  map.on('click', AIRPORT_LAYER, (event) => {
-    // Don't do anything if a new airport is being added
-    if(mapElement.classList.contains('adding')) return;
+  AIRPORT_LAYERS.forEach((layer) => {
+    map.on('click', layer, (event) => {
+      // Don't do anything if a new airport is being added
+      if(mapElement.classList.contains('adding')) return;
 
-    // If the airport is already selected, close it. Unless we're on a small screen size in which case open the drawer again in case it was closed by zooming in
-    if(event.features[0].id === getSelectedAirportMarker() && !utils.isBreakpointDown('sm')) {
-      drawer.closeDrawer();
-      closeAirport();
-    } else {
-      openAirportFeature(event.features[0]);
-    }
-  });
+      // If the airport is already selected, close it. Unless we're on a small screen size in which case open the drawer again in case it was closed by zooming in
+      if(event.features[0].id === getSelectedAirportMarker() && !utils.isBreakpointDown('sm')) {
+        drawer.closeDrawer();
+        closeAirport();
+      } else {
+        openAirportFeature(event.features[0]);
+      }
+    });
 
-  // Show a pointer cursor when hovering over an airport on the map
-  map.on('mouseenter', AIRPORT_LAYER, () => {
-    map.getCanvas().style.cursor = 'pointer';
-  });
+    // Show a pointer cursor when hovering over an airport on the map
+    map.on('mouseenter', layer, () => {
+      map.getCanvas().style.cursor = 'pointer';
+    });
 
-  map.on('mouseleave', AIRPORT_LAYER, () => {
-    map.getCanvas().style.cursor = '';
+    map.on('mouseleave', layer, () => {
+      map.getCanvas().style.cursor = '';
+    });
   });
 
   map.on('moveend', fetchAirportAnnotations);
@@ -179,36 +194,45 @@ async function fetchAirports() {
   }
 
   allAirports = await response.json();
-  addAirportsToMap();
+  await addAirportsToMap();
 }
 
-function addAirportsToMap() {
-  map.loadImage(mapElement.dataset.markerImagePath, (error, image) => {
-    if(error) {
-      flashes.show(flashes.FLASH_ERROR, 'Failed to add airports to map');
-      throw error;
-    }
+async function addAirportsToMap() {
+  try {
+    await loadMapImage(MARKER_ACTIVE, mapElement.dataset.markerImagePath);
+    await loadMapImage(MARKER_INACTIVE, mapElement.dataset.markerInactiveImagePath);
+    await loadMapImage(MARKER_SELECTED, mapElement.dataset.markerSelectedImagePath);
+  } catch(error) {
+    flashes.show(flashes.FLASH_ERROR, 'Failed to add airports to map');
+    throw error;
+  }
 
-    map.addImage('marker', image);
+  addAirportToMap(AIRPORT_ACTIVE_LAYER, activeAirports, MARKER_ACTIVE);
+  addAirportToMap(AIRPORT_INACTIVE_LAYER, inactiveAirports, MARKER_INACTIVE);
 
-    map.loadImage(mapElement.dataset.markerSelectedImagePath, (error, image) => {
+  // The map is fully loaded, start manipulating it
+  applyUrlSearchParamsOnMap();
+  filterAirportsOnMap();
+  set3dButtonLabel();
+}
+
+function loadMapImage(id, imagePath) {
+  return new Promise((resolve, reject) => {
+    map.loadImage(imagePath, (error, image) => {
       if(error) {
         flashes.show(flashes.FLASH_ERROR, 'Failed to add airports to map');
-        throw error;
+        reject(error);
       }
 
-      map.addImage('marker_selected', image);
-      addAirportToMap(AIRPORT_LAYER, displayedAirports);
-
-      // The map is fully loaded, start manipulating it
-      applyUrlSearchParamsOnMap();
-      filterAirportsOnMap();
-      set3dButtonLabel();
+      map.addImage(id, image);
+      resolve();
     });
   });
 }
 
-export function addAirportToMap(layerId, geojson) {
+export function addAirportToMap(layerId, geojson, iconImage) {
+  if(!iconImage) iconImage = MARKER_ACTIVE;
+
   map.addSource(layerId, {
     type: 'geojson',
     data: geojson,
@@ -223,24 +247,30 @@ export function addAirportToMap(layerId, geojson) {
     source: layerId,
     layout: {
       'icon-allow-overlap': true,
-      'icon-image': 'marker',
+      'icon-image': iconImage,
       'icon-size': 0.8,
     },
   });
 }
 
 export function filterAirportsOnMap() {
-  displayedAirports.features.length = 0;
+  activeAirports.features.length = 0;
+  inactiveAirports.features.length = 0;
 
   allAirports.forEach((airport) => {
     if(filters.showAirport(airport)) {
-      displayedAirports.features.push(airport);
+      activeAirports.features.push(airport);
+    } else {
+      inactiveAirports.features.push(airport);
     }
   });
 
-  // If a filter is clicked before the airport layer is ready it may be null
-  const layer = map.getSource(AIRPORT_LAYER);
-  if(layer) layer.setData(displayedAirports);
+  // If a filter is clicked before the airport layers are ready the returned value may be null
+  const activeLayer = map.getSource(AIRPORT_ACTIVE_LAYER);
+  if(activeLayer) activeLayer.setData(activeAirports);
+
+  const inactiveLayer = map.getSource(AIRPORT_INACTIVE_LAYER);
+  if(inactiveLayer) inactiveLayer.setData(inactiveAirports);
 }
 
 async function fetchAirportAnnotations() {
@@ -252,16 +282,19 @@ async function fetchAirportAnnotations() {
     return;
   }
 
-  // The airport layer may not be ready yet if the map is panned immediately after loading the page
-  if(!map.getLayer(AIRPORT_LAYER)) return;
+  // The airport layers may not be ready yet if the map is panned immediately after loading the page
+  for(let i=0; i<AIRPORT_LAYERS.length; i++) {
+    if(!map.getLayer(AIRPORT_LAYERS[i])) return;
+  }
 
   fetchingAnnotations = true;
 
-  const displayedAirports = map.queryRenderedFeatures({layers: [AIRPORT_LAYER]});
+  // Get all airports that are within the current view of the map
+  const airportsInView = map.queryRenderedFeatures({layers: AIRPORT_LAYERS});
   const requests = [];
 
-  for(let i=0; i<displayedAirports.length; i++) {
-    const airport = displayedAirports[i].properties.code;
+  for(let i=0; i<airportsInView.length; i++) {
+    const airport = airportsInView[i].properties.code;
     const {annotationsPath} = mapElement.dataset;
 
     if(!annotationsCache[airport]) {
@@ -325,12 +358,15 @@ export function openAirport(airportCode, boundingBox, zoomLevel, openDrawer) {
 
 export function closeAirport() {
   urlSearchParams.clearAirport();
-  setAirportMarkerSelected('');
+
+  AIRPORT_LAYERS.forEach((layer) => {
+    setAirportMarkerSelected(null, layer);
+  });
 }
 
 function openAirportFeature(airport, boundingBox, zoomLevel, openDrawer) {
   // Set the airport's marker as selected
-  setAirportMarkerSelected(airport.id);
+  setAirportMarkerSelected(airport.id, (activeAirports.features.indexOf(airport) >= 0 ? AIRPORT_ACTIVE_LAYER : AIRPORT_INACTIVE_LAYER));
 
   if(boundingBox) {
     map.fitBounds(boundingBox, {padding: 150});
@@ -352,16 +388,20 @@ function openAirportFeature(airport, boundingBox, zoomLevel, openDrawer) {
 }
 
 export function setAirportMarkerSelected(airportCode, layerId) {
-  if(!layerId) layerId = AIRPORT_LAYER; // eslint-disable-line no-param-reassign
+  if(!layerId) layerId = AIRPORT_ACTIVE_LAYER; // eslint-disable-line no-param-reassign
+  if(!airportCode) airportCode = '';
 
   // Ensure that the layer exists before manipulating it
   if(!map.getLayer(layerId)) return;
 
-  map.setLayoutProperty(layerId, 'icon-image', ['match', ['id'], airportCode, 'marker_selected', 'marker']);
+  // Only the inactive airport layer should use the inactive marker
+  const unselectedMarker = (layerId === AIRPORT_INACTIVE_LAYER ? MARKER_INACTIVE : MARKER_ACTIVE);
+
+  map.setLayoutProperty(layerId, 'icon-image', ['match', ['id'], airportCode, MARKER_SELECTED, unselectedMarker]);
 }
 
 function getSelectedAirportMarker() {
-  return map.getLayoutProperty(AIRPORT_LAYER, 'icon-image')[2];
+  return map.getLayoutProperty(AIRPORT_ACTIVE_LAYER, 'icon-image')[2];
 }
 
 export function removeLayer(layerId) {
@@ -411,7 +451,7 @@ function exposeObjectsForTesting(event) {
   if(!mapElement.dataset.isTest) return;
 
   // This function is called by a `sourcedata` event. We only want to consider events that involve the airport layer being rendered.
-  if(event.sourceId !== AIRPORT_LAYER) return;
+  if(event.sourceId !== AIRPORT_ACTIVE_LAYER) return;
 
   // This is yucky, but we need the map object at global scope so we can access it in Capybara tests
   window.mapbox = map;

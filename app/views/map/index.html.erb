@@ -43,10 +43,11 @@
   data-is-test="<%= Rails.env.test? %>"
   data-mapbox-api-key="<%= Rails.application.credentials.mapbox_api_key %>"
   data-marker-image-path="<%= image_path('marker.png') %>"
+  data-marker-inactive-image-path="<%= image_path('marker_inactive.png') %>"
   data-marker-selected-image-path="<%= image_path('marker_selected.png') %>"
   data-new-airport-path="<%= new_airport_path(format: :drawer) %>"
   data-show-airport-path="<%= airport_path(airport_path_placeholder, format: :drawer) %>"
-  data-tiles-path="<%= faa_data_content_url(:charts, path: :tiles) %>"
   data-tiles-path-test="<%= image_path('empty_map_tile.png') %>"
+  data-tiles-path="<%= faa_data_content_url(:charts, path: :tiles) %>"
   data-zoom-level="<%= @zoom_level %>">
 </div>
