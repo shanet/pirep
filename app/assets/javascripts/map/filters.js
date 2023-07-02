@@ -4,7 +4,10 @@ import * as utils from 'map/utils';
 
 const FILTER_GROUP_HOVER_TEXT = ' (clear all)';
 
+export const FILTER_GROUP_FACILITY_TYPES = 'facility_types';
 export const FILTER_GROUP_TAGS = 'tags';
+
+export const FACILITY_TYPE_AIRPORT = 'airport';
 export const TAG_POPULATED = 'populated';
 export const TAG_PRIVATE = 'private_';
 export const TAG_PUBLIC = 'public_';
