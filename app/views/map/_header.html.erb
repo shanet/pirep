@@ -36,21 +36,21 @@
   <div class="d-flex justify-content-end">
     <ul class="list-group">
       <% if user_signed_in? && current_user.admin? %>
-        <li class="list-group-item"><%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_root_path %></li>
+        <li class="list-group-item p-3"><%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_root_path %></li>
       <% else %>
-        <li class="list-group-item"><%= image_tag 'logo_small.png' %></li>
+        <li class="list-group-item p-3"><%= image_tag 'logo_small.png' %></li>
       <% end %>
 
       <% if user_signed_in? %>
-        <li class="list-group-item"><%= link_to '<i class="fas fa-user me-1"></i>Account'.html_safe, user_path %></li>
+        <li class="list-group-item p-3"><%= link_to '<i class="fas fa-user me-1"></i>Account'.html_safe, user_path %></li>
       <% else %>
-        <li class="list-group-item"><a href="#" class="about-link"><i class="fas fa-question-circle me-1"></i>About</a></li>
+        <li class="list-group-item p-3"><a href="#" class="about-link"><i class="fas fa-question-circle me-1"></i>About</a></li>
       <% end %>
 
       <% if user_signed_in? %>
-        <li class="list-group-item"><%= link_to '<i class="fas fa-right-from-bracket me-1"></i>Logout'.html_safe, destroy_user_session_path, method: :delete %></li>
+        <li class="list-group-item p-3"><%= link_to '<i class="fas fa-right-from-bracket me-1"></i>Logout'.html_safe, destroy_user_session_path, method: :delete %></li>
       <% else %>
-        <li class="list-group-item"><a href="#" class="login-link"><i class="fas fa-right-to-bracket me-1"></i>Log In</a></li>
+        <li class="list-group-item p-3"><a href="#" class="login-link"><i class="fas fa-right-to-bracket me-1"></i>Log In</a></li>
       <% end %>
     </ul>
   </div>
