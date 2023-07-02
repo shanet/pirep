@@ -68,21 +68,22 @@ export function locationSelected(latitude, longitude, elevation) {
   document.getElementById('map').classList.remove('adding');
 
   // Add a temporary pin for the new airport
-  const airportId = -1;
-
-  // Remove the existing pin if one was already added to the map
-  removeNewAirportLayer();
-
-  map.addAirportToMap(NEW_AIRPORT_LAYER, {
-    id: airportId,
+  const airport = {
+    id: -1,
     type: 'Feature',
+    properties: {marker: map.MARKER_SELECTED},
     geometry: {
       type: 'Point',
       coordinates: [longitude, latitude],
     },
-  });
+  };
 
-  map.setAirportMarkerSelected(airportId, NEW_AIRPORT_LAYER);
+  // Remove the existing pin if one was already added to the map
+  removeNewAirportLayer();
+
+  map.addAirportLayerToMap(NEW_AIRPORT_LAYER, airport);
+
+  map.setAirportMarkerSelected(airport, NEW_AIRPORT_LAYER, airport);
 
   // Give focus to the name field now that a location is selected
   document.getElementById('airport_name').focus();
