@@ -31,6 +31,7 @@ export function initializeDrawer() {
     if(utils.isBreakpointDown('sm')) drawer.closeDrawer();
 
     // Change the filters to show all airports too to prevent people from thinking something is unmapped because it's hidden by the filters
+    filters.enableFilter(filters.getFilter(filters.FILTER_GROUP_FACILITY_TYPES, filters.FACILITY_TYPE_AIRPORT));
     filters.enableFilter(filters.getFilter(filters.FILTER_GROUP_TAGS, filters.TAG_PUBLIC));
     filters.enableFilter(filters.getFilter(filters.FILTER_GROUP_TAGS, filters.TAG_PRIVATE));
   });
@@ -50,6 +51,9 @@ export function initializeDrawer() {
 export function locationSelected(latitude, longitude, elevation) {
   // Re-open the drawer if it was closed on a small screen
   drawer.openDrawer();
+
+  // Ensure the satellite view is shown when zoomed in
+  map.toggleSectionalLayers(false);
 
   // Convert meters to feet
   const elevationFeet = Math.round(elevation * 3.28084);
