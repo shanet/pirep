@@ -71,7 +71,6 @@ export function locationSelected(latitude, longitude, elevation) {
   const airport = {
     id: -1,
     type: 'Feature',
-    properties: {marker: map.MARKER_SELECTED},
     geometry: {
       type: 'Point',
       coordinates: [longitude, latitude],
@@ -82,8 +81,7 @@ export function locationSelected(latitude, longitude, elevation) {
   removeNewAirportLayer();
 
   map.addAirportLayerToMap(NEW_AIRPORT_LAYER, airport);
-
-  map.setAirportMarkerSelected(airport, NEW_AIRPORT_LAYER, airport);
+  map.setAirportMarkerSelected(NEW_AIRPORT_LAYER, airport, airport.id);
 
   // Give focus to the name field now that a location is selected
   document.getElementById('airport_name').focus();

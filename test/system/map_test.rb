@@ -69,16 +69,29 @@ class MapTest < ApplicationSystemTestCase
     end
   end
 
-  test 'opens airport drawer for inactive airport' do
-    # Heliports won't be shown by the filters by default
+  test 'opens airport drawer for hidden airport' do
+    # Seaplane bases won't be visible by default
+    seaplane = create(:airport, facility_type: :seaplane_base, latitude: @airport.latitude + 0.25)
+
+    # Heliports should never be in the hidden airports layer
     heliport = create(:airport, facility_type: :heliport, latitude: @airport.latitude - 0.25)
 
     visit map_path
     wait_for_map_ready
-    open_airport(heliport)
+
+    # Hidden airports not shown when zoomed out on the map so clicking on the position for the marker should do nothing
+    open_airport(seaplane)
+    assert_no_selector '#drawer-content'
+
+    # Zoom in sufficiently so the hidden airports layer is shown
+    map_set_zoom_level(8)
+    open_airport(seaplane)
+
+    assert seaplane.code.in?(airport_markers('airports_hidden').pluck('code')), 'Hidden airport marker not shown on map'
+    assert_not heliport.code.in?(airport_markers('airports_hidden').pluck('code')), 'Heliport market shown in hidden airports layer'
 
     within('#drawer-content') do
-      assert_selector '.airport-drawer-header', text: "#{heliport.code} - #{heliport.name.titleize}"
+      assert_selector '.airport-drawer-header', text: "#{seaplane.code} - #{seaplane.name.titleize}"
     end
   end
 
@@ -110,22 +123,22 @@ class MapTest < ApplicationSystemTestCase
     wait_for_map_ready
 
     # By default only airports should be displayed
-    assert_equal 1, displayed_airports.count, 'Airports not shown by default'
-    assert_equal @airport.code, displayed_airports.first['code']
+    assert_equal 1, airport_markers.count, 'Airports not shown by default'
+    assert_equal @airport.code, airport_markers.first['code']
 
     # Showing heliports should display the heliport
     click_filter('heliport')
-    assert_equal 2, displayed_airports.count, 'Heliports not shown'
-    assert displayed_airports.pluck('code').include?(heliport.code)
+    assert_equal 2, airport_markers.count, 'Heliports not shown'
+    assert airport_markers.pluck('code').include?(heliport.code)
 
     # Deselecting airports should hide the airport leaving only the heliport
     click_filter('airport')
-    assert_equal 1, displayed_airports.count, 'Only heliports not shown'
-    assert_equal heliport.code, displayed_airports.first['code']
+    assert_equal 1, airport_markers.count, 'Only heliports not shown'
+    assert_equal heliport.code, airport_markers.first['code']
 
     # Delsecting heliports should show nothing
     click_filter('heliport')
-    assert displayed_airports.empty?
+    assert airport_markers.empty?
   end
 
   test 'filters by tag' do
@@ -137,39 +150,39 @@ class MapTest < ApplicationSystemTestCase
     wait_for_map_ready
 
     # By default all airports should be shown and the populated tag filter should be enabled
-    assert_equal 2, displayed_airports.count, 'Not all airports shown by default'
+    assert_equal 2, airport_markers.count, 'Not all airports shown by default'
     assert_selector '.filter[data-filter-group="tags"][data-filter-name="populated"]:not(.disabled)'
 
     # Selecting a tag should show only show airports tagged with that tag
     click_filter('camping')
-    assert_equal 1, displayed_airports.count, 'Airports not filtered by tag'
+    assert_equal 1, airport_markers.count, 'Airports not filtered by tag'
     assert_selector '.filter[data-filter-group="tags"][data-filter-name="populated"].disabled'
 
     # Selecting another tag should show both again
     click_filter('golfing')
-    assert_equal 2, displayed_airports.count, 'Airports not filtered by tag'
+    assert_equal 2, airport_markers.count, 'Airports not filtered by tag'
 
     # Disabling the populated filter explicitly should hide all airports
     click_filter('tags')
     click_filter('populated')
-    assert_equal 0, displayed_airports.count, 'Airports not filtered by tag'
+    assert_equal 0, airport_markers.count, 'Airports not filtered by tag'
   end
 
   test 'clear filter group' do
     visit map_path
     wait_for_map_ready
 
-    assert_equal 1, displayed_airports.count
+    assert_equal 1, airport_markers.count
     click_filter('facility_types')
     assert_selector '.filter[data-filter-group="facility_types"][data-filter-name="airport"].disabled'
-    assert_equal 0, displayed_airports.count
+    assert_equal 0, airport_markers.count
 
     # Disabling all tag filters should enable the populated filter
     click_filter('airport')
     click_filter('food')
     click_filter('tags')
     assert_selector '.filter[data-filter-group="tags"][data-filter-name="populated"]:not(.disabled)'
-    assert_equal 1, displayed_airports.count
+    assert_equal 1, airport_markers.count
   end
 
   test 'switches layers' do
@@ -387,8 +400,8 @@ private
     return !has_css?("a[data-filter-name=\"#{filter_name}\"].disabled")
   end
 
-  def displayed_airports
-    return evaluate_script("mapbox.getSource('airports_active')._data.features").pluck('properties')
+  def airport_markers(airports_layer='airports_visible')
+    return evaluate_script("mapbox.getSource('#{airports_layer}')._data.features").pluck('properties')
   end
 
   def chart_layer_shown?(chart_layer)
@@ -397,6 +410,10 @@ private
 
   def map_zoom_level
     return evaluate_script('mapbox.getZoom()')
+  end
+
+  def map_set_zoom_level(zoom_level)
+    return execute_script("mapbox.setZoom(#{zoom_level})")
   end
 
   def map_pitch
