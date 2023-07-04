@@ -9,7 +9,7 @@
   </div>
 </div>
 
-<div class="row g-3 mt-1 mb-4">
+<div class="row gy-3 mt-1 mb-4">
   <%= render 'manage/dashboard/meter', label: 'Total Pageviews', value: @user.pageviews.count %>
   <%= render 'manage/dashboard/meter', label: 'Pageviews Last 30 Days', value: @user.pageviews.where('created_at > ?', 1.month.ago).count %>
 </div>

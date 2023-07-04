@@ -3,7 +3,7 @@
   @breadcrumbs = [['Activity']]
 %>
 
-<div class="row g-3 mt-1">
+<div class="row gy-3 mt-1">
   <%= render 'meter', label: 'Total Edits', value: Action.where(type: Action.edited_actions).count %>
   <%= render 'meter', label: 'Total Comments', value: Comment.count %>
   <%= render 'meter', label: 'Edits Last 30 Days', value: Action.where(type: Action.edited_actions).where('created_at > ?', 30.days.ago).count %>

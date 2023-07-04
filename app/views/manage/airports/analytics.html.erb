@@ -10,7 +10,7 @@
   </div>
 </div>
 
-<div class="row g-3 mt-1 mb-4">
+<div class="row gy-3 mt-1 mb-4">
   <%= render 'manage/dashboard/meter', label: 'Total Pageviews', value: @airport.pageviews.count %>
   <%= render 'manage/dashboard/meter', label: 'Total Unique Pageviews', value: @airport.pageviews.distinct.pluck(:user_id).count %>
   <%= render 'manage/dashboard/meter', label: 'Pageviews Last 30 Days', value: @airport.pageviews.where('created_at > ?', 1.month.ago).count %>
