@@ -13,11 +13,11 @@
       </small>
 
       <div>
-        <% if version.item_type != 'Tag' %>
+        <% if version.item_type != Tag.name %>
           <%= button_to 'View', preview_airport_path(@airport, version_id: version.id), method: :get, class: 'btn btn-outline-primary btn-sm mt-1' %>
         <% end %>
 
-        <% if version.item_type == 'Tag' %>
+        <% if version.item_type == Tag.name %>
           <% if TagPolicy.new(current_user, version.reify).revert? %>
             <%= button_to 'Revert', revert_tag_path(version.id), method: :patch, class: 'btn btn-outline-danger btn-sm mt-1' %>
           <% end %>
