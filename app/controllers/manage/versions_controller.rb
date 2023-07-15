@@ -7,7 +7,8 @@ class Manage::VersionsController < ApplicationController
         @record_id = @version.id
         render 'shared/manage/remove_review_record'
       else
-        redirect_to history_airport_path(@version.item), notice: 'Revision updated successfully'
+        airport = (@version.item_type == Tag.name ? @version.item.airport : @version.item)
+        redirect_to history_airport_path(airport), notice: 'Revision updated successfully'
       end
     elsif request.xhr?
       render 'shared/manage/remove_review_record_error'

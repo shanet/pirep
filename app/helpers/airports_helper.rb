@@ -27,7 +27,7 @@ module AirportsHelper
   end
 
   def version_title(version, column)
-    if version.item_type == 'Tag'
+    if version.item_type == Tag.name
       case version.event
         when 'create'
           return '<i class="fa-solid fa-square-plus"></i> Tag Added'.html_safe
