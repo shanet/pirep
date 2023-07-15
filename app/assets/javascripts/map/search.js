@@ -178,7 +178,7 @@ function isCoordinates(query) {
   return {
     latitude: matches[1].trim(),
     longitude: matches[2].trim(),
-  }
+  };
 }
 
 function flyToCoordinates(coordinates) {
