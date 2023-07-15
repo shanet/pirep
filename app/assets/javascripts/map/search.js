@@ -1,4 +1,4 @@
-import * as actionButton from 'map/action_buttons';
+import * as actionButtons from 'map/action_buttons';
 import * as flashes from 'map/flashes';
 import * as map from 'map/map';
 import * as urlSearchParams from 'map/url_search_params';
@@ -17,6 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Only start searching if three or more characters have been entered
     if(query.length < 3) return;
+
+    // If coordinates were entered go directly to those instead of performing a search
+    const coordinates = isCoordinates(query);
+    if(coordinates) return flyToCoordinates(coordinates);
 
     const mapCenter = map.getCenter();
     const response = await fetch(`${searchEndpoint}?query=${query}&latitude=${mapCenter[0]}&longitude=${mapCenter[1]}`);
@@ -119,8 +123,8 @@ function openAirport(result) {
   map.openAirport(result.airportCode, JSON.parse(result.boundingBox), result.zoomLevel, !utils.isBreakpointDown('sm'));
 
   map.toggleSectionalLayers(false);
-  actionButton.updateLayerSwitcherIcon(actionButton.LAYER_MAP);
-  urlSearchParams.setLayer(actionButton.LAYER_SATELLITE);
+  actionButtons.updateLayerSwitcherIcon(actionButtons.LAYER_MAP);
+  urlSearchParams.setLayer(actionButtons.LAYER_SATELLITE);
 }
 
 function hideSearchResults() {
@@ -165,4 +169,21 @@ export function enable() {
   const search = document.getElementById('search');
   search.disabled = false;
   search.placeholder = 'Search airports';
+}
+
+function isCoordinates(query) {
+  const matches = query.match(/(-?\d+\.\d+)[,/ ]+(-?\d+\.\d+)/);
+  if(matches?.length !== 3) return null;
+
+  return {
+    latitude: matches[1].trim(),
+    longitude: matches[2].trim(),
+  }
+}
+
+function flyToCoordinates(coordinates) {
+  map.toggleSectionalLayers(false);
+  map.flyTo(coordinates.latitude, coordinates.longitude, map.ZOOM_IN_ZOOM_LEVEL);
+  actionButtons.updateLayerSwitcherIcon(actionButtons.LAYER_MAP);
+  urlSearchParams.setLayer(actionButtons.LAYER_SATELLITE);
 }
