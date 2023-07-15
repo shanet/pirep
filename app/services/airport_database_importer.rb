@@ -21,7 +21,10 @@ class AirportDatabaseImporter
   def load_database
     report = {new: [], closed: []}
 
-    @airports.each do |airport_code, airport_data|
+    @airports.each_with_index do |(airport_code, airport_data), index|
+      # Report back progress to the seeds so progress can be monitored
+      yield({total: @airports.count, current: index + 1}) if block_given?
+
       airport, new_airport = update_airport(airport_code, airport_data)
       report[:new] << airport[:code] if new_airport
 

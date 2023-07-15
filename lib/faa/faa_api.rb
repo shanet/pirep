@@ -11,6 +11,8 @@ module FaaApi
     # https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/
     AIRPORT_DIAGRAM_ARCHIVES = ['A', 'B', 'C', 'D', 'E']
 
+    CACHE_DIRECTORY = '.faa_cache'
+
     # New data is available every 28 or 56 days depending on the product
     CYCLE_LENGTHS = {
       airports: 28.days,
@@ -138,7 +140,7 @@ module FaaApi
       File.binwrite(archive_path, response.body)
 
       # Write the archive to the development cache
-      cached_archive(:diagrams, "archive_#{archive}.zip", response.body) if Rails.env.development?
+      cache_archive(:diagrams, "archive_#{archive}.zip", response.body) if Rails.env.development?
 
       return archive_path
     end
@@ -168,10 +170,10 @@ module FaaApi
     end
 
     def cached_archive(product, filename)
-      cached_archive = Rails.root.join('.faa_cache', product.to_s, filename)
+      cached_archive = Rails.root.join(CACHE_DIRECTORY, Rails.env, product.to_s, filename)
 
       if File.exist?(cached_archive)
-        Rails.logger.info('Using cached archive, delete .faa_cache to bust cache')
+        Rails.logger.info("Using cached archive, delete #{Rails.root.join(CACHE_DIRECTORY)} to bust cache")
         return cached_archive
       end
 
@@ -179,8 +181,8 @@ module FaaApi
     end
 
     def cache_archive(product, filename, file)
-      FileUtils.mkdir_p(Rails.root.join('.faa_cache', product.to_s, File.dirname(filename)).to_s)
-      File.binwrite(Rails.root.join('.faa_cache', product.to_s, filename).to_s, file)
+      FileUtils.mkdir_p(Rails.root.join(CACHE_DIRECTORY, Rails.env, product.to_s, File.dirname(filename)).to_s)
+      File.binwrite(Rails.root.join(CACHE_DIRECTORY, Rails.env, product.to_s, filename).to_s, file)
     end
 
     def chart_download_path(chart_type)
