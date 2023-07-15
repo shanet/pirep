@@ -26,15 +26,16 @@ For the frontend, Pirep makes use of only vanilla JavaScript. Through the use of
 
 ### Prerequisites
 
-* Ruby (the expected version is defined in `.ruby-version`)
+* Ruby (the expected version is defined in `.ruby-version`, `rvm`, `rbenv`, `asdf`, or any other version manager can install the correct version)
 * Postgres (14.6 is currently used, but fairly standard SQL is used everywhere so other minor versions should be fine too)
 * [GDAL](https://gdal.org) version >= 3.6.2 for generating sectional chart map tiles (older versions will generate bad looking map tiles)
+  * Some distributions may require an additional `python-gdal` package too depending on where the `gdal2tiles.py` script is included
 * [libvips](https://www.libvips.org) for converting airport diagram PDFs to PNGs and processing user photo uploads
 * Yarn version 1.x
 
 Pirep's development has been done on Linux. Other operating systems may work but have not been tested.
 
-Postgres initial setup if not already installed:
+Postgres initial setup if not already configured (some distros, such as Debian/Ubuntu, will do this as part of the package install):
 
 ```
 sudo su - postgres -c "initdb --locale en_US.UTF-8 -D '/var/lib/postgres/data'"
@@ -58,7 +59,7 @@ The server will be running on `http://localhost:3000`.
 
 ### Importing FAA Products & Generating Maps Tiles
 
-The `rails db:seed` task will prompt which FAA products to initially download. Generating map tiles for all sectional charts will require about 20gb of disk space and take hours to fully generate. Because of this you may only want to generate tiles for one or two sectional charts. The `db:seed` task will prompt for this.
+The `rails db:seed` task will prompt which FAA products to initially download. Generating map tiles for all sectional charts will require about 10gb of disk space and take hours to fully generate. Because of this you may only want to generate tiles for one or two sectional charts. The `db:seed` task will prompt for this.
 
 #### Updating FAA Products
 

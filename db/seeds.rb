@@ -19,6 +19,8 @@ class Seeds
     import_diagrams if import_config[:diagrams]
     import_charts(:sectional, import_config[:charts][:sectional]) if import_config[:charts][:sectional].any?
     import_charts(:terminal, import_config[:charts][:terminal]) if import_config[:charts][:terminal].any?
+
+    puts 'Seeds finished!'
   end
 
 private
@@ -62,11 +64,15 @@ private
     CLI::UI::Frame.open('Importing airports') do
       airports = AirportDatabaseParser.new.download_and_parse
 
-      Rails.logger.info('Importing airports')
       initial_import = Airport.none?
+      report = nil
 
-      # Disable the bounding box calculation as we'll import those separately below
-      report = AirportDatabaseImporter.new(airports, bounding_box_calculator: nil).load_database
+      CLI::UI::Spinner.spin('Importing airports') do |spinner|
+        # Disable the bounding box calculation as we'll import those separately below
+        report = AirportDatabaseImporter.new(airports, bounding_box_calculator: nil).load_database do |progress|
+          print_progress('Importing airports', spinner, progress)
+        end
+      end
 
       # Import the bounding boxes from a static file to avoid spamming OSM's servers with thousands of requests
       import_bounding_boxes
@@ -98,6 +104,7 @@ private
 
   def import_diagrams
     CLI::UI::Frame.open('Importing diagrams') do
+      puts CLI::UI.fmt("{{yellow:Downloading diagram archives may take a while if not already cached. There are five archives, each roughly 1gb in size.}}\n")
       AirportDiagramDownloader.new.download_and_convert
     end
   end
@@ -123,6 +130,13 @@ private
     logger = ActiveSupport::Logger.new($stdout)
     logger.formatter = Rails.configuration.log_formatter
     Rails.logger = ActiveSupport::TaggedLogging.new(logger)
+  end
+
+  def print_progress(label, spinner, progress)
+    current = ActionController::Base.helpers.number_with_delimiter(progress[:current])
+    total = ActionController::Base.helpers.number_with_delimiter(progress[:total])
+
+    spinner.update_title("#{label} (#{current}/#{total})")
   end
 
   def print_airport_import_report(label, airport_codes)
