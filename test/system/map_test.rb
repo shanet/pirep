@@ -117,6 +117,23 @@ class MapTest < ApplicationSystemTestCase
     assert_selector '#drawer-content .airport-drawer-header', text: "#{@airport.code} - #{@airport.name.titleize}"
   end
 
+  test 'goes to coordinates' do
+    visit map_path
+    wait_for_map_ready
+
+    # Entering coordinates into the search should go directly to them
+    fill_in 'Search airports', with: "#{@airport.latitude}, #{@airport.longitude}"
+
+    # We need to wait for the map to move before checking the current location but the only UI element to check against is that the layer switcher
+    # was changed to the map icon as the sectional layer is turned off. This makes this test dependent on the sectional layer initially being shown.
+    assert_selector '#layer-switcher i[class="map-icon fas fa-map"]'
+    assert_no_selector '#search-results'
+
+    center = map_location
+    assert_in_delta center['lat'], @airport.latitude, 0.1, 'Search did not go to given coordinates'
+    assert_in_delta center['lng'], @airport.longitude, 0.1, 'Search did not go to given coordinates'
+  end
+
   test 'filters by type' do
     heliport = create(:airport, facility_type: :heliport)
     visit map_path

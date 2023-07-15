@@ -15,6 +15,8 @@ export const MARKER_VISIBLE = 'marker_visible';
 export const MARKER_HIDDEN = 'marker_hidden';
 export const MARKER_SELECTED = 'marker_selected';
 
+export const ZOOM_IN_ZOOM_LEVEL = 16;
+
 // Airports visible on the map with filters applied
 const AIRPORTS_VISIBLE = {
   id: 'airports_visible',
@@ -138,7 +140,7 @@ function addEventHandlersToMap() {
   map.on('click', (event) => {
     if(!mapElement.classList.contains('adding')) return;
 
-    flyTo(event.lngLat.lat, event.lngLat.lng, 16);
+    flyTo(event.lngLat.lat, event.lngLat.lng, ZOOM_IN_ZOOM_LEVEL);
     const elevation = map.queryTerrainElevation([event.lngLat.lng, event.lngLat.lat]);
     newAirportDrawer.locationSelected(event.lngLat.lat, event.lngLat.lng, elevation);
   });
