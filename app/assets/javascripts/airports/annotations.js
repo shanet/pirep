@@ -17,12 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
 }, {once: true});
 
 function initMap() {
-  mapboxgl.accessToken = mapElement.dataset.mapboxApiKey; // eslint-disable-line no-undef
-
   const mapOptions = {
+    accessToken: (hasMapboxAccessToken() ? mapElement.dataset.mapboxApiKey : undefined),
     container: 'airport-map',
     minZoom: 12,
-    style: 'mapbox://styles/mapbox/satellite-streets-v11',
+    style: (hasMapboxAccessToken() ? 'mapbox://styles/mapbox/satellite-streets-v11' : undefined),
   };
 
   const boundingBox = JSON.parse(mapElement.dataset.boundingBox);
@@ -41,10 +40,13 @@ function initMap() {
     annotationFactory.addAnnotationToMap(map, event.lngLat.lat, event.lngLat.lng, null, {editing: true, saveCallback: saveAnnotations});
   });
 
-  map.on('load', () => {
+  const onMapLoad = () => {
     restoreAnnotations();
-    mapUtils.add3dTerrain(map);
-  });
+    if(hasMapboxAccessToken()) mapUtils.add3dTerrain(map);
+  };
+
+  // Load won't be fired in test mode
+  (hasMapboxAccessToken() ? map.on('load', onMapLoad) : onMapLoad()); // eslint-disable-line no-unused-expressions
 }
 
 function initEditingSwitch() {
@@ -140,4 +142,8 @@ function exposeObjectsForTesting() {
 
   // Let the tests know that the map is fully ready to use (once we have the airports layer shown)
   mapElement.dataset.ready = true;
+}
+
+function hasMapboxAccessToken() {
+  return mapElement.dataset.mapboxApiKey !== undefined;
 }

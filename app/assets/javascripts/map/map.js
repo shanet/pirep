@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initMap();
 
-  map.on('load', async () => {
+  const onMapLoad = async () => {
     await fetchMapImages();
     await fetchAirports();
 
@@ -74,28 +74,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     filterAirportsOnMap();
     applyUrlSearchParamsOnMap();
-    set3dButtonLabel();
     addChartLayersToMap();
+    set3dButtonLabel();
     addEventHandlersToMap();
-    mapUtils.add3dTerrain(map);
+    if(hasMapboxAccessToken()) mapUtils.add3dTerrain(map);
     search.enable();
-  });
+
+    if(!hasMapboxAccessToken()) {
+      flashes.show(flashes.FLASH_ERROR, 'Mapbox Access Token is not set. The map will work, but tiles won\'t be rendered.', true);
+    }
+  };
+
+  // Load won't be fired in test mode
+  (hasMapboxAccessToken() ? map.on('load', onMapLoad) : onMapLoad()); // eslint-disable-line no-unused-expressions
 }, {once: true});
 
 function initMap() {
   mapElement = document.getElementById('map');
-  mapboxgl.accessToken = mapElement.dataset.mapboxApiKey; // eslint-disable-line no-undef
 
   const [coordinates, zoomLevel] = initialMapCenter();
 
   map = new mapboxgl.Map({ // eslint-disable-line no-undef
+    accessToken: (hasMapboxAccessToken() ? mapElement.dataset.mapboxApiKey : undefined),
     attributionControl: false,
     center: coordinates.reverse(),
     container: 'map',
     hash: true,
     maxZoom: 18,
     preserveDrawingBuffer: true,
-    style: 'mapbox://styles/mapbox/satellite-streets-v11',
+    style: (hasMapboxAccessToken() ? 'mapbox://styles/mapbox/satellite-streets-v11' : undefined),
+    testMode: !hasMapboxAccessToken(),
     zoom: zoomLevel,
   });
 
@@ -472,4 +480,8 @@ function exposeObjectsForTesting(event) {
 
   // Let the tests know that the map is fully ready to use (once we have the airports layer shown)
   mapElement.dataset.ready = true;
+}
+
+function hasMapboxAccessToken() {
+  return mapElement.dataset.mapboxApiKey !== undefined;
 }
