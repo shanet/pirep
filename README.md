@@ -42,6 +42,20 @@ sudo su - postgres -c "initdb --locale en_US.UTF-8 -D '/var/lib/postgres/data'"
 sudo systemctl start postgresql
 ```
 
+### Third Party API Credentials
+
+Two third-party APIs are used that you may want to set credentials for in order for them to work locally. The application will run without them, but not all features will work.
+
+* Mapbox: Mapbox is used extensively for the core functionality of the application's home page. It is recommended to set a Mapbox access key for development, although the application will still work without one set. With a Mapbox account, a free access token can be created at https://account.mapbox.com/access-tokens.
+* Google Place Photos API: Google Photos is used to get photos of airports for display. Skipping this is recommended for development as this is only a small feature and getting a Google Photos API key is a hassle. See [Google's documentation](https://developers.google.com/maps/documentation/places/web-service/get-api-key) for getting an API key if desired, however.
+
+To set these credentials run `rails credentials:edit --environment development` and enter the following:
+
+```
+google_api_key: [Google Place Photos API key]
+mapbox_api_key: [Mapbox access token]
+```
+
 ### Setup
 
 ```
