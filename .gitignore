@@ -46,3 +46,6 @@ terraform.tfvars
 *.tfstate.backup
 *.tfstate.*.backup
 .terraform/
+
+/config/credentials/development.key
+/config/credentials/development.yml.enc
