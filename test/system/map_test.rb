@@ -58,7 +58,7 @@ class MapTest < ApplicationSystemTestCase
       click_on 'Zoom In'
     end
 
-    # Closing and re-open the drawer
+    # Close and re-open the drawer
     find('#airport-drawer .handle > button').click
     open_airport(@airport)
 
@@ -84,11 +84,12 @@ class MapTest < ApplicationSystemTestCase
     assert_no_selector '#drawer-content'
 
     # Zoom in sufficiently so the hidden airports layer is shown
-    map_set_zoom_level(8)
+    map_set_zoom_level(9)
+    assert_equal 9, map_zoom_level, 'Map did not zoom in for hidden airports layer to be shown'
     open_airport(seaplane)
 
     assert seaplane.code.in?(airport_markers('airports_hidden').pluck('code')), 'Hidden airport marker not shown on map'
-    assert_not heliport.code.in?(airport_markers('airports_hidden').pluck('code')), 'Heliport market shown in hidden airports layer'
+    assert_not heliport.code.in?(airport_markers('airports_hidden').pluck('code')), 'Heliport marker shown in hidden airports layer'
 
     within('#drawer-content') do
       assert_selector '.airport-drawer-header', text: "#{seaplane.code} - #{seaplane.name.titleize}"
