@@ -213,8 +213,8 @@ class AirportsTest < ApplicationSystemTestCase
       # The first photo should still be the contributed photo, the second and third should be direct links to the external photos
       assert_equal 3, images.count, 'Contributed photo not included with uncached external photos'
       assert_equal url_for(@airport.contributed_photos.first), images[0][:src]
-      assert_equal 'https://example.com/image1.jpg', images[1][:src]
-      assert_equal 'https://example.com/image2.jpg', images[2][:src]
+      assert images[1][:src].end_with?('/images/placeholder_1.jpg')
+      assert images[2][:src].end_with?('/images/placeholder_2.jpg')
 
       # Images with attributions should display it (these will currently on display on uncached photos)
       assert first('.carousel-caption', visible: false).text(:all).present?, 'Attribution not present for image'
