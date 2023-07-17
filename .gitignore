@@ -23,6 +23,7 @@ access_logs.html
 # Ignore keys for decrypting credentials
 /config/*.key
 /config/credentials/*.key
+/config/credentials/development.yml.enc
 
 /public/packs
 /public/packs-test
@@ -46,6 +47,3 @@ terraform.tfvars
 *.tfstate.backup
 *.tfstate.*.backup
 .terraform/
-
-/config/credentials/development.key
-/config/credentials/development.yml.enc
