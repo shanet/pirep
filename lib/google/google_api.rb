@@ -77,8 +77,8 @@ module GoogleApi
   class Stub
     def place_photos(*)
       return [
-        {url: 'https://example.com/image1.jpg', attribution: 'John Doe'},
-        {url: 'https://example.com/image2.jpg', attribution: 'Jane Doe'},
+        {url: '/images/placeholder_1.jpg', attribution: 'Google Place Photos API key not set, using fallback image'},
+        {url: '/images/placeholder_2.jpg', attribution: 'Google Place Photos API key not set, using fallback image'},
       ]
     end
   end
