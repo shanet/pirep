@@ -60,13 +60,17 @@ mapbox_api_key: [Mapbox access token]
 
 ```
 git clone git@github.com:shanet/pirep.git
+
 bundle install
 yarn install
-sudo -u postgres createuser --createdb `whoami`  # Potentially not needed if this default user & database already exists
+
+# Potentially not needed if this default user & database already exists (note that the user must be a superuser to install db extensions when loading the db schema below)
+sudo -u postgres createuser --createdb --superuser `whoami`
+
 rails db:create
 rails db:schema:load
-rails db:seed                                    # Note the admin account credentials that will be printed
-bin/dev                                          # Starts web server, Dart SASS compiler, and background jobs runner
+rails db:seed              # Note the admin account credentials that will be printed
+bin/dev                    # Starts web server, Dart SASS compiler, and background jobs runner
 ```
 
 The server will be running on `http://localhost:3000`.
