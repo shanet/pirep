@@ -22,6 +22,7 @@ function initMap() {
     container: 'airport-map',
     minZoom: 12,
     style: (hasMapboxAccessToken() ? 'mapbox://styles/mapbox/satellite-streets-v11' : undefined),
+    testMode: !hasMapboxAccessToken(),
   };
 
   const boundingBox = JSON.parse(mapElement.dataset.boundingBox);
@@ -145,5 +146,5 @@ function exposeObjectsForTesting() {
 }
 
 function hasMapboxAccessToken() {
-  return mapElement.dataset.mapboxApiKey !== undefined;
+  return mapElement.dataset.mapboxApiKey !== undefined && mapElement.dataset.mapboxApiKey !== '';
 }
