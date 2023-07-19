@@ -483,5 +483,5 @@ function exposeObjectsForTesting(event) {
 }
 
 function hasMapboxAccessToken() {
-  return mapElement.dataset.mapboxApiKey !== undefined;
+  return mapElement.dataset.mapboxApiKey !== undefined && mapElement.dataset.mapboxApiKey !== '';
 }
