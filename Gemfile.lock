@@ -356,6 +356,8 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
+    terminal-table (3.0.2)
+      unicode-display_width (>= 1.1.1, < 3)
     thor (1.2.2)
     timeout (0.4.0)
     tzinfo (2.0.6)
@@ -429,6 +431,7 @@ DEPENDENCIES
   sentry-ruby
   skylight
   sprockets-rails
+  terminal-table
   user_agent_parser
   webdrivers
 

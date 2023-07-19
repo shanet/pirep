@@ -38,6 +38,7 @@ gem 'rubyzip'
 gem 'sentry-rails'
 gem 'sentry-ruby'
 gem 'skylight'
+gem 'terminal-table'
 gem 'user_agent_parser'
 
 group :development, :test do
