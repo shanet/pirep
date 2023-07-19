@@ -14,14 +14,16 @@ namespace :pageviews do
 
     rows = total_pageviews.map do |date, total|
       [date, total, unique_pageviews[date]]
-    end.sort_by {|row| row[0]}
+    end
 
-    table = Terminal::Table.new do |table|
+    rows.sort_by! {|row| row[0]}
+
+    summary_table = Terminal::Table.new do |table|
       table.title = "Pageview Summary\n(last #{period} days, non-admins)"
       table.headings = ['Date', 'Total', 'Unique']
       table.rows = rows
     end
 
-    puts table
+    puts summary_table
   end
 end
