@@ -45,6 +45,9 @@ class AirportsTest < ApplicationSystemTestCase
       assert_selector '.EasyMDEContainer', text: text
     end
 
+    # Wait for the uncached images to be fetched
+    assert_selector('.carousel[data-uncached-photos-loaded="true"]')
+
     # Has photos with featured photo form
     expected_photo_path = URI.parse(url_for(@airport.contributed_photos.first)).path
     actual_photo_path = URI.parse(find('.carousel img')[:src]).path
@@ -157,7 +160,8 @@ class AirportsTest < ApplicationSystemTestCase
   test 'scrolls photos' do
     visit airport_path(@airport.code)
 
-    within('.carousel') do
+    # Wait for the uncached images to be fetched
+    within('.carousel[data-uncached-photos-loaded="true"]') do
       images = all('.carousel-item', visible: false)
       previous_button = find('.carousel-control-prev')
       next_button = find('.carousel-control-next')
@@ -194,7 +198,8 @@ class AirportsTest < ApplicationSystemTestCase
 
     visit airport_path(@airport.code)
 
-    within('.carousel') do
+    # Wait for the uncached images to be fetched
+    within('.carousel[data-uncached-photos-loaded="true"]') do
       images = all('img', visible: false)
 
       assert_equal 2, images.count, 'Wrong photos displayed by default'
@@ -208,9 +213,7 @@ class AirportsTest < ApplicationSystemTestCase
     visit current_path
 
     # Wait for the uncached images to be fetched
-    assert_selector('.carousel[data-uncached-photos-loaded="true"]')
-
-    within('.carousel') do
+    within('.carousel[data-uncached-photos-loaded="true"]') do
       images = all('img', visible: false)
 
       # The first photo should still be the contributed photo, the second and third should be direct links to the external photos
@@ -238,6 +241,9 @@ class AirportsTest < ApplicationSystemTestCase
     3.times {@airport.contributed_photos.attach(Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png'))}
 
     visit airport_path(@airport.code)
+
+    # Wait for the uncached images to be fetched
+    assert_selector('.carousel[data-uncached-photos-loaded="true"]')
 
     # Go to the third image and set it as the featured image
     find('.carousel-indicators button[data-bs-target="2"]').click
