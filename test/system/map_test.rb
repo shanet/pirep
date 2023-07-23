@@ -389,10 +389,12 @@ class MapTest < ApplicationSystemTestCase
     assert_equal 0, map_pitch, 'Map pitch not reset'
   end
 
-  test 'has opengraph tags' do
+  test 'has meta and opengraph tags' do
     visit map_path
 
-    # Sanity check on the Opengraph meta tags being present
+    # Sanity check on the meta tags being present
+    assert_equal Rails.configuration.meta_title, find('meta[name="title"]', visible: false)[:content], 'Unexpected meta name'
+    assert_equal Rails.configuration.meta_description, find('meta[name="description"]', visible: false)[:content], 'Unexpected meta description'
     assert find('meta[property="og:title"]', visible: false)[:content].present?, 'Opengraph tags not present'
   end
 

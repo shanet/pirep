@@ -14,6 +14,9 @@ module Pirep
     config.default_timezone = 'Etc/UTC'
     config.supported_timezones = [ActiveSupport::TimeZone.new(config.default_timezone)] + ActiveSupport::TimeZone.us_zones
 
+    config.meta_title = 'Pirep - Collaborative Airport Database'
+    config.meta_description = 'Pirep is a free, collaborative database of all public and private airports located within the United States.'
+
     config.asset_bucket = ENV['RAILS_ASSET_BUCKET'] || 'stub-bucket'
 
     # Override the default form error HTML with something compatible with Bootstrap
