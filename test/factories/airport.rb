@@ -55,17 +55,28 @@ FactoryBot.define do
       end
     end
 
-    trait :unmapped do
-      after(:create) do |airport, _evaluator|
-        create(:tag, name: :unmapped, airport: airport)
-      end
-    end
-
     trait :no_bounding_box do
       bbox_ne_latitude  {nil}
       bbox_ne_longitude {nil}
       bbox_sw_latitude  {nil}
       bbox_sw_longitude {nil}
+    end
+
+    trait :unmapped do
+      # Override the attributes above to more closely match what data an unmapped airport will be created with
+      city                 {nil}
+      state                {nil}
+      fuel_types           {nil}
+      sectional            {nil}
+      diagram              {nil}
+      bbox_ne_latitude     {nil}
+      bbox_ne_longitude    {nil}
+      bbox_sw_latitude     {nil}
+      bbox_sw_longitude    {nil}
+
+      after(:create) do |airport, _evaluator|
+        create(:tag, name: :unmapped, airport: airport)
+      end
     end
   end
 end

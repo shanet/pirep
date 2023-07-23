@@ -32,7 +32,7 @@
           </div>
 
           <%= form.label :fuel_types, class: 'form-label' %>
-          <%= form.text_field :fuel_types, class: 'form-control', value: @airport.fuel_types.join(', ') %>
+          <%= form.text_field :fuel_types, class: 'form-control', value: @airport.fuel_types&.join(', ') %>
           <p class="form-text">Fuel types are a CSV list</p>
 
           <%= form.label :locked_at, class: 'form-label' %>

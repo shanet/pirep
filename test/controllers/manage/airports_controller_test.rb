@@ -26,6 +26,11 @@ class Manage::AirportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test 'edit for unmapped airport' do
+    get edit_manage_airport_path(create(:airport, :unmapped))
+    assert_response :success
+  end
+
   test 'update' do
     patch manage_airport_path(@airport, params: {airport: {name: 'foo'}})
     assert_redirected_to manage_airport_path(@airport)
