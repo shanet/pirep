@@ -44,7 +44,7 @@ class AirportsHelperTest < ActionView::TestCase
     airport = create(:airport, contributed_photos: nil)
 
     # Use the site icon if there are no photos for the airport
-    assert_equal image_url('icon_small.png'), opengraph_image(airport), 'Did not use site icon'
+    assert_equal image_url('logo_small.png'), opengraph_image(airport), 'Did not use site icon'
 
     # Use external photos next
     airport.external_photos.attach(Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png'))
