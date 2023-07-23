@@ -3,7 +3,7 @@ module MaxmindDbStubs
     WebMock.stub_request(:get, /https:\/\/download\.maxmind\.com\/app\/geoip_download\?edition_id=GeoLite2-City&license_key=.*&suffix=tar\.gz$/)
       .to_return(body: Rails.root.join('test/fixtures/maxmind/geolite2_city_stub.tar.gz').read)
 
-    WebMock.stub_request(:get, /https:\/\/download\.maxmind\.com\/app\/geoip_download\?edition_id=GeoLite2-City&license_key=.*&suffix=tar\.gz.sha256$/)
+    WebMock.stub_request(:get, /https:\/\/download\.maxmind\.com\/app\/geoip_download\?edition_id=GeoLite2-City&license_key=.*&suffix=tar\.gz\.sha256$/)
       .to_return(body: "#{Digest::SHA256.hexdigest(Rails.root.join('test/fixtures/maxmind/geolite2_city_stub.tar.gz').read)}  geolite2_city_stub.tar.gz")
 
     WebMock.enable!
