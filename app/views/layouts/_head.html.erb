@@ -4,7 +4,7 @@
 <%= csp_meta_tag %>
 <link rel="icon" type="image/x-icon" href="<%= image_path('favicon.png') %>">
 
-<meta name="title" content="<%= defined?(@title) ? @title : Rails.configuration.meta_title %>">
+<meta name="title" content="<%= defined?(@meta_title) ? @meta_title : Rails.configuration.meta_title %>">
 <meta name="description" content="<%= (defined?(@meta_description) ? @meta_description : Rails.configuration.meta_description).gsub("\n", ' ') %>">
 <meta name="robots" content="index, follow">
 <meta name="language" content="English">
