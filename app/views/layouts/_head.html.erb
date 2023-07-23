@@ -2,8 +2,14 @@
 
 <%= csrf_meta_tags %>
 <%= csp_meta_tag %>
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 <link rel="icon" type="image/x-icon" href="<%= image_path('favicon.png') %>">
+
+<meta name="title" content="<%= defined?(@title) ? @title : Rails.configuration.meta_title %>">
+<meta name="description" content="<%= (defined?(@meta_description) ? @meta_description : Rails.configuration.meta_description).gsub("\n", ' ') %>">
+<meta name="robots" content="index, follow">
+<meta name="language" content="English">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <% if defined?(@opengraph) %>
   <meta property="og:description" content="<%= @opengraph[:description] %>">

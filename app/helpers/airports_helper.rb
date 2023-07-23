@@ -50,12 +50,12 @@ module AirportsHelper
     return annotations.map {|annotation| "#{annotation['label']}: (#{annotation['latitude']}, #{annotation['longitude']})"}.join("\n")
   end
 
-  def opengraph_description(airport)
+  def opengraph_description(airport, lines: 2)
     if airport.description.present?
-      return airport.description.split("\n")[0...2].join("\n")
+      return airport.description.split("\n")[0...lines].join("\n")
     end
 
-    help_text = 'Help us collect information on this airport at Pirep!'
+    help_text = 'Help us collect information on it at Pirep!'
 
     # Unmapped airports don't have city/state info so the text below won't work for them
     return "#{airport.name.titleize} is an unmapped airport. #{help_text}" if airport.unmapped?
@@ -70,7 +70,7 @@ module AirportsHelper
 
     return cdn_url_for(airport.external_photos.first) if airport.external_photos.any?
 
-    return image_url('icon_small.png')
+    return image_url('logo_small.png')
   end
 
   def fuel_label(airport)
