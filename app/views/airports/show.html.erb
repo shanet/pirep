@@ -1,6 +1,6 @@
 <%
   @title = "#{@airport.code} - #{@airport.name.titleize}"
-  @meta_title = @title
+  @meta_title = "#{@title} Airport"
   @meta_description = opengraph_description(@airport, lines: 1)
 
   @opengraph = {
