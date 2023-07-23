@@ -43,15 +43,22 @@ async function fetchUncachedPhotoGallery(photoGallery) {
   const response = await fetch(uncachedPhotoGalleryPath);
 
   // A response without any uncached photos will be a 204 No-Content
-  if(response.status !== 200) return;
+  if(response.status !== 200) {
+    markPhotoGalleryAsLoaded(photoGallery.parentNode);
+    return;
+  }
 
   const body = await response.text();
   const parent = photoGallery.parentNode;
   photoGallery.outerHTML = body;
   initializePhotoGallery(parent.querySelector('.carousel'));
 
+  markPhotoGalleryAsLoaded(parent);
+}
+
+function markPhotoGalleryAsLoaded(photoGalleryParent) {
   // Provide an attribute to tell tests when the uncached photos have been loaded
-  parent.querySelector('.carousel').setAttribute('data-uncached-photos-loaded', 'true');
+  photoGalleryParent.querySelector('.carousel').setAttribute('data-uncached-photos-loaded', 'true');
 }
 
 function showImage(photoGallery, activeIndex) {
