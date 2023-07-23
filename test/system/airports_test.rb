@@ -207,6 +207,9 @@ class AirportsTest < ApplicationSystemTestCase
 
     visit current_path
 
+    # Wait for the uncached images to be fetched
+    assert_selector('.carousel[data-uncached-photos-loaded="true"]')
+
     within('.carousel') do
       images = all('img', visible: false)
 
