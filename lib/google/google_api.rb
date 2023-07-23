@@ -1,9 +1,14 @@
 require 'haversine'
 require 'exceptions'
+require_relative 'google_api_stubs'
 
 module GoogleApi
   def self.client
-    return (Rails.application.credentials.google_api_key ? Service.new : Stub.new)
+    unless Rails.application.credentials.google_api_key
+      GoogleApiStubs.stub_requests(Service::API_HOST)
+    end
+
+    return Service.new
   end
 
   class Service
@@ -69,17 +74,11 @@ module GoogleApi
         photos << {url: response.headers[:location], attribution: photo['html_attribution']&.first}
       end
     rescue => error
+      # Don't be silent during tests
+      raise error if Rails.env.test?
+
       Sentry.capture_exception(error)
       return []
-    end
-  end
-
-  class Stub
-    def place_photos(*)
-      return [
-        {url: '/images/placeholder_1.jpg', attribution: 'Google Place Photos API key not set, using fallback image'},
-        {url: '/images/placeholder_2.jpg', attribution: 'Google Place Photos API key not set, using fallback image'},
-      ]
     end
   end
 end
