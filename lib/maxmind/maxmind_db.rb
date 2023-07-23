@@ -1,12 +1,17 @@
 require 'exceptions'
+require_relative 'maxmind_db_stubs'
 
 module MaxmindDb
   def self.client
-    return (Rails.application.credentials.maxmind_license_key ? Service.new : Stub.new)
+    unless Rails.application.credentials.maxmind_license_key
+      MaxmindDbStubs.stub_requests
+    end
+
+    return Service.new
   end
 
   class Service
-    DATABASE_PATH = File.join((Rails.configuration.try(:efs_path).presence || Rails.root), 'lib/maxmind/geolite2_city.mmdb') # rubocop:disable Rails/FilePath, Rails/SafeNavigation
+    DATABASE_PATH = File.join((Rails.configuration.try(:efs_path).presence || Rails.root), "lib/maxmind/geolite2_city_#{Rails.env}.mmdb") # rubocop:disable Rails/FilePath, Rails/SafeNavigation
     DATABASE_URL = "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=#{Rails.application.credentials.maxmind_license_key}&suffix=tar.gz"
 
     def geoip_lookup(ip_address)
@@ -15,6 +20,9 @@ module MaxmindDb
     rescue MaxMind::GeoIP2::AddressNotFoundError
       return nil
     rescue => error
+      # Don't be silent during tests
+      raise error if Rails.env.test?
+
       # Any errors with the geoip lookup should be captured, but not cause the caller to experience an exception
       Sentry.capture_exception(error)
       return nil
@@ -41,7 +49,7 @@ module MaxmindDb
         database.close
         checksum.close
 
-        raise Exceptions::MaxmindDatabaseIntegrityCheckFailed unless system("cat #{checksum.path} | sha256sum -c -")
+        raise Exceptions::MaxmindDatabaseIntegrityCheckFailed unless system("cat #{checksum.path} | sha256sum -c - > /dev/null")
 
         # Extract database and move it to a new directory since the default one has a date string in the name
         system("tar -xf #{database.path} --directory #{directory} && mv #{directory}/GeoLite2-City_* #{directory}/database")
@@ -59,13 +67,13 @@ module MaxmindDb
   private
 
     def maxmind_database
-      @maxmind_database ||= MaxMind::GeoIP2::Reader.new(database: DATABASE_PATH.to_s)
-    end
-  end
+      update_database! unless File.exist?(DATABASE_PATH)
 
-  class Stub
-    def geoip_lookup(_ip_address)
-      return {latitude: 47.62055376532627, longitude: -122.34936256185215}
+      @maxmind_database ||= if Rails.env.test?
+                              MaxmindDbStubs::StubDatabaseReader.new
+                            else
+                              MaxMind::GeoIP2::Reader.new(database: DATABASE_PATH.to_s)
+                            end
     end
   end
 end

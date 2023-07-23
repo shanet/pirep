@@ -50,6 +50,7 @@ group :development, :test do
   gem 'rubocop-capybara'
   gem 'rubocop-factory_bot'
   gem 'rubocop-rails'
+  gem 'webmock'
 end
 
 group :development do

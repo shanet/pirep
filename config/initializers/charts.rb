@@ -498,6 +498,9 @@ if Rails.env.test?
       archive: 'charts_test.zip',
       filename: 'Charts Test SEC.tif',
       type: :test,
+      insets: {
+        inset: 'Inset Test SEC.tif',
+      },
     },
   }
 end

@@ -1,61 +1,15 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "20138b2a7607bf15070ba4929def6a6bcde779a848be2245fc93e15f6870a87f",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/controllers/manage/dashboard_controller.rb",
-      "line": 41,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "Action.select(\"#{action_foreign_key} AS join_id\", \"COUNT(id) AS rank\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Manage::DashboardController",
-        "method": "most_active_records"
-      },
-      "user_input": "action_foreign_key",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "The only values in this query are non-user changable constants"
-    },
-    {
       "warning_type": "Command Injection",
       "warning_code": 14,
-      "fingerprint": "782564e88b40c29f1e697dd18535f542c74f34dbeb522d86de6da0a792019641",
+      "fingerprint": "561733a3ea8c2e05612e8980e764c4f50d2860657d9a0ddc429f11f26970b6c2",
       "check_name": "Execute",
       "message": "Possible command injection",
       "file": "lib/maxmind/maxmind_db.rb",
-      "line": 54,
+      "line": 52,
       "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
-      "code": "system(\"tar -xf #{File.open(File.join(directory, \"database.tar.gz\"), \"wb\").path} --directory #{directory} && mv #{directory}/GeoLite2-City_* #{directory}/database\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "MaxmindDb::Service",
-        "method": "update_database!"
-      },
-      "user_input": "File.open(File.join(directory, \"database.tar.gz\"), \"wb\").path",
-      "confidence": "Medium",
-      "cwe_id": [
-        77
-      ],
-      "note": ""
-    },
-    {
-      "warning_type": "Command Injection",
-      "warning_code": 14,
-      "fingerprint": "7c346aeb3526dbb941eb1d5fdd7946d5932ad36c2c35b5dacb174ebc816fdecc",
-      "check_name": "Execute",
-      "message": "Possible command injection",
-      "file": "lib/maxmind/maxmind_db.rb",
-      "line": 51,
-      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
-      "code": "system(\"cat #{File.open(File.join(directory, \"database.tar.gz.sha256\"), \"w\").path} | sha256sum -c -\")",
+      "code": "system(\"cat #{File.open(File.join(directory, \"database.tar.gz.sha256\"), \"w\").path} | sha256sum -c - > /dev/null\")",
       "render_path": null,
       "location": {
         "type": "method",
@@ -70,29 +24,29 @@
       "note": ""
     },
     {
-      "warning_type": "File Access",
-      "warning_code": 16,
-      "fingerprint": "a626cce093021f08d76a7102b6aa08b970498e414d18922301e1935898ce2134",
-      "check_name": "FileAccess",
-      "message": "Model attribute used in file name",
-      "file": "app/services/airport_geojson_dumper.rb",
-      "line": 15,
-      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "FileUtils.mkdir_p(File.dirname(File.join(File.join(*(Rails.configuration.efs_path or [Rails.public_path, \"assets\"])), \"airports_cache\", \"airports-*.json\".gsub(\"*\", Digest::SHA256.hexdigest(Airport.geojson.to_json))).to_s))",
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "782564e88b40c29f1e697dd18535f542c74f34dbeb522d86de6da0a792019641",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/maxmind/maxmind_db.rb",
+      "line": 55,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"tar -xf #{File.open(File.join(directory, \"database.tar.gz\"), \"wb\").path} --directory #{directory} && mv #{directory}/GeoLite2-City_* #{directory}/database\")",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "AirportGeojsonDumper",
-        "method": "write_to_file"
+        "class": "MaxmindDb::Service",
+        "method": "update_database!"
       },
-      "user_input": "Airport.geojson.to_json",
-      "confidence": "Weak",
+      "user_input": "File.open(File.join(directory, \"database.tar.gz\"), \"wb\").path",
+      "confidence": "Medium",
       "cwe_id": [
-        22
+        77
       ],
-      "note": "Impractical to control digest output"
+      "note": ""
     }
   ],
-  "updated": "2023-02-11 22:21:01 -0800",
-  "brakeman_version": "5.4.0"
+  "updated": "2023-07-22 23:45:36 -0700",
+  "brakeman_version": "6.0.0"
 }

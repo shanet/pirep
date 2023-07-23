@@ -69,10 +69,11 @@ private
       Seeds.new.perform
       $stdout = STDOUT
       $stderr = STDERR
-    rescue
+    rescue => error
       $stdout = STDOUT
       $stderr = STDERR
-      flunk "STDOUT:\n\n #{stdout.string}\nSTDERR:\n\n#{stderr.string}"
+
+      flunk "Exception: #{error}\n\n#{error.backtrace.join("\n")}\n\nSTDOUT:\n\n #{stdout.string}\nSTDERR:\n\n#{stderr.string}"
     end
   end
 end

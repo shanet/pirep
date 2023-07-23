@@ -1,11 +1,17 @@
 require 'exceptions'
+require_relative 'open_street_maps_api_stubs'
 
 module OpenStreetMapsApi
   def self.client
-    return (Rails.env.test? ? Stub.new : Service.new)
+    if Rails.env.test?
+      OpenStreetMapsApiStubs.stub_requests(Service::API_HOST)
+    end
+
+    return Service.new
   end
 
   class Service
+    API_HOST = 'https://overpass-api.de/api/interpreter'
     EARTH_RADIUS = 6_378 # mi (https://en.wikipedia.org/wiki/Earth_radius)
     BOUNDING_BOX_OFFSET = 1.2 # kilometers
 
@@ -31,7 +37,7 @@ module OpenStreetMapsApi
 
     def send_query(query)
       # See for API server details: https://wiki.openstreetmap.org/wiki/Overpass_API#Public_Overpass_API_instances
-      response = Faraday.post('https://overpass-api.de/api/interpreter', data: query)
+      response = Faraday.post(API_HOST, data: query)
       raise Exceptions::OpenStreetMapsQueryFailed unless response.status == 200
 
       return JSON.parse(response.body).deep_symbolize_keys
@@ -64,30 +70,6 @@ module OpenStreetMapsApi
       longitude_offset = (kilometers / EARTH_RADIUS) * (180 / Math::PI) / Math.cos(latitude * Math::PI / 180)
 
       return [latitude + latitude_offset, longitude + longitude_offset]
-    end
-  end
-
-  class Stub
-    def bounding_box(_latitude, _longitude)
-      # Stub data take from Sullivan Lake, 09S
-      return {
-        elements: [
-          {type: 'node', id: 2_688_856_823, lat: 48.8382765, lon: -117.2840137},
-          {type: 'node', id: 2_688_856_842, lat: 48.8436501, lon: -117.2839675},
-          {
-            type: 'way',
-            id: 263_267_824,
-            nodes: [2_688_856_842, 2_688_856_823],
-            tags: {
-              aeroway: 'runway',
-              length: '538',
-              ref: '16/34',
-              surface: 'grass',
-              width: '30',
-            },
-          },
-        ],
-      }
     end
   end
 end

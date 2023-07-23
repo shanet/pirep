@@ -1,11 +1,15 @@
 ENV['RAILS_ENV'] ||= 'test'
 
 require_relative '../config/environment'
+
 require 'rails/test_help'
 require 'active_support/testing/method_call_assertions'
+require 'webmock/minitest'
+
 require_relative Rails.root.join('lib/active_support/cache/store/postgres_cache_store')
 
 Aws.config[:stub_responses] = true
+WebMock.disable_net_connect!(allow_localhost: true, allow: 'chromedriver.storage.googleapis.com')
 
 Minitest.after_run do
   # Clean up the asset directories (multiple are created with unique names to prevent test threads from stepping on one another)
