@@ -7,7 +7,7 @@
   <%= render 'meter', label: 'Total Edits', value: Action.where(type: Action.edited_actions).count %>
   <%= render 'meter', label: 'Total Comments', value: Comment.count %>
   <%= render 'meter', label: 'Edits Last 30 Days', value: Action.where(type: Action.edited_actions).where('created_at > ?', 30.days.ago).count %>
-  <%= render 'meter', label: 'Active Users Last 30 Days', value: Users::User.where('last_seen_at > ?', 30.days.ago).count %>
+  <%= render 'meter', label: 'Unique Users Last 30 Days', value: Pageview.where('created_at > ?', 1.month.ago).distinct.pluck(:user_id).count %>
 </div>
 
 <div class="row">
