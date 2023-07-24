@@ -1,5 +1,6 @@
 variable "asset_bucket" {}
 variable "asset_host" {}
+variable "backups_bucket" {}
 variable "database_endpoint" {}
 variable "database_password" { sensitive = true }
 variable "database_username" {}
@@ -11,14 +12,15 @@ variable "tiles_host" {}
 locals {
   # If adding a new environment variable here it must also be reflected in the container_definition.yml template too
   static_enviroment_variables = {
-    database_endpoint  = var.database_endpoint,
-    database_password  = var.database_password,
-    database_username  = var.database_username,
-    rails_asset_bucket = var.asset_bucket,
-    rails_asset_host   = var.asset_host,
-    rails_tiles_host   = var.tiles_host,
-    smtp_password      = var.smtp_password,
-    smtp_username      = var.smtp_username,
+    database_endpoint    = var.database_endpoint,
+    database_password    = var.database_password,
+    database_username    = var.database_username,
+    rails_asset_bucket   = var.asset_bucket,
+    rails_asset_host     = var.asset_host,
+    rails_backups_bucket = var.backups_bucket
+    rails_tiles_host     = var.tiles_host,
+    smtp_password        = var.smtp_password,
+    smtp_username        = var.smtp_username,
   }
 }
 

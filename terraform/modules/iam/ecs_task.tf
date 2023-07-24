@@ -28,6 +28,9 @@ data "aws_iam_policy_document" "ecs_task_role_policy" {
     resources = [
       var.assets_bucket_arn,
       "${var.assets_bucket_arn}/*",
+
+      var.backups_bucket_arn,
+      "${var.backups_bucket_arn}/*",
     ]
   }
 

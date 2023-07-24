@@ -2,6 +2,10 @@ output "assets_bucket" {
   value = aws_s3_bucket.assets
 }
 
+output "backups_bucket" {
+  value = aws_s3_bucket.backups
+}
+
 output "logs_bucket" {
   value = aws_s3_bucket.logs
 }
