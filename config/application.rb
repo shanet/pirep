@@ -18,6 +18,7 @@ module Pirep
     config.meta_description = 'Pirep is a free, collaborative database of all public and private airports located within the United States.'
 
     config.asset_bucket = ENV['RAILS_ASSET_BUCKET'] || 'stub-bucket'
+    config.backups_bucket = ENV['RAILS_BACKUPS_BUCKET'] || 'stub-bucket'
 
     # Override the default form error HTML with something compatible with Bootstrap
     config.action_view.field_error_proc = proc do |html_tag, _instance|

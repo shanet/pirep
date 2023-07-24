@@ -122,6 +122,7 @@ module "iam" {
   source = "../iam"
 
   assets_bucket_arn            = module.s3.assets_bucket.arn
+  backups_bucket_arn           = module.s3.backups_bucket.arn
   cloudwatch_log_groups        = [module.cloudwatch.log_group_jobs.arn, module.cloudwatch.log_group_web.arn]
   deployment_bucket            = module.codesuite.deployment_bucket.arn
   ecr_repository               = module.ecr.repository.arn
@@ -180,6 +181,7 @@ module "secretsmanager" {
 
   asset_bucket      = module.s3.assets_bucket.bucket
   asset_host        = module.route53.cdn_assets_record.fqdn
+  backups_bucket    = module.s3.backups_bucket.bucket
   database_endpoint = module.rds.database_endpoint
   database_password = module.rds.database_password
   database_username = module.rds.database_username

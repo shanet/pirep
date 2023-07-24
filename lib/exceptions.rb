@@ -3,6 +3,7 @@ module Exceptions
   class ChartDownloadFailed < StandardError; end
   class ChartTilesGenerationFailed < StandardError; end
   class ChartUploadFailed < StandardError; end
+  class DatabaseBackupFailed < StandardError; end
   class DiagramUploadFailed < StandardError; end
   class FaaDataImporterTaskFailed < StandardError; end
   class GdalBinaryNotFound < StandardError; end

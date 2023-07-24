@@ -38,6 +38,8 @@
       valueFrom: "${enviroment_variables_secret_static}:rails_asset_bucket::"
     - name: RAILS_ASSET_HOST
       valueFrom: "${enviroment_variables_secret_static}:rails_asset_host::"
+    - name: RAILS_BACKUPS_BUCKET
+      valueFrom: "${enviroment_variables_secret_static}:rails_backups_bucket::"
     - name: RAILS_MASTER_KEY
       valueFrom: "${enviroment_variables_secret_dynamic}:rails_master_key::"
     - name: RAILS_TILES_HOST
