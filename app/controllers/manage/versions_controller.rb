@@ -7,8 +7,7 @@ class Manage::VersionsController < ApplicationController
         @record_id = @version.id
         render 'shared/manage/remove_review_record'
       else
-        airport = (@version.item_type == Tag.name ? @version.item.airport : @version.item)
-        redirect_to history_airport_path(airport), notice: 'Revision updated successfully'
+        redirect_to history_airport_path(airport_for_version(@version)), notice: 'Revision updated successfully'
       end
     elsif request.xhr?
       render 'shared/manage/remove_review_record_error'
@@ -26,5 +25,13 @@ private
 
   def version_params
     return params.require(:version).permit(:reviewed_at)
+  end
+
+  def airport_for_version(version)
+    if version.item_type == Tag.name
+      return (version.event == 'destroy' ? version.object['airport_id'] : version.item.airport)
+    end
+
+    return version.item
   end
 end

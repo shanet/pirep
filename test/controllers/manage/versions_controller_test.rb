@@ -25,6 +25,10 @@ class Manage::VersionsControllerTest < ActionDispatch::IntegrationTest
       assert_redirected_to history_airport_path(@airport)
 
       assert_in_delta Time.zone.now, tag.versions.last.reviewed_at, 3.seconds, 'Version not set as reviewed'
+
+      tag.destroy!
+      patch manage_version_path(tag.versions.last), params: {version: {reviewed_at: Time.zone.now}}
+      assert_redirected_to history_airport_path(@airport)
     end
   end
 end
