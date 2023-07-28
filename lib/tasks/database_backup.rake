@@ -50,7 +50,7 @@ namespace :db do
     # This is limited to 1,000 objects. There should never be this many backups though so no need to implement paging here.
     objects = response.contents.map do |object|
       next (object.key.end_with?('.dump') ? object.key : nil)
-    end.compact
+    end.compact.sort.reverse
 
     selected_object = CLI::UI::Prompt.ask('Database backup to download:', options: objects)
 
