@@ -15,8 +15,10 @@ resource "aws_route53_zone" "this" {
 }
 
 resource "aws_route53_record" "apex" {
+  for_each = toset(["A", "AAAA"])
+
   name    = var.domain_apex
-  type    = "A"
+  type    = each.key
   zone_id = aws_route53_zone.this.zone_id
 
   alias {
@@ -27,8 +29,10 @@ resource "aws_route53_record" "apex" {
 }
 
 resource "aws_route53_record" "www" {
+  for_each = toset(["A", "AAAA"])
+
   name    = "www.${var.domain_apex}"
-  type    = "A"
+  type    = each.key
   zone_id = aws_route53_zone.this.zone_id
 
   alias {
