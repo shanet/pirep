@@ -9,6 +9,7 @@ variable "subnets" { type = list(string) }
 variable "vpc_id" {}
 
 resource "aws_lb" "load_balancer" {
+  ip_address_type = "dualstack"
   name            = var.name_prefix
   security_groups = [var.security_group]
   subnets         = var.subnets

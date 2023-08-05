@@ -8,17 +8,19 @@ resource "aws_security_group" "load_balancer" {
 
   # Incoming traffic from internet
   ingress {
-    cidr_blocks = ["0.0.0.0/0"]
-    from_port   = 80
-    protocol    = "TCP"
-    to_port     = 80
+    cidr_blocks      = ["0.0.0.0/0"]
+    from_port        = 80
+    ipv6_cidr_blocks = ["::/0"]
+    protocol         = "TCP"
+    to_port          = 80
   }
 
   ingress {
-    cidr_blocks = ["0.0.0.0/0"]
-    from_port   = 443
-    protocol    = "TCP"
-    to_port     = 443
+    cidr_blocks      = ["0.0.0.0/0"]
+    from_port        = 443
+    ipv6_cidr_blocks = ["::/0"]
+    protocol         = "TCP"
+    to_port          = 443
   }
 
   tags = {
@@ -41,10 +43,11 @@ resource "aws_security_group" "ecs" {
   vpc_id = var.vpc_id
 
   egress {
-    cidr_blocks = ["0.0.0.0/0"]
-    from_port   = 0
-    protocol    = "-1"
-    to_port     = 0
+    cidr_blocks      = ["0.0.0.0/0"]
+    from_port        = 0
+    ipv6_cidr_blocks = ["::/0"]
+    protocol         = "-1"
+    to_port          = 0
   }
 
   ingress {
@@ -88,10 +91,10 @@ resource "aws_security_group" "rds" {
   vpc_id = var.vpc_id
 
   egress {
-    cidr_blocks = ["0.0.0.0/0"]
-    from_port   = 5432
-    protocol    = "TCP"
-    to_port     = 5432
+    from_port       = 5432
+    protocol        = "TCP"
+    security_groups = [aws_security_group.ecs.id]
+    to_port         = 5432
   }
 
   ingress {

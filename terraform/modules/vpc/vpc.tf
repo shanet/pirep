@@ -1,14 +1,16 @@
 variable "name_prefix" {}
 
 resource "aws_vpc" "this" {
-  cidr_block           = "10.0.0.0/16"
-  enable_dns_hostnames = true
-  tags                 = { Name = var.name_prefix }
+  assign_generated_ipv6_cidr_block = true
+  cidr_block                       = "10.0.0.0/16"
+  enable_dns_hostnames             = true
+  tags                             = { Name = var.name_prefix }
 }
 
 resource "aws_subnet" "public_az1" {
   availability_zone = "${data.aws_region.current.name}a"
   cidr_block        = "10.0.1.0/24"
+  ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 1)
   tags              = { Name = "${var.name_prefix}-public_az1" }
   vpc_id            = aws_vpc.this.id
 }
@@ -16,6 +18,7 @@ resource "aws_subnet" "public_az1" {
 resource "aws_subnet" "public_az2" {
   availability_zone = "${data.aws_region.current.name}b"
   cidr_block        = "10.0.2.0/24"
+  ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 2)
   tags              = { Name = "${var.name_prefix}-public_az2" }
   vpc_id            = aws_vpc.this.id
 }
@@ -23,6 +26,7 @@ resource "aws_subnet" "public_az2" {
 resource "aws_subnet" "private_az1" {
   availability_zone = "${data.aws_region.current.name}a"
   cidr_block        = "10.0.11.0/24"
+  ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 11)
   tags              = { Name = "${var.name_prefix}-private_az1" }
   vpc_id            = aws_vpc.this.id
 }
@@ -30,6 +34,7 @@ resource "aws_subnet" "private_az1" {
 resource "aws_subnet" "private_az2" {
   availability_zone = "${data.aws_region.current.name}b"
   cidr_block        = "10.0.12.0/24"
+  ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 12)
   tags              = { Name = "${var.name_prefix}-private_az2" }
   vpc_id            = aws_vpc.this.id
 }
@@ -47,10 +52,16 @@ resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
 }
 
-resource "aws_route" "public_internet_gateway" {
+resource "aws_route" "public_internet_gateway_ipv4" {
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.this.id
   route_table_id         = aws_vpc.this.default_route_table_id
+}
+
+resource "aws_route" "public_internet_gateway_ipv6" {
+  destination_ipv6_cidr_block = "::/0"
+  gateway_id                  = aws_internet_gateway.this.id
+  route_table_id              = aws_vpc.this.default_route_table_id
 }
 
 resource "aws_route_table_association" "public_az1" {
