@@ -33,7 +33,7 @@ RUN apt-get update && apt-get install --yes postgresql-client-14
 # Install a newer version of GDAL (version >= 3.6.2, we may be able to go back to stable in a future Debian version)
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.d/stable.list
 RUN cat /etc/apt/sources.list.d/stable.list | sed "s/bullseye/testing/" > /etc/apt/sources.list.d/testing.list
-RUN apt-get update && apt-get install --yes --target-release testing gdal-bin
+RUN apt-get update && apt-get install --yes --target-release testing gdal-bin libhdf5-103
 
 # -----------------------------------------------------------------------------
 FROM base AS build
