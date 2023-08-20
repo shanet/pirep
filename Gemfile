@@ -11,7 +11,7 @@ gem 'dartsass-rails', '~> 0.4.0'
 gem 'importmap-rails'
 gem 'jbuilder', '~> 2.7'
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 4.1'
+gem 'puma'
 gem 'sprockets-rails'
 
 # Third party gems
