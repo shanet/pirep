@@ -21,7 +21,7 @@ Rails.configuration.content_security_policy do |policy|
   policy.img_src(*(hosts + ['www.gravatar.com', '*.googleusercontent.com', :data, :self]))
   policy.object_src(:none)
   policy.script_src(*hosts)
-  policy.style_src(*(hosts + ['unsafe-inline']))
+  policy.style_src(*hosts)
   policy.worker_src(:blob)
 
   # Send any CSP errors to Sentry
