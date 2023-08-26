@@ -23,8 +23,8 @@ resource "aws_db_parameter_group" "db_parameters" {
 }
 
 resource "aws_db_instance" "database" {
-  allocated_storage         = 100 # gb
-  backup_retention_period   = 30 # days
+  allocated_storage         = 100           # gb
+  backup_retention_period   = 30            # days
   backup_window             = "10:00-10:30" # UTC
   ca_cert_identifier        = "rds-ca-rsa2048-g1"
   db_subnet_group_name      = var.subnet_group
