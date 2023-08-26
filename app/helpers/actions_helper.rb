@@ -8,6 +8,9 @@ module ActionsHelper
         }
 
       when :airport_edited
+        # Skip any version that didn't actually make any changes
+        return nil unless action.version.object_changes
+
         fields_updated = action.version.object_changes.keys.map {|key| key.capitalize.gsub('_', ' ')}
 
         return {

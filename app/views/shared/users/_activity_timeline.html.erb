@@ -9,12 +9,12 @@
 <% if actions.any? %>
   <ul class="list-group my-3">
     <% actions.limit(actions_limit).each do |action| %>
-      <li class="list-group-item">
-        <%
-          link = action_link(action)
-          next unless link
-        %>
+      <%
+        link = action_link(action)
+        next unless link
+      %>
 
+      <li class="list-group-item">
         <i class="<%= link[:icon] %>"></i> <%= link[:label] %>
         <br><small class="text-muted"><%= format_timestamp action.created_at %></small>
       </li>
