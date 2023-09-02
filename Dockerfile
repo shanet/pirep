@@ -1,4 +1,4 @@
-FROM ruby:3.2.2-slim-bullseye AS base
+FROM ruby:3.2.2-slim-bookworm AS base
 
 ARG PORT=8080
 
@@ -16,6 +16,7 @@ RUN apt-get update && apt-get upgrade --yes
 RUN apt-get install --yes \
   curl \
   dnsutils \
+  gdal-bin \
   gnupg \
   htop \
   libjemalloc2 \
@@ -26,14 +27,9 @@ RUN apt-get install --yes \
   zsh
 
 # Install Postgres client
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt bullseye-pgdg main" > /etc/apt/sources.list.d/postgres.list
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/postgres.list
 RUN curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 RUN apt-get update && apt-get install --yes postgresql-client-14
-
-# Install a newer version of GDAL (version >= 3.6.2, we may be able to go back to stable in a future Debian version)
-RUN mv /etc/apt/sources.list /etc/apt/sources.list.d/stable.list
-RUN cat /etc/apt/sources.list.d/stable.list | sed "s/bullseye/testing/" > /etc/apt/sources.list.d/testing.list
-RUN apt-get update && apt-get install --yes --target-release testing gdal-bin libhdf5-103
 
 # -----------------------------------------------------------------------------
 FROM base AS build
@@ -41,7 +37,7 @@ FROM base AS build
 RUN apt-get install --yes build-essential
 
 # Install NodeJS
-RUN echo "deb https://deb.nodesource.com/node_18.x bullseye main" > /etc/apt/sources.list.d/node.list
+RUN echo "deb https://deb.nodesource.com/node_20.x bookworm main" > /etc/apt/sources.list.d/node.list
 RUN curl https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
 
 # Install Yarn
