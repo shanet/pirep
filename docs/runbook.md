@@ -114,9 +114,10 @@ The `FaaDataCycle` model holds information on which data cycle each of these pro
 
 Due to the heavy amount of processing required to generate new charts, a standalone ECS task with significantly more CPU and memory resources is created for this purpose. This `importer` task is responsible for doing the downloading and processing of all FAA products and inserting them into the database.
 
-1. (Recommended) Take an RDS snapshot before
-2. `rails ssh`
-3. `rails c` then `FaaDataImporterJob.perform_now`
+1. (Recommended) Do a test run of this locally first with `FaaDataImporter.new(force_update: true).import!`
+2. (Recommended) Take an RDS snapshot before
+3. `rails ssh`
+4. `rails c` then `FaaDataImporterJob.perform_now`
 
 The `FaaDataImporterJob` job will start a standalone ECS task which has its command overridden to run `scripts/faa_data_importer.rb`. Note that generating map tiles will take 12+ hours even with the increased resources this task has. Progress can be monitored through a combination of CloudWatch logs and running `htop` in the container to ensure the `gdal` process is running and consuming the expected amount of CPU. Finally, this task will update the `FaaDataCycle` with the new data cycle for each product to start using it on the other containers.
 
