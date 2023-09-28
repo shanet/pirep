@@ -6,7 +6,7 @@ class SessionsTest < ApplicationSystemTestCase
     test "logs in and logs out #{user} via map controller" do
       sign_in user
 
-      click_on 'Logout'
+      click_link 'Logout'
       assert_selector '.map-header', text: 'Log In'
     end
   end

@@ -9,8 +9,8 @@ class ReadOnly < ApplicationRecord
   # means having a loader class which lazy loads anything from the database. This allows us to create the loader object when the
   # application initializes but nothing will hit the database until a method is explicitly called.
   class Loader
-    def method_missing(method, *args, **kwargs, &block)
-      return object.send(method, *args, **kwargs, &block)
+    def method_missing(method, ...)
+      return object.send(method, ...)
     end
 
     def respond_to_missing?(method, include_private=false)
