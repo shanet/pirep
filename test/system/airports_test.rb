@@ -79,7 +79,7 @@ class AirportsTest < ApplicationSystemTestCase
     tags.first.click
     tags.last.click
 
-    click_on 'Add Tags'
+    click_button 'Add Tags'
 
     # There should now be four tags plus the "edit tags" button
     assert_equal 5, all('.tag-square').count, 'Tags not added'
@@ -116,10 +116,10 @@ class AirportsTest < ApplicationSystemTestCase
     visit airport_path(@airport.code)
     contact = 'Call 867-5309 for info'
 
-    click_on 'Edit Airport Access'
+    click_button 'Edit Airport Access'
     find('#airport_landing_rights_restricted + label').click
     fill_in 'Requirements/contact info for landing:', with: contact
-    click_on 'Update Airport Access'
+    click_button 'Update Airport Access'
 
     # Kind of messy, but check that the page has the expected landing rights text on it now
     landing_rights = find('.landing-rights').text
@@ -231,9 +231,9 @@ class AirportsTest < ApplicationSystemTestCase
     visit airport_path(@airport.code)
 
     assert_difference -> {all('.carousel[data-uncached-photos-loaded="true"] img', visible: false).count} do
-      click_on 'Add Photo'
+      click_button 'Add Photo'
       find('#upload-photo-form input[type="file"]').set(Rails.root.join('test/fixtures/files/image.png'))
-      click_on 'Upload Photo'
+      click_button 'Upload Photo'
     end
   end
 
@@ -258,28 +258,28 @@ class AirportsTest < ApplicationSystemTestCase
     comment = 'I am a comment'
 
     find_by_id('comment_body').fill_in with: comment
-    click_on 'Add Comment'
+    click_button 'Add Comment'
 
     assert_equal comment, all('.comment p').last.text, 'New comment not on page'
   end
 
   test 'helpful comment' do
     visit airport_path(@airport.code)
-    click_on 'Helpful'
+    click_button 'Helpful'
     assert_selector '.helpful-count'
   end
 
   test 'flag comment as outdated' do
     visit airport_path(@airport.code)
-    click_on 'Flag as outdated'
+    click_button 'Flag as outdated'
     assert_selector '.alert.outdated-at'
   end
 
   test 'changes cover image' do
     visit airport_path(@airport.code)
 
-    click_on 'Theme'
-    click_on 'Forest'
+    click_button 'Theme'
+    click_link 'Forest'
 
     assert_selector '.airport-header-cover-image.cover-image-forest'
     assert_equal 'forest', @airport.reload.cover_image, 'Cover image not updated on airport'

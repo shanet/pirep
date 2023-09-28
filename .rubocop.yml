@@ -107,6 +107,9 @@ Rails/TimeZone:
 
 # --------------------------------------
 
+Style/ArgumentsForwarding:
+  UseAnonymousForwarding: false
+
 Style/ConditionalAssignment:
   Enabled: false
 

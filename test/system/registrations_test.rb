@@ -34,8 +34,8 @@ private
 
   def register_user_map_controller(passwords_match: true)
     visit root_path
-    click_on 'Log In'
-    click_on 'Register'
+    click_link 'Log In'
+    click_link 'Register'
 
     submit_registration_form(passwords_match: passwords_match)
   end
