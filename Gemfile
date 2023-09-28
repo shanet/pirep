@@ -4,7 +4,7 @@ git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 ruby '3.2.2'
 
 # Core Rails gems
-gem 'rails', '7.0.7.2'
+gem 'rails', '7.0.8'
 
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'dartsass-rails', '~> 0.4.0'
@@ -54,8 +54,7 @@ group :development, :test do
 end
 
 group :development do
-  # This can be updated when https://github.com/BetterErrors/better_errors/issues/516 is resolved
-  gem 'better_errors', '2.9.1'
+  gem 'better_errors'
   gem 'binding_of_caller'
   gem 'listen', '~> 3.2'
 end
