@@ -63,6 +63,12 @@ module ActionsHelper
           icon: 'fa-solid fa-rotate-left',
           label: "#{link_to action.actionable.airport.code, airport_path(action.actionable.airport)}: Comment unflagged as outdated".html_safe,
         }
+
+      when :webcam_added
+        return {
+          icon: 'fa-solid fa-camera',
+          label: "#{link_to action.actionable.airport.code, airport_path(action.actionable.airport)}: Airport webcam added".html_safe,
+        }
     end
   end
 end

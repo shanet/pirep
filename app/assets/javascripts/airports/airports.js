@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   initEditingTags();
   initTagDeleteIcons();
+  initShowMoreWebcams();
   initExtraRemarks();
   initMapBackButton();
   initCoverImageForm();
@@ -33,6 +34,16 @@ function initTagDeleteIcons() {
     for(let i=0; i<deleteIcons.length; i++) {
       deleteIcons[i].style.display = (['none', ''].indexOf(deleteIcons[i].style.display) !== -1 ? 'block' : 'none');
     }
+  });
+}
+
+function initShowMoreWebcams() {
+  const showMoreWebcams = document.getElementById('show-more-webcams');
+  if(!showMoreWebcams) return;
+
+  showMoreWebcams.addEventListener('click', () => {
+    // Update the button text accordingly
+    showMoreWebcams.innerText = (showMoreWebcams.innerText === 'Show More' ? 'Show Less' : 'Show More');
   });
 }
 

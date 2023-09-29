@@ -17,6 +17,8 @@ class Action < ApplicationRecord
     :comment_helpful,
     :comment_flagged,
     :comment_unflagged,
+
+    :webcam_added,
   ].to_set
 
   validates :type, inclusion: {in: ACTIONS.map(&:to_s)}
@@ -28,6 +30,7 @@ class Action < ApplicationRecord
       :airport_added,
       :tag_added,
       :tag_removed,
+      :webcam_added,
     ]
   end
 end

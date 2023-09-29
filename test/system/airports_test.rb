@@ -143,11 +143,11 @@ class AirportsTest < ApplicationSystemTestCase
 
     # An update that would overwrite a conflicting change should be rejected
     with_versioning do
-      travel_to(1.minute.from_now) do
+      travel_to(5.minutes.from_now) do
         @airport.update!(description: 'blerg')
       end
 
-      travel_to(1.minute.ago) do
+      travel_to(5.minutes.ago) do
         _editor, card = update_editor('Description', 'Description edit2')
 
         within(card) do
@@ -251,6 +251,27 @@ class AirportsTest < ApplicationSystemTestCase
 
     assert_equal url_for(@airport.reload.featured_photo), find('.carousel-item img')[:src], 'Unexpected featured photo'
     assert_equal 'Featured Photo', find('.carousel-item .featured.disable').text, 'First photo not set as featured with disabled button'
+  end
+
+  test 'has webcams' do
+    webcam1 = create(:webcam, airport: @airport, url: 'https://example.com')
+    webcam2 = create(:webcam, airport: @airport, url: 'https://subdomain.example.com')
+
+    visit airport_path(@airport.code)
+
+    assert_selector "a.webcam-link[href=\"#{webcam1.url}\"]"
+    assert_selector "a.webcam-link[href=\"#{webcam2.url}\"]"
+  end
+
+  test 'add webcam' do
+    visit airport_path(@airport.code)
+    click_button 'Add Webcam'
+
+    url = 'example.com/image.jpg'
+    find_by_id('webcam_url').fill_in with: url
+    find('input[type="submit"][value="Add Webcam"]').click
+
+    assert_selector "img.webcam-image[src=\"https://#{url}\"]"
   end
 
   test 'leave a comment' do

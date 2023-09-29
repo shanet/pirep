@@ -183,7 +183,8 @@ private
     # Create an action for each added tag
     if airport_params[:tags_attributes] # rubocop:disable Style/SafeNavigation
       airport_params[:tags_attributes].each do |_key, tag|
-        Action.create!(type: :tag_added, actionable: @airport.tags.find_by(name: tag[:name]), user: active_user)
+        tag_record = @airport.tags.find_by(name: tag[:name])
+        Action.create!(type: :tag_added, actionable: tag_record, user: active_user, version: tag_record.versions.last)
       end
     end
 

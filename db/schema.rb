@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_22_060020) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_29_054548) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -149,6 +149,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_22_060020) do
     t.datetime "scheduled_at"
     t.datetime "finished_at"
     t.text "error"
+    t.integer "error_event", limit: 2
     t.index ["active_job_id", "created_at"], name: "index_good_job_executions_on_active_job_id_and_created_at"
   end
 
@@ -186,6 +187,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_22_060020) do
     t.boolean "is_discrete"
     t.integer "executions_count"
     t.text "job_class"
+    t.integer "error_event", limit: 2
     t.index ["active_job_id", "created_at"], name: "index_good_jobs_on_active_job_id_and_created_at"
     t.index ["active_job_id"], name: "index_good_jobs_on_active_job_id"
     t.index ["batch_callback_id"], name: "index_good_jobs_on_batch_callback_id", where: "(batch_callback_id IS NOT NULL)"
@@ -317,6 +319,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_22_060020) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  create_table "webcams", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "airport_id", null: false
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["airport_id"], name: "index_webcams_on_airport_id"
+  end
+
   add_foreign_key "actions", "users"
   add_foreign_key "actions", "versions"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -328,4 +338,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_22_060020) do
   add_foreign_key "remarks", "airports"
   add_foreign_key "runways", "airports"
   add_foreign_key "tags", "airports"
+  add_foreign_key "webcams", "airports"
 end

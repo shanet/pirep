@@ -4,12 +4,13 @@ class Airport < ApplicationRecord
   include AttachmentOrganizable
   include Searchable
 
-  has_many :runways, dependent: :destroy
-  has_many :remarks, dependent: :destroy
-  has_many :tags, dependent: :destroy
-  has_many :comments, dependent: :destroy
   has_many :actions, as: :actionable, dependent: :destroy
+  has_many :comments, dependent: :destroy
   has_many :pageviews, as: :record, dependent: :destroy
+  has_many :remarks, dependent: :destroy
+  has_many :runways, dependent: :destroy
+  has_many :tags, dependent: :destroy
+  has_many :webcams, dependent: :destroy
 
   belongs_to :featured_photo, class_name: 'ActiveStorage::Attachment', optional: true
   has_many_attached_with :contributed_photos, path: -> {"uploads/airport_photos/contributed/#{code.downcase}"}
