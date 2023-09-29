@@ -1,0 +1,18 @@
+<% if @airport.webcams.present? %>
+  <ul>
+    <% @airport.webcams.each do |webcam| %>
+      <li>
+        <div class="d-flex align-items-center">
+          <%= link_to(webcam.url.truncate(50), webcam.url) %>
+
+          <%= button_to '<i class="fa-solid fa-trash"></i> Delete'.html_safe, manage_webcam_path(webcam),
+            method: :delete,
+            class: 'btn btn-outline-danger btn-sm ms-2',
+            data: {confirm: 'Are you sure you want to permanently delete this webcam?'} %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  No webcams exist.
+<% end %>

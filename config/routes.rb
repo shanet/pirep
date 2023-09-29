@@ -30,6 +30,7 @@ Rails.application.routes.draw do
 
     resources :attachments, only: [:index, :destroy]
     resources :comments
+    resources :webcams, only: :destroy
     resources :versions, only: :update
 
     resources :airports do
@@ -76,4 +77,6 @@ Rails.application.routes.draw do
       patch 'undo_outdated', action: :undo_outdated, as: :undo_outdated
     end
   end
+
+  resources :webcams, only: :create
 end
