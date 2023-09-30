@@ -3,7 +3,7 @@ class Webcam < ApplicationRecord
 
   belongs_to :airport
 
-  has_many :actions, as: :actionable, dependent: :destroy
+  has_many :actions, as: :actionable, dependent: :nullify
 
   has_paper_trail meta: {airport_id: :airport_id}
 
