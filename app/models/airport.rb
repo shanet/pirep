@@ -4,7 +4,7 @@ class Airport < ApplicationRecord
   include AttachmentOrganizable
   include Searchable
 
-  has_many :actions, as: :actionable, dependent: :destroy
+  has_many :actions, as: :actionable, dependent: :nullify
   has_many :comments, dependent: :destroy
   has_many :pageviews, as: :record, dependent: :destroy
   has_many :remarks, dependent: :destroy

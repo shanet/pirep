@@ -1,7 +1,7 @@
 class Tag < ApplicationRecord
   belongs_to :airport
 
-  has_many :actions, as: :actionable, dependent: :destroy
+  has_many :actions, as: :actionable, dependent: :nullify
 
   validates :name, uniqueness: {scope: :airport}
   validates :name, presence: true

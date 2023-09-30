@@ -33,4 +33,11 @@ class Action < ApplicationRecord
       :webcam_added,
     ]
   end
+
+  # Get the given attribute from the version associated with the action for deleted actionable records
+  def historical_value(attribute)
+    return nil unless version
+
+    return version.object&.[](attribute.to_s) || version.object_changes&.[](attribute.to_s)&.compact&.first
+  end
 end
