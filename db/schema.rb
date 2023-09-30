@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_30_032848) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_30_074625) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -325,6 +325,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_30_032848) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["airport_id"], name: "index_webcams_on_airport_id"
+    t.index ["url", "airport_id"], name: "index_webcams_on_url_and_airport_id", unique: true
   end
 
   add_foreign_key "actions", "users"

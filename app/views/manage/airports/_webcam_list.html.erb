@@ -2,7 +2,7 @@
   <ul>
     <% @airport.webcams.each do |webcam| %>
       <li>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center mt-2">
           <%= link_to(webcam.url.truncate(50), webcam.url) %>
 
           <%= button_to '<i class="fa-solid fa-trash"></i> Delete'.html_safe, manage_webcam_path(webcam),

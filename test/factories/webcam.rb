@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :webcam do
-    url {'https://example.com/webcam.jpg'}
+    sequence(:url) {|count| "https://example.com/webcam#{count}.jpg"}
     airport
   end
 end

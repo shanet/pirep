@@ -1,6 +1,37 @@
 require 'test_helper'
 
 class WebcamTest < ActiveSupport::TestCase
+  test 'adds webcam tag to airport' do
+    airport = create(:airport)
+    assert airport.tags.where(name: :webcam).empty?, 'Airport already has webcam tag'
+
+    create(:webcam, airport: airport)
+    assert airport.tags.where(name: :webcam).any?, 'Webcam tag not added to airport'
+  end
+
+  test 'removes webcam tag from airport' do
+    airport = create(:airport)
+    webcam1 = create(:webcam, airport: airport)
+    webcam2 = create(:webcam, airport: airport)
+
+    webcam1.destroy!
+    assert airport.tags.where(name: :webcam).any?, 'Webcam tag removed from airport'
+
+    webcam2.destroy!
+    assert airport.tags.where(name: :webcam).empty?, 'Webcam tag not removed from airport'
+  end
+
+  test 'disallows duplicate URLs on airport' do
+    airport = create(:airport)
+    create(:webcam, airport: airport, url: 'example.com')
+
+    assert_raises('ActiveRecord::RecordInvalid') do
+      create(:webcam, airport: airport, url: 'example.com')
+    end
+
+    assert create(:webcam, url: 'example.com').valid?, 'Webcam on different airport invalid'
+  end
+
   test 'is image URL' do
     assert create(:webcam).image?, 'Webcam URL not a direct image link'
     assert_not create(:webcam, url: 'https://example.com/webcam').image?, 'Webcam URL a direct image link'

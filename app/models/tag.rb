@@ -17,6 +17,11 @@ class Tag < ApplicationRecord
       theme: 'green',
       default: true,
     },
+    empty: {
+      label: 'Undocumented',
+      icon: 'question',
+      theme: 'pink',
+    },
     public_: {
       label: 'Public',
       icon: 'lock-open',
@@ -108,10 +113,10 @@ class Tag < ApplicationRecord
       icon: 'times-circle',
       theme: 'brown',
     },
-    empty: {
-      label: 'Empty',
-      icon: 'question',
-      theme: 'pink',
+    webcam: {
+      label: 'Webcam',
+      icon: 'camera',
+      theme: 'purple',
     },
   }
 
