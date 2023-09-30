@@ -26,6 +26,8 @@
   <% end %>
 </div>
 
+<%= render 'airports/webcams/add_webcam_form' %>
+
 <% content_for :collapsible_content, flush: true do %>
   <% @airport.webcams.offset(1).each do |webcam| %>
     <%= render 'airports/webcams/webcam', webcam: webcam %>
@@ -33,5 +35,3 @@
 <% end %>
 
 <%= render 'shared/collapsible', id: 'show-all-webcams', classes: 'mb-2' %>
-
-<%= render 'airports/webcams/add_webcam_form' %>

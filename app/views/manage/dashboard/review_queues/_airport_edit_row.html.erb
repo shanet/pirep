@@ -1,6 +1,6 @@
 <%
   user = Users::User.find_by(id: version.whodunnit)
-  airport = (version.item_type == 'Tag' ? Airport.find_by(id: version.airport_id) : version.item)
+  airport = (version.item_type.in?(['Tag', 'Webcam']) ? Airport.find_by(id: version.airport_id) : version.item)
 %>
 
 <div class="review-record list-group-item" data-record-id="<%= version.id %>">
@@ -36,11 +36,19 @@
     <% else %>
       <i class="fa-solid fa-pen-to-square"></i> <%= version.object_changes.keys.map {|key| key.gsub('_', ' ').capitalize}.join(', ') %>
     <% end %>
+
   <% elsif version.item_type == Tag.name %>
     <% if version.event == 'create' %>
-      <i class="fa-solid fa-square-plus"></i> Tag added
+      <i class="fa-solid fa-square-plus"></i> Tag added: <%= version.object_changes['name'].last %>
     <% elsif version.event == 'destroy' %>
-      <i class="fa-solid fa-square-minus"></i> Tag Removed
+      <i class="fa-solid fa-square-minus"></i> Tag removed: <%= version.object_changes['name'].first %>
+    <% end %>
+
+  <% elsif version.item_type == Webcam.name %>
+    <% if version.event == 'create' %>
+      <i class="fa-solid fa-square-plus"></i> Webcam added: <%= version.object_changes['url'].last %>
+    <% elsif version.event == 'destroy' %>
+      <i class="fa-solid fa-square-minus"></i> Webcam removed: <%= version.object_changes['url'].first %>
     <% end %>
   <% end %>
 </div>
