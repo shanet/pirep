@@ -18,7 +18,7 @@ class Tag < ApplicationRecord
       default: true,
     },
     empty: {
-      label: 'Undocumented',
+      label: 'Undocu&shy;mented'.html_safe,
       icon: 'question',
       theme: 'pink',
     },

@@ -1,3 +1,5 @@
+<% image_webcams = @airport.webcams.select(&:image?) %>
+
 <div class="card mt-3">
   <div class="card-header">
     <i class="fas fa-camera"></i> Airport <%= 'Webcam'.pluralize(@airport.webcams.count) %>
@@ -10,8 +12,8 @@
   </ul>
 </div>
 
-<% if @airport.webcams.any? %>
-  <%= render 'airports/webcams/webcam', webcam: @airport.webcams.first %>
+<% if image_webcams.any? %>
+  <%= render 'airports/webcams/webcam', webcam: image_webcams.first %>
 <% end %>
 
 <div class="text-end mt-2">
@@ -21,7 +23,7 @@
 
   <button type="button" class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="collapse" data-bs-target="add-webcam-form">Add Webcam</a>
 
-  <% if @airport.webcams.count > 1 %>
+  <% if image_webcams.count > 1 %>
     <button id="show-more-webcams" class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="show-all-webcams">Show More</a></button>
   <% end %>
 </div>
@@ -29,8 +31,10 @@
 <%= render 'airports/webcams/add_webcam_form' %>
 
 <% content_for :collapsible_content, flush: true do %>
-  <% @airport.webcams.offset(1).each do |webcam| %>
-    <%= render 'airports/webcams/webcam', webcam: webcam %>
+  <% if image_webcams.count > 1 %>
+    <% image_webcams[1..].each do |webcam| %>
+      <%= render 'airports/webcams/webcam', webcam: webcam %>
+    <% end %>
   <% end %>
 <% end %>
 
