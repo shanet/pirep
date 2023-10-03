@@ -9,6 +9,12 @@
     <i class="fa-solid fa-skull-crossbones"></i> Sadly, this airport is reportedly closed<% unless @airport.unmapped? %> based on it being removed from the FAA's database<% end %>.
   </div>
 <% else %>
+  <% if @airport.unmapped? %>
+    <div class="alert alert-danger mb-3">
+      <i class="fa-solid fa-solid fa-triangle-exclamation"></i> Warning: This airport is not mapped in the FAA's database. There is no guarantee regarding the accuracy of the information on this page. <strong>You</strong> are ultimately responsible for confirming conditions before attempting to land here.
+    </div>
+  <% end %>
+
   <div class="alert alert-primary mb-3">
     <i class="fa-solid fa-pencil"></i> Are you familiar with this airport? Help out other pilots by adding your local knowledge<% if defined?(show_link) %> on its <%= link_to 'airport page', airport_path(@airport.code) %><% end %>.
   </div>
