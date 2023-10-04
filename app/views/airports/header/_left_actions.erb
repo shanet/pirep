@@ -1,11 +1,9 @@
-<%# If we're given a referrer from the map, use it as it will include the full query string with the map state. The JavaScript on the
-    page will first try to use the history API in this case since this preserves the Mapbox state and fallback to the referer otherwise.
-    If not referrer is available, link directly to the map index with an anchor that matches Mapbox's state anchor of `zoom/latitude/longitude` %>
-
+<%# Link to the map index with an anchor that matches Mapbox's state anchor of `zoom/latitude/longitude`.
+    The airport module JavaScript will attempt to use the history API if available negating the location of this link. %>
 <%= link_to '<i class="fa-solid fa-chevron-left me-1"></i>Map'.html_safe,
   root_path(airport: @airport.code, anchor: "9/#{@airport.latitude}/#{@airport.longitude}"),
-  class: "map-back btn btn-sm btn-outline-#{color}",
-  data: {'history': (URI(request.referer || '').path == root_path)} %>
+  class: "map-back btn btn-sm btn-outline-#{color}"
+%>
 
 <% if Manage::AirportPolicy.new(current_user, @airport).show? %>
   <%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_airport_path(@airport), class: "btn btn-sm btn-outline-#{color}" %>

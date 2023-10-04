@@ -83,6 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if(!hasMapboxAccessToken()) {
       flashes.show(flashes.FLASH_ERROR, 'Mapbox Access Token is not set. The map will work, but tiles won\'t be rendered.', true);
     }
+
+    // Reapply the URL params when returning to the page via the history API
+    window.addEventListener('pageshow', applyUrlSearchParamsOnMap);
   };
 
   // Load won't be fired in test mode
@@ -355,8 +358,14 @@ function applyUrlSearchParamsOnMap() {
   const airport = urlSearchParams.getAirport();
   const zoomLevel = urlSearchParams.getZoomLevel();
 
+  // Don't open the drawer if on a small screen and we're returning from the airport show page as it creates confusing
+  // UX when leaving the airport show page and arriving at a new page that looks extremely similar rather than the map.
+  const openDrawer = !(utils.isBreakpointDown('sm') && sessionStorage.getItem('from_airport'));
+  sessionStorage.removeItem('from_airport');
+  if(!openDrawer) drawer.closeDrawer();
+
   if(airport) {
-    openAirport(airport, null, zoomLevel);
+    openAirport(airport, null, zoomLevel, openDrawer);
   }
 }
 
