@@ -41,6 +41,16 @@ export function initializeDrawer() {
   // Don't re-initialize a drawer that was already opened, closed, and then re-opened
   if(document.querySelector(`#${DRAWER_CONTENT_ID}`).dataset.initialized === 'true') return;
 
+  // Airport show more buttons
+  const moreButtons = document.querySelectorAll(`#${DRAWER_CONTENT_ID} .airport-more-button`);
+
+  for(let i=0; i<moreButtons.length; i++) {
+    // Let the airport page know it's being accessed from the map so it knows to use the history API for back links
+    moreButtons[i].addEventListener('click', () => {
+      sessionStorage.setItem('from_map', true);
+    });
+  }
+
   // Zoom out/in
   document.querySelector(`#${DRAWER_CONTENT_ID} .zoom-btn`).addEventListener('click', zoomAirport);
 

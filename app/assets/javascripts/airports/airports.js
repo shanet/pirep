@@ -67,19 +67,22 @@ function initExtraRemarks() {
 function initMapBackButton() {
   const mapBackButtons = document.getElementsByClassName('map-back');
 
+  // If arrived at this page from the map index then try to use the history API to go back so it uses the cached map state rather than doing a full page load
+  const useHistoryApi = sessionStorage.getItem('from_map');
+  sessionStorage.removeItem('from_map');
+
   for(let i=0; i<mapBackButtons.length; i++) {
     const button = mapBackButtons[i];
 
-    // If there is a "history" attribute set it means we want to call `history.back` for the link but this has to be done
-    // in a JavaScript module rather than in the link attribute itself because of the CSP not allowing inline JavaScript.
-    if(button.dataset.history === 'true') {
-      button.addEventListener('click', (event) => {
-        if(window.history.length > 1) {
-          window.history.back();
-          event.preventDefault();
-        }
-      });
-    }
+    button.addEventListener('click', (event) => {
+      // Let the map index know we're coming from the airport page to customize the drawer loading
+      sessionStorage.setItem('from_airport', true);
+
+      if(useHistoryApi && window.history.length > 1) {
+        window.history.back();
+        event.preventDefault();
+      }
+    });
   }
 }
 
