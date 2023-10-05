@@ -1,6 +1,8 @@
 require 'google/google_api'
 
 class Airport < ApplicationRecord
+  AIRPORT_PHOTOS_S3_PATH = 'uploads/airport_photos'
+
   include AttachmentOrganizable
   include Searchable
 
@@ -13,8 +15,8 @@ class Airport < ApplicationRecord
   has_many :webcams, dependent: :destroy
 
   belongs_to :featured_photo, class_name: 'ActiveStorage::Attachment', optional: true
-  has_many_attached_with :contributed_photos, path: -> {"uploads/airport_photos/contributed/#{code.downcase}"}
-  has_many_attached_with :external_photos, path: -> {"uploads/airport_photos/external/#{code.downcase}"}
+  has_many_attached_with :contributed_photos, path: -> {"#{AIRPORT_PHOTOS_S3_PATH}/contributed/#{code.downcase}"}
+  has_many_attached_with :external_photos, path: -> {"#{AIRPORT_PHOTOS_S3_PATH}/external/#{code.downcase}"}
 
   accepts_nested_attributes_for :tags
 

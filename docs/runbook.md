@@ -164,3 +164,22 @@ There are four places environment variables are configured:
 [Sentry](https://sentry.io) is used for error monitoring on the backend and frontend.
 
 [Skylight](https://skylight.io) is used for performance monitoring on the backend.
+
+## Database Backups
+
+Automated RDS snapshot backups are configured. To make manual local database backups use the following rake tasks:
+
+```
+rails ssh
+rails db:backup
+```
+
+```
+rails db:download
+```
+
+To make a backup of airport photos from S3:
+
+```
+rails s3_sync[path/to/destination]
+```

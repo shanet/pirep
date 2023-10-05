@@ -61,3 +61,13 @@ namespace :db do
     puts "Database backup downloaded to ./#{selected_object}"
   end
 end
+
+desc 'Sync S3 bucket'
+task :s3_sync, [:destination] => :environment do |_task, argv|
+  if argv[:destination].blank?
+    puts 'Usage: rails s3_sync[path/to/destination]'
+    next
+  end
+
+  system("aws s3 sync s3://pirep-production-assets/#{Airport::AIRPORT_PHOTOS_S3_PATH} #{argv[:destination]}")
+end
