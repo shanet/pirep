@@ -10,6 +10,7 @@ import * as newAirportDrawer from 'map/drawer_new_airport';
 import * as search from 'map/search';
 import * as urlSearchParams from 'map/url_search_params';
 import * as utils from 'shared/utils';
+import * as welcomeInfo from 'map/welcome_info';
 
 export const MARKER_VISIBLE = 'marker_visible';
 export const MARKER_HIDDEN = 'marker_hidden';
@@ -183,6 +184,7 @@ function addEventHandlersToMap() {
     });
   });
 
+  map.on('movestart', welcomeInfo.hideWelcomeInfo);
   map.on('moveend', fetchAirportAnnotations);
   map.on('move', fetchAirportAnnotations);
 

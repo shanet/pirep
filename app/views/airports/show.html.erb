@@ -21,6 +21,8 @@
     </div>
   </div>
 
+  <%= render 'airports/welcome_info' %>
+
   <% if @airport.empty? || @airport.closed? || @airport.unmapped? %>
     <div class="row">
       <div class="col-12">

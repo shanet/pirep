@@ -1,3 +1,5 @@
+import * as welcomeInfo from 'shared/welcome_info';
+
 document.addEventListener('DOMContentLoaded', () => {
   initEditingTags();
   initTagDeleteIcons();
@@ -5,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initExtraRemarks();
   initMapBackButton();
   initCoverImageForm();
+  initWelcomeInfo();
 }, {once: true});
 
 function initEditingTags() {
@@ -116,4 +119,14 @@ function initCoverImageForm() {
       dropdown.querySelector('.dropdown-menu').classList.toggle('d-none');
     });
   }
+}
+
+function initWelcomeInfo() {
+  const welcomeNotice = document.getElementById('welcome-info-notice');
+  if(!welcomeNotice || !welcomeInfo.shouldShowWelcomeInfo()) return;
+
+  // Only show the welcome info once
+  welcomeInfo.welcomeInfoShown();
+
+  welcomeNotice.classList.remove('d-none');
 }

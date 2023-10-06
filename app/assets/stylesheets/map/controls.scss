@@ -57,7 +57,6 @@ $drawer-translate-length: calc(100% - (#{$drawer-width} + #{$handle-size} / 2));
           'flashes'
           'footer';
         grid-template-columns: auto;
-        grid-template-rows: 20% auto;
       }
 
       > div * {
@@ -79,10 +78,6 @@ $drawer-translate-length: calc(100% - (#{$drawer-width} + #{$handle-size} / 2));
 
       .flashes {
         grid-area: flashes;
-
-        @include media-breakpoint-up(md) {
-          margin-top: 40%;
-        }
       }
 
       .action-buttons {

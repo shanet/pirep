@@ -30,4 +30,5 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  site_description: Pirep is a free, collaborative database of all public and private airports located within the United States. All pilots are welcome to contribute, edit, and improve any airport they have local knowledge about, no registration required.
+  airport_tags: The map, by default, shows documented airports with user-contributed information added to them. Use the filters to find new destinations for restaurants, camping, golfing, etc. or just explore what's around you.
