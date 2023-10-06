@@ -81,7 +81,7 @@ class MapTest < ApplicationSystemTestCase
 
     # Hidden airports not shown when zoomed out on the map so clicking on the position for the marker should do nothing
     open_airport(seaplane)
-    assert_no_selector '#drawer-content'
+    assert_no_selector '#drawer-content .airport-drawer-header'
 
     # Zoom in sufficiently so the hidden airports layer is shown
     map_set_zoom_level(9)
@@ -396,6 +396,14 @@ class MapTest < ApplicationSystemTestCase
     assert_equal Rails.configuration.meta_title, find('meta[name="title"]', visible: false)[:content], 'Unexpected meta name'
     assert_equal Rails.configuration.meta_description, find('meta[name="description"]', visible: false)[:content], 'Unexpected meta description'
     assert find('meta[property="og:title"]', visible: false)[:content].present?, 'Opengraph tags not present'
+  end
+
+  test 'shows about drawer on first visit as welcome info' do
+    visit map_path
+    assert_selector '#drawer-content #about'
+
+    visit map_path
+    assert_no_selector '#drawer-content #about'
   end
 
 private

@@ -315,6 +315,14 @@ class AirportsTest < ApplicationSystemTestCase
     assert_equal @airport.description, find('meta[property="og:description"]', visible: false)[:content], 'Unexpected Opengraph description'
   end
 
+  test 'display welcome info on first visit' do
+    visit airport_path(@airport.code)
+    assert_selector '#welcome-info-notice'
+
+    visit airport_path(@airport.code)
+    assert_no_selector '#welcome-info-notice'
+  end
+
 private
 
   def assert_editor_has_text(label, property, text)
