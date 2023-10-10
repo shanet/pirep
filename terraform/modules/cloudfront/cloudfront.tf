@@ -8,6 +8,7 @@ variable "s3_empty_map_tile_object" {}
 variable "s3_root_object" {}
 
 locals {
+  cache_ttl               = 86400 # seconds (1 day)
   headers                 = ["Origin"]
   http_methods            = ["GET", "HEAD", "OPTIONS"]
   origin_id_s3            = "s3_assets"
@@ -21,6 +22,7 @@ resource "aws_cloudfront_distribution" "assets" {
   comment             = "${var.name_prefix}-assets"
   default_root_object = var.s3_root_object
   enabled             = true
+  http_version        = "http2and3"
   is_ipv6_enabled     = true
   price_class         = "PriceClass_100"
 
@@ -28,8 +30,7 @@ resource "aws_cloudfront_distribution" "assets" {
     allowed_methods            = local.http_methods
     cached_methods             = local.http_methods
     compress                   = true
-    default_ttl                = 86400 # seconds (1 day)
-    min_ttl                    = 86400 # seconds (1 day)
+    default_ttl                = local.cache_ttl
     response_headers_policy_id = aws_cloudfront_response_headers_policy.this.id
     target_origin_id           = local.origin_id_web
     viewer_protocol_policy     = "redirect-to-https"
@@ -51,7 +52,7 @@ resource "aws_cloudfront_distribution" "assets" {
       allowed_methods            = local.http_methods
       cached_methods             = local.http_methods
       compress                   = true
-      default_ttl                = 86400 # seconds (1 day)
+      default_ttl                = local.cache_ttl
       path_pattern               = ordered_cache_behavior.value
       response_headers_policy_id = aws_cloudfront_response_headers_policy.this.id
       target_origin_id           = local.origin_id_s3
@@ -96,7 +97,7 @@ resource "aws_cloudfront_distribution" "assets" {
 
   viewer_certificate {
     acm_certificate_arn      = var.acm_certificate
-    minimum_protocol_version = "TLSv1.2_2018"
+    minimum_protocol_version = "TLSv1.2_2021"
     ssl_support_method       = "sni-only"
   }
 }
@@ -106,6 +107,7 @@ resource "aws_cloudfront_distribution" "tiles" {
   comment             = "${var.name_prefix}-tiles"
   default_root_object = var.s3_root_object
   enabled             = true
+  http_version        = "http2and3"
   is_ipv6_enabled     = true
   price_class         = "PriceClass_100"
 
@@ -127,7 +129,7 @@ resource "aws_cloudfront_distribution" "tiles" {
     allowed_methods            = local.http_methods
     cached_methods             = local.http_methods
     compress                   = true
-    default_ttl                = 86400 # seconds (1 day)
+    default_ttl                = local.cache_ttl
     response_headers_policy_id = aws_cloudfront_response_headers_policy.this.id
     target_origin_id           = local.origin_id_s3
     viewer_protocol_policy     = "redirect-to-https"
@@ -156,7 +158,7 @@ resource "aws_cloudfront_distribution" "tiles" {
 
   viewer_certificate {
     acm_certificate_arn      = var.acm_certificate
-    minimum_protocol_version = "TLSv1.2_2018"
+    minimum_protocol_version = "TLSv1.2_2021"
     ssl_support_method       = "sni-only"
   }
 }
