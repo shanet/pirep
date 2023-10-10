@@ -40,9 +40,6 @@ class Manage::DashboardController < ApplicationController
 private
 
   def most_active_records(data_model, event_model, polymorphic_column, limit, time_frame=nil)
-    # Remove the third-party CTE gem and use the built-in CTE support in Rails 7.1
-    raise if Rails.gem_version.to_s >= '7.1'
-
     # Events model = The model where the events are stored (Action for user edit actions, Pageview for reads)
     # Data model = The model to aggregate data and generate a count for (airports, users, etc.)
 
