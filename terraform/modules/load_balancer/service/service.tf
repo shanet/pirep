@@ -32,7 +32,7 @@ resource "aws_lb_listener" "https" {
   load_balancer_arn = var.load_balancer
   port              = var.listener_port_https
   protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
 
   default_action {
     target_group_arn = module.target_group_green.target_group.arn
