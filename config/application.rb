@@ -5,7 +5,7 @@ Bundler.require(*Rails.groups)
 
 module Pirep
   class Application < Rails::Application
-    config.load_defaults 7.0
+    config.load_defaults 7.1
 
     config.domain = 'pirep.io'
     config.active_job.queue_adapter = :good_job

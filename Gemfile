@@ -4,7 +4,7 @@ git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 ruby '3.2.2'
 
 # Core Rails gems
-gem 'rails', '7.0.8'
+gem 'rails', '7.1.0'
 
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'dartsass-rails', '~> 0.4.0'
@@ -15,7 +15,6 @@ gem 'puma'
 gem 'sprockets-rails'
 
 # Third party gems
-gem 'activerecord-cte'
 gem 'amazing_print'
 gem 'aws-sdk-ecs'
 gem 'aws-sdk-s3'
