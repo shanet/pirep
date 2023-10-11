@@ -121,13 +121,23 @@ private
       next unless File.file?(file)
 
       key = File.join(Rails.configuration.cdn_content_path, key_prefix, file.gsub(tiles_directory, ''))
+      attempts = 0
 
-      response = Aws::S3::Client.new.put_object(
-        body: File.open(file, 'r'),
-        bucket: Rails.configuration.asset_bucket,
-        content_type: 'image/webp',
-        key: key
-      )
+      begin
+        response = Aws::S3::Client.new.put_object(
+          body: File.open(file, 'r'),
+          bucket: Rails.configuration.asset_bucket,
+          content_type: 'image/webp',
+          key: key
+        )
+      rescue Aws::S3::Errors::InternalError => error
+        # Retry S3 internal errors a few times before giving up since getting to this point is an expensive operation
+        raise error if attempts >= 5
+
+        attempts += 1
+        sleep 10
+        retry
+      end
 
       raise Exceptions::ChartUploadFailed, response.to_h unless response.etag
     end
