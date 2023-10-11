@@ -36,7 +36,7 @@ module AirportsHelper
       end
     end
 
-    return '<i class="fa-solid fa-pen-to-square"></i> '.html_safe + Airport::HISTORY_COLUMNS[column.to_sym]
+    return "<i class=\"fa-solid fa-pen-to-square\"></i> #{Airport::HISTORY_COLUMNS[column.to_sym]}".html_safe
   end
 
   def diff(previous, current)
