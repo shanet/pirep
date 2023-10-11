@@ -1,3 +1,5 @@
+<% changes = diff(change.first, change.last) %>
+
 <div class="card mb-5">
   <div class="card-header ps-1">
     <%= version_title(version, column) %>
@@ -5,11 +7,11 @@
 
   <div class="row g-0">
     <div class="col-md-6">
-      <div class="diff diff-removed p-1"><%= diff(change.first, change.last).left.html_safe %></div>
+      <div class="diff diff-removed p-1"><%= changes.left.html_safe %></div>
     </div>
 
     <div class="col-md-6 border-start">
-      <div class="diff diff-added p-1"><%= diff(change.first, change.last).right.html_safe %></div>
+      <div class="diff diff-added p-1"><%= changes.right.html_safe %></div>
     </div>
   </div>
 </div>

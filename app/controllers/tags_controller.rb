@@ -15,24 +15,6 @@ class TagsController < ApplicationController
     end
   end
 
-  def revert
-    version = PaperTrail::Version.find(params[:id])
-    authorize(version.item || version.reify)
-
-    case version.event
-      when 'create'
-        # This is an admin only action and if it fails it's likely something complex that we shouldn't try to gracefully recover from
-        version.item.destroy!
-        redirect_to airport_path(version.item.airport), notice: 'Tag removed'
-      when 'destroy'
-        tag = version.reify
-
-        # This is an admin only action and if it fails it's likely something complex that we shouldn't try to gracefully recover from
-        tag.save!
-        redirect_to airport_path(tag.airport), notice: 'Tag added'
-    end
-  end
-
 private
 
   def tag_params

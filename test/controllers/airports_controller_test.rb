@@ -202,21 +202,6 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test 'revert' do
-    sign_in create(:admin)
-
-    with_versioning do
-      original_description = @airport.description
-      @airport.update! description: 'Changed'
-
-      # Revert the update made above
-      patch revert_airport_path(@airport, version_id: @airport.versions.last)
-      assert_redirected_to airport_path(@airport.code)
-
-      assert_equal original_description, @airport.reload.description, 'Airport not reverted to previous version'
-    end
-  end
-
   test 'annotations' do
     get annotations_airport_path(@airport)
     assert_response :success, 'Failed to get airport annotations'

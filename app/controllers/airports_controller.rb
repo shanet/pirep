@@ -101,15 +101,6 @@ class AirportsController < ApplicationController
     render :show
   end
 
-  def revert
-    @airport = PaperTrail::Version.find(params[:version_id]).reify
-    authorize @airport
-
-    # This is an admin only action and if it fails it's likely something complex that we shouldn't try to gracefully recover from
-    @airport.save!
-    redirect_to airport_path(@airport.code), notice: 'Airport reverted to previous version'
-  end
-
   def annotations
     return not_found unless @airport
 

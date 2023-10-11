@@ -14,6 +14,12 @@ module AirportsHelper
     end
   end
 
+  def display_version?(version, column)
+    return Airport::HISTORY_COLUMNS.keys.include?(column.to_sym) ||
+        (version.item_type == 'Tag' && column == 'name') ||
+        (version.item_type == 'Webcam' && column == 'url')
+  end
+
   def version_author(version)
     # Use `find_by` to handle versions without an author
     user = Users::User.find_by(id: version.whodunnit)
@@ -33,6 +39,15 @@ module AirportsHelper
           return '<i class="fa-solid fa-square-plus"></i> Tag Added'.html_safe
         when 'destroy'
           return '<i class="fa-solid fa-square-minus"></i> Tag Removed'.html_safe
+      end
+    end
+
+    if version.item_type == Webcam.name
+      case version.event
+        when 'create'
+          return '<i class="fa-solid fa-camera"></i> Webcam Added'.html_safe
+        when 'destroy'
+          return '<i class="fa-solid fa-camera"></i> Webcam Removed'.html_safe
       end
     end
 

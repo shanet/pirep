@@ -212,13 +212,14 @@ class AirportTest < ActiveSupport::TestCase
     with_versioning do
       # The airport should have versions for its associated tags so create & destroy one to create some versions
       @airport.update!(description: 'updated')
+      webcam = create(:webcam, airport: @airport)
       tag = create(:tag, airport: @airport)
       tag.destroy!
 
-      assert_equal 3, @airport.all_versions.count, 'Airport does not have own versions and associated tag versions'
+      assert_equal 5, @airport.all_versions.count, 'Airport does not have own versions and associated tag versions'
 
-      tag.versions.each do |version|
-        assert version.in?(@airport.all_versions), 'Tag versions not included with airport versions'
+      (tag.versions + webcam.versions).each do |version|
+        assert version.in?(@airport.all_versions), 'Tag/webcam versions not included with airport versions'
       end
     end
   end

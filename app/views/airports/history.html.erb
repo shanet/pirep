@@ -23,7 +23,7 @@
 
         <div class="col">
           <% version.object_changes.each do |column, change| %>
-            <% next unless Airport::HISTORY_COLUMNS.keys.include?(column.to_sym) || (version.item_type == 'Tag' && column == 'name') %>
+            <% next unless display_version?(version, column) %>
             <%= render 'airports/history/diff', version: version, column: column, change: change %>
           <% end %>
         </div>

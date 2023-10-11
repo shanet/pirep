@@ -7,24 +7,23 @@
 
       <small class="text-muted">
         <%= format_timestamp(version.created_at) %>
+
+        <% if VersionPolicy.new(current_user, version).revert? && version.reverted_at.present? %>
+          <br>Reverted at: <%= format_timestamp(version.reverted_at) %>
+        <% end %>
+
         <% if current_user&.admin? %>
           <br><%= version_author(version) %>
         <% end %>
       </small>
 
       <div>
-        <% if version.item_type != Tag.name %>
+        <% if version.item_type == Airport.name %>
           <%= button_to 'View', preview_airport_path(@airport, version_id: version.id), method: :get, class: 'btn btn-outline-primary btn-sm mt-1' %>
         <% end %>
 
-        <% if version.item_type == Tag.name %>
-          <% if TagPolicy.new(current_user, version.reify).revert? %>
-            <%= button_to 'Revert', revert_tag_path(version.id), method: :patch, class: 'btn btn-outline-danger btn-sm mt-1' %>
-          <% end %>
-        <% else %>
-          <% if AirportPolicy.new(current_user, @airport).revert? %>
-            <%= button_to 'Revert', revert_airport_path(@airport, version_id: version.id), method: :patch, class: 'btn btn-outline-danger btn-sm mt-1' %>
-          <% end %>
+        <% if VersionPolicy.new(current_user, version).revert? && version.reverted_at.blank? %>
+          <%= button_to 'Revert', revert_version_path(version), method: :patch, class: 'btn btn-outline-danger btn-sm mt-1' %>
         <% end %>
 
         <% if Manage::VersionPolicy.new(current_user, version).update? %>
