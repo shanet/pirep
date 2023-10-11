@@ -120,10 +120,11 @@ class Airport < ApplicationRecord
   TEXTAREA_EDITABLE_COLUMNS = {
     description: 'Description',
     transient_parking: 'Transient Parking',
-    fuel_location: 'Fuel location',
-    landing_fees: 'Landing Fees',
-    crew_car: 'Crew Car',
-    wifi: 'WiFi',
+    fuel_location: 'Fuel Location',
+    landing_fees: 'Landing &amp; Tie-down Fees',
+    crew_car: 'Crew Car Availability',
+    flying_clubs: 'Flying Clubs',
+    wifi: 'WiFi Access',
   }
 
   # Only keep versions for changes to these columns
