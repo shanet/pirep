@@ -58,15 +58,8 @@ Rails.application.routes.draw do
     member do
       get 'history', as: :history
       get 'preview/:version_id', action: :preview, as: :preview
-      patch 'revert/:version_id', action: :revert, as: :revert
       get 'annotations', as: :annotations
       get 'uncached_photo_gallery', as: :uncached_photo_gallery
-    end
-  end
-
-  resources :tags, only: :destroy do
-    member do
-      patch 'revert', action: :revert, as: :revert
     end
   end
 
@@ -75,6 +68,14 @@ Rails.application.routes.draw do
       patch 'helpful', action: :helpful, as: :helpful
       patch 'flag', action: :flag_outdated, as: :flag_outdated
       patch 'undo_outdated', action: :undo_outdated, as: :undo_outdated
+    end
+  end
+
+  resources :tags, only: :destroy
+
+  resources :versions, only: [] do
+    member do
+      patch 'revert', action: :revert, as: :revert
     end
   end
 

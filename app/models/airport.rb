@@ -411,7 +411,10 @@ class Airport < ApplicationRecord
 
   def all_versions
     # Return versions of the airport and associated tags as well
-    return versions.or(PaperTrail::Version.where(item_type: 'Tag', airport_id: id)).reorder(created_at: :desc)
+    return versions
+        .or(PaperTrail::Version.where(item_type: 'Tag', airport_id: id))
+        .or(PaperTrail::Version.where(item_type: 'Webcam', airport_id: id))
+        .reorder(created_at: :desc)
   end
 
   def created_by
