@@ -33,6 +33,7 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
 
     # Check that the annotation's latitude and longitude were moved in the right directions by the drag
     previous_annotation = @airport.annotations.first
+
     assert previous_annotation['latitude'] > @airport.reload.annotations.first['latitude'], 'Annotation latitude not updated when moved'
     assert previous_annotation['longitude'] < @airport.reload.annotations.first['longitude'], 'Annotation longitude not updated when moved'
 
@@ -92,6 +93,7 @@ private
     find_by_id('annotations-editing').click
     assert_selector '.airport-annotations-saved'
     assert_no_selector '#airport-map.editing'
+    assert_no_selector '.annotation.editing'
   end
 
   def move_annotation(delta_x, delta_y)

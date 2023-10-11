@@ -14,10 +14,12 @@ class PostgresCacheStoreTest < ActiveSupport::TestCase
 
   test 'reading expired key deletes it' do
     # Reading an expired key should return nil and remove it from the cache
-    @cache.write(@key, 'expired', expires_at: 1.hour.ago)
+    @cache.write(@key, 'expired', expires_at: 1.minute.from_now)
 
-    assert_difference('@cache.size', -1) do
-      assert_nil @cache.read(@key), 'Did not return nil from expired key'
+    travel_to(1.hour.from_now) do
+      assert_difference('@cache.size', -1) do
+        assert_nil @cache.read(@key), 'Did not return nil from expired key'
+      end
     end
   end
 
@@ -60,12 +62,14 @@ class PostgresCacheStoreTest < ActiveSupport::TestCase
 
   test 'cleanup cache' do
     @cache.write("#{@key}-no-expiration", 'no expiration')
-    @cache.write("#{@key}-expired", 'expired', expires_at: 1.hour.ago)
+    @cache.write("#{@key}-expired", 'expired', expires_at: 1.minute.from_now)
     @cache.write("#{@key}-not-expired", 'not expired', expires_in: 1.hour)
 
     # Cleaning up the cache should only remove the expired key
-    assert_difference('@cache.size', -1) do
-      @cache.cleanup
+    travel_to(10.minutes.from_now) do
+      assert_difference('@cache.size', -1) do
+        @cache.cleanup
+      end
     end
   end
 end
