@@ -102,6 +102,12 @@ class Tag < ApplicationRecord
       theme: 'indigo',
       addable: true,
     },
+    flying_clubs: {
+      label: 'Flying Clubs',
+      icon: 'people-group',
+      theme: 'deep-orange',
+      addable: true,
+    },
     airpark: {
       label: 'Airpark',
       icon: 'home',
