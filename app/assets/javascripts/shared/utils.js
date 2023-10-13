@@ -1,3 +1,5 @@
+const SESSION_STORAGE_PREVIOUS_PAGE_KEY = 'previous_page';
+
 document.addEventListener('DOMContentLoaded', () => {
   addCollapseListeners();
 }, {once: true});
@@ -56,4 +58,14 @@ function getActiveBreakpoint() {
 export function isWebGlAvailable() {
   const canvas = document.createElement('canvas');
   return (canvas.getContext('webgl') instanceof WebGLRenderingContext);
+}
+
+export function setPreviousPage(page) {
+  sessionStorage.setItem(SESSION_STORAGE_PREVIOUS_PAGE_KEY, page);
+}
+
+export function getPreviousPage() {
+  const previousPage = sessionStorage.getItem(SESSION_STORAGE_PREVIOUS_PAGE_KEY);
+  sessionStorage.removeItem(SESSION_STORAGE_PREVIOUS_PAGE_KEY);
+  return previousPage;
 }

@@ -9,25 +9,17 @@ $animation-duration: .2s;
       animation: fade-out-down $animation-duration ease-in forwards;
       opacity: 0;
     }
+  }
 
-    @include media-breakpoint-down(md) {
-      margin-top: $spacer * 7;
-    }
+  #welcome-info-toast:not(.d-block) + .toast {
+    margin-top: $spacer * 5;
   }
 }
 
-#welcome-info {
+#welcome-info-toast {
   background-color: $white;
-  border: 1px solid #ced4da;
-  border-radius: .25rem;
-  margin: $map-fixed-offset;
-  width: 500px;
-
-  @include media-breakpoint-down(md) {
-    width: 100%;
-  }
+  width: 95%;
 }
-
 
 @keyframes fade-in-down {
   from {

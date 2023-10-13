@@ -47,7 +47,7 @@ export function initializeDrawer() {
   for(let i=0; i<moreButtons.length; i++) {
     // Let the airport page know it's being accessed from the map so it knows to use the history API for back links
     moreButtons[i].addEventListener('click', () => {
-      sessionStorage.setItem('from_map', true);
+      utils.setPreviousPage('map');
     });
   }
 
