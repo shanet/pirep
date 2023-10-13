@@ -357,18 +357,17 @@ async function addAirportAnnotations() {
 }
 
 function applyUrlSearchParamsOnMap() {
+  // Don't open the drawer if on a small screen and we're returning from the airport show page as it creates confusing
+  // UX when leaving the airport show page and arriving at a new page that looks extremely similar rather than the map.
+  if(utils.isBreakpointDown('sm') && utils.getPreviousPage() === 'airport') {
+    drawer.closeDrawer();
+    return;
+  }
+
   const airport = urlSearchParams.getAirport();
   const zoomLevel = urlSearchParams.getZoomLevel();
 
-  // Don't open the drawer if on a small screen and we're returning from the airport show page as it creates confusing
-  // UX when leaving the airport show page and arriving at a new page that looks extremely similar rather than the map.
-  const openDrawer = !(utils.isBreakpointDown('sm') && sessionStorage.getItem('from_airport'));
-  sessionStorage.removeItem('from_airport');
-  if(!openDrawer) drawer.closeDrawer();
-
-  if(airport) {
-    openAirport(airport, null, zoomLevel, openDrawer);
-  }
+  if(airport) openAirport(airport, null, zoomLevel);
 }
 
 export function toggleSectionalLayers(show) {

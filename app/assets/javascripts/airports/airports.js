@@ -1,3 +1,4 @@
+import * as utils from 'shared/utils';
 import * as welcomeInfo from 'shared/welcome_info';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -69,18 +70,18 @@ function initExtraRemarks() {
 
 function initMapBackButton() {
   const mapBackButtons = document.getElementsByClassName('map-back');
+  if(mapBackButtons.length === 0) return;
 
   // If arrived at this page from the map index then try to use the history API to go back so it uses the cached map state rather than doing a full page load
-  const useHistoryApi = sessionStorage.getItem('from_map');
-  sessionStorage.removeItem('from_map');
+  const useHistoryApi = (utils.getPreviousPage() === 'map');
+
+  // Let the map index know we're coming from the airport page to customize the drawer loading
+  utils.setPreviousPage('airport');
 
   for(let i=0; i<mapBackButtons.length; i++) {
     const button = mapBackButtons[i];
 
     button.addEventListener('click', (event) => {
-      // Let the map index know we're coming from the airport page to customize the drawer loading
-      sessionStorage.setItem('from_airport', true);
-
       if(useHistoryApi && window.history.length > 1) {
         window.history.back();
         event.preventDefault();
