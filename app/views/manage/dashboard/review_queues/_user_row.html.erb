@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-between">
     <div>
       <%= link_to user.email, manage_user_path(user) %><br>
-      <small class="text-muted"><%= time_ago_in_words(user.created_at).capitalize %> ago</small>
+      <small class="text-body-secondary"><%= time_ago_in_words(user.created_at).capitalize %> ago</small>
     </div>
 
     <div class="btn-group">

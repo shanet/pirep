@@ -11,7 +11,7 @@
           <%= link_to comment.user.email, manage_user_path(comment.user) %> |
         <% end %>
 
-        <span class="text-muted"><%= time_ago_in_words(comment.created_at).capitalize %> ago</span>
+        <span class="text-body-secondary"><%= time_ago_in_words(comment.created_at).capitalize %> ago</span>
       </small>
     </div>
 

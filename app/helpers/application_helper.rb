@@ -55,4 +55,8 @@ module ApplicationHelper
   def user_label(user)
     return (user.unknown? ? user.ip_address : user.email)
   end
+
+  def active_path?(route)
+    return (request.path.start_with?(route) ? 'active' : '')
+  end
 end

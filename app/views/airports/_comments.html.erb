@@ -34,7 +34,7 @@
           <%= render_markdown comment.body %>
         </div>
 
-        <div class="small text-muted">
+        <div class="small text-body-secondary">
           Created <%= time_ago_in_words comment.created_at %> ago (<%= format_timestamp(comment.created_at) %>)
 
           <div class="helpful-count <%= comment.helpful_count == 0 ? 'd-none' : '' %>">
@@ -47,7 +47,7 @@
 
   <%= form_with model: Comment.new, local: true do |form| %>
     <div class="form-group p-3">
-      <i class="fas fa-comment"></i> Leave a comment <span class="text-muted">&mdash; <em>What was your experience like at this airport?</em></span>
+      <i class="fas fa-comment"></i> Leave a comment <span class="text-body-secondary">&mdash; <em>What was your experience like at this airport?</em></span>
 
       <%= form.text_area :body, class: 'form-control comment-textarea my-3' %>
       <%= form.hidden_field :airport_id, value: @airport.id %>

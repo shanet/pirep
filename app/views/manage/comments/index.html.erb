@@ -21,7 +21,7 @@
       <% @comments.each do |comment| %>
         <tr>
           <td class="col"><%= link_to comment.short_id, manage_comment_path(comment) %></td>
-          <td class="col"><%= link_to comment.user.short_id, manage_user_path(comment.user) %> <small class="text-muted">(<%= comment.user.type.demodulize %>)</small></td>
+          <td class="col"><%= link_to comment.user.short_id, manage_user_path(comment.user) %> <small class="text-body-secondary">(<%= comment.user.type.demodulize %>)</small></td>
           <td class="col"><%= link_to comment.airport.code, manage_airport_path(comment.airport) %></td>
           <td class="col text-center"><i class="fs-4 fa-solid <%= comment.reviewed_at ? 'fa-solid fa-square-check text-success' : 'fa-square-xmark text-warning' %>"></i></td>
           <td class="col"><%= render_markdown(comment.body).truncate(400, separator: /\s/, omission: '…').html_safe %></td>

@@ -48,7 +48,7 @@
         <li class="list-group-item">
           <% if @airport.reviewed_at.present? %>
             <strong>Reviewed:</strong> <%= time_ago_in_words(@airport.reviewed_at).capitalize %> ago
-            <small class="text-muted">(<%= format_timestamp @airport.reviewed_at %>)</small>
+            <small class="text-body-secondary">(<%= format_timestamp @airport.reviewed_at %>)</small>
           <% else %>
             <strong>State:</strong> Unreviewed
           <% end %>
@@ -78,7 +78,7 @@
 <div class="row my-3">
   <div class="col-6 my-3 my-md-0">
     <h4>External Photos</h4>
-    <small class="text-muted">Cached at: <%= @airport.external_photos_updated_at ? format_timestamp(@airport.external_photos_updated_at) : 'Never' %></small>
+    <small class="text-body-secondary">Cached at: <%= @airport.external_photos_updated_at ? format_timestamp(@airport.external_photos_updated_at) : 'Never' %></small>
     <%= render 'manage/airports/image_table', images: @airport.external_photos, type: :external_photos %>
   </div>
 

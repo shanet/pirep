@@ -31,6 +31,6 @@
 
 <div class="text-end mb-3">
   <% if model.send(column).present? && last_updated %>
-    <small class="text-muted">Last updated: <%= format_timestamp last_updated %></small>
+    <small class="text-body-secondary">Last updated: <%= format_timestamp last_updated %></small>
   <% end %>
 </div>

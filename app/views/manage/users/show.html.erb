@@ -27,20 +27,20 @@
       <% unless @user.unknown? %>
         <li class="list-group-item">
           <strong>Last seen:</strong> <%= @user.last_seen_at ? "#{time_ago_in_words(@user.last_seen_at).capitalize} ago" : 'Never' %>
-          <br><small class="text-muted"><%= format_timestamp @user.last_seen_at %></small>
+          <br><small class="text-body-secondary"><%= format_timestamp @user.last_seen_at %></small>
         </li>
       <% end %>
 
       <li class="list-group-item">
         <strong>Last edit:</strong> <%= @user.last_edit_at ? "#{time_ago_in_words(@user.last_edit_at).capitalize} ago" : 'None' %>
-        <br><small class="text-muted"><%= format_timestamp @user.last_edit_at %></small>
+        <br><small class="text-body-secondary"><%= format_timestamp @user.last_edit_at %></small>
       </li>
 
       <% unless @user.unknown? %>
         <li class="list-group-item">
           <% if @user.reviewed_at.present? %>
             <strong>Reviewed:</strong> <%= time_ago_in_words(@user.reviewed_at).capitalize %> ago
-            <br><small class="text-muted"><%= format_timestamp @user.reviewed_at %></small>
+            <br><small class="text-body-secondary"><%= format_timestamp @user.reviewed_at %></small>
           <% else %>
             <strong>State:</strong> Unreviewed
           <% end %>
