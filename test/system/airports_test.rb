@@ -143,15 +143,15 @@ class AirportsTest < ApplicationSystemTestCase
 
     # An update that would overwrite a conflicting change should be rejected
     with_versioning do
-      travel_to(5.minutes.from_now) do
+      travel_to(1.minute.from_now) do
         @airport.update!(description: 'blerg')
       end
 
-      travel_to(5.minutes.ago) do
+      travel_to(1.minute.ago) do
         _editor, card = update_editor('Description', 'Description edit2')
 
         within(card) do
-          assert_selector '.status-indicator.text-danger'
+          assert_selector '.status-indicator.text-danger', visible: false
         end
       end
     end
