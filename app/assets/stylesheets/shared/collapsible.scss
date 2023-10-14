@@ -26,3 +26,12 @@
     }
   }
 }
+
+// Create classes that will only collapse the collapisble below a given breakpoint
+@each $breakpoint, $width in $grid-breakpoints {
+  .collapsible-#{$breakpoint} {
+    @media (min-width: $width) {
+      max-height: inherit;
+    }
+  }
+}

@@ -56,7 +56,11 @@ module ApplicationHelper
     return (user.unknown? ? user.ip_address : user.email)
   end
 
-  def active_path?(route)
+  def active_path?(route, exact: false)
+    if exact
+      return (request.path == route ? 'active' : '')
+    end
+
     return (request.path.start_with?(route) ? 'active' : '')
   end
 end
