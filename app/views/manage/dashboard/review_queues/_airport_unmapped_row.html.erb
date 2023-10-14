@@ -12,7 +12,7 @@
         System
       <% end %>
 
-      <br><small class="text-muted"><%= time_ago_in_words(airport.created_at).capitalize %> ago</small>
+      <br><small class="text-body-secondary"><%= time_ago_in_words(airport.created_at).capitalize %> ago</small>
     </div>
 
     <%= button_to '<i class="fa-solid fa-square-check text-success"></i>'.html_safe, manage_airport_path(airport),

@@ -28,19 +28,19 @@
     <ul class="list-group">
       <li class="list-group-item">
         <%= link_to @comment.airport.code, manage_airport_path(@comment.airport) %> |
-        <%= link_to 'Author', manage_user_path(@comment.user) %> <small><span class="text-muted">(<%= @comment.user.type.demodulize %>)</span></small> |
+        <%= link_to 'Author', manage_user_path(@comment.user) %> <small><span class="text-body-secondary">(<%= @comment.user.type.demodulize %>)</span></small> |
         Helpful: <%= number_with_delimiter @comment.helpful_count %>
       </li>
 
       <li class="list-group-item">
         Created <%= time_ago_in_words(@comment.created_at).capitalize %> ago
-        <small class="text-muted">(<%= format_timestamp @comment.created_at %>)</small>
+        <small class="text-body-secondary">(<%= format_timestamp @comment.created_at %>)</small>
       </li>
 
       <li class="list-group-item">
         <% if @comment.reviewed_at.present? %>
           Reviewed <%= time_ago_in_words(@comment.reviewed_at).capitalize %> ago
-          <small class="text-muted">(<%= format_timestamp @comment.reviewed_at %>)</small>
+          <small class="text-body-secondary">(<%= format_timestamp @comment.reviewed_at %>)</small>
         <% else %>
           State: Unreviewed
         <% end %>
@@ -49,7 +49,7 @@
       <% if @comment.outdated_at.present? %>
         <li class="list-group-item">
           Flagged as outdated: <%= format_timestamp @comment.outdated_at %>
-          <small class="text-muted">(<%= time_ago_in_words(@comment.outdated_at).capitalize %> ago)</small>
+          <small class="text-body-secondary">(<%= time_ago_in_words(@comment.outdated_at).capitalize %> ago)</small>
         </li>
       <% end %>
     </ul>

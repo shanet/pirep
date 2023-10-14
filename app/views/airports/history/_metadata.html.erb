@@ -5,7 +5,7 @@
     <div class="ms-3">
       <%= time_ago_in_words(version.created_at).capitalize %> ago<br>
 
-      <small class="text-muted">
+      <small class="text-body-secondary">
         <%= format_timestamp(version.created_at) %>
 
         <% if VersionPolicy.new(current_user, version).revert? && version.reverted_at.present? %>
@@ -31,7 +31,7 @@
             class: 'btn btn-sm btn-outline-success mt-1',
             method: :patch, params: {version: {reviewed_at: (version.reviewed_at ? nil : Time.zone.now)}} %>
 
-          <p><small class="text-muted">
+          <p><small class="text-body-secondary">
             <% if version.reviewed_at %>
               Reviewed at: <%= format_timestamp version.reviewed_at %>
             <% else %>

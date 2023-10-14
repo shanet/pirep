@@ -12,9 +12,9 @@
 
     <% @breadcrumbs.each_with_index do |breadcrumb, index| %>
       <% if index == @breadcrumbs.count - 1 %>
-        <li class="breadcrumb-item active"><small class="text-muted"><%= breadcrumb.first %></small></li>
+        <li class="breadcrumb-item active"><small class="text-body-secondary"><%= breadcrumb.first %></small></li>
       <% else %>
-        <li class="breadcrumb-item"><small class="text-muted"><%= breadcrumb.size == 2 ? link_to(breadcrumb.first, breadcrumb.second) : breadcrumb.first %></small></li>
+        <li class="breadcrumb-item"><small class="text-body-secondary"><%= breadcrumb.size == 2 ? link_to(breadcrumb.first, breadcrumb.second) : breadcrumb.first %></small></li>
       <% end %>
     <% end %>
   </ol>
