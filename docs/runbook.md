@@ -56,7 +56,7 @@ Pirep is hosted on AWS, primarily through ECS Fargate. AWS services are use spar
 
 If a new environment needs to be set up or the existing production environment needs to be re-created the following procedure should be used:
 
-1. Create an SSM parameter named `DOCKER_HUB_CREDENTIALS` with Docker Hub credentials of the following form: `{"username": "USERANEM", "password": "PASSWORD"}`
+1. Create an SSM parameter named `DOCKER_HUB_CREDENTIALS` with Docker Hub credentials of the following form: `{"username": "USERNAME", "password": "PASSWORD"}`
   * This is necessary because Docker Hub rate limits anonymous pulls of public images and Codebuild instances will use shared IPs which are likely hitting that rate limit
 2. `cd terraform/environments/production` and `terraform apply`
   * Note: If restoring from a database backup the backup snapshot should be set in the RDS Terraform resource before applying.
