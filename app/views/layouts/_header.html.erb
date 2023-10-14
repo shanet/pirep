@@ -1,21 +1,29 @@
 <% is_manage = controller.class.name.start_with? 'Manage::' %>
 
-<nav class="navbar navbar-expand-lg bg-dark nav-underline" data-bs-theme="dark">
+<nav class="navbar navbar-expand-md bg-dark nav-underline" data-bs-theme="dark">
   <div class="container-fluid">
     <%= link_to image_tag('icon_small.png'), root_path, class: 'navbar-brand me-2' %>
 
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="navbar-nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar-nav" class="navbar-collapse collapsible collapsible-md">
+      <ul class="navbar-nav me-auto">
         <% if is_manage %>
-          <li class="nav-item"><%= link_to 'Dashboard', manage_root_path, class: "nav-link #{active_path?(manage_root_path)}" %></li>
+          <li class="nav-item"><%= link_to 'Dashboard', manage_root_path, class: "nav-link #{active_path?(manage_root_path, exact: true)}" %></li>
           <li class="nav-item"><%= link_to 'Activity', manage_activity_path, class: "nav-link #{active_path?(manage_activity_path)}" %></li>
           <li class="nav-item"><%= link_to 'Airports', manage_airports_path, class: "nav-link #{active_path?(manage_airports_path)}" %></li>
           <li class="nav-item"><%= link_to 'Comments', manage_comments_path, class: "nav-link #{active_path?(manage_comments_path)}" %></li>
           <li class="nav-item"><%= link_to 'Users', manage_users_path, class: "nav-link #{active_path?(manage_users_path)}" %></li>
           <li class="nav-item"><%= link_to 'Photos', manage_attachments_path, class: "nav-link #{active_path?(manage_attachments_path)}" %></li>
           <li class="nav-item"><%= link_to 'Jobs', GoodJob::Engine.routes.url_helpers.root_path, class: 'nav-link' %></li>
-        <% elsif Manage::DashboardPolicy.new(current_user, nil).index? %>
-          <li class="nav-item"><%= link_to 'Manage', manage_root_path, class: "nav-link #{active_path?(manage_root_path)}" %></li>
+        <% else %>
+          <li class="nav-item"><%= link_to 'Account', user_path, class: "nav-link #{active_path?(user_path)}" %></li>
+
+          <% if Manage::DashboardPolicy.new(current_user, nil).index? %>
+            <li class="nav-item"><%= link_to 'Manage', manage_root_path, class: "nav-link #{active_path?(manage_root_path)}" %></li>
+          <% end %>
         <% end %>
       </ul>
 
