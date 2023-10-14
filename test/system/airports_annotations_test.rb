@@ -49,6 +49,7 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
 
     assert_no_selector('annotation')
     assert_selector '.airport-annotations-saved'
+    stop_editing_annotations
     assert_nil @airport.reload.annotations, 'Deleted annotation not removed from backend'
   end
 
