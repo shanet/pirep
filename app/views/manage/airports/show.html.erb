@@ -76,14 +76,15 @@
 </div>
 
 <div class="row my-3">
-  <div class="col-6 my-3 my-md-0">
+  <div class="col-12 col-md-6 my-3 my-md-0">
     <h4>External Photos</h4>
     <small class="text-body-secondary">Cached at: <%= @airport.external_photos_updated_at ? format_timestamp(@airport.external_photos_updated_at) : 'Never' %></small>
     <%= render 'manage/airports/image_table', images: @airport.external_photos, type: :external_photos %>
   </div>
 
-  <div class="col-6 my-3 my-md-0">
+  <div class="col-12 col-md-6 my-3 my-md-0">
     <h4>Contributed Photos</h4>
+    <small class="text-body-secondary d-none d-md-block">&nbsp;</small><%# Match spacing with the external photos column header %>
     <%= render 'manage/airports/image_table', images: @airport.contributed_photos, type: :contributed_photos %>
   </div>
 </div>
