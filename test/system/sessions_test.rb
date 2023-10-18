@@ -15,8 +15,8 @@ class SessionsTest < ApplicationSystemTestCase
     visit root_path
     click_link 'Log In'
 
-    fill_in 'login-email', with: 'fake@example.com'
-    fill_in 'login-password', with: 'hunter2'
+    fill_in 'user_email', with: 'fake@example.com'
+    fill_in 'user_password', with: 'hunter2'
     click_button 'Log in'
 
     # The login drawer should still be open
@@ -35,8 +35,8 @@ class SessionsTest < ApplicationSystemTestCase
   test 'handle log in failure via sessions controller' do
     visit new_user_session_path
 
-    fill_in 'login-email', with: 'fake@example.com'
-    fill_in 'login-password', with: 'hunter2'
+    fill_in 'user_email', with: 'fake@example.com'
+    fill_in 'user_password', with: 'hunter2'
     click_button 'Log in'
 
     # An error message should be shown
