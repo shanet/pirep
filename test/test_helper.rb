@@ -84,8 +84,8 @@ class ActionDispatch::SystemTestCase
         flunk 'Unknown sign-in controller type'
     end
 
-    fill_in 'login-email', with: user.email
-    fill_in 'login-password', with: user.password
+    fill_in 'user_mail', with: user.email
+    fill_in 'user_password', with: user.password
     click_button 'Log in'
 
     # If an admin check that we're on the manage dashboard
