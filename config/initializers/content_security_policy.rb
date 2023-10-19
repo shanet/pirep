@@ -2,6 +2,9 @@
 Rails.configuration.content_security_policy_nonce_generator = ->(_request) {SecureRandom.base64(32)}
 Rails.configuration.content_security_policy_nonce_directives = ['script-src', 'style-src']
 
+# Allow these domains to be displayed in a frame (used for embedded webcams)
+Rails.configuration.content_security_policy_whitelisted_frame_domains = Set.new(['video.nest.com'])
+
 Rails.configuration.content_security_policy do |policy|
   # All hosts that are allowed to load content onto the pages
   hosts = [
@@ -16,6 +19,7 @@ Rails.configuration.content_security_policy do |policy|
   policy.child_src(:blob)
   policy.connect_src(*(hosts + ['*.ingest.sentry.io', :self]))
   policy.default_src(*(hosts + [:self]))
+  policy.frame_src(*Rails.configuration.content_security_policy_whitelisted_frame_domains.to_a)
   policy.font_src(*hosts)
   policy.form_action(:self)
   policy.img_src('*', :data)

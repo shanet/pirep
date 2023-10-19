@@ -57,6 +57,11 @@
   }
 }
 
+.webcam-frame {
+  height: 350px;
+  width: 100%;
+}
+
 .remark {
   &.extra-remark.hidden {
     display: none;

@@ -39,6 +39,18 @@ class WebcamTest < ActiveSupport::TestCase
     assert_not create(:webcam, url: 'http://example.com/webcam.jpg').image?, 'HTTP Webcam URL a direct image link'
   end
 
+  test 'is frame URL' do
+    assert create(:webcam, :frame).frame?, 'Webcam URL not a frame URL'
+    assert_not create(:webcam).frame?, 'Webcam URL a frame URL'
+    assert_not create(:webcam, url: 'https://example.com/webcam').frame?, 'Webcam URL a frame URL'
+  end
+
+  test 'is embedded' do
+    assert create(:webcam).embedded?, 'Image webcam not embedded'
+    assert create(:webcam, :frame).embedded?, 'Frame webcam not embedded'
+    assert_not create(:webcam, url: 'https://example.com').embedded?, 'URL webcam not embedded'
+  end
+
   test 'adds URL protocol if missing' do
     assert create(:webcam, url: 'example.com').url.start_with?('https://'), 'Protocol not added to webcam URL'
     assert create(:webcam, url: 'http://example.com').url.start_with?('http://'), 'Protocol malformed on webcam URL'

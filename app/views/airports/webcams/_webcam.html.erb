@@ -1,5 +1,9 @@
-<% return unless webcam.image? %>
+<% return unless webcam.embedded? %>
 
-<div class="text-center">
-  <img class="webcam-image img-thumbnail mt-2" src="<%= webcam.url %>">
+<div class="text-center mt-2">
+  <% if webcam.image? %>
+    <img class="webcam-image img-thumbnail" src="<%= webcam.url %>">
+  <% elsif webcam.frame? %>
+    <iframe class="webcam-frame img-thumbnail" src="<%= webcam.url %>"></iframe>
+  <% end %>
 </div>
