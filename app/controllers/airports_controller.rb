@@ -142,6 +142,7 @@ private
       :fuel_location,
       :landing_fees,
       :crew_car,
+      :flying_clubs,
       :wifi,
       :landing_rights,
       :landing_requirements,

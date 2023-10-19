@@ -40,6 +40,7 @@ class AirportsTest < ApplicationSystemTestCase
       @airport.fuel_location,
       @airport.landing_fees,
       @airport.crew_car,
+      @airport.flying_clubs,
       @airport.wifi,
     ].each do |text|
       assert_selector '.EasyMDEContainer', text: text
@@ -139,6 +140,7 @@ class AirportsTest < ApplicationSystemTestCase
     assert_editor_has_text('Fuel Location', :fuel_location, 'Fuel location edit')
     assert_editor_has_text('Landing & Tie-down Fees', :landing_fees, 'Landing fee edit')
     assert_editor_has_text('Crew Car Availability', :crew_car, 'Crew car edit')
+    assert_editor_has_text('Flying Clubs', :flying_clubs, 'Flying clubs edit')
     assert_editor_has_text('WiFi Access', :wifi, 'WiFi edit')
 
     # An update that would overwrite a conflicting change should be rejected
