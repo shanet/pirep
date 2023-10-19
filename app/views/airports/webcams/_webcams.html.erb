@@ -1,4 +1,4 @@
-<% image_webcams = @airport.webcams.select(&:image?) %>
+<% embedded_webcams = @airport.webcams.select(&:embedded?) %>
 
 <div class="card mt-3">
   <div class="card-header">
@@ -6,14 +6,14 @@
   </div>
 
   <ul class="list-group list-group-flush">
-    <% @airport.webcams.reject(&:image?).each do |webcam| %>
+    <% @airport.webcams.reject(&:embedded?).each do |webcam| %>
       <li class="list-group-item"><%= link_to(webcam.url.truncate(50), webcam.url, class: 'webcam-link') %></li>
     <% end %>
   </ul>
 </div>
 
-<% if image_webcams.any? %>
-  <%= render 'airports/webcams/webcam', webcam: image_webcams.first %>
+<% if embedded_webcams.any? %>
+  <%= render 'airports/webcams/webcam', webcam: embedded_webcams.first %>
 <% end %>
 
 <div class="text-end mt-2">
@@ -23,7 +23,7 @@
 
   <button type="button" class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="collapse" data-bs-target="add-webcam-form">Add Webcam</a>
 
-  <% if image_webcams.count > 1 %>
+  <% if embedded_webcams.count > 1 %>
     <button id="show-more-webcams" class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="show-all-webcams">Show More</a></button>
   <% end %>
 </div>
@@ -31,8 +31,8 @@
 <%= render 'airports/webcams/add_webcam_form' %>
 
 <% content_for :collapsible_content, flush: true do %>
-  <% if image_webcams.count > 1 %>
-    <% image_webcams[1..].each do |webcam| %>
+  <% if embedded_webcams.count > 1 %>
+    <% embedded_webcams[1..].each do |webcam| %>
       <%= render 'airports/webcams/webcam', webcam: webcam %>
     <% end %>
   <% end %>

@@ -1,4 +1,5 @@
 class Webcam < ApplicationRecord
+  FRAME_DOMAINS = Rails.configuration.content_security_policy_whitelisted_frame_domains
   IMAGE_LINK_EXTENSIONS = Set.new(['jpg', 'png', 'cgi', 'mjpg'])
 
   belongs_to :airport
@@ -14,11 +15,20 @@ class Webcam < ApplicationRecord
   validates :url, presence: true, length: {maximum: 1_000}, format: /\Ahttps?:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\/?.*\z/
   validates :url, uniqueness: {scope: :airport_id}
 
+  def embedded?
+    return image? || frame?
+  end
+
   def image?
     uri = URI.parse(url)
 
     # Don't consider http:// links to be direct image links as that would cause mixed content loading on our HTTPS website
     return uri.is_a?(URI::HTTPS) && File.extname(uri.path)[1..]&.in?(IMAGE_LINK_EXTENSIONS)
+  end
+
+  def frame?
+    uri = URI.parse(url)
+    return uri.is_a?(URI::HTTPS) && uri.host.in?(FRAME_DOMAINS)
   end
 
   def url=(url)

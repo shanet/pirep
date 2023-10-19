@@ -258,11 +258,13 @@ class AirportsTest < ApplicationSystemTestCase
   test 'has webcams' do
     webcam1 = create(:webcam, airport: @airport, url: 'https://example.com')
     webcam2 = create(:webcam, airport: @airport, url: 'https://subdomain.example.com')
+    webcam3 = create(:webcam, :frame, airport: @airport)
 
     visit airport_path(@airport.code)
 
     assert_selector "a.webcam-link[href=\"#{webcam1.url}\"]"
     assert_selector "a.webcam-link[href=\"#{webcam2.url}\"]"
+    assert_selector "iframe.webcam-frame[src=\"#{webcam3.url}\"]"
   end
 
   test 'add webcam' do
