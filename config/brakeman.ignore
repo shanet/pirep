@@ -2,6 +2,49 @@
   "ignored_warnings": [
     {
       "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "21544d844c43914f61d3d9c463052372fdf52c5ebffa5933cbebb0e04a3551af",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/airports/tags/_tag.html.erb",
+      "line": 6,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Tag::TAGS[(defined? tag ? (tag.name) : (tag_name))][:scroll_target]",
+      "render_path": [
+        {
+          "type": "template",
+          "name": "airports/show",
+          "line": 38,
+          "file": "app/views/airports/show.html.erb",
+          "rendered": {
+            "name": "airports/tags/_tags",
+            "file": "app/views/airports/tags/_tags.html.erb"
+          }
+        },
+        {
+          "type": "template",
+          "name": "airports/tags/_tags",
+          "line": 9,
+          "file": "app/views/airports/tags/_tags.html.erb",
+          "rendered": {
+            "name": "airports/tags/_tag",
+            "file": "app/views/airports/tags/_tag.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "airports/tags/_tag"
+      },
+      "user_input": "Tag::TAGS[(defined? tag ? (tag.name) : (tag_name))]",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
       "warning_code": 4,
       "fingerprint": "287419f85185e75d819251266e0c681334d4fb1655610682b4dbf693dbfffd76",
       "check_name": "LinkToHref",
@@ -97,7 +140,7 @@
       "check_name": "LinkToHref",
       "message": "Potentially unsafe model attribute in `link_to` href",
       "file": "app/views/airports/webcams/_webcams.html.erb",
-      "line": 8,
+      "line": 10,
       "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
       "code": "link_to((Unresolved Model).new.url.truncate(50), (Unresolved Model).new.url, :class => \"webcam-link\")",
       "render_path": [
@@ -115,7 +158,7 @@
         {
           "type": "template",
           "name": "airports/show",
-          "line": 56,
+          "line": 59,
           "file": "app/views/airports/show.html.erb",
           "rendered": {
             "name": "airports/webcams/_webcams",
@@ -135,6 +178,6 @@
       "note": ""
     }
   ],
-  "updated": "2023-09-28 23:34:09 -0700",
+  "updated": "2023-10-19 21:24:31 -0700",
   "brakeman_version": "6.0.1"
 }
