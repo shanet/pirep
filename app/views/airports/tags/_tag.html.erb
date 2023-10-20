@@ -3,7 +3,7 @@
 <div class="tag-square card p-0 me-1 mb-1 theme-<%= tag_configuration[:theme] %>
   <%= defined?(editing) ? 'editing unselected' : '' %>
   <%= defined?(size) ? size : '' %>"
-  <%= tag_configuration[:scroll_target] && !defined?(no_scroll) ? "data-scroll-target=\"#{tag_configuration[:scroll_target]}\"".html_safe  : '' %>
+  <%= tag_configuration[:scroll_target] && !defined?(no_scroll) ? "data-scroll-target=\"#{tag_configuration[:scroll_target]}\"".html_safe : '' %>
   data-tag-id="<%= defined?(tag_record) ? tag_record.id : '' %>">
 
   <div class="card-body h-100 p-0 d-flex flex-column justify-content-center align-items-center">
