@@ -24,6 +24,13 @@ class AirportTest < ActiveSupport::TestCase
 
     assert_equal 'UNM02', airport2.code, 'Unmapped airport not given a unique code'
     assert_equal :private_, airport2.landing_rights, 'Unmapped airport did not default to private landing rights'
+
+    # Deleting the first airport should still create a code with the next largest number
+    airport.destroy!
+
+    airport3 = Airport.new_unmapped(attributes_for(:airport, landing_rights: nil))
+    airport3.save!
+    assert_equal 'UNM03', airport3.code, 'Unmapped airport not given a unique code'
   end
 
   test 'does not return hidden facility types' do
