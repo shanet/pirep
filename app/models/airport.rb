@@ -32,6 +32,8 @@ class Airport < ApplicationRecord
   after_update :collate_versions!, if: proc {HISTORY_COLUMNS.keys.any? {|column| send("#{column}_previously_changed?")}}
   after_save :remove_empty_tag!
 
+  UNMAPPED_CODE_PREFIX = 'UNM'
+
   FACILITY_TYPES = {
     airport: {
       label: 'Airports',
@@ -173,7 +175,9 @@ class Airport < ApplicationRecord
     # prefix (with three letters so it doesn't conflict with any future ICAO codes) and an sequentially increasing number suffix to make
     # it unique. There may be a better way to do this but this should be sufficient for now. It's not likely that we'll have a bunch of
     # unmapped airports that would make this number suffix huge.
-    airport.code = "UNM#{(Airport.joins(:tags).where('tags.name': :unmapped).count + 1).to_s.rjust(2, '0')}"
+    maximum_code = Airport.joins(:tags).where('tags.name': :unmapped).maximum(Arel.sql("CAST(SUBSTR(code, #{UNMAPPED_CODE_PREFIX.length + 1}) AS INTEGER)")) || 0
+
+    airport.code = "#{UNMAPPED_CODE_PREFIX}#{(maximum_code + 1).to_s.rjust(2, '0')}"
     airport.facility_use = :PR
     airport.facility_type = :airport
     airport.ownership_type = :PR

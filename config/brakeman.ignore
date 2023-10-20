@@ -134,6 +134,29 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "7f8b885ad12a52f1336fd76049f6826650ef665ee78ad948ff2afcc9ebc48ba4",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/airport.rb",
+      "line": 178,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Arel.sql(\"CAST(SUBSTR(code, #{(\"UNM\".length + 1)}) AS INTEGER)\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Airport",
+        "method": "Airport.new_unmapped"
+      },
+      "user_input": "(\"UNM\".length + 1)",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 4,
       "fingerprint": "eafc74136bdb22ebeec9fe423371f73f1f8d7cbd8baf2de412e9be2c25143b67",
@@ -178,6 +201,6 @@
       "note": ""
     }
   ],
-  "updated": "2023-10-19 21:24:31 -0700",
+  "updated": "2023-10-20 00:05:05 -0700",
   "brakeman_version": "6.0.1"
 }
