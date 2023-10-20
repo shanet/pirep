@@ -1,6 +1,6 @@
 <% embedded_webcams = @airport.webcams.select(&:embedded?) %>
 
-<div class="card mt-3">
+<div id="webcams" class="card mt-3">
   <div class="card-header">
     <i class="fas fa-camera"></i> Airport <%= 'Webcam'.pluralize(@airport.webcams.count) %>
   </div>

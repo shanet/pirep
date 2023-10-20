@@ -4,6 +4,7 @@ import * as welcomeInfo from 'shared/welcome_info';
 document.addEventListener('DOMContentLoaded', () => {
   initEditingTags();
   initTagDeleteIcons();
+  initTagScrollTargets();
   initShowMoreWebcams();
   initExtraRemarks();
   initMapBackButton();
@@ -39,6 +40,19 @@ function initTagDeleteIcons() {
       deleteIcons[i].style.display = (['none', ''].indexOf(deleteIcons[i].style.display) !== -1 ? 'block' : 'none');
     }
   });
+}
+
+function initTagScrollTargets() {
+  const scrollTags = document.querySelectorAll('.tag-square[data-scroll-target]');
+
+  for(let i=0; i<scrollTags.length; i++) {
+    scrollTags[i].addEventListener('click', () => {
+      // Don't scroll if the tags are being edited
+      if(document.querySelector('#add-tag-form.show')) return;
+
+      document.getElementById(scrollTags[i].dataset.scrollTarget).scrollIntoView({behavior: 'smooth'});
+    });
+  }
 }
 
 function initShowMoreWebcams() {

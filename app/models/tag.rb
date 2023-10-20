@@ -65,6 +65,7 @@ class Tag < ApplicationRecord
       icon: 'car',
       theme: 'orange',
       addable: true,
+      scroll_target: 'crew-car',
     },
     bicycles: {
       label: 'Bicycles',
@@ -107,6 +108,7 @@ class Tag < ApplicationRecord
       icon: 'people-group',
       theme: 'deep-orange',
       addable: true,
+      scroll_target: 'flying-clubs',
     },
     airpark: {
       label: 'Airpark',
@@ -123,6 +125,7 @@ class Tag < ApplicationRecord
       label: 'Webcam',
       icon: 'camera',
       theme: 'purple',
+      scroll_target: 'webcams',
     },
   }
 

@@ -40,7 +40,7 @@
 <div class="row my-2">
   <div class="col-sm d-flex flex-wrap">
     <% @airport.tags.each do |tag| %>
-      <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag, size: :small} %>
+      <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag, size: :small, no_scroll: true} %>
     <% end %>
   </div>
 </div>
