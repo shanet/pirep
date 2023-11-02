@@ -7,6 +7,7 @@ class AirportsTest < ApplicationSystemTestCase
     @airport = create(:airport)
     @airport.tags << create(:tag, :camping, airport: @airport)
     @airport.comments << create(:comment, airport: @airport)
+    @airport.events << create(:event, :recurring, airport: @airport)
   end
 
   test 'visit airport show page' do
@@ -17,6 +18,9 @@ class AirportsTest < ApplicationSystemTestCase
 
     # Has tags
     assert_selector '.tag-square', text: Tag::TAGS[@airport.tags.first.name][:label]
+
+    # Has events
+    assert_selector '#events h5', text: @airport.events.first.name
 
     # Has elevation
     assert_selector '.statistics-box', text: "Elevation: #{number_with_delimiter(@airport.elevation, delimiter: ',')}ft"
@@ -325,6 +329,23 @@ class AirportsTest < ApplicationSystemTestCase
 
     visit airport_path(@airport.code)
     assert_no_selector '#welcome-info-notice'
+  end
+
+  test 'adds event' do
+    visit airport_path(@airport.code)
+    click_button 'Add Event'
+
+    fill_in 'event_name', with: 'Foobar'
+    fill_in 'event_start_date', with: DateTime.new(2023, 11, 5, 8)
+    fill_in 'event_end_date', with: DateTime.new(2023, 11, 5, 17)
+    fill_in 'event_location', with: 'The ramp'
+    fill_in 'event_url', with: 'https://example.com'
+    fill_in 'event_host', with: 'Bob Hoover'
+    fill_in 'event_description', with: 'Lorem ipsum dolor sit amet'
+    find_by_id('new-event-recurring-toggle').click
+    find('#event-form input[type="submit"]').click
+
+    assert_selector '#events h5', text: 'Foobar'
   end
 
 private

@@ -42,6 +42,11 @@ class Tag < ApplicationRecord
       icon: 'map-marked-alt',
       theme: 'blue-grey',
     },
+    events: {
+      label: 'Events',
+      icon: 'calendar-days',
+      theme: 'light-blue',
+    },
     food: {
       label: 'Food',
       icon: 'hamburger',

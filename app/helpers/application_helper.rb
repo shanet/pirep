@@ -63,4 +63,11 @@ module ApplicationHelper
 
     return (request.path.start_with?(route) ? 'active' : '')
   end
+
+  # Wrap the current page method to gracefully handle actions that don't exist for the current resource
+  def current_page?(...)
+    return super
+  rescue ActionController::UrlGenerationError
+    return false
+  end
 end

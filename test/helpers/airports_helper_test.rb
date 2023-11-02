@@ -82,4 +82,17 @@ class AirportsHelperTest < ActionView::TestCase
     airport = create(:airport, :unmapped)
     assert_equal "foreflightmobile://maps/search?q=#{airport.latitude}/#{airport.longitude}", foreflight_url(airport), 'Wrong ForeFlight URL for unmapped airport'
   end
+
+  test 'recurring event to_s' do
+    assert_equal '', recurring_event_to_s(create(:event)), 'Wrong recurring event label for static event'
+
+    event = create(:event, :recurring, recurring_cadence: :yearly)
+    assert_equal "Repeats every year on the last Monday of #{event.start_date.strftime('%B')}", recurring_event_to_s(event), 'Wrong recurring event label for recurring event'
+
+    event = create(:event, :recurring, recurring_cadence: :monthly, recurring_day_of_month: 1)
+    assert_equal 'Repeats every month on the 1st', recurring_event_to_s(event), 'Wrong recurring event label for recurring event'
+
+    event = create(:event, :recurring, recurring_cadence: :weekly, recurring_interval: 2)
+    assert_equal 'Repeats every two weeks', recurring_event_to_s(event), 'Wrong recurring event label for recurring event'
+  end
 end

@@ -16,6 +16,7 @@ module AirportsHelper
 
   def display_version?(version, column)
     return Airport::HISTORY_COLUMNS.keys.include?(column.to_sym) ||
+        (version.item_type == 'Event' && column == 'name') ||
         (version.item_type == 'Tag' && column == 'name') ||
         (version.item_type == 'Webcam' && column == 'url')
   end
@@ -33,25 +34,37 @@ module AirportsHelper
   end
 
   def version_title(version, column)
-    if version.item_type == Tag.name
-      case version.event
-        when 'create'
-          return '<i class="fa-solid fa-square-plus"></i> Tag Added'.html_safe
-        when 'destroy'
-          return '<i class="fa-solid fa-square-minus"></i> Tag Removed'.html_safe
-      end
-    end
+    case version.item_type
+      when Airport.name
+        return "<i class=\"fa-solid fa-pen-to-square\"></i> #{Airport::HISTORY_COLUMNS[column.to_sym]}".html_safe
 
-    if version.item_type == Webcam.name
-      case version.event
-        when 'create'
-          return '<i class="fa-solid fa-camera"></i> Webcam Added'.html_safe
-        when 'destroy'
-          return '<i class="fa-solid fa-camera"></i> Webcam Removed'.html_safe
-      end
-    end
+      when Event.name
+        case version.event
+          when 'create'
+            return '<i class="fa-solid fa-calendar-days"></i> Event Added'.html_safe
+          when 'destroy'
+            return '<i class="fa-solid fa-calendar-days"></i> Event Removed'.html_safe
+        end
 
-    return "<i class=\"fa-solid fa-pen-to-square\"></i> #{Airport::HISTORY_COLUMNS[column.to_sym]}".html_safe
+      when Tag.name
+        case version.event
+          when 'create'
+            return '<i class="fa-solid fa-square-plus"></i> Tag Added'.html_safe
+          when 'destroy'
+            return '<i class="fa-solid fa-square-minus"></i> Tag Removed'.html_safe
+        end
+
+      when Webcam.name
+        case version.event
+          when 'create'
+            return '<i class="fa-solid fa-camera"></i> Webcam Added'.html_safe
+          when 'destroy'
+            return '<i class="fa-solid fa-camera"></i> Webcam Removed'.html_safe
+        end
+
+      else
+        raise 'Unknown version item type'
+    end
   end
 
   def diff(previous, current)
@@ -111,5 +124,29 @@ module AirportsHelper
     return "#{url}#{airport.latitude}/#{airport.longitude}" if airport.unmapped?
 
     return "#{url}APT@#{airport.icao_code || airport.code}"
+  end
+
+  def recurring_event_to_s(event)
+    return '' unless event.recurring?
+
+    if event.recurring_interval > 1
+      string = "Repeats every #{event.recurring_interval.to_s.humanize.downcase} #{Event::RECURRING_CADENCE[event.recurring_cadence].pluralize(2).downcase}"
+    else
+      string = "Repeats every #{Event::RECURRING_CADENCE[event.recurring_cadence].downcase}"
+    end
+
+    if [:monthly, :yearly].include?(event.recurring_cadence)
+      if event.recurring_day_of_month
+        string += " on the #{event.recurring_day_of_month.ordinalize}"
+      elsif event.recurring_week_of_month
+        string += " on the #{event.recurring_week_of_month_label} #{event.start_date.strftime('%A')}"
+      end
+    end
+
+    if event.recurring_cadence == :yearly
+      string += " of #{event.start_date.strftime('%B')}"
+    end
+
+    return string
   end
 end

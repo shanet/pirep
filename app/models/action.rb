@@ -6,17 +6,21 @@ class Action < ApplicationRecord
   self.inheritance_column = nil
 
   ACTIONS = [
-    :airport_edited,
     :airport_added,
+    :airport_edited,
     :airport_photo_uploaded,
+
+    :comment_added,
+    :comment_flagged,
+    :comment_helpful,
+    :comment_unflagged,
+
+    :event_added,
+    :event_edited,
+    :event_removed,
 
     :tag_added,
     :tag_removed,
-
-    :comment_added,
-    :comment_helpful,
-    :comment_flagged,
-    :comment_unflagged,
 
     :webcam_added,
   ].to_set
@@ -28,6 +32,9 @@ class Action < ApplicationRecord
     return [
       :airport_edited,
       :airport_added,
+      :event_added,
+      :event_edited,
+      :event_removed,
       :tag_added,
       :tag_removed,
       :webcam_added,

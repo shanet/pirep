@@ -8,6 +8,7 @@ class Airport < ApplicationRecord
 
   has_many :actions, as: :actionable, dependent: :nullify
   has_many :comments, dependent: :destroy
+  has_many :events, dependent: :destroy
   has_many :pageviews, as: :record, dependent: :destroy
   has_many :remarks, dependent: :destroy
   has_many :runways, dependent: :destroy
@@ -414,11 +415,14 @@ class Airport < ApplicationRecord
   end
 
   def all_versions
-    # Return versions of the airport and associated tags as well
-    return versions
-        .or(PaperTrail::Version.where(item_type: 'Tag', airport_id: id))
-        .or(PaperTrail::Version.where(item_type: 'Webcam', airport_id: id))
-        .reorder(created_at: :desc)
+    # Return versions of the airport and associated models as well
+    query = versions
+
+    ['Event', 'Tag', 'Webcam'].each do |model|
+      query = query.or(PaperTrail::Version.where(item_type: model, airport_id: id))
+    end
+
+    return query.reorder(created_at: :desc)
   end
 
   def created_by

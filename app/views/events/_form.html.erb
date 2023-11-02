@@ -1,0 +1,72 @@
+<%= form_with model: (defined?(@event) ? @event : Event.new), local: true, id: 'event-form' do |form| %>
+  <%= render 'shared/record_errors', record: form.object %>
+
+  <div class="mb-2">
+    <%= form.label :name, class: 'form-label mb-0' %><span class="form-text-required ms-1">*</span>
+    <%= form.text_field :name, class: 'form-control' %>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
+      <%= form.label :start_date, class: 'form-label mb-0' %><span class="form-text-required ms-1">*</span>
+      <%= form.datetime_local_field :start_date, class: 'form-control' %>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-12 col-lg-6">
+      <%= form.label :end_date, class: 'form-label mb-0' %><span class="form-text-required ms-1">*</span>
+      <%= form.datetime_local_field :end_date, class: 'form-control' %>
+    </div>
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :location, class: 'form-label mb-0' %>
+    <%= form.text_field :location, class: 'form-control' %>
+    <p class="form-text">Where exactly on/near the airport is this event taking place?</p>
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :url, 'URL', class: 'form-label mb-0' %>
+    <%= form.text_field :url, class: 'form-control' %>
+    <p class="form-text">Is there a webpage with more information for this event?</p>
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :host, 'Host / Point of Contact', class: 'form-label mb-0' %>
+    <%= form.text_field :host, class: 'form-control' %>
+    <p class="form-text">Who should be contacted for more information?</p>
+  </div>
+
+  <div class="mb-2">
+    <%= form.label :description, class: 'form-label mb-0' %>
+    <%= form.text_area :description, class: 'form-control' %>
+    <p class="form-text">What is this event all about?</p>
+  </div>
+
+  <div class="form-check form-switch mt-3 mb-4">
+    <input type="checkbox" id="new-event-recurring-toggle" class="form-check-input" name="new-event-recurring-toggle" role="switch" <%= form.object.recurring? ? 'checked' : '' %>>
+    <label class="form-check-label" for="new-event-recurring-toggle">Recurring event?</label>
+  </div>
+
+  <div id="new-event-recurring" class="<%= form.object.recurring? ? '' : 'd-none' %> mb-4">
+    <div class="mb-1">Repeat every</div>
+
+    <div class="row">
+      <div class="col-2">
+        <%= form.number_field :recurring_interval, value: 1, min: 1, max: 100, class: 'form-control' %>
+      </div>
+
+      <div class="col-4">
+        <%= form.select :recurring_cadence, options_for_select(Event::RECURRING_CADENCE.invert, :monthly), {}, class: 'form-select' %>
+      </div>
+
+      <div class="col-6">
+        <%= form.select :recurring_week_of_month, [], {include_blank: true}, class: 'form-select' %>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <%= form.hidden_field :airport_id, value: (defined?(@airport) ? @airport.id : form.object.airport&.id) %>
+    <%= form.submit value: (form.object.persisted? ? 'Submit' : 'Add Event'), class: 'btn btn-primary' %>
+  </div>
+<% end %>
