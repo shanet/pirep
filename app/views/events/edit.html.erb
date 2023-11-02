@@ -1,0 +1,26 @@
+<%
+  @airport = @event.airport
+  @title = (@event.persisted? ? @event.name : 'Create Event')
+  @breadcrumbs = [[@airport.code, airport_path(@airport)], (@event.persisted? ? ["Event - #{@event.name}"] : ['Create Event'])]
+%>
+
+<%= render 'airports/header/header', subtitle: "#{@event.persisted? ? 'Edit' : 'Create'} Event", hide_cover_image_dropdown: true %>
+
+<div class="container-lg">
+  <div class="row mb-3">
+    <div class="col-12 col-md-6 offset-md-3">
+      <div class="d-flex justify-content-between">
+        <h5><%= @event.persisted? ? 'Edit' : 'Create' %> Event</h5>
+
+        <% if @event.persisted? %>
+          <%= button_to '<i class="fa-solid fa-trash"></i> Delete'.html_safe, event_path(@event),
+              method: :delete,
+              class: 'btn btn-outline-danger btn-sm ms-2',
+              data: {confirm: 'Are you sure you want to delete this event?'} %>
+        <% end %>
+      </div>
+
+      <%= render 'form' %>
+    </div>
+  </div>
+</div>

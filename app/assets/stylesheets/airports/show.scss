@@ -47,6 +47,10 @@
   cursor: pointer;
 }
 
+#event_description { // stylelint-disable-line selector-id-pattern
+  min-height: 8rem;
+}
+
 .EasyMDEContainer { // stylelint-disable-line selector-class-pattern
   .editor-toolbar {
     display: none;

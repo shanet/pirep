@@ -14,6 +14,7 @@ class WebcamTest < ActiveSupport::TestCase
     webcam1 = create(:webcam, airport: airport)
     webcam2 = create(:webcam, airport: airport)
 
+    # The webcam tags should only be removed when the last webcam on the airport is deleted
     webcam1.destroy!
     assert airport.tags.where(name: :webcam).any?, 'Webcam tag removed from airport'
 

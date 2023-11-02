@@ -119,6 +119,24 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_02_031610) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "location"
+    t.string "host"
+    t.string "url"
+    t.datetime "start_date", precision: nil
+    t.datetime "end_date", precision: nil
+    t.string "recurring_cadence"
+    t.integer "recurring_interval"
+    t.integer "recurring_day_of_month"
+    t.integer "recurring_week_of_month"
+    t.uuid "airport_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["airport_id"], name: "index_events_on_airport_id"
+  end
+
   create_table "faa_data_cycles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "airports"
     t.string "charts"
@@ -339,6 +357,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_02_031610) do
   add_foreign_key "airports", "active_storage_attachments", column: "featured_photo_id", on_delete: :nullify
   add_foreign_key "comments", "airports"
   add_foreign_key "comments", "users"
+  add_foreign_key "events", "airports"
   add_foreign_key "pageviews", "users"
   add_foreign_key "remarks", "airports"
   add_foreign_key "runways", "airports"

@@ -85,6 +85,7 @@ export function openDrawer(instant=false) {
   if(drawer.className.indexOf('slide-in-drawer-instant') !== -1) return;
 
   mapUtils.closeAllDrawers();
+  drawer.querySelector('.handle').classList.remove('d-none');
 
   // In small screen sizes the drawer overlaps the map controls as opposed to being inline with them on large screen sizes.
   // This requires styles applied to the drawer itself vs. the map controls grid depending on screen size. However, we also
@@ -131,11 +132,14 @@ export function closeDrawer() {
   drawerNewAirport.removeNewAirportLayer();
 
   // Once the animation is done, remove the slide-out classes to avoid the animation from being played again on a window resize
+  // Also hide the drawer handle to prevent it from stick out of the side of the page
   grid.addEventListener('animationend', () => {
+    if(grid.classList.contains('slide-out-drawer')) drawer.querySelector('.handle').classList.add('d-none');
     grid.classList.remove('slide-out-drawer');
   });
 
   drawer.addEventListener('animationend', () => {
+    if(drawer.classList.contains('slide-out-drawer')) drawer.querySelector('.handle').classList.add('d-none');
     drawer.classList.remove('slide-out-drawer');
   });
 }

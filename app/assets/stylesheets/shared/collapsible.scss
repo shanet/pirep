@@ -18,7 +18,7 @@
     width: 100%;
 
     > div {
-      background-color: #eee;
+      background-color: $border-color-translucent;
       clip-path: polygon(0% 12px, 12px 0%, calc(100% - 12px) 0%, 100% 12px);
       height: 12px;
       margin: 0 auto;

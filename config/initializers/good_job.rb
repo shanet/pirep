@@ -4,6 +4,11 @@ Rails.configuration.good_job = {
   on_thread_error: ->(error) {Sentry.capture_exception(error)},
 
   cron: {
+    airport_events_tags_cleanup: {
+      cron: '30 6 * * *', # Every day
+      class: 'AirportEventsTagsCleanupJob',
+    },
+
     airports_geojson_dump: {
       cron: '0 * * * *', # Every hour
       class: 'AirportGeojsonDumperJob',

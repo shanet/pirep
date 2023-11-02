@@ -1,0 +1,38 @@
+<%
+  start_date_timestamp_format = '%a, %b %e %Y %H:%M %Z'
+  end_date_timestamp_format = (event.start_date.day == event.end_date.day ? '%H:%M %Z' : start_date_timestamp_format)
+%>
+
+<div class="d-flex justify-content-between">
+  <h5><%= event.name.upcase_first %></h5>
+  <%= link_to('<i class="fa-solid fa-edit"></i> Edit'.html_safe, edit_event_path(event), class: 'btn btn-outline-primary btn-sm ') %>
+</div>
+
+<p class="mb-1">
+  <%= format_timestamp event.next_start_date, format: start_date_timestamp_format %> &mdash; <%= format_timestamp event.next_end_date, format: end_date_timestamp_format %>
+
+  <br>
+  <% if event.recurring? %>
+    <small class="text-body-secondary"><%= recurring_event_to_s(event) %></small>
+  <% end %>
+</p>
+
+<% if event.location.present? || event.url.present? || event.host.present? %>
+  <ul class="ps-4">
+    <% if event.location.present? %>
+      <li>Location: <%= event.location %></li>
+    <% end %>
+
+    <% if event.url.present? %>
+      <li>Event page: <%= link_to event.url, event.url %></li>
+    <% end %>
+
+    <% if event.host.present? %>
+      <li>Host: <%= event.host %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if event.description.present? %>
+  <%= event.description %>
+<% end %>
