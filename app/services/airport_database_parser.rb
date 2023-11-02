@@ -4,7 +4,7 @@ require 'faa/faa_api'
 class AirportDatabaseParser
   def initialize
     @airports = {}
-    @faa_to_icao = YAML.safe_load(Rails.root.join('db/faa_to_icao_mapping.yml').read)
+    @faa_to_icao = YAML.safe_load(Rails.root.join('db/fixtures/faa_to_icao_mapping.yml').read)
   end
 
   def download_and_parse

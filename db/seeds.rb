@@ -1,5 +1,8 @@
 require 'securerandom'
 
+require 'airport_bounding_box_seeds'
+require 'airport_timezone_seeds'
+
 ALL_CHARTS = 'All charts'
 
 # rubocop:disable Rails/Output
@@ -68,37 +71,17 @@ private
       report = nil
 
       CLI::UI::Spinner.spin('Importing airports') do |spinner|
-        # Disable the bounding box calculation as we'll import those separately below
-        report = AirportDatabaseImporter.new(airports, bounding_box_calculator: nil).load_database do |progress|
+        # Import the bounding boxes & timezones from a static file to avoid spamming OSM's servers with thousands of requests and running up huge Google API bills
+        report = AirportDatabaseImporter.new(airports, bounding_box_provider: AirportBoundingBoxSeeds.new, timezone_provider: AirportTimezoneSeeds.new).load_database do |progress|
           print_progress('Importing airports', spinner, progress)
         end
       end
-
-      # Import the bounding boxes from a static file to avoid spamming OSM's servers with thousands of requests
-      import_bounding_boxes
 
       # Don't print every airport code on the first import since obviously they're all "new" airports
       unless initial_import
         print_airport_import_report('new', report[:new])
         print_airport_import_report('closed', report[:closed])
       end
-    end
-  end
-
-  def import_bounding_boxes
-    bounding_boxes = YAML.safe_load(Rails.root.join('db/airport_bounding_boxes.yml').read)
-
-    Airport.where(bbox_checked: false).find_each do |airport|
-      bounding_box = bounding_boxes[airport.code]
-      next unless bounding_box
-
-      airport.update!(
-        bbox_checked: true,
-        bbox_ne_latitude: bounding_box[0],
-        bbox_ne_longitude: bounding_box[1],
-        bbox_sw_latitude: bounding_box[2],
-        bbox_sw_longitude: bounding_box[3]
-      )
     end
   end
 

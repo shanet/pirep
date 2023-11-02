@@ -27,6 +27,8 @@ FactoryBot.define do
     bbox_ne_longitude    {-122.2691531}
     bbox_sw_latitude     {47.8966986}
     bbox_sw_longitude    {-122.2918449}
+    timezone             {'America/Los_Angeles'}
+    timezone_checked_at  {Time.zone.now}
     contributed_photos   {[Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png')]}
 
     annotations do

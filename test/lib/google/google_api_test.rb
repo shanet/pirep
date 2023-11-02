@@ -13,4 +13,10 @@ class GoogleApiTest < ActiveSupport::TestCase
     assert photos.first[:url].present?, 'Image URL not returned'
     assert photos.first[:attribution].present?, 'Image attribution not returned'
   end
+
+  test 'retrieves timezone' do
+    airport = create(:airport)
+    timezone = @client.timezone(airport.latitude, airport.longitude)
+    assert_equal 'America/Los_Angeles', timezone, 'Wrong timezone returned'
+  end
 end

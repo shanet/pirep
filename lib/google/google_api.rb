@@ -5,19 +5,20 @@ require_relative 'google_api_stubs'
 module GoogleApi
   def self.client
     unless Rails.application.credentials.google_api_key
-      GoogleApiStubs.stub_requests(Service::API_HOST)
+      GoogleApiStubs.stub_requests(Service::API_PLACE_PHOTOS, Service::API_TIMEZONES)
     end
 
     return Service.new
   end
 
   class Service
-    API_HOST = 'https://maps.googleapis.com/maps/api/place'
+    API_PLACE_PHOTOS = 'https://maps.googleapis.com/maps/api/place'
+    API_TIMEZONES = 'https://maps.googleapis.com/maps/api/timezone/json'
     PLACE_RADIUS = 2000 # meters
 
     def place_photos(query, latitude, longitude)
       # First first "places" near the given coordinates for the given query
-      response = Faraday.get("#{API_HOST}/findplacefromtext/json", {
+      response = Faraday.get("#{API_PLACE_PHOTOS}/findplacefromtext/json", {
         key: Rails.application.credentials.google_api_key,
         input: query,
         inputtype: :textquery,
@@ -51,7 +52,7 @@ module GoogleApi
         return []
       end
 
-      response = Faraday.get("#{API_HOST}/details/json", {
+      response = Faraday.get("#{API_PLACE_PHOTOS}/details/json", {
         key: Rails.application.credentials.google_api_key,
         place_id: result['place_id'],
         fields: :photo,
@@ -63,7 +64,7 @@ module GoogleApi
       return [] unless result['photos']
 
       return result['photos'].reduce([]) do |photos, photo|
-        response = Faraday.get("#{API_HOST}/photo", {
+        response = Faraday.get("#{API_PLACE_PHOTOS}/photo", {
           key: Rails.application.credentials.google_api_key,
           photoreference: photo['photo_reference'],
           maxwidth: 1000, # px
@@ -79,6 +80,24 @@ module GoogleApi
 
       Sentry.capture_exception(error)
       return []
+    end
+
+    def timezone(latitude, longitude)
+      response = Faraday.get(API_TIMEZONES, {
+        key: Rails.application.credentials.google_api_key,
+        location: "#{latitude},#{longitude}",
+        timestamp: Time.zone.now.to_i,
+      })
+
+      raise Exceptions::GoogleTimezoneQueryFailed unless response.success?
+
+      return JSON.parse(response.body)['timeZoneId']
+    rescue => error
+      # Don't be silent during tests
+      raise error if Rails.env.test?
+
+      Sentry.capture_exception(error)
+      return nil
     end
   end
 end
