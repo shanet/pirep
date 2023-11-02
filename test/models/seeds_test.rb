@@ -28,6 +28,9 @@ class SeedsTest < ActiveSupport::TestCase
     assert_in_delta(47.8966986, Airport.first.bbox_sw_latitude, 0.1, 'SW latitude bounding box not imported from YAML file')
     assert_in_delta(-122.2918449, Airport.first.bbox_sw_longitude, 0.1, 'SW longitude bounding box not imported from YAML file')
 
+    assert_equal 'America/Los_Angeles', Airport.first.timezone, 'Airport timezone not imported from YAML file'
+    assert_in_delta Time.zone.now, Airport.first.timezone_checked_at, 1.minute, 'Airport timezone checked at timestamp not set'
+
     assert_not_nil Airport.first.diagram, 'Airport diagram not imported'
   end
 

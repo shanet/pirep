@@ -7,6 +7,9 @@ module Pirep
   class Application < Rails::Application
     config.load_defaults 7.1
 
+    # Add db/ to the load path for classes the seeds use that live in there
+    $LOAD_PATH << Rails.root.join('db')
+
     config.domain = 'pirep.io'
     config.active_job.queue_adapter = :good_job
     config.pagination_page_size = 50

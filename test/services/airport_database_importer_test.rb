@@ -33,6 +33,8 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
     assert_equal(-117.2839675, airport.bbox_ne_longitude)
     assert_equal 48.8382765, airport.bbox_sw_latitude
     assert_equal(-117.2840137, airport.bbox_sw_longitude)
+    assert_equal 'America/Los_Angeles', airport.timezone
+    assert_in_delta Time.zone.now, airport.timezone_checked_at, 1.minute
 
     # Check tags, runways, and remarks attributes created as expected
     assert_equal [:empty, :public_], airport.tags.order(:name).map(&:name), 'Did not create tags for new airport'
@@ -51,8 +53,8 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
     airport = Airport.last
 
     # Set the FAA data cycle to something old to ensure it gets updated properly
-    # Also clear the bounding box to ensure it doesn't get updated again
-    airport.update!(faa_data_cycle: 1.month.ago, bbox_ne_latitude: nil, landing_rights: :restricted)
+    # Also clear the bounding box & timezone to ensure they don't get updated again
+    airport.update!(faa_data_cycle: 1.month.ago, bbox_ne_latitude: nil, timezone: nil, landing_rights: :restricted)
 
     assert_difference('Airport.count', 0) do
       assert_difference('Runway.count', 0) do
@@ -73,6 +75,7 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
     assert_equal FaaApi.client.current_data_cycle(:airports), airport.faa_data_cycle, 'Airport data cycle not updated on re-import'
     assert_not airport.closed?, 'Airport incorrectly marked as closed on re-import'
     assert_nil airport.bbox_ne_latitude, 'Airport bounding box incorrectly updated'
+    assert_nil airport.timezone, 'Airport timezone incorrectly updated'
   end
 
   test 'tags closed airport' do

@@ -12,10 +12,11 @@ class AirportDatabaseImporter
 
   MILITARY_OWNERSHIP_TYPES = Set.new(['MA', 'MN', 'MR', 'CG'])
 
-  def initialize(airports, bounding_box_calculator: AirportBoundingBoxCalculator.new)
+  def initialize(airports, bounding_box_provider: nil, timezone_provider: nil)
     @airports = airports
     @current_data_cycle = FaaApi.client.current_data_cycle(:airports)
-    @bounding_box_calculator = bounding_box_calculator
+    @bounding_box_provider = bounding_box_provider || AirportBoundingBoxCalculator.new
+    @timezone_provider = timezone_provider || AirportTimezoneProvider.new
   end
 
   def load_database
@@ -29,7 +30,8 @@ class AirportDatabaseImporter
       report[:new] << airport[:code] if new_airport
 
       update_tags(airport)
-      update_bounding_box(airport) if @bounding_box_calculator
+      update_bounding_box(airport)
+      update_timezone(airport)
 
       (airport_data[:runways] || []).each do |runway|
         update_runway(airport, runway)
@@ -128,7 +130,8 @@ private
     # in on their center.
     return if airport.bbox_checked? || !airport.uses_bounding_box? || airport.has_bounding_box?
 
-    bounding_box = @bounding_box_calculator.calculate(airport)
+    Rails.logger.info("Looking up bounding box for #{airport.id}")
+    bounding_box = @bounding_box_provider.calculate(airport)
 
     airport.update!({
       bbox_checked: true,
@@ -137,6 +140,14 @@ private
       bbox_sw_latitude: bounding_box[:southwest][:latitude],
       bbox_sw_longitude: bounding_box[:southwest][:longitude],
     })
+  end
+
+  def update_timezone(airport)
+    return if airport.timezone_checked_at
+
+    Rails.logger.info("Looking up timezone for #{airport.id}")
+    timezone = @timezone_provider.timezone(airport)
+    airport.update!(timezone: timezone, timezone_checked_at: Time.zone.now)
   end
 
   def tag_closed_airports

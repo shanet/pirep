@@ -6,10 +6,10 @@
       <%= time_ago_in_words(version.created_at).capitalize %> ago<br>
 
       <small class="text-body-secondary">
-        <%= format_timestamp(version.created_at) %>
+        <%= format_timestamp(version.created_at, timezone: @airport.timezone) %>
 
         <% if VersionPolicy.new(current_user, version).revert? && version.reverted_at.present? %>
-          <br>Reverted at: <%= format_timestamp(version.reverted_at) %>
+          <br>Reverted at: <%= format_timestamp(version.reverted_at, timezone: @airport.timezone) %>
         <% end %>
 
         <% if current_user&.admin? %>
@@ -33,7 +33,7 @@
 
           <p><small class="text-body-secondary">
             <% if version.reviewed_at %>
-              Reviewed at: <%= format_timestamp version.reviewed_at %>
+              Reviewed at: <%= format_timestamp version.reviewed_at, timezone: @airport.timezone %>
             <% else %>
               Unreviewed
             <% end %>

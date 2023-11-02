@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_11_062806) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_02_031610) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -100,6 +100,8 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_11_062806) do
     t.string "icao_code"
     t.datetime "external_photos_enqueued_at", precision: nil
     t.text "flying_clubs"
+    t.string "timezone"
+    t.datetime "timezone_checked_at", precision: nil
     t.index ["code"], name: "index_airports_on_code", unique: true
     t.index ["featured_photo_id"], name: "index_airports_on_featured_photo_id"
   end

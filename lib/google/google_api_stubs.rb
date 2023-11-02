@@ -1,6 +1,6 @@
 module GoogleApiStubs
-  def self.stub_requests(api_host)
-    WebMock.stub_request(:get, /#{api_host}\/findplacefromtext\/json\?.+/).to_return(lambda {|request|
+  def self.stub_requests(api_place_photos, api_timezones)
+    WebMock.stub_request(:get, /#{api_place_photos}\/findplacefromtext\/json\?.+/).to_return(lambda {|request|
       # Extract the given location so the distance radius check passes
       matches = request.uri.query.match(/.*locationbias=circle:\d+@(-?\d+.\d+),(-?\d+.\d+)/)
 
@@ -14,7 +14,7 @@ module GoogleApiStubs
       }
     })
 
-    WebMock.stub_request(:get, /#{api_host}\/details\/json\?.+/).to_return(lambda {|request|
+    WebMock.stub_request(:get, /#{api_place_photos}\/details\/json\?.+/).to_return(lambda {|request|
       # Extract the place ID
       matches = request.uri.query.match(/.*place_id=(.+),?/)
 
@@ -35,7 +35,7 @@ module GoogleApiStubs
       }
     })
 
-    WebMock.stub_request(:get, /#{api_host}\/photo\?.+/).to_return(lambda {|request|
+    WebMock.stub_request(:get, /#{api_place_photos}\/photo\?.+/).to_return(lambda {|request|
       # Extract the photo reference ID in order to return two different photos (this should match a value in the stubbed request above)
       matches = request.uri.query.match(/.*photoreference=(.+),?/)
 
@@ -46,6 +46,15 @@ module GoogleApiStubs
         status: 302,
       }
     })
+
+    WebMock.stub_request(:get, /#{api_timezones}\?.+/)
+      .to_return(body: {
+        'dstOffset' => 0,
+        'rawOffset' => -28_800,
+        'status' => 'OK',
+        'timeZoneId' => 'America/Los_Angeles',
+        'timeZoneName' => 'Pacific Standard Time',
+      }.to_json)
 
     WebMock.enable!
   end
