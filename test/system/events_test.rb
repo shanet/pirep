@@ -18,7 +18,11 @@ class EventsTest < ApplicationSystemTestCase
     visit edit_event_path(@event)
 
     assert_difference('Event.count', -1) do
-      click_button 'Delete'
+      accept_alert do
+        click_button 'Delete'
+      end
+
+      page.assert_text('No upcoming events.')
     end
   end
 end
