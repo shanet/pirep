@@ -36,16 +36,20 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     assert_difference('Airport.count') do
       assert_difference('Action.where(type: :airport_added).count') do
         assert_enqueued_with(job: AirportGeojsonDumperJob) do
-          post airports_path(format: :js, params: {airport: {
-            name: 'Unmapped airport',
-            latitude: @airport.latitude,
-            longitude: @airport.longitude,
-            elevation: @airport.elevation,
-            state: 'closed',
-            landing_rights: :private_,
-          }})
+          assert_enqueued_with(job: FetchAirportBoundingBoxJob) do
+            assert_enqueued_with(job: FetchAirportTimezoneJob) do
+              post airports_path(format: :js, params: {airport: {
+                name: 'Unmapped airport',
+                latitude: @airport.latitude,
+                longitude: @airport.longitude,
+                elevation: @airport.elevation,
+                state: 'closed',
+                landing_rights: :private_,
+              }})
 
-          assert_response :success
+              assert_response :success
+            end
+          end
         end
       end
     end

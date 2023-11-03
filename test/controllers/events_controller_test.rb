@@ -6,15 +6,22 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'create' do
-    event_attributes = attributes_for(:event).merge(airport_id: @event.airport.id)
+    event_attributes = attributes_for(:event, airport_id: @event.airport.id, start_date: '2023-11-05T00:00', end_date: '2023-11-06T00:00')
 
     assert_difference('Action.where(type: :event_added).count') do
       post events_path, params: {event: event_attributes}
       assert_redirected_to airport_path(@event.airport.code)
     end
 
-    assert_equal event_attributes[:name], Event.last.name, 'Event name not set'
-    assert_equal @event.airport, Event.last.airport, 'Event not associated with airport'
+    event = Event.last
+
+    assert_equal event_attributes[:name], event.name, 'Event name not set'
+    assert_equal @event.airport, event.airport, 'Event not associated with airport'
+
+    # The timestamps above did not have timezone info associated with them so the controller should convert them to the airport's local timezone.
+    # These particular dates are on either side of the DST boundary so the hours are different as well.
+    assert_equal 7, event.start_date.hour, 'Start date not converted to airport timezone'
+    assert_equal 8, event.end_date.hour, 'End date not converted to airport timezone'
   end
 
   test 'edit' do

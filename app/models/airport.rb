@@ -312,6 +312,10 @@ class Airport < ApplicationRecord
     return self[:landing_rights]&.to_sym
   end
 
+  def timezone
+    return self[:timezone] || Rails.configuration.time_zone
+  end
+
   def attach_contributed_photos(photos)
     # Before attaching images downsize them, normalize to JPG, and strip EXIF data. To save on storage costs we ideally
     # don't want/need to be storing large source images that are never displayed. Using Rails' ActiveStorage variants it

@@ -18,7 +18,7 @@ module ApplicationHelper
   end
 
   def format_timestamp(timestamp, format: nil, timezone: nil)
-    timestamp = timestamp&.in_time_zone(timezone || current_user&.timezone.presence || Rails.configuration.default_timezone)
+    timestamp = timestamp&.in_time_zone(timezone || current_user&.timezone.presence || Rails.configuration.time_zone)
     return timestamp&.strftime(format || '%F %T %Z')
   end
 

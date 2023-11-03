@@ -1,6 +1,8 @@
 <%
-  start_date_timestamp_format = '%a, %b %e %Y %H:%M %Z'
-  end_date_timestamp_format = (event.start_date.day == event.end_date.day ? '%H:%M %Z' : start_date_timestamp_format)
+  start_date_timestamp_format = '%a, %b %e %Y %l:%M%P'
+
+  # For a start and end date on the same day we don't need to echo the full date again, only the hour and minute
+  end_date_timestamp_format = (event.start_date.day == event.end_date.day ? '%l:%M%P' : start_date_timestamp_format)
 %>
 
 <div class="d-flex justify-content-between">
@@ -9,7 +11,8 @@
 </div>
 
 <p class="mb-1">
-  <%= format_timestamp event.next_start_date, format: start_date_timestamp_format %> &mdash; <%= format_timestamp event.next_end_date, format: end_date_timestamp_format %>
+  <%= format_timestamp event.next_start_date, format: start_date_timestamp_format, timezone: @airport.timezone %> &ndash;
+  <%= format_timestamp event.next_end_date, format: end_date_timestamp_format, timezone: @airport.timezone %>
 
   <br>
   <% if event.recurring? %>

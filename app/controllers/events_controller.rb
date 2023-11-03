@@ -53,6 +53,13 @@ private
     # If no recurring cadence value was provided assume the event if non-recurring (for changing a recurring event to a non-recurring one)
     params[:event][:recurring_cadence] ||= nil
 
+    # Put the start/end dates in the timezone local to the event's airport
+    if params[:event][:start_date].present? || params[:event][:end_date].present?
+      timezone = (params[:event][:airport_id] ? Airport.find(params[:event][:airport_id]).timezone : Rails.configuration.time_zone)
+      params[:event][:start_date] = params[:event][:start_date]&.in_time_zone(timezone) if params[:event][:start_date].present?
+      params[:event][:end_date] = params[:event][:end_date]&.in_time_zone(timezone) if params[:event][:end_date].present?
+    end
+
     return params.require(:event).permit(
       :airport_id,
       :description,

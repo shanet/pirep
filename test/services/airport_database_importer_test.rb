@@ -75,7 +75,7 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
     assert_equal FaaApi.client.current_data_cycle(:airports), airport.faa_data_cycle, 'Airport data cycle not updated on re-import'
     assert_not airport.closed?, 'Airport incorrectly marked as closed on re-import'
     assert_nil airport.bbox_ne_latitude, 'Airport bounding box incorrectly updated'
-    assert_nil airport.timezone, 'Airport timezone incorrectly updated'
+    assert_nil airport[:timezone], 'Airport timezone incorrectly updated'
   end
 
   test 'tags closed airport' do
