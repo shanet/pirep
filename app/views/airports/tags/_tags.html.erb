@@ -1,10 +1,10 @@
-<div id="tags" class="card my-2">
+<div id="tags" class="card mb-2">
   <div class="card-header">
     <i class="fas fa-tags"></i> Tags
   </div>
 </div>
 
-<div class="d-flex flex-wrap <% if @airport.tags.count > 2 %>justify-content-center<% end %>">
+<div class="d-flex flex-wrap mb-2 <% if @airport.tags.count > 2 %>justify-content-center<% end %>">
   <% @airport.tags.each do |tag| %>
     <%= render partial: 'airports/tags/tag', locals: {tag_record: tag} %>
   <% end %>
@@ -38,4 +38,4 @@
   <% end %>
 <% end %>
 
-<%= render 'shared/collapsible', id: 'add-tag-form' %>
+<%= render 'shared/collapsible', id: 'add-tag-form', classes: 'mb-3' %>

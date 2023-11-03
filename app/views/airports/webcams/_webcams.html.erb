@@ -1,6 +1,6 @@
 <% embedded_webcams = @airport.webcams.select(&:embedded?) %>
 
-<div id="webcams" class="card mt-3">
+<div id="webcams" class="card mb-2">
   <div class="card-header">
     <i class="fas fa-camera"></i> Airport <%= 'Webcam'.pluralize(@airport.webcams.count) %>
   </div>
@@ -16,12 +16,12 @@
   <%= render 'airports/webcams/webcam', webcam: embedded_webcams.first %>
 <% end %>
 
-<div class="text-end mt-2">
+<div class="text-end mb-2">
   <% if @airport.webcams.empty? %>
-    <small class="text-body-secondary">No webcams added yet.</small>
+    <small class="text-body-secondary me-2">No webcams added yet.</small>
   <% end %>
 
-  <button type="button" class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="collapse" data-bs-target="add-webcam-form">Add Webcam</a>
+  <button type="button" class="btn btn-outline-primary btn-sm mb-2" data-bs-toggle="collapse" data-bs-target="add-webcam-form">Add Webcam</a>
 
   <% if embedded_webcams.count > 1 %>
     <button id="show-more-webcams" class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="show-all-webcams">Show More</a></button>
