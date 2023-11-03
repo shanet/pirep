@@ -305,4 +305,9 @@ class AirportTest < ActiveSupport::TestCase
       end
     end
   end
+
+  test 'timezone' do
+    airport = create(:airport, timezone: nil)
+    assert_equal Rails.configuration.time_zone, airport.timezone, 'Did not fallback to default timezone'
+  end
 end

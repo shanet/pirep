@@ -30,6 +30,7 @@ class AirportsController < ApplicationController
     if @airport.save
       # It's unlikely, but try to get a bounding box for the new airport just in case one exists
       FetchAirportBoundingBoxJob.perform_later(@airport)
+      FetchAirportTimezoneJob.perform_later(@airport)
 
       Action.create!(type: :airport_added, actionable: @airport, user: active_user)
 

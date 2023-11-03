@@ -12,10 +12,10 @@ class TimezoneTest < ApplicationSystemTestCase
   end
 
   test 'does not set user timezone if set' do
-    user = create(:known, timezone: Rails.configuration.default_timezone)
+    user = create(:known, timezone: Rails.configuration.time_zone)
     sign_in user
 
     visit root_path
-    assert_equal Rails.configuration.default_timezone, user.reload.timezone, 'User timezone overwritten'
+    assert_equal Rails.configuration.time_zone, user.reload.timezone, 'User timezone overwritten'
   end
 end

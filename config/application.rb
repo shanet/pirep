@@ -14,8 +14,7 @@ module Pirep
     config.active_job.queue_adapter = :good_job
     config.pagination_page_size = 50
 
-    config.default_timezone = 'Etc/UTC'
-    config.supported_timezones = [ActiveSupport::TimeZone.new(config.default_timezone)] + ActiveSupport::TimeZone.us_zones
+    config.supported_timezones = [ActiveSupport::TimeZone.new('Etc/UTC')] + ActiveSupport::TimeZone.us_zones
 
     config.meta_title = 'Pirep - Collaborative Airport Database'
     config.meta_description = 'Pirep is a free, collaborative database of all public and private airports located within the United States.'
