@@ -1,5 +1,5 @@
 <% if @airport.diagram %>
-  <div class="airport-diagram mt-3">
+  <div class="airport-diagram mb-3">
     <img class="img-thumbnail" src="<%= Rails.env.test? ? image_path('logo.png') : faa_data_content_url(:diagrams, filename: @airport.diagram) %>">
   </div>
 <% end %>

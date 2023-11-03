@@ -1,6 +1,6 @@
 <% return unless webcam.embedded? %>
 
-<div class="text-center mt-2">
+<div class="text-center mb-2">
   <% if webcam.image? %>
     <img class="webcam-image img-thumbnail" src="<%= webcam.url %>">
   <% elsif webcam.frame? %>

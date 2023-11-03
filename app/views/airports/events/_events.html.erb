@@ -1,18 +1,7 @@
-<div id="events" class="card my-2">
-  <% if @airport.events.upcoming.any? %>
-    <div class="card-header">
-      <i class="fas fa-calendar-days"></i> Upcoming Events
-    </div>
-  <% else %>
-    <div class="card-header d-flex justify-content-between">
-      <div>
-        <i class="fas fa-calendar-days"></i> Upcoming Events &mdash; None
-        <br><span class="text-body-secondary">Is anything happening here soon?</span>
-      </div>
-
-      <button type="button" class="btn btn-outline-primary btn-sm my-2" data-bs-toggle="collapse" data-bs-target="add-event-form">Add Event</a>
-    </div>
-  <% end %>
+<div id="events" class="card mb-2">
+  <div class="card-header">
+    <i class="fas fa-calendar-days"></i> Upcoming Events
+  </div>
 
   <ul class="list-group list-group-flush">
     <% @airport.events.upcoming.each do |event| %>
@@ -21,14 +10,16 @@
   </ul>
 </div>
 
-<% if @airport.events.upcoming.any? %>
-  <div class="text-end">
-    <button type="button" class="btn btn-outline-primary btn-sm my-2" data-bs-toggle="collapse" data-bs-target="add-event-form">Add Event</a>
-  </div>
-<% end %>
+<div class="text-end mb-3">
+  <% if @airport.events.upcoming.empty? %>
+    <small class="text-body-secondary me-2">No upcoming events. Is anything happening here soon?</small>
+  <% end %>
+
+  <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="add-event-form">Add Event</a>
+</div>
 
 <% content_for :collapsible_content, flush: true do %>
   <%= render 'events/form' %>
 <% end %>
 
-<%= render 'shared/collapsible', id: 'add-event-form', classes: 'mb-2' %>
+<%= render 'shared/collapsible', id: 'add-event-form', classes: 'mb-3' %>
