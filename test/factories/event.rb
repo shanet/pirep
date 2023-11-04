@@ -11,7 +11,7 @@ FactoryBot.define do
     trait :recurring do
       recurring_interval      {1}
       recurring_cadence       {:yearly}
-      recurring_week_of_month {4}
+      recurring_week_of_month {-1}
     end
   end
 end
