@@ -47,7 +47,9 @@ class Event < ApplicationRecord
   def recurring_week_of_month_label
     return nil unless recurring_week_of_month
 
-    return ['first', 'second', 'third', 'last'][recurring_week_of_month - 1]
+    return 'last' if recurring_week_of_month == -1
+
+    return ['first', 'second', 'third', 'fourth', 'fifth'][recurring_week_of_month - 1]
   end
 
   def next_start_date

@@ -80,8 +80,10 @@ function setWeekOfMonthOptions(setDefault) {
     return;
   }
 
-  recurringWeekOfMonth.appendChild(createOptionForDayOfMonth(startDate.value, (setDefault ? recurringWeekOfMonth.dataset.default : null)));
-  recurringWeekOfMonth.appendChild(createOptionForWeekOfMonth(startDate.value, (setDefault ? recurringWeekOfMonth.dataset.default : null)));
+  const date = new Date(startDate.value);
+
+  createOptionForDayOfMonth(date, (setDefault ? recurringWeekOfMonth.dataset.default : null));
+  createOptionsForWeekOfMonth(date, (setDefault ? recurringWeekOfMonth.dataset.default : null));
 }
 
 function createDisabledOption() {
@@ -90,9 +92,9 @@ function createDisabledOption() {
   return option;
 }
 
-function createOptionForDayOfMonth(startDate, defaultOption) {
-  const date = new Date(startDate);
+function createOptionForDayOfMonth(date, defaultOption) {
   const recurringCadence = document.getElementById('event_recurring_cadence');
+  const recurringWeekOfMonth = document.getElementById('event_recurring_week_of_month');
 
   const option = document.createElement('option');
   option.value = `day_${date.getDate()}`;
@@ -108,13 +110,22 @@ function createOptionForDayOfMonth(startDate, defaultOption) {
     default:
   }
 
-  return option;
+  recurringWeekOfMonth.appendChild(option);
 }
 
-function createOptionForWeekOfMonth(startDate, defaultOption) {
-  const date = new Date(startDate);
-  const recurringCadence = document.getElementById('event_recurring_cadence');
+function createOptionsForWeekOfMonth(date, defaultOption) {
   const weekOfMonth = dateToWeekOfMonth(date);
+  createOptionForWeekOfMonth(date, defaultOption, weekOfMonth);
+
+  // If the date is on the 4th or 5th week of the month also show a "last week of" option
+  if([4, 5].indexOf(weekOfMonth.week) !== -1) {
+    createOptionForWeekOfMonth(date, defaultOption, {week: -1, label: 'last'});
+  }
+}
+
+function createOptionForWeekOfMonth(date, defaultOption, weekOfMonth) {
+  const recurringCadence = document.getElementById('event_recurring_cadence');
+  const recurringWeekOfMonth = document.getElementById('event_recurring_week_of_month');
 
   const option = document.createElement('option');
   option.value = `week_${weekOfMonth.week}`;
@@ -130,7 +141,7 @@ function createOptionForWeekOfMonth(startDate, defaultOption) {
     default:
   }
 
-  return option;
+  recurringWeekOfMonth.appendChild(option);
 }
 
 function dateToDayOfWeek(date) {
@@ -144,12 +155,9 @@ function dateToMonth(date) {
 function dateToWeekOfMonth(date) {
   const weekOfMonth = Math.ceil(date.getDate() / 7);
 
-  // Currently this assumes all days only occur four times per month. It's odd to have a recurring event
-  // on the fourth day of a month and have it not also be the last day of that month so in the interest
-  // of simplifying this code it assumes the fourth week is always the last.
   return {
     week: weekOfMonth,
-    label: ['first', 'second', 'third', 'last'][weekOfMonth - 1],
+    label: ['first', 'second', 'third', 'fourth', 'fifth'][weekOfMonth - 1],
   };
 }
 
