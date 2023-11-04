@@ -2,7 +2,7 @@ require 'application_system_test_case'
 
 class EventsTest < ApplicationSystemTestCase
   setup do
-    @event = create(:event)
+    @event = create(:event, :recurring)
   end
 
   test 'edits event' do
