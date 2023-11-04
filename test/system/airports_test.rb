@@ -331,7 +331,20 @@ class AirportsTest < ApplicationSystemTestCase
     assert_no_selector '#welcome-info-notice'
   end
 
-  test 'adds event' do
+  test 'adds static event' do
+    visit airport_path(@airport.code)
+    click_button 'Add Event'
+
+    fill_in 'event_name', with: 'Foobar'
+    fill_in 'event_start_date', with: DateTime.new(2023, 11, 5, 8)
+    fill_in 'event_end_date', with: DateTime.new(2023, 11, 5, 17)
+    find('#event-form input[type="submit"]').click
+
+    assert_selector '#events h5', text: 'Foobar'
+    assert_not Event.last.recurring?, 'Static event created as recurring'
+  end
+
+  test 'adds recurring event' do
     visit airport_path(@airport.code)
     click_button 'Add Event'
 
@@ -346,6 +359,7 @@ class AirportsTest < ApplicationSystemTestCase
     find('#event-form input[type="submit"]').click
 
     assert_selector '#events h5', text: 'Foobar'
+    assert Event.last.recurring?, 'Recurring event created as static'
   end
 
 private

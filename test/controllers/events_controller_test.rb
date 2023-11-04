@@ -6,7 +6,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'create' do
-    event_attributes = attributes_for(:event, airport_id: @event.airport.id, start_date: '2023-11-05T00:00', end_date: '2023-11-06T00:00')
+    event_attributes = attributes_for(:event, :recurring, airport_id: @event.airport.id, start_date: '2023-11-05T00:00', end_date: '2023-11-06T00:00')
 
     assert_difference('Action.where(type: :event_added).count') do
       post events_path, params: {event: event_attributes}
@@ -22,6 +22,9 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     # These particular dates are on either side of the DST boundary so the hours are different as well.
     assert_equal 7, event.start_date.hour, 'Start date not converted to airport timezone'
     assert_equal 8, event.end_date.hour, 'End date not converted to airport timezone'
+
+    # No recurring fields should be set without the `recurring_event` param set to true
+    assert_not event.recurring?, 'Event made recurring without requisite param'
   end
 
   test 'edit' do
@@ -44,7 +47,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   test 'update recurring event' do
     event = create(:event, :recurring)
 
-    patch event_path(event, params: {event: {recurring_cadence: 'monthly', recurring_week_of_month: 'day_13'}})
+    patch event_path(event, params: {recurring_event: '1', event: {recurring_cadence: 'monthly', recurring_week_of_month: 'day_13'}})
     assert_redirected_to airport_path(event.airport.code)
 
     # Test that the recurring week of month field is parsed correctly when provided with a day-of-month value
