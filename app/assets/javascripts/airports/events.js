@@ -11,16 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
 function initRecurringToggle() {
   const recurringFields = document.getElementById('new-event-recurring');
   const recurringToggle = document.getElementById('new-event-recurring-toggle');
-  const recurringCadence = document.getElementById('event_recurring_cadence');
+  const recurringEvent = document.getElementById('recurring_event');
 
+  // Show the recurring fields and set the hidden field to true/false so the controller knows if the event is recurring
   recurringToggle.addEventListener('change', () => {
     if(recurringToggle.checked) {
       recurringFields.classList.remove('d-none');
+      recurringEvent.value = '1';
     } else {
       recurringFields.classList.add('d-none');
-
-      // Clear the recurring cadence to make the event non-recurring when deselected
-      recurringCadence.value = '';
+      recurringEvent.value = '0';
     }
   });
 }
@@ -64,6 +64,7 @@ function initStartDate() {
 
   startDate.addEventListener('change', () => {
     setWeekOfMonthOptions();
+    copyStartDateToEndDate();
   });
 }
 
@@ -160,4 +161,12 @@ function addOrdinalSuffix(number) {
   if([3, 23].indexOf(number) !== -1) return `${number}rd`;
 
   return `${number}th`;
+}
+
+// Copy the start date to the end date when it's set as long as the end date is not already selected
+function copyStartDateToEndDate() {
+  const endDate = document.getElementById('event_end_date');
+  if(endDate.value !== '') return;
+
+  endDate.value = document.getElementById('event_start_date').value;
 }

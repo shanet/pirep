@@ -45,6 +45,7 @@
   <div class="form-check form-switch mt-3 mb-4">
     <input type="checkbox" id="new-event-recurring-toggle" class="form-check-input" name="new-event-recurring-toggle" role="switch" <%= form.object.recurring? ? 'checked' : '' %>>
     <label class="form-check-label" for="new-event-recurring-toggle">Recurring event?</label>
+    <%= hidden_field_tag :recurring_event, form.object.recurring? ? '1' : '0' %>
   </div>
 
   <div id="new-event-recurring" class="<%= form.object.recurring? ? '' : 'd-none' %> mb-4">

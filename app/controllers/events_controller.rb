@@ -40,6 +40,13 @@ private
   end
 
   def event_params
+    # If the event is not recurring then disregard all of the recurring fields
+    unless params[:recurring_event] == '1'
+      [:recurring_cadence, :recurring_day_of_month, :recurring_interval, :recurring_week_of_month].each do |field|
+        params[:event].delete(field)
+      end
+    end
+
     week_of_month = params[:event][:recurring_week_of_month]&.split('_')
 
     # Split out the day/week of month value into two separate fields since these are from the same select element
