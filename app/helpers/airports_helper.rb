@@ -139,12 +139,12 @@ module AirportsHelper
       if event.recurring_day_of_month
         string += " on the #{event.recurring_day_of_month.ordinalize}"
       elsif event.recurring_week_of_month
-        string += " on the #{event.recurring_week_of_month_label} #{event.start_date.strftime('%A')}"
+        string += " on the #{event.recurring_week_of_month_label} #{event.start_date.in_time_zone(event.airport.timezone).strftime('%A')}"
       end
     end
 
     if event.recurring_cadence == :yearly
-      string += " of #{event.start_date.strftime('%B')}"
+      string += " of #{event.start_date.in_time_zone(event.airport_timezone).strftime('%B')}"
     end
 
     return string

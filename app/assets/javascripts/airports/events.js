@@ -5,22 +5,19 @@ document.addEventListener('DOMContentLoaded', () => {
   initRecurringInterval();
   initRecurringCadence();
   initStartDate();
-  setWeekOfMonthOptions();
+  setWeekOfMonthOptions(true);
 }, {once: true});
 
 function initRecurringToggle() {
   const recurringFields = document.getElementById('new-event-recurring');
   const recurringToggle = document.getElementById('new-event-recurring-toggle');
-  const recurringEvent = document.getElementById('recurring_event');
 
   // Show the recurring fields and set the hidden field to true/false so the controller knows if the event is recurring
   recurringToggle.addEventListener('change', () => {
     if(recurringToggle.checked) {
       recurringFields.classList.remove('d-none');
-      recurringEvent.value = '1';
     } else {
       recurringFields.classList.add('d-none');
-      recurringEvent.value = '0';
     }
   });
 }
@@ -68,7 +65,7 @@ function initStartDate() {
   });
 }
 
-function setWeekOfMonthOptions() {
+function setWeekOfMonthOptions(setDefault) {
   const startDate = document.getElementById('event_start_date');
   const recurringWeekOfMonth = document.getElementById('event_recurring_week_of_month');
 
@@ -83,8 +80,8 @@ function setWeekOfMonthOptions() {
     return;
   }
 
-  recurringWeekOfMonth.appendChild(createOptionForDayOfMonth(startDate.value));
-  recurringWeekOfMonth.appendChild(createOptionForWeekOfMonth(startDate.value));
+  recurringWeekOfMonth.appendChild(createOptionForDayOfMonth(startDate.value, (setDefault ? recurringWeekOfMonth.dataset.default : null)));
+  recurringWeekOfMonth.appendChild(createOptionForWeekOfMonth(startDate.value, (setDefault ? recurringWeekOfMonth.dataset.default : null)));
 }
 
 function createDisabledOption() {
@@ -93,12 +90,13 @@ function createDisabledOption() {
   return option;
 }
 
-function createOptionForDayOfMonth(startDate) {
+function createOptionForDayOfMonth(startDate, defaultOption) {
   const date = new Date(startDate);
   const recurringCadence = document.getElementById('event_recurring_cadence');
 
   const option = document.createElement('option');
   option.value = `day_${date.getDate()}`;
+  option.selected = (option.value === defaultOption);
 
   switch(recurringCadence.value) {
     case 'monthly':
@@ -113,13 +111,14 @@ function createOptionForDayOfMonth(startDate) {
   return option;
 }
 
-function createOptionForWeekOfMonth(startDate) {
+function createOptionForWeekOfMonth(startDate, defaultOption) {
   const date = new Date(startDate);
   const recurringCadence = document.getElementById('event_recurring_cadence');
   const weekOfMonth = dateToWeekOfMonth(date);
 
   const option = document.createElement('option');
   option.value = `week_${weekOfMonth.week}`;
+  option.selected = (option.value === defaultOption);
 
   switch(recurringCadence.value) {
     case 'monthly':

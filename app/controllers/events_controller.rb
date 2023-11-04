@@ -41,24 +41,22 @@ private
 
   def event_params
     # If the event is not recurring then disregard all of the recurring fields
-    unless params[:recurring_event] == '1'
+    unless params['new-event-recurring-toggle'] == 'on'
       [:recurring_cadence, :recurring_day_of_month, :recurring_interval, :recurring_week_of_month].each do |field|
-        params[:event].delete(field)
+        params[:event][field] = nil
       end
     end
 
+    # Split out the day/week of month value into two separate fields since these are from the same select element
     week_of_month = params[:event][:recurring_week_of_month]&.split('_')
 
-    # Split out the day/week of month value into two separate fields since these are from the same select element
     if week_of_month&.first == 'day'
       params[:event][:recurring_day_of_month] = week_of_month.last.to_i
-      params[:event].delete(:recurring_week_of_month)
+      params[:event][:recurring_week_of_month] = nil
     elsif week_of_month&.first == 'week'
       params[:event][:recurring_week_of_month] = week_of_month.last.to_i
+      params[:event][:recurring_day_of_month] = nil
     end
-
-    # If no recurring cadence value was provided assume the event if non-recurring (for changing a recurring event to a non-recurring one)
-    params[:event][:recurring_cadence] ||= nil
 
     # Put the start/end dates in the timezone local to the event's airport
     if params[:event][:start_date].present? || params[:event][:end_date].present?
