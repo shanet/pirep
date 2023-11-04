@@ -86,8 +86,8 @@ class AirportsTest < ApplicationSystemTestCase
 
     click_button 'Add Tags'
 
-    # There should now be four tags plus the "edit tags" button
-    assert_equal 5, all('.tag-square').count, 'Tags not added'
+    # There should now be six tags plus the "edit tags" button
+    assert_equal 6, all('.tag-square').count, 'Tags not added'
   end
 
   test 'remove tag' do
