@@ -44,7 +44,16 @@ class Event < ApplicationRecord
   end
 
   def next_start_date
-    return (recurring? ? recurrance_schedule(start_date).next_occurrence : start_date)
+    return start_date unless recurring?
+
+    next_start_date = recurrance_schedule(start_date).next_occurrence
+
+    # Annoying edge case: If the event start date is during DST and the next recurring date is not then we need to adjust by an hour to keep the times consistent
+    if start_date.in_time_zone(airport.timezone).dst? && !next_start_date.in_time_zone(airport.timezone).dst?
+      next_start_date += 1.hour
+    end
+
+    return next_start_date
   end
 
   def next_end_date
@@ -52,7 +61,7 @@ class Event < ApplicationRecord
 
     # For a recurring event the end date is the next start date + the difference between the start and end dates.
     # Otherwise there is an edge case for a multi-day event when the start date has passed but not the end date.
-    return recurrance_schedule(start_date).next_occurrence + (end_date - start_date)
+    return next_start_date + (end_date - start_date)
   end
 
 private

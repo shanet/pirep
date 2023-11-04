@@ -61,6 +61,20 @@ class EventTest < ActiveSupport::TestCase
     assert_equal event.next_start_date + (event.end_date - event.start_date), event.next_end_date, 'End date for recurring event incorrect'
   end
 
+  test 'next start date for DST boundary' do
+    event = create(:event, :recurring, start_date: Time.zone.local(2023, 11, 1), end_date: Time.zone.local(2023, 11, 2), recurring_cadence: :monthly)
+
+    start_date = event.start_date.in_time_zone(event.airport.timezone)
+    end_date = event.end_date.in_time_zone(event.airport.timezone)
+    next_start_date = event.next_start_date.in_time_zone(event.airport.timezone)
+    next_end_date = event.next_end_date.in_time_zone(event.airport.timezone)
+
+    assert start_date.dst?, 'Event not starting during DST'
+    assert_not next_start_date.dst?, 'Event\'s next start date still during DST'
+    assert_equal start_date.hour, next_start_date.hour, 'Cross-DST hours not adjusted for recurring event start'
+    assert_equal end_date.hour, next_end_date.hour, 'Cross-DST hours not adjusted for recurring event end'
+  end
+
   test 'day/week of month is required for monthly/yearly recurring event' do
     assert create(:event, recurring_interval: 1, recurring_cadence: :monthly, recurring_day_of_month: 1).valid?, 'Recurring event invalid'
     assert create(:event, recurring_interval: 1, recurring_cadence: :yearly, recurring_week_of_month: 1).valid?, 'Recurring event invalid'
