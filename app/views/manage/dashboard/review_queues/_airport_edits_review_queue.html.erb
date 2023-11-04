@@ -1,7 +1,7 @@
 <%
   queue_limit = 10
   versions = PaperTrail::Version
-    .where(reviewed_at: nil, item_type: [Airport.name, Tag.name, Webcam.name])
+    .where(reviewed_at: nil, item_type: [Airport.name, Event.name, Tag.name, Webcam.name])
     .where.not(whodunnit: nil)
     .where.not(object_changes: nil)
     .order(created_at: :desc)
