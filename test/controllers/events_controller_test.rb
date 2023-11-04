@@ -47,7 +47,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   test 'update recurring event' do
     event = create(:event, :recurring)
 
-    patch event_path(event, params: {recurring_event: '1', event: {recurring_cadence: 'monthly', recurring_week_of_month: 'day_13'}})
+    patch event_path(event, params: {'new-event-recurring-toggle' => 'on', event: {recurring_cadence: 'monthly', recurring_week_of_month: 'day_13'}})
     assert_redirected_to airport_path(event.airport.code)
 
     # Test that the recurring week of month field is parsed correctly when provided with a day-of-month value
