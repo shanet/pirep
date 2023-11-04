@@ -51,6 +51,8 @@ class Event < ApplicationRecord
     # Annoying edge case: If the event start date is during DST and the next recurring date is not then we need to adjust by an hour to keep the times consistent
     if start_date.in_time_zone(airport.timezone).dst? && !next_start_date.in_time_zone(airport.timezone).dst?
       next_start_date += 1.hour
+    elsif !start_date.in_time_zone(airport.timezone).dst? && next_start_date.in_time_zone(airport.timezone).dst?
+      next_start_date -= 1.hour
     end
 
     return next_start_date
