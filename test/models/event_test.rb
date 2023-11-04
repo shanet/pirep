@@ -41,13 +41,13 @@ class EventTest < ActiveSupport::TestCase
     event = create(:event, :recurring, start_date: 1.day.ago, end_date: Time.zone.now, recurring_cadence: :weekly, recurring_interval: 2)
     assert_in_delta 2.weeks.from_now, event.next_start_date, 1.week, 'Unexpected next start date for weekly recurring event'
 
-    event = create(:event, :recurring, start_date: Time.zone.now, end_date: 2.days.from_now, recurring_cadence: :monthly, recurring_day_of_month: 15)
+    event = create(:event, :recurring, start_date: Time.zone.now, end_date: 2.days.from_now, recurring_cadence: :monthly, recurring_day_of_month: 15, recurring_week_of_month: nil)
     assert_in_delta 1.month.from_now, event.next_start_date, 1.month, 'Unexpected next start date for monthly day-of-month recurring event'
 
     event = create(:event, :recurring, start_date: Time.zone.now, end_date: 2.days.from_now, recurring_cadence: :monthly, recurring_week_of_month: 3)
     assert_in_delta 1.month.from_now, event.next_start_date, 1.month, 'Unexpected next start date for monthly week-of-month recurring event'
 
-    event = create(:event, :recurring, start_date: 3.months.ago, end_date: 2.days.from_now, recurring_cadence: :yearly, recurring_day_of_month: 5)
+    event = create(:event, :recurring, start_date: 3.months.ago, end_date: 2.days.from_now, recurring_cadence: :yearly, recurring_day_of_month: 5, recurring_week_of_month: nil)
     assert_in_delta 1.year.from_now - 3.months, event.next_start_date, 1.month, 'Unexpected next start date for yearly day-of-month recurring event'
 
     event = create(:event, :recurring, start_date: 3.months.from_now, end_date: 4.months.from_now, recurring_cadence: :yearly, recurring_week_of_month: 2)
@@ -100,6 +100,12 @@ class EventTest < ActiveSupport::TestCase
 
     assert_raises(ActiveRecord::RecordInvalid) {create(:event, recurring_interval: 1, recurring_cadence: :monthly, recurring_week_of_month: nil)}
     assert_raises(ActiveRecord::RecordInvalid) {create(:event, recurring_interval: 1, recurring_cadence: :yearly, recurring_day_of_month: nil)}
+  end
+
+  test 'both recurring day-of-month and week-of-month cannot be specified' do
+    assert_raises(ActiveRecord::RecordInvalid) do
+      create(:event, :recurring, recurring_day_of_month: 1, recurring_week_of_month: 1)
+    end
   end
 
   test 'adds event tag to airport' do
