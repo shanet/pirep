@@ -1,6 +1,6 @@
 <%
   user = Users::User.find_by(id: version.whodunnit)
-  airport = (version.item_type.in?(['Tag', 'Webcam']) ? Airport.find_by(id: version.airport_id) : version.item)
+  airport = (version.item_type.in?(['Event', 'Tag', 'Webcam']) ? Airport.find_by(id: version.airport_id) : version.item)
 %>
 
 <div class="review-record list-group-item" data-record-id="<%= version.id %>">
@@ -35,6 +35,15 @@
       <i class="fa-solid fa-trash"></i> Airport deleted
     <% else %>
       <i class="fa-solid fa-pen-to-square"></i> <%= version.object_changes.keys.map {|key| key.gsub('_', ' ').capitalize}.join(', ') %>
+    <% end %>
+
+  <% elsif version.item_type == Event.name %>
+    <% if version.event == 'create' %>
+      <i class="fa-solid fa-calendar-days"></i> Event added: <%= version.object_changes['name'].last %>
+    <% elsif version.event == 'update' %>
+      <i class="fa-solid fa-calendar-days"></i> Event updated: <%= version.object_changes.keys.map {|key| key.gsub('_', ' ').capitalize}.join(', ') %>
+    <% elsif version.event == 'destroy' %>
+      <i class="fa-solid fa-calendar-days"></i> Event removed: <%= version.object_changes['name'].first %>
     <% end %>
 
   <% elsif version.item_type == Tag.name %>
