@@ -10,9 +10,16 @@ class Event < ApplicationRecord
   validates :start_date, presence: true
   validates :end_date, presence: true
   validates :end_date, comparison: {greater_than: :start_date}
+
   validates :recurring_cadence, presence: true, if: :recurring?
   validates :recurring_interval, presence: true, if: :recurring?
+
+  validates :recurring_interval, numericality: {only_integer: true}, allow_nil: true
+  validates :recurring_day_of_month, numericality: {only_integer: true}, allow_nil: true
+  validates :recurring_week_of_month, numericality: {only_integer: true}, allow_nil: true
+
   validate :recurring_monthly_presence
+  validate :recurring_day_week_of_month_xor
 
   after_create :create_tag
   after_destroy :remove_tag
@@ -89,6 +96,12 @@ private
     # Ensure that a recurring day/week of month is selected for monthly/yearly recurring events
     if recurring? && [:monthly, :yearly].include?(recurring_cadence) && recurring_day_of_month.blank? && recurring_week_of_month.blank? # rubocop:disable Style/GuardClause
       errors.add(:base, 'A time period for a monthly recurring event must be selected.')
+    end
+  end
+
+  def recurring_day_week_of_month_xor
+    if recurring_day_of_month && recurring_week_of_month # rubocop:disable Style/GuardClause
+      errors.add(:base, 'Both recurring day-of-month and week-of-month cannot be specified.')
     end
   end
 

@@ -144,7 +144,7 @@ module AirportsHelper
     end
 
     if event.recurring_cadence == :yearly
-      string += " of #{event.start_date.in_time_zone(event.airport_timezone).strftime('%B')}"
+      string += " of #{event.start_date.in_time_zone(event.airport.timezone).strftime('%B')}"
     end
 
     return string
