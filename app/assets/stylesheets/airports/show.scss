@@ -45,20 +45,15 @@
 
 .editor-edit-icon:hover {
   cursor: pointer;
+  transition: .3s;
+
+  &:hover {
+    color: $primary;
+  }
 }
 
 #event_description { // stylelint-disable-line selector-id-pattern
   min-height: 8rem;
-}
-
-.EasyMDEContainer { // stylelint-disable-line selector-class-pattern
-  .editor-toolbar {
-    display: none;
-  }
-
-  &.editing .editor-toolbar {
-    display: block;
-  }
 }
 
 .webcam-frame {

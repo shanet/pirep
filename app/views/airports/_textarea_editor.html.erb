@@ -3,14 +3,14 @@
   last_updated = model.send("#{column}_updated_at")
 %>
 
-<div id="<%= column.to_s.gsub('_', '-') %>" class="card mb-2">
-  <div class="card-header">
+<div id="<%= column.to_s.gsub('_', '-') %>" class="card">
+  <div class="card-header pe-2">
     <div class="d-flex justify-content-between align-items-center">
       <span class="flex-shrink-0 me-3"><i class="fas <%= icon %> me-2"></i><%= title.html_safe %></span>
 
       <% unless read_only %>
         <span class="status-indicator hide flex-grow-1 text-end me-3"></span>
-        <span><i class="fas fa-edit editor-edit-icon"></i></span>
+        <span><i class="fas fa-edit editor-edit-icon px-1"></i></span>
       <% end %>
     </div>
   </div>
