@@ -1,0 +1,32 @@
+.EasyMDEContainer { // stylelint-disable-line selector-class-pattern
+  .editor-toolbar {
+    display: none;
+    padding: $spacer * .25;
+
+    .editor-save {
+      float: right;
+    }
+  }
+
+  &.editing .editor-toolbar {
+    display: block;
+  }
+
+  // stylelint-disable selector-class-pattern
+  .CodeMirror {
+    .CodeMirror-lines,
+    .CodeMirror-line {
+      padding: 0;
+    }
+  }
+  // stylelint-enable selector-class-pattern
+
+  blockquote {
+    border-left: 3px solid $primary;
+    padding-left: $spacer * .25;
+  }
+
+  table {
+    margin-bottom: $spacer * .5;
+  }
+}

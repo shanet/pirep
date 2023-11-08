@@ -28,6 +28,18 @@ export function initEditors() {
 }
 
 function initEditor(textarea) {
+  let dirty = false;
+
+  const onEditorSave = (editor) => {
+    readMode(editor);
+
+    // Write changes if a change was made
+    if(dirty) {
+      writeEditorChanges(editor);
+      dirty = false;
+    }
+  };
+
   const editor = new EasyMDE({ // eslint-disable-line no-undef
     autoDownloadFontAwesome: false,
     element: textarea,
@@ -39,10 +51,36 @@ function initEditor(textarea) {
     inputStyle: 'contenteditable',
     status: false,
     toolbarButtonClassPrefix: 'editor', // Avoid conflicts with Bootstrap styles
+
+    toolbar: [
+      'bold',
+      'italic',
+      'heading',
+      '|',
+      'unordered-list',
+      'link',
+      {
+        name: 'advanced',
+        className: 'fa fa-bars',
+        title: 'Advanced formatting',
+        children: ['ordered-list', 'quote', 'table', 'horizontal-rule', 'code'],
+      },
+      '|',
+      'preview',
+      'side-by-side',
+      'fullscreen',
+      '|',
+      'guide',
+      {
+        name: 'save',
+        action: onEditorSave,
+        className: 'fa-solid fa-floppy-disk',
+        title: 'Save changes',
+      },
+    ],
   });
 
   const container = editorContainer(editor);
-  let dirty = false;
 
   // Set read mode by default
   readMode(editor);
@@ -63,13 +101,7 @@ function initEditor(textarea) {
     // `contains` call to return false and then re-enter read mode.
     if(container.contains(event.target) || !isEditing(editor) || event.target.classList.contains('editor-edit-icon') || !event.target.parentNode) return;
 
-    readMode(editor);
-
-    // Write changes if a change was made
-    if(dirty) {
-      writeEditorChanges(editor);
-      dirty = false;
-    }
+    onEditorSave(editor);
   });
 
   // Mark the editor as dirty when a change is made
