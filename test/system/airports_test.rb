@@ -336,8 +336,8 @@ class AirportsTest < ApplicationSystemTestCase
     click_button 'Add Event'
 
     fill_in 'event_name', with: 'Foobar'
-    fill_in 'event_start_date', with: DateTime.new(2023, 11, 5, 8)
-    fill_in 'event_end_date', with: DateTime.new(2023, 11, 5, 17)
+    fill_in 'event_start_date', with: 1.week.from_now
+    fill_in 'event_end_date', with: 2.weeks.from_now
     find('#event-form input[type="submit"]').click
 
     assert_selector '#events h5', text: 'Foobar'
@@ -349,8 +349,8 @@ class AirportsTest < ApplicationSystemTestCase
     click_button 'Add Event'
 
     fill_in 'event_name', with: 'Foobar'
-    fill_in 'event_start_date', with: DateTime.new(2023, 11, 5, 8)
-    fill_in 'event_end_date', with: DateTime.new(2023, 11, 5, 17)
+    fill_in 'event_start_date', with: Time.zone.now
+    fill_in 'event_end_date', with: 1.hour.from_now
     fill_in 'event_location', with: 'The ramp'
     fill_in 'event_url', with: 'https://example.com'
     fill_in 'event_host', with: 'Bob Hoover'
