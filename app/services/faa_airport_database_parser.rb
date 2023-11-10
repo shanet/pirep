@@ -1,7 +1,18 @@
 require 'csv'
 require 'faa/faa_api'
 
-class AirportDatabaseParser
+class FaaAirportDatabaseParser
+  FACILITY_TYPES = {
+    'A' => 'airport',
+    'B' => 'balloonport',
+    'C' => 'seaplane_base',
+    'G' => 'gliderport',
+    'H' => 'heliport',
+    'U' => 'ultralight',
+  }
+
+  MILITARY_OWNERSHIP_TYPES = Set.new(['MA', 'MN', 'MR', 'CG'])
+
   def initialize
     @airports = {}
     @faa_to_icao = YAML.safe_load(Rails.root.join('db/fixtures/faa_to_icao_mapping.yml').read)
@@ -43,7 +54,7 @@ private
     @airports[faa_code] = {
       airport_name:    row['ARPT_NAME'],
       icao_code:       @faa_to_icao[faa_code],
-      facility_type:   row['SITE_TYPE_CODE'].upcase,
+      facility_type:   normalize_facility_type(row['SITE_TYPE_CODE'].upcase, row['OWNERSHIP_TYPE_CODE'].upcase),
       facility_use:    row['FACILITY_USE_CODE'].upcase,
       ownership_type:  row['OWNERSHIP_TYPE_CODE'].upcase,
       latitude:        row['LAT_DECIMAL'].to_f,
@@ -51,10 +62,12 @@ private
       elevation:       row['ELEV'].to_i,
       city:            row['CITY'],
       state:           row['COUNTY_ASSOC_STATE'].upcase,
+      country:         :us,
       city_distance:   row['DIST_CITY_TO_AIRPORT'].to_f,
       sectional:       row['CHART_NAME'],
       fuel_types:      row['FUEL_TYPES'],
       activation_date: (row['ACTIVATION_DATE'].present? ? DateTime.strptime(row['ACTIVATION_DATE'], '%Y/%m') : nil),
+      data_source:     :faa,
     }
     # rubocop:enable Layout/HashAlignment
   end
@@ -81,5 +94,13 @@ private
       element: row['ELEMENT'].presence || row['LEGACY_ELEMENT_NUMBER'],
       text: row['REMARK'],
     }
+  end
+
+  # Normalize the facility type to the options we use for filtering
+  def normalize_facility_type(facility_type, ownership_type)
+    # Compress all of the different military ownership types down to a single "military" facility type
+    return :military if ownership_type.in?(MILITARY_OWNERSHIP_TYPES)
+
+    return FACILITY_TYPES[facility_type]
   end
 end

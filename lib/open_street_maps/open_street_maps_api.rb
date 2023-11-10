@@ -3,7 +3,7 @@ require_relative 'open_street_maps_api_stubs'
 
 module OpenStreetMapsApi
   def self.client
-    if Rails.env.test?
+    if Rails.env.development? || Rails.env.test?
       OpenStreetMapsApiStubs.stub_requests(Service::API_HOST)
     end
 

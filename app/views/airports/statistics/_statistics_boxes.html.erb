@@ -43,11 +43,13 @@
     </div>
   <% end %>
 
-  <div class="col-<%= drawer ? 12 : 6 %>">
-    <%= render partial: 'airports/statistics/statistics_box', locals: {
-      label: 'Fuel', value: fuel_label(@airport), icon: 'gas-pump', theme: (@airport.fuel_types&.any? ? 'blue-grey' : :red)
-    } %>
-  </div>
+  <% if @airport.fuel_types %>
+    <div class="col-<%= drawer ? 12 : 6 %>">
+      <%= render partial: 'airports/statistics/statistics_box', locals: {
+        label: 'Fuel', value: fuel_label(@airport), icon: 'gas-pump', theme: (@airport.fuel_types.any? ? 'blue-grey' : :red)
+      } %>
+    </div>
+  <% end %>
 
   <% runways.each do |runway| %>
     <div class="col-<%= drawer ? 12 : 6 %>">

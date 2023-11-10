@@ -1,4 +1,4 @@
-class FaaDataImporter
+class MasterDataImporter
   def initialize(products: nil, force_update: false)
     @products = Array(products || [:airports, :diagrams, :charts])
     @force_update = force_update
@@ -30,17 +30,17 @@ private
   end
 
   def import_airports
-    airports = AirportDatabaseParser.new.download_and_parse
-    AirportDatabaseImporter.new(airports).load_database
+    airports = FaaAirportDatabaseParser.new.download_and_parse.reverse_merge!(OurAirportsDatabaseParser.new.download_and_parse)
+    AirportDatabaseImporter.new(airports).import!
   end
 
   def import_diagrams
-    AirportDiagramDownloader.new.download_and_convert
+    FaaAirportDiagramDownloader.new.download_and_convert
   end
 
   def import_charts
     [:sectional, :terminal].each do |chart_type|
-      ChartsDownloader.new.download_and_convert(chart_type)
+      FaaChartsDownloader.new.download_and_convert(chart_type)
     end
   end
 

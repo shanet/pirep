@@ -3,7 +3,7 @@ require 'exceptions'
 require 'faa/faa_api'
 require 'open3'
 
-class ChartsDownloader
+class FaaChartsDownloader
   def download_and_convert(chart_type, charts_to_download: nil, upload_to_s3: Rails.env.production?)
     # Always use the test charts in test
     chart_type = :test if Rails.env.test?

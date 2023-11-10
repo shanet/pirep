@@ -8,6 +8,7 @@ FactoryBot.define do
     coordinates          {[latitude, longitude]}
     city                 {'EVERETT'}
     state                {'WA'}
+    country              {'us'}
     elevation            {607}
     facility_type        {'airport'}
     facility_use         {'PU'}
@@ -22,6 +23,7 @@ FactoryBot.define do
     landing_rights       {:public_}
     sectional            {'seattle'}
     diagram              {'diagram.png'}
+    data_source          {'faa'}
     bbox_checked         {true}
     bbox_ne_latitude     {47.922902}
     bbox_ne_longitude    {-122.2691531}

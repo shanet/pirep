@@ -1,9 +1,9 @@
 require 'test_helper'
 
-class FaaDataImporterTest < ActiveSupport::TestCase
-  test 'imports FAA data' do
-    assert_difference('Airport.count', 1) do
-      FaaDataImporter.new(force_update: true).import!
+class MasterDataImporterTest < ActiveSupport::TestCase
+  test 'imports data' do
+    assert_difference('Airport.count', 2) do
+      MasterDataImporter.new(force_update: true).import!
     end
 
     # Check that the current data cycle was written to the cache
@@ -14,7 +14,7 @@ class FaaDataImporterTest < ActiveSupport::TestCase
 
   test 'skips current data cycle' do
     assert_difference('Airport.count', 0) do
-      FaaDataImporter.new.import!
+      MasterDataImporter.new.import!
     end
   end
 end

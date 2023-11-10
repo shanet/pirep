@@ -19,19 +19,21 @@ class SeedsTest < ActiveSupport::TestCase
   end
 
   test 'imports airports and diagrams' do
-    assert_difference('Airport.count', 1) do
+    assert_difference('Airport.count', 2) do
       run_seeds({import_airports: true, import_diagrams: true})
     end
 
-    assert_in_delta(47.922902, Airport.first.bbox_ne_latitude, 0.1, 'NE latitude bounding box not imported from YAML file')
-    assert_in_delta(-122.2691531, Airport.first.bbox_ne_longitude, 0.1, 'NE longitude bounding box not imported from YAML file')
-    assert_in_delta(47.8966986, Airport.first.bbox_sw_latitude, 0.1, 'SW latitude bounding box not imported from YAML file')
-    assert_in_delta(-122.2918449, Airport.first.bbox_sw_longitude, 0.1, 'SW longitude bounding box not imported from YAML file')
+    airport = Airport.find_by(data_source: 'faa')
 
-    assert_equal 'America/Los_Angeles', Airport.first.timezone, 'Airport timezone not imported from YAML file'
-    assert_in_delta Time.zone.now, Airport.first.timezone_checked_at, 1.minute, 'Airport timezone checked at timestamp not set'
+    assert_in_delta(47.922902, airport.bbox_ne_latitude, 0.1, 'NE latitude bounding box not imported from YAML file')
+    assert_in_delta(-122.2691531, airport.bbox_ne_longitude, 0.1, 'NE longitude bounding box not imported from YAML file')
+    assert_in_delta(47.8966986, airport.bbox_sw_latitude, 0.1, 'SW latitude bounding box not imported from YAML file')
+    assert_in_delta(-122.2918449, airport.bbox_sw_longitude, 0.1, 'SW longitude bounding box not imported from YAML file')
 
-    assert_not_nil Airport.first.diagram, 'Airport diagram not imported'
+    assert_equal 'America/Los_Angeles', airport.timezone, 'Airport timezone not imported from YAML file'
+    assert_in_delta Time.zone.now, airport.timezone_checked_at, 1.minute, 'Airport timezone checked at timestamp not set'
+
+    assert_not_nil airport.diagram, 'Airport diagram not imported'
   end
 
   test 'import charts' do

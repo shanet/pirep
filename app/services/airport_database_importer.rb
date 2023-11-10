@@ -1,17 +1,6 @@
 require 'faa/faa_api'
 
 class AirportDatabaseImporter
-  FACILITY_TYPES = {
-    'A' => :airport,
-    'B' => :balloonport,
-    'C' => :seaplane_base,
-    'G' => :gliderport,
-    'H' => :heliport,
-    'U' => :ultralight,
-  }
-
-  MILITARY_OWNERSHIP_TYPES = Set.new(['MA', 'MN', 'MR', 'CG'])
-
   def initialize(airports, bounding_box_provider: nil, timezone_provider: nil)
     @airports = airports
     @current_data_cycle = FaaApi.client.current_data_cycle(:airports)
@@ -19,7 +8,7 @@ class AirportDatabaseImporter
     @timezone_provider = timezone_provider || AirportTimezoneProvider.new
   end
 
-  def load_database
+  def import!
     report = {new: [], closed: []}
 
     @airports.each_with_index do |(airport_code, airport_data), index|
@@ -27,6 +16,8 @@ class AirportDatabaseImporter
       yield({total: @airports.count, current: index + 1}) if block_given?
 
       airport, new_airport = update_airport(airport_code, airport_data)
+      next unless airport
+
       report[:new] << airport[:code] if new_airport
 
       update_tags(airport)
@@ -54,11 +45,10 @@ private
     airport = Airport.find_by(code: airport_code) || Airport.new
     new_airport = !airport.persisted?
 
-    # Normalize the facility type to the options we use for filtering
-    if airport_data[:ownership_type].in?(MILITARY_OWNERSHIP_TYPES)
-      airport_data[:facility_type] = :military
-    else
-      airport_data[:facility_type] = FACILITY_TYPES[airport_data[:facility_type]].to_s
+    # Abort anything with conflicting data sources
+    if airport.data_source.present? && airport.data_source != airport_data[:data_source].to_s
+      Rails.logger.info("Skipping import for #{airport_code} as it has conflicting data sources: #{airport.data_source} / #{airport_data[:data_source]}")
+      return nil, nil
     end
 
     # rubocop:disable Layout/HashAlignment
@@ -75,10 +65,12 @@ private
       elevation:       airport_data[:elevation],
       city:            airport_data[:city],
       state:           airport_data[:state],
+      country:         airport_data[:country],
       city_distance:   airport_data[:city_distance],
-      fuel_types:      airport_data[:fuel_types].split(','),
       sectional:       airport_data[:sectional],
+      fuel_types:      airport_data[:fuel_types]&.split(','),
       activation_date: airport_data[:activation_date],
+      data_source:     airport_data[:data_source],
       faa_data_cycle:  @current_data_cycle,
 
       # The landing rights are configurable by users so we don't want to overwrite this field unless the airport is first being created
@@ -92,7 +84,7 @@ private
   def update_tags(airport)
     # Tag public and private airports
     # Skip military airports as those are all private so there's no need to tag them
-    if !airport.ownership_type.in?(MILITARY_OWNERSHIP_TYPES) && airport.tags.where(name: [:private_, :public_, :restricted]).count == 0
+    if !airport.facility_type == :military && airport.tags.where(name: [:private_, :public_, :restricted]).count == 0
       tag = (airport.facility_use == 'PR' ? :private_ : :public_)
       airport.tags << Tag.new(name: tag)
     end
