@@ -42,15 +42,15 @@ private
   end
 
   def prompt_for_imports
-    airports = CLI::UI.confirm('Import FAA airport database?')
+    airports = CLI::UI.confirm('Import FAA & Canada airport database?')
     diagrams = CLI::UI.confirm('Import FAA airport diagrams?')
 
     puts CLI::UI.fmt("{{red:WARNING: Generating map tiles for all charts will take multiple hours. You may only want to select one or two charts for a development environment.}}\n")
 
-    ask_for_sectionals = CLI::UI.confirm('Generate sectional chart map tiles?')
+    ask_for_sectionals = CLI::UI.confirm('Generate US sectional chart map tiles?')
     sectionals = CLI::UI.ask('Which sectional charts?', options: chart_options(:sectional_charts), multiple: true) if ask_for_sectionals
 
-    ask_for_terminals = CLI::UI.confirm('Generate terminal area chart map tiles?')
+    ask_for_terminals = CLI::UI.confirm('Generate US terminal area chart map tiles?')
     terminals = CLI::UI.ask('Which terminal area charts?', options: chart_options(:terminal_area_charts), multiple: true) if ask_for_terminals
 
     return {
@@ -65,14 +65,14 @@ private
 
   def import_airports
     CLI::UI::Frame.open('Importing airports') do
-      airports = AirportDatabaseParser.new.download_and_parse
+      airports = FaaAirportDatabaseParser.new.download_and_parse.reverse_merge!(OurAirportsDatabaseParser.new.download_and_parse)
 
       initial_import = Airport.none?
       report = nil
 
       CLI::UI::Spinner.spin('Importing airports') do |spinner|
         # Import the bounding boxes & timezones from a static file to avoid spamming OSM's servers with thousands of requests and running up huge Google API bills
-        report = AirportDatabaseImporter.new(airports, bounding_box_provider: AirportBoundingBoxSeeds.new, timezone_provider: AirportTimezoneSeeds.new).load_database do |progress|
+        report = AirportDatabaseImporter.new(airports, bounding_box_provider: AirportBoundingBoxSeeds.new, timezone_provider: AirportTimezoneSeeds.new).import! do |progress|
           print_progress('Importing airports', spinner, progress)
         end
       end
@@ -88,7 +88,7 @@ private
   def import_diagrams
     CLI::UI::Frame.open('Importing diagrams') do
       puts CLI::UI.fmt("{{yellow:Downloading diagram archives may take a while if not already cached. There are five archives, each roughly 1gb in size.}}\n")
-      AirportDiagramDownloader.new.download_and_convert
+      FaaAirportDiagramDownloader.new.download_and_convert
     end
   end
 
@@ -101,7 +101,7 @@ private
     end
 
     CLI::UI::Frame.open("Generating #{chart_type} chart tiles") do
-      ChartsDownloader.new.download_and_convert(chart_type, **kwargs)
+      FaaChartsDownloader.new.download_and_convert(chart_type, **kwargs)
     end
   end
 

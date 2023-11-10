@@ -1,8 +1,8 @@
 require 'test_helper'
 
-class ChartsDownloaderTest < ActiveSupport::TestCase
+class FaaChartsDownloaderTest < ActiveSupport::TestCase
   test 'creates tiles from geotiff' do
-    output_directory = ChartsDownloader.new.download_and_convert(:test)
+    output_directory = FaaChartsDownloader.new.download_and_convert(:test)
 
     # Assert that tiles were generated for each zoom level
     (0..11).each do |zoom_level| # rubocop:disable Style/EachForSimpleLoop

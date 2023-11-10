@@ -14,6 +14,7 @@ class AirportTest < ActiveSupport::TestCase
     assert_equal 'PR', airport.facility_use
     assert_equal 'PR', airport.ownership_type
     assert_equal :restricted, airport.landing_rights
+    assert_equal 'user_contributed', airport.data_source
 
     assert :unmapped.in?(airport.tags.map(&:name)), 'Unmapped airport not tagged as such'
     assert :restricted.in?(airport.tags.map(&:name)), 'Unmapped airport not tagged restricted'
@@ -70,6 +71,12 @@ class AirportTest < ActiveSupport::TestCase
     assert_not @airport.unmapped?, 'Mapped airport considered unmapped'
     @airport.tags << create(:tag, name: :unmapped)
     assert @airport.unmapped?, 'Unmapped airport not considered unmapped'
+  end
+
+  test 'authoritative data source' do
+    assert create(:airport, data_source: :faa).authoritative?, 'FAA airport not authoritative'
+    assert_not create(:airport, data_source: :our_airports).authoritative?, 'Our Airports airport authoritative'
+    assert_not create(:airport, data_source: :user_contributed).authoritative?, 'User contributed airport authoritative'
   end
 
   test 'airport is not empty if tagged with a user addable tag' do

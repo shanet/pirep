@@ -1,0 +1,4 @@
+"id","ident","type","name","latitude_deg","longitude_deg","elevation_ft","continent","iso_country","iso_region","municipality","scheduled_service","gps_code","iata_code","local_code","home_link","wikipedia_link","keywords"
+1896,"CYRV","medium_airport","Revelstoke Airport",50.962245,-118.184258,1459,"NA","CA","CA-BC","Revelstoke","no","CYRV","YRV",,,"https://en.wikipedia.org/wiki/Revelstoke_Airport","YRV"
+39723,"CA-0077","closed","Cape Dyer Airport",66.59,-61.5732,1290,"NA","CA","CA-NU","Cape Dyer","no",,,,,,"CYVN, YVN"
+3763,"KPAE","medium_airport","Seattle Paine Field International Airport",47.9063,-122.281998,606,"NA","US","US-WA","Everett","yes","KPAE","PAE","PAE",,"https://en.wikipedia.org/wiki/Paine_Field","Snohomish County"

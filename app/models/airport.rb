@@ -143,6 +143,7 @@ class Airport < ApplicationRecord
 
   enum facility_type: FACILITY_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
   enum landing_rights: LANDING_RIGHTS_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
+  enum data_source: {faa: 'faa', our_airports: 'our_airports', user_contributed: 'user_contributed'}
 
   validates :code, uniqueness: true, presence: true
   validates :name, presence: true
@@ -153,7 +154,7 @@ class Airport < ApplicationRecord
   validates :facility_use, inclusion: {in: FACILITY_USES.keys.map(&:to_s)}
   validates :ownership_type, inclusion: {in: OWNERSHIP_TYPES.keys.map(&:to_s)}
   validates :cover_image, inclusion: {in: COVER_IMAGES.keys.map(&:to_s)}
-  validates :state, length: {is: 2}, if: -> {state.present?}
+  validates :country, length: {is: 2}, if: -> {country.present?}
   validate :validate_contributed_photos_size_and_filetype
 
   def self.geojson
@@ -167,6 +168,7 @@ class Airport < ApplicationRecord
 
   def self.new_unmapped(parameters)
     # State is not part of the airport model so remove it and store it for the code below below passing the parameters to the new record
+    # (this is different from the city/state/country fields and was not a great name choice)
     state = parameters[:state]
     parameters.delete(:state)
 
@@ -183,6 +185,7 @@ class Airport < ApplicationRecord
     airport.facility_type = :airport
     airport.ownership_type = :PR
     airport.landing_rights ||= :private_
+    airport.data_source = :user_contributed
     airport.tags << Tag.new(name: :unmapped)
 
     # Tag closed airports as closed
@@ -289,6 +292,10 @@ class Airport < ApplicationRecord
 
   def private?
     return facility_use == 'PR'
+  end
+
+  def authoritative?
+    return data_source == 'faa'
   end
 
   def has_bounding_box? # rubocop:disable Naming/PredicateName

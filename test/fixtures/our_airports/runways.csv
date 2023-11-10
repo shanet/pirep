@@ -1,0 +1,2 @@
+"id","airport_ref","airport_ident","length_ft","width_ft","surface","lighted","closed","le_ident","le_latitude_deg","le_longitude_deg","le_elevation_ft","le_heading_degT","le_displaced_threshold_ft","he_ident","he_latitude_deg","he_longitude_deg","he_elevation_ft","he_heading_degT","he_displaced_threshold_ft"
+234939,1896,"CYRV",4800,75,"ASP",0,0,"12",50.971500396728516,-118.19000244140625,1457,138,,"30",50.96179962158203,-118.1760025024414,1459,318,300

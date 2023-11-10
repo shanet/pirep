@@ -1,7 +1,7 @@
 require 'exceptions'
 require 'faa/faa_api'
 
-class AirportDiagramDownloader
+class FaaAirportDiagramDownloader
   def download_and_convert
     Dir.mktmpdir do |directory|
       metadata_path = FaaApi.client.airport_diagrams(directory)
