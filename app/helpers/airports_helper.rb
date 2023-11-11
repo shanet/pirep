@@ -1,6 +1,10 @@
 module AirportsHelper
   include ApplicationHelper
 
+  def show_notices?(airport)
+    return airport.empty? || airport.closed? || airport.unmapped?
+  end
+
   def textarea_editor_height(size)
     case size
       when :large
