@@ -1,13 +1,17 @@
 WRITE_THROTTLED_PATHS = [
   /^\/airports.*\z/,
-  /^\/tags\/.+\z/,
-  /^\/comments\z/,
-  /^\/comments\/.+\/helpful\z/,
   /^\/comments\/.+\/flag\z/,
+  /^\/comments\/.+\/helpful\z/,
   /^\/comments\/.+\/undo_outdated\z/,
+  /^\/comments\z/,
+  /^\/events\/.+\/edit\z/,
+  /^\/events\/.+\z/,
+  /^\/events\z/,
+  /^\/tags\/.+\z/,
+  /^\/user\/password\z/,
   /^\/user\/sign_in\z/,
   /^\/user\z/,
-  /^\/user\/password\z/,
+  /^\/webcams\z/,
 ]
 
 READ_THROTTLED_PATHS = [
