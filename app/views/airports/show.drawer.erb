@@ -22,22 +22,22 @@
 </div>
 
 <% if @airport.all_photos.any? %>
-  <div class="row">
+  <div class="row mb-3">
     <div class="col-sm p-0">
       <%= render partial: 'airports/photo_gallery/photo_gallery', formats: :html, locals: {photo_groups: @airport.all_photos} %>
     </div>
   </div>
 <% end %>
 
-<% if @airport.empty? || @airport.closed? %>
-  <div class="row my-2">
+<% if show_notices?(@airport) %>
+  <div class="row">
     <div class="col-sm">
       <%= render partial: 'airports/notices', formats: :html, locals: {show_link: true} %>
     </div>
   </div>
 <% end %>
 
-<div class="row my-2">
+<div class="row mb-2">
   <div class="col-sm d-flex flex-wrap">
     <% @airport.tags.each do |tag| %>
       <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag, size: :small, no_scroll: true} %>

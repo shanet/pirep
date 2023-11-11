@@ -12,7 +12,6 @@
 
   @include media-breakpoint-down(lg) {
     left: 100vw;
-    // padding-right: calc($handle-size / 2);
     position: fixed;
     width: 50vw;
 
@@ -30,7 +29,8 @@
   }
 
   @include media-breakpoint-down(md) {
-    width: calc(100vw - $handle-size / 2 - $handle-margin);
+    margin-left: calc($handle-size / 2 + $handle-margin);
+    width: calc(100vw - $handle-size / 2);
 
     &.slide-in-drawer {
       animation: slide-in-drawer-medium $animation-duration forwards;

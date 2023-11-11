@@ -3,6 +3,13 @@ require 'test_helper'
 class AirportsHelperTest < ActionView::TestCase
   include AirportsHelper
 
+  test 'show notices' do
+    assert_not show_notices?(create(:airport)), 'Normal airport shows notices'
+    assert show_notices?(create(:airport, :empty)), 'Empty airport does not show notices'
+    assert show_notices?(create(:airport, :closed)), 'Closed airport does not show notices'
+    assert show_notices?(create(:airport, :unmapped)), 'Unmapped airport does not show notices'
+  end
+
   test 'version author' do
     unknown = create(:unknown)
     known = create(:known)

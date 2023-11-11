@@ -61,9 +61,7 @@ class AirportTest < ActiveSupport::TestCase
   end
 
   test 'airport is closed' do
-    airport = create(:airport)
-    create(:tag, airport: airport, name: :closed)
-
+    airport = create(:airport, :closed)
     assert airport.closed?, 'Airport not closed'
   end
 

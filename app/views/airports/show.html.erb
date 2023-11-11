@@ -23,7 +23,7 @@
 
   <%= render 'airports/welcome_info' %>
 
-  <% if @airport.empty? || @airport.closed? || @airport.unmapped? %>
+  <% if show_notices?(@airport) %>
     <div class="row">
       <div class="col-12">
         <%= render 'airports/notices' %>
