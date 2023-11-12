@@ -11,6 +11,9 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_equal user, Comment.last.user, 'User not set for comment'
+
+    assert_in_delta Time.zone.now, user.reload.last_seen_at, 1.second, 'Unknown user\'s last seen at timestamp not set after creating comment'
+    assert_in_delta Time.zone.now, user.reload.last_edit_at, 1.second, 'Unknown user\'s last edit at timestamp not set after creating comment'
   end
 
   test 'helpful' do

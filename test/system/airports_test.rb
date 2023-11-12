@@ -362,6 +362,12 @@ class AirportsTest < ApplicationSystemTestCase
     assert Event.last.recurring?, 'Recurring event created as static'
   end
 
+  test 'hides landing rights form for military airports' do
+    airport = create(:airport, facility_type: :military, landing_rights: :private_)
+    visit airport_path(airport.code)
+    assert_no_selector 'button[data-bs-target="landing-rights-form"]'
+  end
+
 private
 
   def assert_editor_has_text(label, property, text)

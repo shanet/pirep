@@ -54,7 +54,7 @@ class AirportsController < ApplicationController
     return head(:conflict) if airport_write_conflict?(@airport, params[:airport][:rendered_at])
 
     if @airport.update(airport_params) && @airport.attach_contributed_photos((params[:airport][:photos] || []).compact_blank)
-      touch_author
+      touch_user_edit
       create_actions
 
       # Schedule an airport cache refresh if the tags/landing rights changed so the changes are reflected on the map before the next refresh cycle
@@ -167,11 +167,6 @@ private
     )
   end
 
-  def touch_author
-    # Keep track of when a user last made an edit
-    active_user&.touch(:last_edit_at) # rubocop:disable Rails/SkipsModelValidations
-  end
-
   def create_actions
     # Create an action for each added tag
     if airport_params[:tags_attributes] # rubocop:disable Style/SafeNavigation
@@ -193,10 +188,6 @@ private
     if params[:airport][:photos] # rubocop:disable Style/GuardClause
       Action.create!(type: :airport_photo_uploaded, actionable: @airport, user: active_user)
     end
-  end
-
-  def user_for_paper_trail
-    return active_user.id
   end
 
   def airport_write_conflict?(airport, timestamp)

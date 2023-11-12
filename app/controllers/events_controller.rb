@@ -6,6 +6,7 @@ class EventsController < ApplicationController
     authorize @event
 
     if @event.save && Action.create(type: :event_added, actionable: @event, user: active_user).persisted?
+      touch_user_edit
       redirect_to airport_path(@event.airport.code), notice: 'Event created successfully'
     else
       render :edit, layout: 'blank'
@@ -18,6 +19,7 @@ class EventsController < ApplicationController
 
   def update
     if @event.update(event_params) && Action.create(type: :event_edited, actionable: @event, user: active_user).persisted?
+      touch_user_edit
       redirect_to airport_path(@event.airport.code), notice: 'Event updated successfully'
     else
       render :edit, layout: 'blank'
@@ -26,6 +28,7 @@ class EventsController < ApplicationController
 
   def destroy
     if @event.destroy && Action.create(type: :event_removed, actionable: @event, user: active_user).persisted?
+      touch_user_edit
       redirect_to airport_path(@event.airport.code), notice: 'Event deleted successfully'
     else
       render :edit, layout: 'blank'
