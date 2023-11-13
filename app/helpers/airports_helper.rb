@@ -92,7 +92,13 @@ module AirportsHelper
     # Unmapped airports don't have city/state info so the text below won't work for them
     return "#{airport.name.titleize} is an unmapped airport. #{help_text}" if airport.unmapped?
 
-    return "#{airport.name.titleize} is a #{Airport::FACILITY_USES[airport.facility_use.to_sym].downcase} airport located in #{airport.city.titleize}, #{airport.state}. #{help_text}"
+    location = if airport.city.present? && airport.state.present?
+                 " located in #{airport.city.titleize}, #{airport.state}"
+               elsif airport.state.present?
+                 " located in #{airport.state}"
+               end
+
+    return "#{airport.name.titleize} is a #{Airport::FACILITY_USES[airport.facility_use.to_sym].downcase} airport#{location}. #{help_text}"
   end
 
   def opengraph_image(airport)
