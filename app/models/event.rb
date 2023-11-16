@@ -119,5 +119,8 @@ private
     return if airport.events.any?
 
     airport.tags.where(name: :events).destroy_all
+
+    # Schedule an airport cache refresh so the event's airport is longer shown under the events tag
+    AirportGeojsonDumperJob.perform_later
   end
 end

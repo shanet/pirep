@@ -9,9 +9,11 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     with_versioning do
       event_attributes = attributes_for(:event, :recurring, airport_id: @event.airport.id, start_date: '2023-11-05T00:00', end_date: '2023-11-06T00:00')
 
-      assert_difference('Action.where(type: :event_added).count') do
-        post events_path, params: {event: event_attributes}
-        assert_redirected_to airport_path(@event.airport.code)
+      assert_enqueued_with(job: AirportGeojsonDumperJob) do
+        assert_difference('Action.where(type: :event_added).count') do
+          post events_path, params: {event: event_attributes}
+          assert_redirected_to airport_path(@event.airport.code)
+        end
       end
 
       event = Event.last
