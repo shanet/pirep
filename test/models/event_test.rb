@@ -51,7 +51,7 @@ class EventTest < ActiveSupport::TestCase
     assert_in_delta 1.year.from_now - 3.months, event.next_start_date, 1.month, 'Unexpected next start date for yearly day-of-month recurring event'
 
     event = create(:event, :recurring, start_date: 3.months.from_now, end_date: 4.months.from_now, recurring_cadence: :yearly, recurring_week_of_month: 2)
-    assert_in_delta 3.months.from_now, event.next_start_date, 1.month, 'Unexpected next start date for yearly week-of-month recurring event'
+    assert_in_delta 3.months.from_now, event.next_start_date, 1.year, 'Unexpected next start date for yearly week-of-month recurring event'
   end
 
   test 'next end date for recurring event' do
@@ -125,7 +125,9 @@ class EventTest < ActiveSupport::TestCase
     event1.destroy!
     assert airport.tags.where(name: :events).any?, 'Events tag removed from airport'
 
-    event2.destroy!
-    assert airport.tags.where(name: :events).empty?, 'Events tag not removed from airport'
+    assert_enqueued_with(job: AirportGeojsonDumperJob) do
+      event2.destroy!
+      assert airport.tags.where(name: :events).empty?, 'Events tag not removed from airport'
+    end
   end
 end

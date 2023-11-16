@@ -7,6 +7,10 @@ class EventsController < ApplicationController
 
     if @event.save && Action.create(type: :event_added, actionable: @event, user: active_user).persisted?
       touch_user_edit
+
+      # Schedule an airport cache refresh so the event's airport shows up on the map as tagged with "events"
+      AirportGeojsonDumperJob.perform_later
+
       redirect_to airport_path(@event.airport.code), notice: 'Event created successfully'
     else
       render :edit, layout: 'blank'
