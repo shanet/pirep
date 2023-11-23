@@ -22,6 +22,7 @@ READ_THROTTLED_PATHS = [
 # If needed, specific IPs/subnets can be blocked by adding them here
 BLACKLISTED_IPS = [
   '74.119.193.27', # Creating spam accounts
+  '2a0a:6040:9731::a', # Creating spam accounts
 ]
 
 Rails.configuration.rack_attack_write_limit = 10 # requests
