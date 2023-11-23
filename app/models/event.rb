@@ -10,6 +10,7 @@ class Event < ApplicationRecord
   validates :start_date, presence: true
   validates :end_date, presence: true
   validates :end_date, comparison: {greater_than: :start_date}
+  validates :digest, uniqueness: {scope: :airport_id}, allow_blank: true
 
   validates :recurring_cadence, presence: true, if: :recurring?
   validates :recurring_interval, presence: true, if: :recurring?
@@ -32,6 +33,7 @@ class Event < ApplicationRecord
   }
 
   enum recurring_cadence: RECURRING_CADENCE.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
+  enum data_source: {aopa: 'aopa', eaa: 'eaa', user_contributed: 'user_contributed'}
 
   # All single events in the future and all recurring events
   scope :upcoming, -> {where('start_date > ?', Time.zone.now).or(where.not(recurring_cadence: nil))}
@@ -73,6 +75,11 @@ class Event < ApplicationRecord
     # For a recurring event the end date is the next start date + the difference between the start and end dates.
     # Otherwise there is an edge case for a multi-day event when the start date has passed but not the end date.
     return next_start_date + (end_date - start_date)
+  end
+
+  def url=(url)
+    url = "https://#{url}" unless url.start_with?('https://', 'http://')
+    super(url)
   end
 
 private
@@ -120,7 +127,7 @@ private
 
     airport.tags.where(name: :events).destroy_all
 
-    # Schedule an airport cache refresh so the event's airport is longer shown under the events tag
+    # Schedule an airport cache refresh so the event's airport is no longer shown under the events tag
     AirportGeojsonDumperJob.perform_later
   end
 end

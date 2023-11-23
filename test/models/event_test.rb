@@ -130,4 +130,9 @@ class EventTest < ActiveSupport::TestCase
       assert airport.tags.where(name: :events).empty?, 'Events tag not removed from airport'
     end
   end
+
+  test 'adds URL protocol if missing' do
+    assert create(:event, url: 'example.com').url.start_with?('https://'), 'Protocol not added to event URL'
+    assert create(:event, url: 'http://example.com').url.start_with?('http://'), 'Protocol malformed on event URL'
+  end
 end

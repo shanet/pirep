@@ -30,7 +30,7 @@ private
         latitude: 50.962245,
         longitude: -118.184258,
         elevation: 1459,
-        city: 'Revelstoke',
+        city: 'REVELSTOKE',
         state: 'British Columbia',
         country: 'ca',
         city_distance: nil,

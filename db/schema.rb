@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_08_080326) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_19_044514) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -136,7 +136,10 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_08_080326) do
     t.uuid "airport_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "data_source"
+    t.string "digest"
     t.index ["airport_id"], name: "index_events_on_airport_id"
+    t.index ["digest", "airport_id"], name: "index_events_on_digest_and_airport_id", unique: true
   end
 
   create_table "faa_data_cycles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
