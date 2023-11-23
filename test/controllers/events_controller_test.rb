@@ -7,7 +7,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
 
   test 'create' do
     with_versioning do
-      event_attributes = attributes_for(:event, :recurring, airport_id: @event.airport.id, start_date: '2023-11-05T00:00', end_date: '2023-11-06T00:00')
+      event_attributes = attributes_for(:event, :recurring, airport_id: @event.airport.id, start_date: '2023-11-05T00:00', end_date: '2023-11-06T00:00', data_source: :aopa)
 
       assert_enqueued_with(job: AirportGeojsonDumperJob) do
         assert_difference('Action.where(type: :event_added).count') do
@@ -21,6 +21,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
       assert_equal event_attributes[:name], event.name, 'Event name not set'
       assert_equal @event.airport, event.airport, 'Event not associated with airport'
       assert_not_nil event.versions.last.whodunnit, 'User not associated with version for webcam'
+      assert_equal 'user_contributed', event.data_source, 'Event data source able to be user-controlled'
 
       # The timestamps above did not have timezone info associated with them so the controller should convert them to the airport's local timezone.
       # These particular dates are on either side of the DST boundary so the hours are different as well.

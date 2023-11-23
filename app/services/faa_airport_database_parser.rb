@@ -60,7 +60,7 @@ private
       latitude:        row['LAT_DECIMAL'].to_f,
       longitude:       row['LONG_DECIMAL'].to_f,
       elevation:       row['ELEV'].to_i,
-      city:            row['CITY'],
+      city:            row['CITY'].upcase,
       state:           row['COUNTY_ASSOC_STATE'].upcase,
       country:         :us,
       city_distance:   row['DIST_CITY_TO_AIRPORT'].to_f,

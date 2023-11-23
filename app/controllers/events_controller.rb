@@ -5,6 +5,9 @@ class EventsController < ApplicationController
     @event = Event.new(event_params)
     authorize @event
 
+    # Events created through the UI are always user contributed
+    @event.data_source = :user_contributed
+
     if @event.save && Action.create(type: :event_added, actionable: @event, user: active_user).persisted?
       touch_user_edit
 
@@ -68,6 +71,7 @@ private
     # Put the start/end dates in the timezone local to the event's airport
     if params[:event][:start_date].present? || params[:event][:end_date].present?
       timezone = (params[:event][:airport_id] ? Airport.find(params[:event][:airport_id]).timezone : Rails.configuration.time_zone)
+
       params[:event][:start_date] = params[:event][:start_date]&.in_time_zone(timezone) if params[:event][:start_date].present?
       params[:event][:end_date] = params[:event][:end_date]&.in_time_zone(timezone) if params[:event][:end_date].present?
     end
