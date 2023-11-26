@@ -45,7 +45,7 @@ module ActionsHelper
         }
 
       when :comment_added
-        airport = Airport.find_by(id: action.historical_value(:airport_id))
+        airport = action.actionable&.airport
 
         return {
           icon: 'fa-solid fa-comment',
@@ -53,18 +53,24 @@ module ActionsHelper
         }
 
       when :comment_helpful
+        airport = action.actionable&.airport
+
         return {
           icon: 'fa-solid fa-thumbs-up',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Comment found helpful".html_safe,
         }
 
       when :comment_flagged
+        airport = action.actionable&.airport
+
         return {
           icon: 'fa-solid fa-flag',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Comment flagged as outdated".html_safe,
         }
 
       when :comment_unflagged
+        airport = action.actionable&.airport
+
         return {
           icon: 'fa-solid fa-rotate-left',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Comment unflagged as outdated".html_safe,

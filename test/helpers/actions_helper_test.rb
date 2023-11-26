@@ -65,4 +65,13 @@ class ActionsHelperTest < ActionView::TestCase
       assert_not action_link(action.reload)[:label].include?(ActionsHelper::DELETED), 'Rendered deleted string for deleted webcam actionable'
     end
   end
+
+  test 'has airport for comment action' do
+    with_versioning do
+      comment = create(:comment)
+      action = create(:action, type: :comment_added, actionable: comment)
+
+      assert_not action_link(action.reload)[:label].include?(ActionsHelper::DELETED), 'Did not render action link for comment'
+    end
+  end
 end
