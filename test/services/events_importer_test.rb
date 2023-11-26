@@ -11,18 +11,23 @@ class EventsImporterTest < ActiveSupport::TestCase
     import_events!
 
     ['aopa', 'eaa'].each do |data_source|
-      assert Event.find_by(data_source: data_source), "Did not create event from #{data_source}"
+      event = Event.find_by(data_source: data_source)
+
+      assert_equal 'Test Event', event.name, 'Unexpected event name'
+      assert_equal airport, event.airport, 'Event not associated with airport'
+      assert_equal data_source, event.data_source, 'Unexpected event data source'
+      assert_not event.recurring?, 'Event marked as recurring'
+      assert_not_nil event.digest, 'Event digest not set'
+
+      case data_source
+        when 'aopa'
+          assert_in_delta Time.zone.parse('2023-11-05 20:00:00 UTC'), event.start_date, 1.second, 'Event start date not in airport\'s timezone'
+          assert_in_delta Time.zone.parse('2023-11-05 21:00:00 UTC'), event.end_date, 1.second, 'Event end date not in airport\'s timezone'
+        when 'eaa'
+          assert_in_delta Time.zone.parse('2023-11-14 19:00:00 UTC'), event.start_date, 1.second, 'Event start date not in airport\'s timezone'
+          assert_in_delta Time.zone.parse('2023-11-14 20:00:00 UTC'), event.end_date, 1.second, 'Event end date not in airport\'s timezone'
+      end
     end
-
-    event = Event.find_by(data_source: 'eaa')
-
-    assert_equal 'Test Event', event.name, 'Unexpected event name'
-    assert_equal airport, event.airport, 'Event not associated with airport'
-    assert_equal 'eaa', event.data_source, 'Unexpected event data source'
-    assert_not event.recurring?, 'Event marked as recurring'
-    assert_not_nil event.digest, 'Event digest not set'
-    assert_in_delta Time.zone.parse('2023-11-14 19:00:00 UTC').in_time_zone('America/Los_Angeles'), event.start_date, 1.second, 'Event start date not in airport\'s timezone'
-    assert_in_delta Time.zone.parse('2023-11-14 20:00:00 UTC').in_time_zone('America/Los_Angeles'), event.end_date, 1.second, 'Event end date not in airport\'s timezone'
   end
 
   test 'matches event to public airport in given city/state' do
@@ -75,7 +80,12 @@ class EventsImporterTest < ActiveSupport::TestCase
     create(:airport)
 
     import_events!
-    import_events!(expected_count: 0)
+
+    travel_to(TIME_TRAVEL_DATE) do
+      assert_raises(ActiveRecord::RecordInvalid) do
+        EventsImporter.new.import!
+      end
+    end
   end
 
   test 'filters out past events' do
