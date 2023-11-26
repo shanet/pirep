@@ -26,12 +26,10 @@ module AopaApi
       start_date = Time.zone.parse(raw_event['startDateTimeUTC']).in_time_zone(raw_event['timeZone'])
       end_date = Time.zone.parse(raw_event['endDateTimeUTC']).in_time_zone(raw_event['timeZone'])
 
-      # The start/end dates need to be in local time in a regular time object as the event importer will set the time to the airport's timezone.
-      # Thus we need to drop the timezone info entirely by creating a new time object (there must be a better way to do this... I hate timezones so much).
       return {
         name: raw_event['title'],
-        start_date: Time.parse(start_date.localtime.strftime('%FT%T')), # rubocop:disable Rails/TimeZone
-        end_date: Time.parse(end_date.localtime.strftime('%FT%T')), # rubocop:disable Rails/TimeZone
+        start_date: start_date.strftime('%FT%T'),
+        end_date: end_date.strftime('%FT%T'),
         latitude: raw_event['latitude'].to_f,
         longitude: raw_event['longitude'].to_f,
         url: raw_event['informationWebsite'],
@@ -41,6 +39,8 @@ module AopaApi
     rescue => error
       Rails.logger.info("Failed to parse AOPA event: #{raw_event}")
       Sentry.capture_exception(error)
+      raise error if Rails.env.test?
+
       return nil
     end
   end

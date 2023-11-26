@@ -43,14 +43,20 @@ private
         next
       end
 
+      # Put the event's start/end dates into the airport's local timezone
+      Time.use_zone(airport.timezone || Rails.configuration.time_zone) do
+        event[:start_date] = Time.zone.parse(event[:start_date])
+        event[:end_date] = Time.zone.parse(event[:end_date])
+      end
+
       next if !valid_event?(event) || duplicate_event?(event, airport)
 
       normalize_event!(event)
 
       Event.create!(
         name: event[:name],
-        start_date: event[:start_date].in_time_zone(airport.timezone || Rails.configuration.time_zone),
-        end_date: event[:end_date].in_time_zone(airport.timezone || Rails.configuration.time_zone),
+        start_date: event[:start_date],
+        end_date: event[:end_date],
         url: event[:url],
         airport: airport,
         data_source: data_source,
@@ -59,6 +65,7 @@ private
     rescue => error
       Rails.logger.info("Failed to import event: #{error}")
       Sentry.capture_exception(error)
+      raise error if Rails.env.test?
     end
   end
 

@@ -26,7 +26,7 @@ class WebcamTest < ActiveSupport::TestCase
     airport = create(:airport)
     create(:webcam, airport: airport, url: 'example.com')
 
-    assert_raises('ActiveRecord::RecordInvalid') do
+    assert_raises(ActiveRecord::RecordInvalid) do
       create(:webcam, airport: airport, url: 'example.com')
     end
 

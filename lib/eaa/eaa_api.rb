@@ -31,23 +31,21 @@ module EaaApi
   private
 
     def parse_event(raw_event)
-      # The event times will need to be put into the local timezone of its airport but we don't know that yet so
-      # use plain Time objects rather than TimeWithZone objects here to make it easier to inject the timezone later.
-      # rubocop:disable Rails/TimeZone
-      start_date = Time.at(raw_event['StartDate'].match(EVENT_DATE_REGEX)[1].to_i / 1000)
-      end_date = Time.at(raw_event['EndDate'].match(EVENT_DATE_REGEX)[1].to_i / 1000)
-
-      start_time = Time.parse(raw_event['sTime'])
-      end_time = Time.parse(raw_event['eTime'])
+      # Apparently the start/end date and time are two separate timestamp field so we need to parse each one inddividually and then combine them
+      start_time = Time.zone.parse(raw_event['sTime'])
+      end_time = Time.zone.parse(raw_event['eTime'])
 
       # Combine the start/end date and time into one object
-      start_date = start_date.change(hour: start_time.hour, min: start_time.min, sec: start_time.sec)
-      end_date = end_date.change(hour: end_time.hour, min: end_time.min, sec: end_time.sec)
+      start_date = Time.zone.at(raw_event['StartDate'].match(EVENT_DATE_REGEX)[1].to_i / 1000)
+        .change(hour: start_time.hour, min: start_time.min, sec: start_time.sec)
+
+      end_date = Time.zone.at(raw_event['EndDate'].match(EVENT_DATE_REGEX)[1].to_i / 1000)
+        .change(hour: end_time.hour, min: end_time.min, sec: end_time.sec)
 
       return {
         name: raw_event['Title'],
-        start_date: start_date,
-        end_date: end_date,
+        start_date: start_date.strftime('%FT%T'),
+        end_date: end_date.strftime('%FT%T'),
         latitude: raw_event['Latitude'].to_f,
         longitude: raw_event['Longitude'].to_f,
         url: "https://eaa.org#{raw_event['EventUrl']}",
@@ -55,10 +53,11 @@ module EaaApi
         state: raw_event['State'],
         digest: raw_event['ID'],
       }
-      # rubocop:enable Rails/TimeZone
     rescue => error
       Rails.logger.info("Failed to parse EAA event: #{raw_event}")
       Sentry.capture_exception(error)
+      raise error if Rails.env.test?
+
       return nil
     end
   end

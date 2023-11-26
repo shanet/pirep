@@ -16,8 +16,8 @@ class AopaApiTest < ActiveSupport::TestCase
       assert_equal(-122.272657, events.first[:longitude], 'Unexpected event longitude')
       assert_equal 'Everett', events.first[:city], 'Unexpected event city'
       assert_equal 'WA', events.first[:state], 'Unexpected event state'
-      assert_in_delta Time.zone.parse('2023-11-05 20:00:00 UTC').in_time_zone('America/Los_Angeles'), events.first[:start_date], 1.second, 'Unexpected event start date'
-      assert_in_delta Time.zone.parse('2023-11-05 21:00:00 UTC').in_time_zone('America/Los_Angeles'), events.first[:end_date], 1.second, 'Unexpected event start date'
+      assert_equal Time.zone.parse('2023-11-05 20:00:00 UTC').in_time_zone('America/Los_Angeles').strftime('%FT%T'), events.first[:start_date], 'Unexpected event start date'
+      assert_equal Time.zone.parse('2023-11-05 21:00:00 UTC').in_time_zone('America/Los_Angeles').strftime('%FT%T'), events.first[:end_date], 'Unexpected event start date'
       assert events.first[:digest].blank?, 'Event has digest'
     end
   end
