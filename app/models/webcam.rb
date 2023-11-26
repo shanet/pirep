@@ -13,6 +13,7 @@ class Webcam < ApplicationRecord
   after_create :create_tag
   after_destroy :remove_tag
 
+  validates :url, presence: true
   validates :url, uniqueness: {scope: :airport_id}
 
   def embedded?
@@ -32,7 +33,7 @@ class Webcam < ApplicationRecord
   end
 
   def url=(url)
-    url = "https://#{url}" unless url.start_with?('https://', 'http://')
+    url = "https://#{url}" if url.present? && !url.start_with?('https://', 'http://')
     super(url)
   end
 
