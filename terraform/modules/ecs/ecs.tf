@@ -73,7 +73,7 @@ module "task_definition_importer" {
   source = "./task_definition"
 
   cloudwatch_log_group                = var.cloudwatch_log_groups.jobs
-  container_command                   = "[bundle, exec, rails, runner, scripts/faa_data_importer.rb]"
+  container_command                   = "[bundle, exec, rails, runner, scripts/master_data_importer.rb]"
   cpu                                 = 4096 # 4 vCPU
   efs_access_point                    = aws_efs_access_point.this.id
   efs_volume                          = aws_efs_file_system.this.id

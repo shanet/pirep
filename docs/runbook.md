@@ -66,7 +66,7 @@ If a new environment needs to be set up or the existing production environment n
   1. `rails db:create`
   2. `rails db:schema:load`
   3. `rails db:seed` (note the default username and password)
-  4. `rails c` then `FaaDataImporterJob.perform_now`
+  4. `rails c` then `MasterDataImporterJob.perform_now`
     * This will start an importer task to download airport data, diagrams, and charts. This will take many hours to complete. Progress can be monitored in CloudWatch.
 
 ## Deployment
@@ -102,24 +102,25 @@ rails ssh
 
 A prompt will ask for which container to access. The `jobs` containers are preferred to avoid any heavy processing from affecting web traffic on the `web` containers.
 
-## FAA Database Importing
+## Airport Database Importing
 
-FAA data must be updated every cycle to get updated information. There are three FAA products used in Pirep:
+Airport data must be updated every cycle to get updated information. There are multiple airport products used in Pirep:
 
-* Airport database of all public and private airports in the United States
-* Airport diagrams
-* Sectional & terminal charts
+* FAA airport database of all public and private airports in the United States
+* FAA airport diagrams
+* FAA sectional & terminal charts
+* OurAirports Canadian airport database
 
 The `FaaDataCycle` model holds information on which data cycle each of these products are currently on within Pirep. Updating the data cycle is an automated process, but currently must be started manually. It may be fully automated in the future, but only after it has proven reliable to not need manual oversight due to the high potential for dramatically damaging the database.
 
 Due to the heavy amount of processing required to generate new charts, a standalone ECS task with significantly more CPU and memory resources is created for this purpose. This `importer` task is responsible for doing the downloading and processing of all FAA products and inserting them into the database.
 
-1. (Recommended) Do a test run of this locally first with `FaaDataImporter.new(force_update: true).import!`
+1. (Recommended) Do a test run of this locally first with `MasterDataImporter.new(force_update: true).import!`
 2. (Recommended) Take an RDS snapshot before
 3. `rails ssh`
-4. `rails c` then `FaaDataImporterJob.perform_now`
+4. `rails c` then `MasterDataImporterJob.perform_now`
 
-The `FaaDataImporterJob` job will start a standalone ECS task which has its command overridden to run `scripts/faa_data_importer.rb`. Note that generating map tiles will take 12+ hours even with the increased resources this task has. Progress can be monitored through a combination of CloudWatch logs and running `htop` in the container to ensure the `gdal` process is running and consuming the expected amount of CPU. Finally, this task will update the `FaaDataCycle` with the new data cycle for each product to start using it on the other containers.
+The `MasterDataImporterJob` job will start a standalone ECS task which has its command overridden to run `scripts/master_data_importer.rb`. Note that generating map tiles will take 12+ hours even with the increased resources this task has. Progress can be monitored through a combination of CloudWatch logs and running `htop` in the container to ensure the `gdal` process is running and consuming the expected amount of CPU. Finally, this task will update the `FaaDataCycle` with the new data cycle for each product to start using it on the other containers.
 
 ## Terraform
 
