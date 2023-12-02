@@ -64,7 +64,7 @@ private
       latitude:        row['latitude_deg'].to_f,
       longitude:       row['longitude_deg'].to_f,
       elevation:       row['elevation_ft'].to_i,
-      city:            row['municipality'].upcase,
+      city:            row['municipality']&.upcase,
       state:           @regions[row['iso_region']&.upcase],
       country:         row['iso_country']&.downcase,
       city_distance:   nil,
