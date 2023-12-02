@@ -1,21 +1,21 @@
 require 'exceptions'
 
-class FaaDataImporterJob < ApplicationJob
+class MasterDataImporterJob < ApplicationJob
   ECS_CLUSTER = 'pirep-production'
   ECS_SERVICE_JOBS = 'pirep-production-jobs'
   ECS_SERVICE_IMPORTER = 'pirep-production-importer'
 
   def perform
     network_configuration = find_network_configuration(ECS_CLUSTER, ECS_SERVICE_JOBS)
-    raise Exceptions::FaaDataImporterTaskFailed, 'ECS service network configuration not found' unless network_configuration
+    raise Exceptions::MasterDataImporterTaskFailed, 'ECS service network configuration not found' unless network_configuration
 
     task_definition = find_task_definition(ECS_SERVICE_IMPORTER)
-    raise Exceptions::FaaDataImporterTaskFailed, 'ECS task definition not found' unless task_definition
+    raise Exceptions::MasterDataImporterTaskFailed, 'ECS task definition not found' unless task_definition
 
     Rails.logger.info("Using task definition: #{task_definition}")
 
     task_arn = run_task(ECS_CLUSTER, task_definition, network_configuration)
-    raise Exceptions::FaaDataImporterTaskFailed, 'Failed to run task' unless task_arn
+    raise Exceptions::MasterDataImporterTaskFailed, 'Failed to run task' unless task_arn
 
     Rails.logger.info("Importer task started: #{task_arn}")
   end
