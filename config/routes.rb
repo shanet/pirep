@@ -80,5 +80,5 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :webcams, only: :create
+  resources :webcams, only: [:create, :destroy]
 end

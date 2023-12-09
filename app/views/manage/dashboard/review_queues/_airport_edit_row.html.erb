@@ -30,34 +30,5 @@
     </div>
   </div>
 
-  <% if version.item_type == Airport.name %>
-    <% if version.event == 'destroy' %>
-      <i class="fa-solid fa-trash"></i> Airport deleted
-    <% else %>
-      <i class="fa-solid fa-pen-to-square"></i> <%= version.object_changes.keys.map {|key| key.gsub('_', ' ').capitalize}.join(', ') %>
-    <% end %>
-
-  <% elsif version.item_type == Event.name %>
-    <% if version.event == 'create' %>
-      <i class="fa-solid fa-calendar-days"></i> Event added: <%= version.object_changes['name'].last %>
-    <% elsif version.event == 'update' %>
-      <i class="fa-solid fa-calendar-days"></i> Event updated: <%= version.object_changes.keys.map {|key| key.gsub('_', ' ').capitalize}.join(', ') %>
-    <% elsif version.event == 'destroy' %>
-      <i class="fa-solid fa-calendar-days"></i> Event removed: <%= version.object_changes['name'].first %>
-    <% end %>
-
-  <% elsif version.item_type == Tag.name %>
-    <% if version.event == 'create' %>
-      <i class="fa-solid fa-square-plus"></i> Tag added: <%= version.object_changes['name'].last %>
-    <% elsif version.event == 'destroy' %>
-      <i class="fa-solid fa-square-minus"></i> Tag removed: <%= version.object_changes['name'].first %>
-    <% end %>
-
-  <% elsif version.item_type == Webcam.name %>
-    <% if version.event == 'create' %>
-      <i class="fa-solid fa-square-plus"></i> Webcam added: <%= version.object_changes['url'].last %>
-    <% elsif version.event == 'destroy' %>
-      <i class="fa-solid fa-square-minus"></i> Webcam removed: <%= version.object_changes['url'].first %>
-    <% end %>
-  <% end %>
+  <%= version_summary(version) %>
 </div>

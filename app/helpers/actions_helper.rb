@@ -26,23 +26,7 @@ module ActionsHelper
           label: "#{action.actionable ? link_to(action.actionable.code, airport_path(action.actionable)) : DELETED}: Airport photo uploaded".html_safe,
         }
 
-      when :tag_added
-        tag_label = Tag::TAGS[action.historical_value(:name)&.to_sym]&.[](:label)
-        airport = Airport.find_by(id: action.historical_value(:airport_id))
-
-        return {
-          icon: 'fa-solid fa-square-plus',
-          label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Tag added | #{tag_label.presence || DELETED}".html_safe,
-        }
-
-      when :tag_removed
-        tag_label = Tag::TAGS[action.historical_value(:name)&.to_sym]&.[](:label)
-        airport = Airport.find_by(id: action.historical_value(:airport_id))
-
-        return {
-          icon: 'fa-solid fa-square-minus',
-          label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Tag removed | #{tag_label.presence || DELETED}".html_safe,
-        }
+      # -----------------------------------------------------------------------
 
       when :comment_added
         airport = action.actionable&.airport
@@ -76,13 +60,71 @@ module ActionsHelper
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Comment unflagged as outdated".html_safe,
         }
 
+      # -----------------------------------------------------------------------
+
+      when :event_added
+        airport = action.actionable&.airport
+
+        return {
+          icon: 'fa-solid fa-calendar-plus',
+          label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Event added".html_safe,
+        }
+
+      when :event_edited
+        airport = action.actionable&.airport
+
+        return {
+          icon: 'fa-solid fa-calendar-days',
+          label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Event updated".html_safe,
+        }
+
+      when :event_removed
+        airport = Airport.find_by(id: action.historical_value(:airport_id))
+
+        return {
+          icon: 'fa-solid fa-calendar-xmark',
+          label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Event removed".html_safe,
+        }
+
+      # -----------------------------------------------------------------------
+
+      when :tag_added
+        tag_label = Tag::TAGS[action.historical_value(:name)&.to_sym]&.[](:label)
+        airport = Airport.find_by(id: action.historical_value(:airport_id))
+
+        return {
+          icon: 'fa-solid fa-square-plus',
+          label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Tag added | #{tag_label.presence || DELETED}".html_safe,
+        }
+
+      when :tag_removed
+        tag_label = Tag::TAGS[action.historical_value(:name)&.to_sym]&.[](:label)
+        airport = Airport.find_by(id: action.historical_value(:airport_id))
+
+        return {
+          icon: 'fa-solid fa-square-minus',
+          label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Tag removed | #{tag_label.presence || DELETED}".html_safe,
+        }
+
+      # -----------------------------------------------------------------------
+
       when :webcam_added
         airport = Airport.find_by(id: action.historical_value(:airport_id))
 
         return {
           icon: 'fa-solid fa-camera',
-          label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Airport webcam added".html_safe,
+          label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Webcam added".html_safe,
+        }
+
+      when :webcam_removed
+        airport = Airport.find_by(id: action.historical_value(:airport_id))
+
+        return {
+          icon: 'fa-solid fa-square-minus',
+          label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Webcam removed".html_safe,
         }
     end
+
+    return nil
   end
 end

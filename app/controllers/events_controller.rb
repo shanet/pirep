@@ -34,7 +34,7 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    if @event.destroy && Action.create(type: :event_removed, actionable: @event, user: active_user).persisted?
+    if @event.destroy && Action.create(type: :event_removed, actionable: @event, user: active_user, version: @event.versions.last).persisted?
       touch_user_edit
       redirect_to airport_path(@event.airport.code), notice: 'Event deleted successfully'
     else

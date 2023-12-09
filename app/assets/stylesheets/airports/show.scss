@@ -59,6 +59,10 @@
 .webcam-frame {
   height: 350px;
   width: 100%;
+
+  .delete-overlay {
+    z-index: $zindex-fixed;
+  }
 }
 
 .remark {
