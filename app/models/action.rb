@@ -5,6 +5,10 @@ class Action < ApplicationRecord
 
   self.inheritance_column = nil
 
+  # Adding a new action:
+  # 1. Add it to the list below
+  # 2. Add an entry to `dashboard_helper.rb`
+  # 3. Add an entry to `actions_helper.rb` if exposed to users on activity page
   ACTIONS = [
     :airport_added,
     :airport_edited,
@@ -23,6 +27,7 @@ class Action < ApplicationRecord
     :tag_removed,
 
     :webcam_added,
+    :webcam_removed,
   ].to_set
 
   validates :type, inclusion: {in: ACTIONS.map(&:to_s)}

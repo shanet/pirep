@@ -47,7 +47,9 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     sign_in create(:admin)
     comment = create(:comment)
 
-    delete comment_path(comment)
-    assert_response :redirect
+    assert_difference('Comment.count', -1) do
+      delete comment_path(comment)
+      assert_response :redirect
+    end
   end
 end

@@ -45,9 +45,9 @@ module AirportsHelper
       when Event.name
         case version.event
           when 'create'
-            return '<i class="fa-solid fa-calendar-days"></i> Event Added'.html_safe
+            return '<i class="fa-solid fa-calendar-plus"></i> Event Added'.html_safe
           when 'destroy'
-            return '<i class="fa-solid fa-calendar-days"></i> Event Removed'.html_safe
+            return '<i class="fa-solid fa-calendar-xmark"></i> Event Removed'.html_safe
         end
 
       when Tag.name

@@ -17,4 +17,17 @@ class WebcamsControllerTest < ActionDispatch::IntegrationTest
       assert_in_delta Time.zone.now, Users::Unknown.last.last_edit_at, 1.second, 'Unknown user\'s last edit at timestamp not set after creating webcam'
     end
   end
+
+  test 'destroy' do
+    webcam = create(:webcam)
+
+    with_versioning do
+      assert_difference('Webcam.count', -1) do
+        assert_difference('Action.where(type: :webcam_removed).where.not(version: nil).count') do
+          delete webcam_path(id: webcam)
+          assert_redirected_to airport_path(webcam.airport.code)
+        end
+      end
+    end
+  end
 end

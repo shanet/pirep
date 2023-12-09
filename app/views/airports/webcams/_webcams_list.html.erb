@@ -1,0 +1,14 @@
+<ul class="list-group list-group-flush">
+  <% webcams.each do |webcam| %>
+    <li class="list-group-item">
+      <div class="d-flex justify-content-between align-items-center">
+        <%= link_to(webcam.url.truncate(50), webcam.url, class: 'webcam-link') %>
+
+        <%= button_to '<i class="fa-solid fa-trash"></i>'.html_safe, webcam_path(webcam),
+          method: :delete,
+          class: 'end-0 btn btn-sm btn-outline-danger',
+          data: {confirm: 'Are you sure you want to remove this webcam?'} %>
+        </div>
+    </li>
+  <% end %>
+</ul>

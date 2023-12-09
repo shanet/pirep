@@ -5,13 +5,11 @@
     <i class="fas fa-camera"></i> Airport <%= 'Webcam'.pluralize(@airport.webcams.count) %>
   </div>
 
-  <ul class="list-group list-group-flush">
-    <% @airport.webcams.reject(&:embedded?).each do |webcam| %>
-      <li class="list-group-item"><%= link_to(webcam.url.truncate(50), webcam.url, class: 'webcam-link') %></li>
-    <% end %>
-  </ul>
+  <%# Render all link webcams in a list group %>
+  <%= render 'airports/webcams/webcams_list', webcams: @airport.webcams.reject(&:embedded?) %>
 </div>
 
+<%# Render only the first embedded webcam and then put the rest in a collapisble container to avoid taking up too much vertical space %>
 <% if embedded_webcams.any? %>
   <%= render 'airports/webcams/webcam', webcam: embedded_webcams.first %>
 <% end %>

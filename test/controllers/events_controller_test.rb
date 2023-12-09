@@ -61,9 +61,11 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'destroy' do
-    assert_difference('Action.where(type: :event_removed).count') do
-      delete event_path(id: @event)
-      assert_redirected_to airport_path(@event.airport.code)
+    with_versioning do
+      assert_difference('Action.where(type: :event_removed).where.not(version: nil).count') do
+        delete event_path(id: @event)
+        assert_redirected_to airport_path(@event.airport.code)
+      end
     end
   end
 end
