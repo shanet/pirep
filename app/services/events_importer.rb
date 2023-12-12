@@ -5,11 +5,14 @@ class EventsImporter
   AIRPORT_SEARCH_RADIUS = 10 # miles
 
   def import!
-    import_aopa_events!
-    import_eaa_events!
+    aopa_events = import_aopa_events!
+    eaa_events = import_eaa_events!
 
     # Schedule a geojson dump so airports with new events show up on the map
     AirportGeojsonDumperJob.perform_later
+
+    Rails.logger.info("Imported #{aopa_events.count} AOPA events")
+    Rails.logger.info("Imported #{eaa_events.count} EAA events")
   end
 
 private
@@ -31,7 +34,7 @@ private
   end
 
   def create_events!(events, data_source)
-    events.each do |event|
+    return events.map do |event|
       # The times should not be TimeWithZone objects as that will mess up the timezone injection below
       raise('Event has start date with timezone') if event[:start_date].is_a?(ActiveSupport::TimeWithZone)
 
@@ -53,7 +56,7 @@ private
 
       normalize_event!(event)
 
-      Event.create!(
+      next Event.create!(
         name: event[:name],
         start_date: event[:start_date],
         end_date: event[:end_date],
@@ -66,7 +69,7 @@ private
       Rails.logger.info("Failed to import event: #{error}")
       Sentry.capture_exception(error)
       raise error if Rails.env.test?
-    end
+    end.compact
   end
 
   def airport_for_event(event)
