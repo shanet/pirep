@@ -46,15 +46,12 @@ private
         next
       end
 
-      # Put the event's start/end dates into the airport's local timezone
-      Time.use_zone(airport.timezone || Rails.configuration.time_zone) do
-        event[:start_date] = Time.zone.parse(event[:start_date])
-        event[:end_date] = Time.zone.parse(event[:end_date])
+      normalize_event!(event, airport.timezone)
+
+      if !valid_event?(event) || duplicate_event?(event, airport)
+        Rails.logger.info("Skipping invalid/duplicate event for #{event[:name]} at (#{event[:latitude]}, #{event[:longitude]})")
+        next
       end
-
-      next if !valid_event?(event) || duplicate_event?(event, airport)
-
-      normalize_event!(event)
 
       next Event.create!(
         name: event[:name],
@@ -122,7 +119,13 @@ private
     return false
   end
 
-  def normalize_event!(event)
+  def normalize_event!(event, timezone)
+    # Put the event's start/end dates into the airport's local timezone
+    Time.use_zone(timezone || Rails.configuration.time_zone) do
+      event[:start_date] = Time.zone.parse(event[:start_date])
+      event[:end_date] = Time.zone.parse(event[:end_date])
+    end
+
     # If the start and end date/time are the same bump the end date by an hour to avoid a validation error
     if event[:start_date] == event[:end_date]
       event[:end_date] += 1.hour
