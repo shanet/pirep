@@ -71,7 +71,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :events, only: [:create, :edit, :update, :destroy]
+  resources :events, only: [:create, :edit, :update, :show, :destroy]
   resources :tags, only: :destroy
 
   resources :versions, only: [] do

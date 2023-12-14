@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: [:edit, :update, :destroy]
+  before_action :set_event, only: [:edit, :update, :show, :destroy]
 
   def create
     @event = Event.new(event_params)
@@ -30,6 +30,20 @@ class EventsController < ApplicationController
       redirect_to airport_path(@event.airport.code), notice: 'Event updated successfully'
     else
       render :edit, layout: 'blank'
+    end
+  end
+
+  def show
+    respond_to do |format|
+      format.html {head :no_content}
+
+      format.ical do
+        # Render the ical template to a string (removing leading whitespace and blank lines) and then send it to the browser as a file
+        ical_event = render_to_string('events/show').gsub(/^\s*|^$/, '')
+        filename = "#{@event.name.gsub(/\s/, '_').gsub(/\W/, '')}.ics"
+
+        send_data(ical_event, filename: filename)
+      end
     end
   end
 

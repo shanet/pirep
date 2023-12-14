@@ -77,6 +77,10 @@ class Event < ApplicationRecord
     return next_start_date + (end_date - start_date)
   end
 
+  def ical_recurrance_rule
+    return (recurring? ? recurrance_schedule.to_ical.split("\n").last : nil)
+  end
+
   def url=(url)
     url = "https://#{url}" if url.present? && !url.start_with?('https://', 'http://')
     super(url)
@@ -84,7 +88,7 @@ class Event < ApplicationRecord
 
 private
 
-  def recurrance_schedule(date)
+  def recurrance_schedule(date=nil)
     return IceCube::Schedule.new(date) do |schedule|
       case recurring_cadence
         when :daily

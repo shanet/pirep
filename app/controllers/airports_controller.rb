@@ -46,7 +46,6 @@ class AirportsController < ApplicationController
   end
 
   def show
-    return not_found(request.format.symbol) unless @airport
   end
 
   def update

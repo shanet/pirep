@@ -1,0 +1,30 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Pirep.io//iCal 1.0//EN
+
+BEGIN:VEVENT
+
+SUMMARY:<%= @event.name %>
+
+DTSTART:<%= @event.next_start_date.iso8601.gsub(/-|:/, '') %>
+DTEND:<%= @event.next_end_date.iso8601.gsub(/-|:/, '') %>
+<%= @event.ical_recurrance_rule %>
+
+<% if @event.url.present? %>
+  URL:<%= @event.url %>
+<% end %>
+
+<% if @event.description.present? %>
+  DESCRIPTION:<%= @event.description %> - <%= airport_url(@event.airport.code) %>
+<% else %>
+  DESCRIPTION:Visit <%= airport_url(@event.airport.code) %> for event details.
+<% end %>
+
+<% if @event.location.present? || @event.url.present? %>
+  LOCATION:<%= @event.location.presence || @event.url.presence %>
+<% else %>
+  LOCATION:<%= airport_url(@event.airport.code) %>
+<% end %>
+
+END:VEVENT
+END:VCALENDAR
