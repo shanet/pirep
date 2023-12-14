@@ -60,6 +60,33 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 13, event.reload.recurring_day_of_month, 'Recurring week of month field not parsed correctly'
   end
 
+  test 'show - html' do
+    get event_path(@event)
+    assert_response :no_content
+  end
+
+  test 'show - ical static event' do
+    get event_path(@event, format: :ical)
+    assert_response :success
+
+    assert response.body.include?("SUMMARY:#{@event.name}"), 'ICS file did not contain event name'
+    assert response.body.include?("DTSTART:#{@event.next_start_date.iso8601.gsub(/-|:/, '')}"), 'ICS file did not contain event start date'
+    assert response.body.include?("DTEND:#{@event.next_end_date.iso8601.gsub(/-|:/, '')}"), 'ICS file did not contain event end date'
+    assert response.body.include?("LOCATION:#{@event.location}"), 'ICS file did not contain event location'
+    assert response.body.include?("URL:#{@event.url}"), 'ICS file did not contain event URL'
+    assert response.body.include?('DESCRIPTION:Visit'), 'ICS file did not contain default description'
+    assert_not response.body.include?('RRULE:'), 'ICS file contained recurrance rule for static event'
+  end
+
+  test 'show - ical recurring event' do
+    event = create(:event, :recurring)
+
+    get event_path(event, format: :ical)
+    assert_response :success
+
+    assert response.body.include?('RRULE:'), 'ICS file did not contain recurrance rule for recurring event'
+  end
+
   test 'destroy' do
     with_versioning do
       assert_difference('Action.where(type: :event_removed).where.not(version: nil).count') do

@@ -82,7 +82,7 @@ class EventsImporterTest < ActiveSupport::TestCase
     import_events!
 
     travel_to(TIME_TRAVEL_DATE) do
-      assert_raises(ActiveRecord::RecordInvalid) do
+      assert_difference('Event.count', 0) do
         EventsImporter.new.import!
       end
     end

@@ -7,7 +7,11 @@
 
 <div class="d-flex justify-content-between">
   <h5><%= event.name.upcase_first %></h5>
-  <%= link_to('<i class="fa-solid fa-edit"></i> Edit'.html_safe, edit_event_path(event), class: 'btn btn-outline-primary btn-sm ') %>
+
+  <div>
+    <%= link_to('<i class="fa-solid fa-file-arrow-down"></i> Export'.html_safe, event_path(event, format: :ical), class: 'btn btn-outline-primary btn-sm ') %>
+    <%= link_to('<i class="fa-solid fa-edit"></i> Edit'.html_safe, edit_event_path(event), class: 'btn btn-outline-primary btn-sm ') %>
+  </div>
 </div>
 
 <p class="mb-1">
@@ -27,7 +31,7 @@
     <% end %>
 
     <% if event.url.present? %>
-      <li>Event page: <%= link_to event.url, event.url %></li>
+      <li>Event webpage: <%= link_to event.url, event.url %></li>
     <% end %>
 
     <% if event.host.present? %>

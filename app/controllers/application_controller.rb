@@ -12,31 +12,32 @@ class ApplicationController < ActionController::Base
 
 private
 
-  def not_found(format=nil, message: nil)
-    render_error(format, :not_found, message)
+  def not_found(_exception=nil, message: nil)
+    render_error(request&.format&.symbol, :not_found, message)
   end
 
-  def forbidden(format=nil, message: nil)
-    render_error(format, :forbidden, message)
+  def forbidden(_exception=nil, message: nil)
+    render_error(request&.format&.symbol, :forbidden, message)
   end
 
-  def bad_request(format=nil, message: nil)
-    render_error(format, :bad_request, message)
+  def bad_request(_exception=nil, message: nil)
+    render_error(request&.format&.symbol, :bad_request, message)
   end
 
-  def internal_server_error(format=nil, message: nil)
-    render_error(format, :internal_server_error, message)
+  def internal_server_error(_exception=nil, message: nil)
+    render_error(request&.format&.symbol, :internal_server_error, message)
   end
 
   def render_error(format, status, message)
     status_code = Rack::Utils::SYMBOL_TO_STATUS_CODE[status]
 
     case format
-      when :json
-        render json: {error: status.to_s, message: message}, status: status
+      when :json, :ical
+        render json: {error: status.to_s, **(message ? {message: message} : {})}, status: status
       else
         # These are static pages so skip the CSP
         headers.merge!('Content-Security-Policy' => '')
+
         render file: Rails.public_path.join("#{status_code}.html"), formats: [:html], status: status, layout: false
     end
   end

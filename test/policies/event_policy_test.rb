@@ -11,6 +11,10 @@ class EventPolicyTest < PolicyTest
     end
   end
 
+  test 'show' do
+    assert_allows_all @event, :show
+  end
+
   test 'revert' do
     assert_allows_admin @event, :revert
   end
