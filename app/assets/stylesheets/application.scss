@@ -3,11 +3,12 @@
 
 // These paths for vendor stylesheets are relative to vendor/ (which are then symlinks to node_modules/)
 @import 'bootstrap/bootstrap';
-@import 'fontawesome/fontawesome';
-@import 'fontawesome/solid';
-@import 'fontawesome/regular';
-@import 'mapbox-gl';
 @import 'easymde';
+@import 'fontawesome/brands';
+@import 'fontawesome/fontawesome';
+@import 'fontawesome/regular';
+@import 'fontawesome/solid';
+@import 'mapbox-gl';
 
 @import 'themes';
 
@@ -23,7 +24,6 @@
 @import 'manage/airports';
 @import 'manage/dashboard';
 
-@import 'map/about';
 @import 'map/action_buttons';
 @import 'map/controls';
 @import 'map/drawer';
@@ -34,9 +34,11 @@
 @import 'map/map';
 @import 'map/search';
 
+@import 'shared/about';
 @import 'shared/annotations';
 @import 'shared/breakpoints';
 @import 'shared/collapsible';
+@import 'shared/footer';
 @import 'shared/forms';
 @import 'shared/navbar';
 @import 'shared/photo_gallery';

@@ -1,6 +1,6 @@
 <% is_manage = controller.class.name.start_with? 'Manage::' %>
 
-<nav class="navbar navbar-expand-md bg-dark nav-underline" data-bs-theme="dark">
+<nav class="navbar navbar-expand-md nav-underline bg-dark" data-bs-theme="dark">
   <div class="container-fluid">
     <%= link_to image_tag('icon_small.png'), root_path, class: 'navbar-brand me-2' %>
 
@@ -27,7 +27,11 @@
         <% end %>
       </ul>
 
-      <span class="float-end"><%= link_to '<i class="fa-solid fa-right-from-bracket"></i> Logout'.html_safe, destroy_user_session_path, method: :delete, class: 'nav-link d-inline text-light' %></span>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <%= link_to '<i class="fa-solid fa-right-from-bracket"></i> Logout'.html_safe, destroy_user_session_path, method: :delete, class: 'nav-link' %>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>

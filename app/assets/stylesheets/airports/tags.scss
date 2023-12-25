@@ -37,7 +37,8 @@
   }
 
   &.add {
-    border: #343a40 dashed 3px;
+    border: $dark dashed 3px;
+    color: $dark;
     transition: .3s;
 
     &:hover {
@@ -60,5 +61,16 @@
 
   .icon {
     font-size: 1.5rem;
+  }
+}
+
+@include color-mode(dark) {
+  .tag-square.add {
+    border: $light dashed 3px;
+    color: $light;
+
+    &:hover {
+      background-color: $dark-bg-subtle-dark;
+    }
   }
 }

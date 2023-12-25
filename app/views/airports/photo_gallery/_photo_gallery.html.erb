@@ -32,18 +32,18 @@
         <% photos.each do |photo| %>
           <% next if photo == @airport.featured_photo && group != :featured %>
 
-          <button type="button" data-bs-target="<%= counter %>"<% if counter == 0 %> class="active"<% end %>></button>
+          <button type="button" data-bs-target="<%= counter %>" class="bg-white<%= counter == 0 ? ' active' : '' %>"></button>
           <% counter += 1 %>
         <% end %>
       <% end %>
     </div>
 
     <button class="carousel-control-prev <%= show_border ? 'm-1' : '' %>" type="button">
-      <span class="carousel-control-prev-icon"></span>
+      <span class="carousel-control-prev-icon text-white"></span>
     </button>
 
     <button class="carousel-control-next <%= show_border ? 'm-1' : '' %>" type="button">
-      <span class="carousel-control-next-icon"></span>
+      <span class="carousel-control-next-icon text-white"></span>
     </button>
   <% end %>
 </div>

@@ -1,6 +1,6 @@
 <% cover_image = (@airport.cover_image != 'default') %>
 
-<div class="container-fluid p-0 <%= cover_image ? "airport-header-cover-image cover-image-#{@airport.cover_image} mb-1" : '' %>">
+<div class="container-fluid p-0 text-dark <%= cover_image ? "airport-header-cover-image cover-image-#{@airport.cover_image} mb-1" : '' %>">
   <div class="airport-header <%= cover_image ? '' : "theme-#{@airport.theme}" %> text-center p-3">
     <h3><%= @airport.code %> - <%= @airport.name.titleize %></h3>
   </div>

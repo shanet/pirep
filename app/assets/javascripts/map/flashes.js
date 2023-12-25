@@ -13,7 +13,7 @@ export function show(type, message, persistent) {
   const flash = document.createElement('div');
   const flashBody = document.createElement('div');
 
-  flash.classList.add('toast', 'show', 'text-white', `bg-${type}`, 'mb-3');
+  flash.classList.add('toast', 'show', 'text-dark', `bg-${type}`, 'mb-3');
   flashBody.classList.add('toast-body');
 
   flashBody.textContent = message;
