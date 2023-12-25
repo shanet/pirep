@@ -1,0 +1,29 @@
+<footer class="bg-secondary-subtle border-top border-dark-subtle p-3 border-top">
+  <div class="container-lg d-flex justify-content-between align-items-center">
+    <ul class="list-inline d-flex m-0">
+      <li class="border-end border-dark-subtle pe-2 me-2">
+        <%= link_to '<i class="fa-solid fa-question-circle me-1"></i>About Pirep'.html_safe, about_path %>
+      </li>
+
+      <li class="border-end border-dark-subtle pe-2 me-2">
+        <a href="https://github.com/shanet/pirep"><i class="fa-brands fa-github me-1"></i>GitHub</a>
+      </li>
+
+      <li>
+        <%= link_to 'Sitemap', sitemap_path(format: :xml) %>
+      </li>
+    </ul>
+
+    <div class="dropdown color-scheme-selector">
+      <button class="btn dropdown-toggle p-0" data-bs-toggle="color-scheme-options">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+      </button>
+
+      <ul id="color-scheme-options" class="dropdown-menu" data-popper-placement="top">
+        <li><button class="dropdown-item" data-color-scheme="auto"><i class="fa-solid fa-circle-half-stroke me-1"></i>Auto</button></li>
+        <li><button class="dropdown-item" data-color-scheme="light"><i class="fa-solid fa-sun me-1"></i>Light</button></li>
+        <li><button class="dropdown-item" data-color-scheme="dark"><i class="fa-solid fa-moon me-1"></i>Dark</button></li>
+      </ul>
+    </div>
+  </div>
+</footer>

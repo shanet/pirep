@@ -75,6 +75,12 @@
   }
 }
 
+@include color-mode(dark) {
+  .remark.list-group-item:hover {
+    background-color: $body-secondary-bg-dark;
+  }
+}
+
 .comment {
   .comment-actions {
     float: right;

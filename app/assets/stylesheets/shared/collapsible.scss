@@ -27,6 +27,18 @@
   }
 }
 
+@include color-mode(dark) {
+  .collapsible {
+    > .content {
+      background-color: $body-secondary-bg-dark;
+    }
+
+    .notch > div {
+      background-color: $dark-border-subtle-dark;
+    }
+  }
+}
+
 // Create classes that will only collapse the collapisble below a given breakpoint
 @each $breakpoint, $width in $grid-breakpoints {
   .collapsible-#{$breakpoint} {

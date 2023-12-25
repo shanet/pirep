@@ -1,0 +1,15 @@
+footer {
+  .color-scheme-selector {
+    position: relative;
+
+    a.dropdown-toggle {
+      text-decoration: none;
+    }
+
+    .dropdown-menu {
+      bottom: 2rem;
+      position: absolute;
+      right: 0;
+    }
+  }
+}

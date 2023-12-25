@@ -2,17 +2,28 @@ $header-height: calc(1.5em + .75rem + 2px);
 
 .navigation {
   background-clip: padding-box;
-  background-color: $white;
-  border: 1px solid #ced4da;
   border-radius: .25rem;
-  color: #495057;
   height: $header-height;
   line-height: $header-height;
   margin-left: $map-fixed-offset;
   margin-right: $map-fixed-offset;
   margin-top: $map-fixed-offset;
 
-  img {
+  img.logo {
     height: 45%;
+
+    &.logo-dark {
+      display: none;
+    }
+  }
+}
+
+[data-bs-theme="dark"] { // stylelint-disable-line stylistic/string-quotes
+  .navigation img.logo {
+    display: none;
+
+    &.logo-dark {
+      display: inline;
+    }
   }
 }

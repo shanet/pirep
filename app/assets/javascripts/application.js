@@ -12,6 +12,8 @@ import 'map/header';
 import 'map/map';
 import 'map/search';
 import 'map/utils';
+import 'shared/collapsible';
+import 'shared/color_scheme';
 import 'shared/textarea_editors';
 
 // For browsers that still don't support ImportMaps (*cough* Safari) the es-module-shims polyfill will be used.

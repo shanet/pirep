@@ -30,3 +30,34 @@
     margin-bottom: $spacer * .5;
   }
 }
+
+@include color-mode(dark) {
+  // stylelint-disable selector-class-pattern
+  .EasyMDEContainer {
+    .CodeMirror {
+      background-color: $body-bg-dark;
+      color: $body-color-dark;
+    }
+
+    .editor-preview-full {
+      background-color: $body-bg-dark;
+      color: $body-color-dark;
+    }
+
+    .easymde-dropdown {
+      background: linear-gradient(to bottom right, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 84%, $light 50%, $light 100%);
+      border: none;
+    }
+
+    .easymde-dropdown-content {
+      background-color: $body-bg-dark;
+      border: $light-border-subtle-dark 1px solid;
+    }
+
+    .editor-toolbar button:hover {
+      background-color: $body-bg-dark;
+      border-color: $light-border-subtle-dark;
+    }
+  }
+  // stylelint-enable selector-class-pattern
+}

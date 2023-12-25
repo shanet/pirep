@@ -26,4 +26,10 @@
   .carousel-control-next:hover {
     background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .75) 100%);
   }
+
+  // Override dark mode
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon, {
+    filter: none !important; // stylelint-disable-line declaration-no-important
+  }
 }
