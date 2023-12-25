@@ -1,0 +1,24 @@
+#about {
+  img.logo {
+    height: 2rem;
+    max-width: 100%;
+
+    &.logo-dark {
+      display: none;
+    }
+  }
+
+  .creative-commons-badge {
+    width: 5rem;
+  }
+}
+
+[data-bs-theme="dark"] { // stylelint-disable-line stylistic/string-quotes
+  #about img.logo {
+    display: none;
+
+    &.logo-dark {
+      display: inline;
+    }
+  }
+}

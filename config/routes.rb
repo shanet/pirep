@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   root 'map#index'
   get :map, to: 'map#index'
+
+  get :about, to: 'meta#about'
   get :health, to: 'meta#health'
   get :sitemap, to: 'meta#sitemap'
 

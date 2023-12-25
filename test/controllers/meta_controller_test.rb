@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class MetaControllerTest < ActionDispatch::IntegrationTest
+  test 'about' do
+    get about_path
+    assert_response :success
+  end
+
   test 'healthcheck' do
     assert_difference('Users::Unknown.count', 0) do
       get health_path

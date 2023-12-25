@@ -2,6 +2,10 @@ class MetaController < ApplicationController
   # Health checks and sitemap requests should not track users
   skip_before_action :touch_user_seen, only: [:health, :sitemap]
 
+  def about
+    authorize :health, policy_class: MetaPolicy
+  end
+
   def health
     authorize :health, policy_class: MetaPolicy
     head :ok
