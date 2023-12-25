@@ -1,4 +1,8 @@
 class MetaPolicy < ApplicationPolicy
+  def about?
+    return true
+  end
+
   def health?
     return true
   end

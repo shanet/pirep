@@ -5,6 +5,9 @@ Bundler.require(*Rails.groups)
 
 module Pirep
   class Application < Rails::Application
+    # Always show Ruby deprecation warnings
+    Warning[:deprecated] = true
+
     config.load_defaults 7.1
 
     # Add db/ to the load path for classes the seeds use that live in there

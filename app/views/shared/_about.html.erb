@@ -1,0 +1,56 @@
+<div class="text-center m-4">
+  <%= image_tag 'logo_small.png', class: 'logo' %>
+  <%= image_tag 'logo_small_dark.png', class: 'logo logo-dark' %>
+</div>
+
+<h5><i class="fa-regular fa-question-circle me-2"></i>What is Pirep?</h5>
+
+<p><%= t :site_description %></p>
+
+<h5><i class="fa-solid fa-filter me-2"></i>Using this site</h5>
+
+<p>Pirep uses tags to organize airports. <%= t :airport_tags %></p>
+
+<h5><i class="fa-solid fa-screwdriver-wrench me-2"></i>Why does Pirep exist?</h5>
+
+<figure class="border-start border-primary border-3 ps-2">
+  <blockquote class="blockquote fs-6">
+    <p>Pirep is my love letter to our aviation infrastructure. When I first started flying I had no idea about where to find transient parking, pilot lounges, or fuel pumps, if an airport had crew cars/bikes, or really any of the unpublished, local knowledge that only came from walking around an airport.</p>
+
+    <p>As I slowly expanded my personal knowledge base of information I realized how valuable it could be to others and how valuable their knowledge bases would be to me. I created Pirep for pilots to contribute to a shared source of the unpublished information about airports and to hopefully discover new destinations &amp; adventures.</p>
+  </blockquote>
+
+  <figcaption class="blockquote-footer">
+    Author &amp; maintainer of Pirep
+  </figcaption>
+</figure>
+
+<p><%= image_tag 'creative_commons_badge.png', class: 'creative-commons-badge img-fluid me-1' %><strong>Copyright notice:</strong> All user contributed content to Pirep is performed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a> license.</p>
+
+<hr>
+
+<p>
+  <%= image_tag 'agpl_logo.png', class: 'img-fluid ms-1 float-end w-25' %>
+  Pirep is free, open source software licensed under the AGPLv3.
+</p>
+
+<div class="text-center mb-3">
+  <p class="mb-1">Found a bug or have an idea for a new feature?</p>
+  <a class="btn btn-primary btn-lg" href="https://github.com/shanet/pirep"><i class="fa-solid fa-code"></i> Contribute on GitHub</a>
+</div>
+
+<p>Pirep would have been impossible to build without the following software projects:
+  <ul>
+    <li><a href="https://rubyonrails.org">Ruby on Rails</a></li>
+    <li><a href="https://gdal.org">GDAL</a></li>
+    <li><a href="https://www.openstreetmap.org">OpenStreetMap</a></li>
+    <li><a href="https://www.mapbox.com">Mapbox</a></li>
+    <li><a href="https://github.com/Ionaru/easy-markdown-editor">EasyMDE</a></li>
+    <li><a href="https://www.postgresql.org">PostgreSQL</a></li>
+    <li>And many more</li>
+  </ul>
+</p>
+
+<div class="text-end mt-2 mb-1">
+  <small class="text-body-secondary">Proudly made in Seattle&nbsp;<i class="fa-solid fa-umbrella"></i></small>
+</div>
