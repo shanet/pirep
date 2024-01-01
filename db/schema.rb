@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_19_044514) do
+ActiveRecord::Schema[7.1].define(version: 2023_12_29_073752) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -346,6 +346,27 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_19_044514) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  create_table "weather_reports", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.float "dewpoint"
+    t.float "temperature"
+    t.integer "visibility"
+    t.integer "wind_direction"
+    t.integer "wind_gusts"
+    t.integer "wind_speed"
+    t.jsonb "cloud_layers"
+    t.uuid "airport_id", null: false
+    t.string "flight_category"
+    t.string "raw"
+    t.string "type"
+    t.string "weather"
+    t.datetime "ends_at", precision: nil
+    t.datetime "observed_at", precision: nil
+    t.datetime "starts_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["airport_id"], name: "index_weather_reports_on_airport_id"
+  end
+
   create_table "webcams", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "airport_id", null: false
     t.string "url"
@@ -367,5 +388,6 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_19_044514) do
   add_foreign_key "remarks", "airports"
   add_foreign_key "runways", "airports"
   add_foreign_key "tags", "airports"
+  add_foreign_key "weather_reports", "airports"
   add_foreign_key "webcams", "airports"
 end

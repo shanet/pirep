@@ -105,4 +105,44 @@ class AirportsHelperTest < ActionView::TestCase
     event = create(:event, :recurring, recurring_cadence: :weekly, recurring_interval: 2)
     assert_equal 'Repeats every two weeks', recurring_event_to_s(event), 'Wrong recurring event label for recurring event'
   end
+
+  test 'weather icon' do
+    airport = create(:airport)
+
+    # First tries to find icon with weather category
+    airport.metar = create(:metar, airport: airport, weather: 'FZRA')
+    assert_equal 'fa-person-skating', weather_icon(airport)
+
+    # Then checks wind values
+    airport.metar = create(:metar, airport: airport, weather: nil, wind_gusts: 25)
+    assert_equal 'fa-wind', weather_icon(airport)
+
+    # Then flight category
+    airport.metar = create(:metar, airport: airport, weather: nil, flight_category: 'LIFR')
+    assert_equal 'fa-cloud', weather_icon(airport)
+
+    # Then time of day (night hours)
+    travel_to(Time.zone.now.in_time_zone(airport.timezone).change(hour: 20)) do
+      # Finally, clear sky or not
+      airport.metar = create(:metar, airport: airport, weather: nil, cloud_layers: [])
+      assert_equal 'fa-moon', weather_icon(airport)
+
+      airport.metar = create(:metar, airport: airport, weather: nil)
+      assert_equal 'fa-cloud-moon', weather_icon(airport)
+    end
+
+    # Daytime hours
+    travel_to(Time.zone.now.in_time_zone(airport.timezone).change(hour: 12)) do
+      airport.metar = create(:metar, airport: airport, weather: nil, cloud_layers: [])
+      assert_equal 'fa-sun', weather_icon(airport)
+
+      airport.metar = create(:metar, airport: airport, weather: nil)
+      assert_equal 'fa-cloud-sun', weather_icon(airport)
+    end
+  end
+
+  test 'cloud layers to_s' do
+    assert_equal 'Few @ 3,000ft, Overcast @ 5,000ft', cloud_layers_to_s(create(:metar)), 'Wrong cloud layers string'
+    assert_equal '', cloud_layers_to_s(create(:metar, cloud_layers: [])), 'Wrong cloud layers string for no clouds'
+  end
 end

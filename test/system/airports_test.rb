@@ -368,6 +368,26 @@ class AirportsTest < ApplicationSystemTestCase
     assert_no_selector 'button[data-bs-target="landing-rights-form"]'
   end
 
+  test 'show weather for airport with weather reports' do
+    visit airport_path(@airport.code)
+    assert_no_selector '.weather-reports'
+
+    create(:metar, airport: @airport)
+    visit airport_path(@airport.code)
+    assert_selector '.weather-reports'
+    assert_no_selector '#show-tafs'
+
+    create(:taf, airport: @airport)
+    visit airport_path(@airport.code)
+    assert_selector '#show-tafs'
+
+    click_button 'Show TAFs'
+    assert_selector '.taf'
+
+    click_button 'Hide TAFs'
+    assert_no_selector '.taf'
+  end
+
 private
 
   def assert_editor_has_text(label, property, text)

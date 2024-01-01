@@ -1,0 +1,31 @@
+<% return unless @airport.has_weather? %>
+
+<div class="weather-reports card mb-2">
+  <div class="card-header <%= weather_background_color(@airport.metar.flight_category) %>">
+    <i class="fa-solid <%= weather_icon(@airport) %>"></i> Current Weather &mdash; <span class="fw-bold"><%= @airport.metar.flight_category %></span>
+  </div>
+
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item p-2">
+      <div class="alert alert-danger mb-0 py-1 px-2">
+        <small><i class="fa-solid fa-triangle-exclamation me-1"></i>Weather data is strictly informational and <span class="fw-bold">not</span> for flight planning purposes.</small>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <%= render 'airports/weather/metar' %>
+    </li>
+
+    <% @airport.tafs.order(:starts_at).each do |taf| %>
+      <li class="list-group-item taf d-none">
+        <%= render 'airports/weather/taf', taf: taf %>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<% if @airport.tafs.any? %>
+  <div class="text-end mb-2">
+    <button id="show-tafs" class="btn btn-outline-primary btn-sm">Show TAFs</a></button>
+  </div>
+<% end %>
