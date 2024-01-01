@@ -94,6 +94,21 @@ $themes: (
   }
 }
 
+// Display dark logos when in dark mode
+img.logo.logo-dark {
+  display: none;
+}
+
+[data-bs-theme="dark"] { // stylelint-disable-line stylistic/string-quotes
+  img.logo {
+    display: none;
+
+    &.logo-dark {
+      display: inline;
+    }
+  }
+}
+
 .bg-lifr-subtle {
   background-color: $bg-lifr-subtle;
 }

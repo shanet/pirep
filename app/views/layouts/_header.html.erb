@@ -11,25 +11,32 @@
     <div id="navbar-nav" class="navbar-collapse collapsible collapsible-md">
       <ul class="navbar-nav me-auto">
         <% if is_manage %>
-          <li class="nav-item"><%= link_to 'Dashboard', manage_root_path, class: "nav-link #{active_path?(manage_root_path, exact: true)}" %></li>
-          <li class="nav-item"><%= link_to 'Activity', manage_activity_path, class: "nav-link #{active_path?(manage_activity_path)}" %></li>
-          <li class="nav-item"><%= link_to 'Airports', manage_airports_path, class: "nav-link #{active_path?(manage_airports_path)}" %></li>
-          <li class="nav-item"><%= link_to 'Comments', manage_comments_path, class: "nav-link #{active_path?(manage_comments_path)}" %></li>
-          <li class="nav-item"><%= link_to 'Users', manage_users_path, class: "nav-link #{active_path?(manage_users_path)}" %></li>
-          <li class="nav-item"><%= link_to 'Photos', manage_attachments_path, class: "nav-link #{active_path?(manage_attachments_path)}" %></li>
-          <li class="nav-item"><%= link_to 'Jobs', GoodJob::Engine.routes.url_helpers.root_path, class: 'nav-link' %></li>
+          <li class="nav-item"><%= link_to '<i class="fa-solid fa-gauge me-1"></i>Dashboard'.html_safe, manage_root_path, class: "nav-link #{active_path?(manage_root_path, exact: true)}" %></li>
+          <li class="nav-item"><%= link_to '<i class="fa-solid fa-chart-line me-1"></i>Activity'.html_safe, manage_activity_path, class: "nav-link #{active_path?(manage_activity_path)}" %></li>
+          <li class="nav-item"><%= link_to '<i class="fa-solid fa-plane-departure me-1"></i>Airports'.html_safe, manage_airports_path, class: "nav-link #{active_path?(manage_airports_path)}" %></li>
+          <li class="nav-item"><%= link_to '<i class="fa-solid fa-comments me-1"></i>Comments'.html_safe, manage_comments_path, class: "nav-link #{active_path?(manage_comments_path)}" %></li>
+          <li class="nav-item"><%= link_to '<i class="fa-solid fa-user me-1"></i>Users'.html_safe, manage_users_path, class: "nav-link #{active_path?(manage_users_path)}" %></li>
+          <li class="nav-item"><%= link_to '<i class="fa-solid fa-image me-1"></i>Photos'.html_safe, manage_attachments_path, class: "nav-link #{active_path?(manage_attachments_path)}" %></li>
+          <li class="nav-item"><%= link_to '<i class="fa-solid fa-gear me-1"></i>Jobs'.html_safe, GoodJob::Engine.routes.url_helpers.root_path, class: 'nav-link' %></li>
         <% else %>
-          <li class="nav-item"><%= link_to 'Account', user_path, class: "nav-link #{active_path?(user_path)}" %></li>
+          <% if user_signed_in? %>
+            <li class="nav-item"><%= link_to '<i class="fa-solid fa-user me-1"></i>Account'.html_safe, user_path, class: "nav-link #{active_path?(user_path)}" %></li>
+          <% end %>
 
           <% if Manage::DashboardPolicy.new(current_user, nil).index? %>
-            <li class="nav-item"><%= link_to 'Manage', manage_root_path, class: "nav-link #{active_path?(manage_root_path)}" %></li>
+            <li class="nav-item"><%= link_to '<i class="fa-solid fa-gear me-1"></i>Manage'.html_safe, manage_root_path, class: "nav-link #{active_path?(manage_root_path)}" %></li>
           <% end %>
         <% end %>
       </ul>
 
       <ul class="navbar-nav">
         <li class="nav-item">
-          <%= link_to '<i class="fa-solid fa-right-from-bracket"></i> Logout'.html_safe, destroy_user_session_path, method: :delete, class: 'nav-link' %>
+          <% if user_signed_in? %>
+            <%= link_to '<i class="fa-solid fa-right-from-bracket me-1"></i>Logout'.html_safe, destroy_user_session_path, method: :delete, class: 'nav-link' %>
+          <% else %>
+            <li class="nav-item"><%= link_to '<i class="fa-solid fa-circle-plus me-1"></i>Register'.html_safe, new_user_registration_path, class: 'nav-link' %></li>
+            <li class="nav-item"><%= link_to '<i class="fa-solid fa-right-from-bracket me-1"></i>Log In'.html_safe, new_user_session_path, class: 'nav-link' %></li>
+          <% end %>
         </li>
       </ul>
     </div>

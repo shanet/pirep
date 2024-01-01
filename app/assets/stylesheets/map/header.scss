@@ -11,19 +11,5 @@ $header-height: calc(1.5em + .75rem + 2px);
 
   img.logo {
     height: 45%;
-
-    &.logo-dark {
-      display: none;
-    }
-  }
-}
-
-[data-bs-theme="dark"] { // stylelint-disable-line stylistic/string-quotes
-  .navigation img.logo {
-    display: none;
-
-    &.logo-dark {
-      display: inline;
-    }
   }
 }

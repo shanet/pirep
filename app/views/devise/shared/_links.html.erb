@@ -6,7 +6,7 @@
   links = []
 
   if controller_name != 'sessions' && parent != :map
-    links << link_to('Log in', new_user_session_path)
+    links << link_to('Log In', new_user_session_path)
   end
 
   if Devise.mappings[:user].registerable? && controller_name != 'registrations' && parent != :map
