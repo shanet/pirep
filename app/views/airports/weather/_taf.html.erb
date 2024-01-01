@@ -1,0 +1,33 @@
+<div class="py-1 d-flex justify-content-between">
+  <div class="fw-bold">TAF</div>
+  <div><%= format_timestamp taf.starts_at, timezone: @airport.timezone %> &ndash; <%= format_timestamp taf.ends_at, timezone: @airport.timezone %></div>
+</div>
+
+<table class="table mt-2 mb-1">
+  <thead>
+    <tr>
+      <th class="fw-medium">Ceiling</th>
+      <th class="fw-medium">Wind</th>
+      <th class="fw-medium">Weather</th>
+      <th class="fw-medium">Visbility</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><%= taf.ceiling == WeatherReport::SKY_CLEAR ? 'Sky clear' : "#{number_with_delimiter taf.ceiling}ft" %></td>
+      <td><%= render 'airports/weather/winds', weather_report: taf %></td>
+      <td><%= WeatherReportParser.new(taf).weather_label&.capitalize.presence || 'N/A' %></td>
+      <td><%= taf.visibility %>SM</td>
+    </tr>
+
+    <% if taf.cloud_layers.filter {|cloud_layer| cloud_layer['coverage'] != 'CLR'}.any? %>
+      <tr>
+        <td colspan="6"><span class="fw-medium">Clouds:</span> <%= cloud_layers_to_s(taf) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <small>Raw: <code><%= taf.raw %></code></small>
+</div>

@@ -1,0 +1,13 @@
+<% if weather_report.wind_speed == 0 %>
+  Calm
+<% else %>
+  <% if weather_report.wind_direction == WeatherReport::WINDS_VARIABLE %>
+    Variable
+  <% else %>
+    <%= weather_report.wind_direction %>&deg; @ <%= weather_report.wind_speed %>kt
+  <% end %>
+
+  <% if weather_report.wind_gusts %>
+  , gusts <%= weather_report.wind_gusts %>
+  <% end %>
+<% end %>

@@ -12,8 +12,10 @@ class Airport < ApplicationRecord
   has_many :pageviews, as: :record, dependent: :destroy
   has_many :remarks, dependent: :destroy
   has_many :runways, dependent: :destroy
+  has_many :tafs, dependent: :destroy
   has_many :tags, dependent: :destroy
   has_many :webcams, dependent: :destroy
+  has_one :metar, dependent: :destroy
 
   belongs_to :featured_photo, class_name: 'ActiveStorage::Attachment', optional: true
   has_many_attached_with :contributed_photos, path: -> {"#{AIRPORT_PHOTOS_S3_PATH}/contributed/#{code.downcase}"}
@@ -296,6 +298,10 @@ class Airport < ApplicationRecord
 
   def authoritative?
     return data_source == 'faa'
+  end
+
+  def has_weather? # rubocop:disable Naming/PredicateName
+    return metar.present?
   end
 
   def has_bounding_box? # rubocop:disable Naming/PredicateName

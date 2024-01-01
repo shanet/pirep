@@ -30,5 +30,10 @@ Rails.configuration.good_job = {
       cron: '0 6 * * *', # Every day
       class: 'RackAttackCacheCleanerJob',
     },
+
+    weather_report_update: {
+      cron: '2 * * * *', # Every hour
+      class: 'WeatherReportUpdaterJob',
+    },
   },
 }

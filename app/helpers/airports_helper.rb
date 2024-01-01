@@ -159,4 +159,47 @@ module AirportsHelper
 
     return string
   end
+
+  def weather_icon(airport)
+    icon = {
+      rain: 'fa-cloud-showers-heavy',
+      snow: 'fa-snowflake',
+      fog: 'fa-cloud',
+      wind: 'fa-wind',
+      freezing: 'fa-person-skating',
+      thunderstorm: 'fa-cloud-bolt',
+      smoke: 'fa-smog',
+      tornado: 'fa-tornado',
+      volcano: 'fa-volcano',
+    }[WeatherReportParser.new(airport.metar).weather_category]
+    return icon if icon
+
+    return 'fa-wind' if airport.metar.wind_speed >= 20 || airport.metar.wind_gusts&.send(:>=, 20) # kt
+
+    return 'fa-cloud' if airport.metar.ifr? || airport.metar.mvfr?
+
+    # When no other category is determined fallback to a generic sun & clouds icon. Show a moon if it's nighttime though.
+    time = Time.zone.now.in_time_zone(airport.timezone)
+
+    unless time.dst? ? time.hour.between?(8, 18) : time.hour.between?(7, 19)
+      return (airport.metar.ceiling == Metar::SKY_CLEAR ? 'fa-moon' : 'fa-cloud-moon')
+    end
+
+    return (airport.metar.ceiling == Metar::SKY_CLEAR ? 'fa-sun' : 'fa-cloud-sun')
+  end
+
+  def weather_background_color(flight_category)
+    return {
+      'VFR' => 'bg-success-subtle',
+      'MVFR' => 'bg-info-subtle',
+      'IFR' => 'bg-danger-subtle',
+      'LIFR' => 'bg-lifr-subtle',
+    }[flight_category] || nil
+  end
+
+  def cloud_layers_to_s(weather_report)
+    return weather_report.cloud_layers.map do |cloud_layer|
+      next "#{Metar::CLOUD_COVERAGE[cloud_layer['coverage']]} @ #{number_with_delimiter cloud_layer['altitude']}ft"
+    end.join(', ')
+  end
 end

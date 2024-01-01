@@ -1,6 +1,7 @@
 module Exceptions
   class AirportDatabaseDownloadFailed < StandardError; end
   class AopaEventsFetchFailed < StandardError; end
+  class AviationWeatherDownloadFailed < StandardError; end
   class ChartDownloadFailed < StandardError; end
   class ChartTilesGenerationFailed < StandardError; end
   class ChartUploadFailed < StandardError; end

@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTagDeleteIcons();
   initTagScrollTargets();
   initShowMoreWebcams();
+  initTafs();
   initExtraRemarks();
   initMapBackButton();
   initCoverImageForm();
@@ -65,6 +66,28 @@ function initShowMoreWebcams() {
   });
 }
 
+function initTafs() {
+  const showTafs = document.getElementById('show-tafs');
+  const tafs = document.querySelectorAll('.taf');
+
+  if(!showTafs) return;
+
+  showTafs.addEventListener('click', () => {
+    // Update the button text accordingly
+    showTafs.innerText = (tafs[0].classList.contains('d-none') ? 'Hide TAFs' : 'Show TAFs');
+
+    // Show/hide the TAFs
+    tafs.forEach((taf) => {
+      taf.classList.toggle('d-none');
+    });
+
+    // Go back to the top of the weather report list when hiding the TAFs
+    if(tafs[0].classList.contains('d-none')) {
+      document.querySelector('.weather-reports').scrollIntoView({behavior: 'smooth'});
+    }
+  });
+}
+
 function initExtraRemarks() {
   const showExtraRemarks = document.getElementById('show-extra-remarks');
   const extraRemarks = document.querySelectorAll('.extra-remark');
@@ -76,9 +99,9 @@ function initExtraRemarks() {
     showExtraRemarks.innerText = (extraRemarks[0].classList.contains('hidden') ? 'Show Less' : 'Show More');
 
     // Show/hide the extra remarks
-    for(let i=0; i<extraRemarks.length; i++) {
-      extraRemarks[i].classList.toggle('hidden');
-    }
+    extraRemarks.forEach((remark) => {
+      remark.classList.toggle('hidden');
+    });
   });
 }
 
