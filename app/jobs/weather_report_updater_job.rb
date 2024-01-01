@@ -1,5 +1,5 @@
 class WeatherReportUpdaterJob < ApplicationJob
   def perform
-    AviationWeatherUpdater.new.import!
+    WeatherReportUpdater.new.update!
   end
 end
