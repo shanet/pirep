@@ -14,10 +14,10 @@ Rails.configuration.good_job = {
       class: 'AirportGeojsonDumperJob',
     },
 
-    # events_importer_job: {
-    #   cron: '0 7 * * *', # Every day
-    #   class: 'EventsImporterJob',
-    # },
+    events_importer_job: {
+      cron: '0 7 * * *', # Every day
+      class: 'EventsImporterJob',
+    },
 
     # Maxmind update (https://support.maxmind.com/hc/en-us/articles/4408216129947-Download-and-Update-Databases)
     maxmind_database_update: {
