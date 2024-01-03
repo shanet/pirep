@@ -40,7 +40,7 @@
       <li class="list-group-item"><strong>Facility type:</strong> <%= Airport::FACILITY_TYPES[@airport.facility_type.to_sym][:label].singularize %></li>
       <li class="list-group-item"><strong>Landing rights:</strong> <%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights.to_sym][:short_description] %></li>
       <li class="list-group-item"><strong>Coordinates:</strong> <%= @airport.latitude.round(7) %>, <%= @airport.longitude.round(7) %></li>
-      <li class="list-group-item"><strong>Location:</strong> <%= @airport.city&.titleize %>, <%= @airport.state %></li>
+      <% if @airport.city && @airport.state %><li class="list-group-item"><strong>Location:</strong> <%= @airport.city.titleize %>, <%= @airport.state %></li><% end %>
       <li class="list-group-item"><strong>Timezone:</strong> <%= @airport.timezone || 'Unknown' %></li>
       <li class="list-group-item"><strong>Elevation:</strong> <%= @airport.elevation %>ft</li>
       <li class="list-group-item"><strong>Locked:</strong> <i class="fa-solid fa-<%= @airport.locked_at ? 'square-check' : 'square-xmark' %>"></i></li>

@@ -268,6 +268,16 @@ class AirportTest < ActiveSupport::TestCase
     assert_not create(:airport, facility_type: 'heliport').has_bounding_box?, 'Heliport uses bounding box'
   end
 
+  test 'has weather' do
+    assert_not @airport.has_weather?, 'Airport without METAR has weather'
+
+    create(:metar, airport: @airport)
+    assert @airport.reload.has_weather?, 'Airport with METAR does not have weather'
+
+    @airport.metar.update!(created_at: 1.day.ago)
+    assert_not @airport.reload.has_weather?, 'Airport with stale METAR has weather'
+  end
+
   test 'converts fuel types to array' do
     @airport.fuel_types = 'A , MOGAS'
     assert_equal ['A', 'MOGAS'], @airport.fuel_types, 'Fuel types string not conver to array and stripped of whitespace'

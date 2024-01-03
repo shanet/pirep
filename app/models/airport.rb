@@ -301,7 +301,8 @@ class Airport < ApplicationRecord
   end
 
   def has_weather? # rubocop:disable Naming/PredicateName
-    return metar.present?
+    # Don't show weather if it's outdated for some reason
+    return metar.present? && metar.created_at > 2.hours.ago
   end
 
   def has_bounding_box? # rubocop:disable Naming/PredicateName

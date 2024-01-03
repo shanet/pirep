@@ -17,6 +17,9 @@ class WeatherReport < ApplicationRecord
 
   validates :raw, presence: true
 
+  after_create :add_airport_tag
+  after_destroy :remove_airport_tag
+
   def ceiling
     return SKY_CLEAR if cloud_layers.empty? || cloud_layers.first['coverage'] == 'CLR'
 
@@ -26,6 +29,20 @@ class WeatherReport < ApplicationRecord
   end
 
 private
+
+  def add_airport_tag
+    # Don't add another tag if one already exists
+    return if airport.tags.where(name: :weather_report).any?
+
+    airport.tags << Tag.new(name: :weather_report)
+  end
+
+  def remove_airport_tag
+    # Only remove the tag when the airport has no METAR or TAFs
+    return if airport.metar || airport.tafs.any?
+
+    airport.tags.where(name: :weather_report).destroy_all
+  end
 
   def celsius_to_fahrenheit(value)
     return nil unless value

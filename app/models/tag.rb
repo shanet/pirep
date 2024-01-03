@@ -115,6 +115,17 @@ class Tag < ApplicationRecord
       addable: true,
       scroll_target: 'flying-clubs',
     },
+    weather_report: {
+      label: 'METAR / TAF',
+      icon: 'cloud-sun',
+      theme: 'lime',
+    },
+    webcam: {
+      label: 'Webcam',
+      icon: 'camera',
+      theme: 'purple',
+      scroll_target: 'webcams',
+    },
     airpark: {
       label: 'Airpark',
       icon: 'home',
@@ -125,12 +136,6 @@ class Tag < ApplicationRecord
       label: 'Closed',
       icon: 'times-circle',
       theme: 'brown',
-    },
-    webcam: {
-      label: 'Webcam',
-      icon: 'camera',
-      theme: 'purple',
-      scroll_target: 'webcams',
     },
   }
 

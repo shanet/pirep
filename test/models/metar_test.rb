@@ -37,4 +37,22 @@ class MetarTest < ActiveSupport::TestCase
     assert_equal WeatherReport::SKY_CLEAR, create(:metar, cloud_layers: [{coverage: 'FEW', altitude: 2000}]).ceiling, 'Found \'few\' cloud layer as ceiling'
     assert_equal WeatherReport::SKY_CLEAR, create(:metar, cloud_layers: []).ceiling, 'Found ceiling with no cloud layers'
   end
+
+  test 'adds tag to airport on create' do
+    assert_difference('Tag.where(name: :weather_report).count', 1) do
+      metar = create(:metar)
+      assert metar.airport.tags.find_by(name: :weather_report), 'METAR airport does not have weather report tag'
+    end
+  end
+
+  test 'removes tag from airport on destroy' do
+    airport = create(:airport)
+    metar = create(:metar, airport: airport)
+    taf = create(:taf, airport: airport)
+
+    assert_difference('Tag.count', 0) {metar.destroy!}
+    assert_difference('Tag.count', -1) {taf.destroy!}
+
+    assert_nil metar.airport.tags.find_by(name: :weather_report), 'Airport did not have weather report tag removed'
+  end
 end
