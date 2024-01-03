@@ -32,7 +32,7 @@ Rails.configuration.good_job = {
     },
 
     weather_report_update: {
-      cron: '2 * * * *', # Every hour
+      cron: '31 * * * *', # Every hour (right after most METARs are updated)
       class: 'WeatherReportUpdaterJob',
     },
   },
