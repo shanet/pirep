@@ -15,7 +15,9 @@
     </div>
   <% end %>
 
-  <div class="alert alert-primary mb-3">
-    <i class="fa-solid fa-pencil me-1"></i>Are you familiar with this airport? Help out other pilots by adding your local knowledge<% if defined?(show_link) %> on its <%= link_to 'airport page', airport_path(@airport.code) %><% end %>.
-  </div>
+  <% if @airport.empty? %>
+    <div class="alert alert-primary mb-3">
+      <i class="fa-solid fa-pencil me-1"></i>Are you familiar with this airport? Help out other pilots by adding your local knowledge<% if defined?(show_link) %> on its <%= link_to 'airport page', airport_path(@airport.code) %><% end %>.
+    </div>
+  <% end %>
 <% end %>
