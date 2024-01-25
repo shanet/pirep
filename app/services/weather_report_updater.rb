@@ -105,7 +105,7 @@ private
       altitude = node.at_xpath('vert_vis_ft')&.text&.to_i if coverage == 'OVX'
 
       next {coverage: coverage, altitude: altitude}
-    end.sort_by {|cloud_layer| cloud_layer[:altitude]} # rubocop:disable Style/MultilineBlockChain
+    end.sort_by {|cloud_layer| cloud_layer[:altitude] || (2**32)} # Default to a max integer value for clear skies # rubocop:disable Style/MultilineBlockChain
   end
 
   def extract_winds(node)
