@@ -174,7 +174,7 @@ module AirportsHelper
     }[WeatherReportParser.new(airport.metar).weather_category]
     return icon if icon
 
-    return 'fa-wind' if airport.metar.wind_speed >= 20 || airport.metar.wind_gusts&.send(:>=, 20) # kt
+    return 'fa-wind' if airport.metar.wind_speed&.send(:>=, 20) || airport.metar.wind_gusts&.send(:>=, 20) # kt
 
     return 'fa-cloud' if airport.metar.ifr? || airport.metar.mvfr?
 

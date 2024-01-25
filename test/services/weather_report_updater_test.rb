@@ -50,7 +50,7 @@ class WeatherReportUpdaterTest < ActiveSupport::TestCase
     assert_nil @airport_kpae.tafs.first.wind_gusts, 'Wind gusts populated in KPAE TAF'
 
     assert_equal [{'coverage' => 'OVX', 'altitude' => 200}], @airport_kawo.metar.cloud_layers, 'Cloud layers not parsed correctly for KAWO METAR'
-    assert_equal [{'coverage' => 'CLR', 'altitude' => nil}], @airport_kfhr.metar.cloud_layers, 'Cloud layers not parsed correctly for KFHR METAR'
+    assert_equal [{'coverage' => 'SCT', 'altitude' => 2000}, {'coverage' => 'CLR', 'altitude' => nil}], @airport_kfhr.metar.cloud_layers, 'Cloud layers not parsed correctly for KFHR METAR'
     assert_equal 15, @airport_kawo.metar.wind_gusts, 'Wrong wind gusts in KAWO METAR'
   end
 end
