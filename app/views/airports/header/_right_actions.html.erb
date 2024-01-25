@@ -1,13 +1,13 @@
 <% unless hide_cover_image_dropdown %>
-  <div class="cover-image-dropdown">
+  <div class="cover-image-dropdown dropdown">
     <button class="dropdown-toggle btn btn-sm btn-outline-<%= color %>" type="button"><i class="fa-solid fa-brush me-1"></i>Theme</button>
 
-    <ul class="dropdown-menu d-none list-group p-0">
+    <ul class="dropdown-menu">
       <% Airport::COVER_IMAGES.each do |cover_image, label| %>
         <% active = @airport.cover_image == cover_image.to_s %>
 
-        <li class="list-group-item list-group-item-action <%= active ? 'active' : '' %>" tabindex="0" data-cover-image="<%= cover_image %>">
-          <a href="#" class="text-decoration-none <%= active ? 'text-light' : 'text-dark' %>">
+        <li tabindex="0" data-cover-image="<%= cover_image %>">
+          <a href="#" class="dropdown-item <%= active ? 'active' : '' %>">
             <%= label %><% if active %><i class="fa-solid fa-check ms-1"></i><% end %>
           </a>
         </li>

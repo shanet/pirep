@@ -37,9 +37,10 @@
   }
 }
 
-.cover-image-dropdown {
-  .dropdown-menu li:hover {
-    cursor: pointer;
+@include color-mode(dark) {
+  .actions .btn {
+    border-color: $light;
+    color: $light;
   }
 }
 
