@@ -135,7 +135,7 @@ function initCoverImageForm() {
     const toggleButton = dropdown.querySelector('.dropdown-toggle');
 
     toggleButton.addEventListener('click', () => {
-      dropdown.querySelector('.dropdown-menu').classList.toggle('d-none');
+      dropdown.querySelector('.dropdown-menu').classList.toggle('d-block');
     });
 
     const options = dropdown.querySelectorAll('.dropdown-menu li');
@@ -154,7 +154,7 @@ function initCoverImageForm() {
       if(Array.from(options).indexOf(event.relatedTarget) !== -1) return;
       if(Array.from(options).indexOf(event.relatedTarget?.parentNode) !== -1) return;
 
-      dropdown.querySelector('.dropdown-menu').classList.toggle('d-none');
+      dropdown.querySelector('.dropdown-menu').classList.toggle('d-block');
     });
   }
 }
