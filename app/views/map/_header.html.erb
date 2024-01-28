@@ -50,7 +50,10 @@
       <% if user_signed_in? && current_user.admin? %>
         <li class="list-group-item p-3"><%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_root_path %></li>
       <% else %>
-        <li class="list-group-item p-3"><%= image_tag 'logo_small.png' %></li>
+        <li class="list-group-item p-3">
+          <%= image_tag 'logo_small.png', class: 'logo' %>
+          <%= image_tag('logo_small_dark.png', class: 'logo logo-dark') %>
+        </li>
       <% end %>
 
       <% if user_signed_in? %>
