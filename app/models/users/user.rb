@@ -17,7 +17,7 @@ class Users::User < ApplicationRecord
   searchable({column: :last_sign_in_ip})
 
   def first_name
-    return name&.split(' ')&.first
+    return name&.split&.first
   end
 
   def admin?

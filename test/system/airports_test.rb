@@ -84,7 +84,7 @@ class AirportsTest < ApplicationSystemTestCase
     tags.first.click
     tags.last.click
 
-    click_button 'Add Tags'
+    click_link_or_button 'Add Tags'
 
     # There should now be six tags plus the "edit tags" button
     assert_equal 6, all('.tag-square').count, 'Tags not added'
@@ -121,10 +121,10 @@ class AirportsTest < ApplicationSystemTestCase
     visit airport_path(@airport.code)
     contact = 'Call 867-5309 for info'
 
-    click_button 'Edit Airport Access'
+    click_link_or_button 'Edit Airport Access'
     find('#airport_landing_rights_restricted + label').click
     fill_in 'Requirements/contact info for landing:', with: contact
-    click_button 'Update Airport Access'
+    click_link_or_button 'Update Airport Access'
 
     # Kind of messy, but check that the page has the expected landing rights text on it now
     landing_rights = find('.landing-rights').text
@@ -237,9 +237,9 @@ class AirportsTest < ApplicationSystemTestCase
     visit airport_path(@airport.code)
 
     assert_difference -> {all('.carousel[data-uncached-photos-loaded="true"] img', visible: false).count} do
-      click_button 'Add Photo'
+      click_link_or_button 'Add Photo'
       find('#upload-photo-form input[type="file"]').set(Rails.root.join('test/fixtures/files/image.png'))
-      click_button 'Upload Photo'
+      click_link_or_button 'Upload Photo'
     end
   end
 
@@ -273,7 +273,7 @@ class AirportsTest < ApplicationSystemTestCase
 
   test 'add webcam' do
     visit airport_path(@airport.code)
-    click_button 'Add Webcam'
+    click_link_or_button 'Add Webcam'
 
     url = 'example.com/image.jpg'
     find_by_id('webcam_url').fill_in with: url
@@ -287,28 +287,28 @@ class AirportsTest < ApplicationSystemTestCase
     comment = 'I am a comment'
 
     find_by_id('comment_body').fill_in with: comment
-    click_button 'Add Comment'
+    click_link_or_button 'Add Comment'
 
     assert_equal comment, all('.comment p').last.text, 'New comment not on page'
   end
 
   test 'helpful comment' do
     visit airport_path(@airport.code)
-    click_button 'Helpful'
+    click_link_or_button 'Helpful'
     assert_selector '.helpful-count'
   end
 
   test 'flag comment as outdated' do
     visit airport_path(@airport.code)
-    click_button 'Flag as outdated'
+    click_link_or_button 'Flag as outdated'
     assert_selector '.alert.outdated-at'
   end
 
   test 'changes cover image' do
     visit airport_path(@airport.code)
 
-    click_button 'Theme'
-    click_link 'Forest'
+    click_link_or_button 'Theme'
+    click_link_or_button 'Forest'
 
     assert_selector '.airport-header-cover-image.cover-image-forest'
     assert_equal 'forest', @airport.reload.cover_image, 'Cover image not updated on airport'
@@ -333,7 +333,7 @@ class AirportsTest < ApplicationSystemTestCase
 
   test 'adds static event' do
     visit airport_path(@airport.code)
-    click_button 'Add Event'
+    click_link_or_button 'Add Event'
 
     fill_in 'event_name', with: 'Foobar'
     fill_in 'event_start_date', with: 1.week.from_now
@@ -346,7 +346,7 @@ class AirportsTest < ApplicationSystemTestCase
 
   test 'adds recurring event' do
     visit airport_path(@airport.code)
-    click_button 'Add Event'
+    click_link_or_button 'Add Event'
 
     fill_in 'event_name', with: 'Foobar'
     fill_in 'event_start_date', with: Time.zone.now
@@ -381,10 +381,10 @@ class AirportsTest < ApplicationSystemTestCase
     visit airport_path(@airport.code)
     assert_selector '#show-tafs'
 
-    click_button 'Show TAFs'
+    click_link_or_button 'Show TAFs'
     assert_selector '.taf'
 
-    click_button 'Hide TAFs'
+    click_link_or_button 'Hide TAFs'
     assert_no_selector '.taf'
   end
 

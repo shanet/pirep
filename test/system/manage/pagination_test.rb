@@ -32,7 +32,7 @@ class Manage::PaginationTest < ApplicationSystemTestCase
     assert_selector '.pagination .page-item:nth-child(2) .page-link.active'
 
     within('.pagination') do
-      click_link '2'
+      click_link_or_button '2'
     end
 
     # The second page link should now be active
@@ -42,28 +42,28 @@ class Manage::PaginationTest < ApplicationSystemTestCase
     assert_selector '.pagination .page-item:first-child .page-link'
 
     within('.pagination') do
-      click_link '3'
+      click_link_or_button '3'
     end
 
     # The third page link should now be active
     assert_selector '.pagination .page-item:nth-child(4) .page-link.active'
 
     within('.pagination') do
-      click_link '4'
+      click_link_or_button '4'
     end
 
     # The third page link should still be active as there are more than five pages and this is the center
     assert_selector '.pagination .page-item:nth-child(4) .page-link.active'
 
     within('.pagination') do
-      click_link '5'
+      click_link_or_button '5'
     end
 
     # The fourth page link should still be active as there are less than three pages left before the last page
     assert_selector '.pagination .page-item:nth-child(5) .page-link.active'
 
     within('.pagination') do
-      click_link 'Last'
+      click_link_or_button 'Last'
     end
 
     # The last page link should be active now

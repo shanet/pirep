@@ -55,7 +55,7 @@ class MapTest < ApplicationSystemTestCase
 
     within('#drawer-content') do
       assert_selector '.EasyMDEContainer', count: 1
-      click_button 'Zoom In'
+      click_link_or_button 'Zoom In'
     end
 
     # Close and re-open the drawer
@@ -65,7 +65,7 @@ class MapTest < ApplicationSystemTestCase
     # Upon the re-opening the drawer, there should still be one description field and the zoom button label was not changed
     within('#drawer-content') do
       assert_selector '.EasyMDEContainer', count: 1
-      click_button 'Zoom Out'
+      click_link_or_button 'Zoom Out'
     end
   end
 
@@ -227,7 +227,7 @@ class MapTest < ApplicationSystemTestCase
     open_airport(@airport)
 
     # Zoom into the airport then switch back to chart view to confirm that the terminal area chart is shown when zoomed in sufficiently
-    click_button 'Zoom In'
+    click_link_or_button 'Zoom In'
     find_by_id('layer-switcher').click
     assert chart_layer_shown?(:terminal), 'Terminal area chart not shown when zoomed in'
   end
@@ -240,22 +240,22 @@ class MapTest < ApplicationSystemTestCase
     open_airport(@airport)
 
     # Zoom in on the airport and then check that we're now zoomed in
-    click_button 'Zoom In'
+    click_link_or_button 'Zoom In'
     assert_not_equal default_zoom_level, map_zoom_level, 'Map did not zoom in on airport'
 
     # Zooming in should switch to satellite view
     assert 'layer=satellite'.in?(URI.parse(current_url).query), 'Layer URL parameter not set'
 
-    click_button 'Zoom Out'
+    click_link_or_button 'Zoom Out'
 
     assert_equal default_zoom_level, map_zoom_level, 'Map did not zoom back out from airport'
     assert_not 'layer=satellite'.in?(URI.parse(current_url).query), 'Layer URL parameter not removed'
 
     # Zooming in when satellite view is set should return to satellite view
     find_by_id('layer-switcher').click
-    click_button 'Zoom In'
+    click_link_or_button 'Zoom In'
     assert 'layer=satellite'.in?(URI.parse(current_url).query), 'Layer URL parameter not set'
-    click_button 'Zoom Out'
+    click_link_or_button 'Zoom Out'
     assert 'layer=satellite'.in?(URI.parse(current_url).query), 'Layer URL parameter incorrectly removed'
   end
 
@@ -268,7 +268,7 @@ class MapTest < ApplicationSystemTestCase
     open_airport(@airport)
 
     within('.airport-drawer-header') do
-      click_button 'Zoom In'
+      click_link_or_button 'Zoom In'
 
       # Wait for the zoom level in the URL to be updated or the map won't return to the zoom level when returning to the page
       # Capybara's synchronize method will keep re-running while an exception is raised. Since there's nothing to key off
@@ -279,7 +279,7 @@ class MapTest < ApplicationSystemTestCase
         raise Capybara::ElementNotFound if (url_zoom_level - default_zoom_level).abs < 0.1
       end
 
-      click_link 'More'
+      click_link_or_button 'More'
     end
 
     assert_equal airport_path(@airport.code), URI.parse(current_url).path, 'Did not navigate to airport show page'
@@ -345,7 +345,7 @@ class MapTest < ApplicationSystemTestCase
       find('#airport_landing_rights_restricted + label').click
       find_by_id('airport_landing_requirements').fill_in(with: 'Call 867-5309')
 
-      click_button 'Submit'
+      click_link_or_button 'Submit'
     end
 
     assert_selector '.alert', text: 'New airport added to map'
@@ -362,7 +362,7 @@ class MapTest < ApplicationSystemTestCase
     assert_no_selector '.annotation'
 
     open_airport(@airport)
-    click_button 'Zoom In'
+    click_link_or_button 'Zoom In'
     assert_selector '.annotation', count: @airport.annotations.count
 
     # Clicking on an annotation label should not enter editing mode
@@ -370,7 +370,7 @@ class MapTest < ApplicationSystemTestCase
     assert_no_selector '.annotation.editing'
 
     # Zooming out should remove the annotations
-    click_button 'Zoom Out'
+    click_link_or_button 'Zoom Out'
     assert_no_selector '.annotation'
   end
 

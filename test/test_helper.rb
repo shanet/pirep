@@ -66,7 +66,7 @@ class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def sign_in(user)
-    super (user.is_a?(Users::User) ? user : create(user)) # rubocop:disable Rails/SaveBang
+    super((user.is_a?(Users::User) ? user : create(user))) # rubocop:disable Rails/SaveBang
   end
 end
 
@@ -77,7 +77,7 @@ class ActionDispatch::SystemTestCase
     case controller
       when :map
         visit root_path
-        click_link 'Log In'
+        click_link_or_button 'Log In'
       when :sessions
         visit new_user_session_path
       else
@@ -86,7 +86,7 @@ class ActionDispatch::SystemTestCase
 
     fill_in 'user_email', with: user.email
     fill_in 'user_password', with: user.password
-    click_button 'Log in'
+    click_link_or_button 'Log in'
 
     # If an admin check that we're on the manage dashboard
     if user.is_a? Users::Admin

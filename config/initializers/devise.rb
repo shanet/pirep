@@ -53,7 +53,7 @@ Devise.setup do |config|
   # a value less than 10 in other environments. Note that, for bcrypt (the default
   # algorithm), the cost increases exponentially with the number of stretches (e.g.
   # a value of 20 is already extremely slow: approx. 60 seconds for 1 calculation).
-  config.stretches = (Rails.env.development? || Rails.env.test? ? 1 : 14)
+  config.stretches = (Rails.env.local? ? 1 : 14)
 
   # Set up a pepper to generate the hashed password.
   config.pepper = Rails.application.credentials.devise_pepper
@@ -105,7 +105,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :validatable
   # Range for password length.
-  config.password_length = (Rails.env.development? || Rails.env.test? ? 1..128 : 10..128)
+  config.password_length = (Rails.env.local? ? 1..128 : 10..128)
 
   # Email regex used to validate email formats. It simply asserts that
   # one (and only one) @ exists in the given string. This is mainly

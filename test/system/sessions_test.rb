@@ -6,18 +6,18 @@ class SessionsTest < ApplicationSystemTestCase
     test "logs in and logs out #{user} via map controller" do
       sign_in user
 
-      click_link 'Logout'
+      click_link_or_button 'Logout'
       assert_selector '.map-header', text: 'Log In'
     end
   end
 
   test 'handle log in failure via map controller' do
     visit root_path
-    click_link 'Log In'
+    click_link_or_button 'Log In'
 
     fill_in 'user_email', with: 'fake@example.com'
     fill_in 'user_password', with: 'hunter2'
-    click_button 'Log in'
+    click_link_or_button 'Log in'
 
     # The login drawer should still be open
     assert_selector '#login-tabs'
@@ -37,7 +37,7 @@ class SessionsTest < ApplicationSystemTestCase
 
     fill_in 'user_email', with: 'fake@example.com'
     fill_in 'user_password', with: 'hunter2'
-    click_button 'Log in'
+    click_link_or_button 'Log in'
 
     # An error message should be shown
     assert_selector '.alert', text: 'Invalid Email or password.'

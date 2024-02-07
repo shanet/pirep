@@ -3,7 +3,7 @@ require_relative 'aopa_api_stubs'
 
 module AopaApi
   def self.client
-    if Rails.env.development? || Rails.env.test?
+    if Rails.env.local?
       AopaApiStubs.stub_requests(Service::API_HOST)
     end
 

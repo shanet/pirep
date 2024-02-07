@@ -38,7 +38,7 @@ private
     elements.each do |element|
       next unless element[:type] == 'node'
 
-      ways.each do |_id, way|
+      ways.each_value do |way|
         way[:nodes] << element if way[:node_ids].include?(element[:id])
       end
     end
@@ -47,7 +47,7 @@ private
   def calculate_bounding_box(ways)
     bounding_box = empty_bounding_box
 
-    ways.each do |_id, way|
+    ways.each_value do |way|
       way[:nodes].each do |node|
         bounding_box[:southwest][:latitude] = [bounding_box[:southwest][:latitude] || node[:lat], node[:lat]].min
         bounding_box[:southwest][:longitude] = [bounding_box[:southwest][:longitude] || node[:lon], node[:lon]].min

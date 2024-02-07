@@ -169,7 +169,7 @@ private
   def create_actions
     # Create an action for each added tag
     if airport_params[:tags_attributes] # rubocop:disable Style/SafeNavigation
-      airport_params[:tags_attributes].each do |_key, tag|
+      airport_params[:tags_attributes].each_value do |tag|
         tag_record = @airport.tags.find_by(name: tag[:name])
         Action.create!(type: :tag_added, actionable: tag_record, user: active_user, version: tag_record.versions.last)
       end
@@ -194,7 +194,7 @@ private
 
     # For each field that was edited, check if there was a conflicting update to it made between when the page was rendered and the update request.
     # The existance of the column name in any version's changed columns after the given timestamp is sufficient to establish a conflict.
-    edited_fields.each do |column, _value|
+    edited_fields.each_key do |column|
       return true if airport.versions.where('created_at > ?', timestamp).where('object_changes ? :column', column: column).any?
     end
 

@@ -15,7 +15,7 @@ class EventsTest < ApplicationSystemTestCase
     assert_equal ['day_29', 'week_5', 'week_-1'], all('#event_recurring_week_of_month > option').map(&:value)
 
     fill_in 'Description', with: 'Lorem ipsum'
-    click_button 'Submit'
+    click_link_or_button 'Submit'
 
     assert find_by_id('events').text.include?('Lorem ipsum'), 'Event not edited'
   end
@@ -25,7 +25,7 @@ class EventsTest < ApplicationSystemTestCase
 
     assert_difference('Event.count', -1) do
       accept_alert do
-        click_button 'Delete'
+        click_link_or_button 'Delete'
       end
 
       page.assert_text('No upcoming events.')

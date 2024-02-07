@@ -34,8 +34,8 @@ private
 
   def register_user_map_controller(passwords_match: true)
     visit root_path
-    click_link 'Log In'
-    click_link 'Register'
+    click_link_or_button 'Log In'
+    click_link_or_button 'Register'
 
     submit_registration_form(passwords_match: passwords_match)
   end
@@ -44,7 +44,7 @@ private
     fill_in 'registration-email', with: 'new_user@example.com'
     fill_in 'registration-password', with: 'password'
     fill_in 'Password confirmation', with: (passwords_match ? 'password' : 'different')
-    click_button 'Sign up'
+    click_link_or_button 'Sign up'
   end
 
   def assert_registration_success

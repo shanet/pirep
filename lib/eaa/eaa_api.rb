@@ -3,7 +3,7 @@ require_relative 'eaa_api_stubs'
 
 module EaaApi
   def self.client
-    if Rails.env.development? || Rails.env.test?
+    if Rails.env.local?
       EaaApiStubs.stub_requests(Service::API_HOST)
     end
 

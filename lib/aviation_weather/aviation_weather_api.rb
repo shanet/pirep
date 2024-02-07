@@ -3,7 +3,7 @@ require_relative 'aviation_weather_api_stubs'
 
 module AviationWeatherApi
   def self.client
-    if Rails.env.development? || Rails.env.test?
+    if Rails.env.local?
       AviationWeatherApiStubs.stub_requests
     end
 

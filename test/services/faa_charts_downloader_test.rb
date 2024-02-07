@@ -5,7 +5,7 @@ class FaaChartsDownloaderTest < ActiveSupport::TestCase
     output_directory = FaaChartsDownloader.new.download_and_convert(:test)
 
     # Assert that tiles were generated for each zoom level
-    (0..11).each do |zoom_level| # rubocop:disable Style/EachForSimpleLoop
+    (0..11).each do |zoom_level|
       assert File.exist?(File.join(output_directory, zoom_level.to_s)), "Missing tiles for zoom level #{zoom_level}"
     end
   end

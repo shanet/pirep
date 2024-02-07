@@ -101,7 +101,7 @@ def rollback!(deployments)
   answer = CLI::UI.ask('Rollback all services?', options: ['Yes', 'No'])
   return unless answer == 'Yes'
 
-  deployments.each do |_deployment_group, deployment_info|
+  deployments.each_value do |deployment_info|
     response = codedeploy_client.stop_deployment(deployment_id: deployment_info[:deployment_id], auto_rollback_enabled: true)
     log("Rollback status for deployment #{deployment_info[:deployment_id]}: #{response.status}")
   end
@@ -114,7 +114,7 @@ def abort_deployment!(pipeline_name, codepipeline_execution_id, codedeploy_deplo
     log 'Pipeline execution not found, skipping abort'
   end
 
-  codedeploy_deployments.each do |_deployment_group, deployment_info|
+  codedeploy_deployments.each_value do |deployment_info|
     codedeploy_client.stop_deployment(deployment_id: deployment_info[:deployment_id], auto_rollback_enabled: false)
   end
 end

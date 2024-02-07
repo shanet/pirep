@@ -26,7 +26,7 @@ class Manage::DashboardTest < ApplicationSystemTestCase
       # Create a new webcam as an unknown user
       airport = create(:airport)
       visit airport_path(airport.code)
-      click_button 'Add Webcam'
+      click_link_or_button 'Add Webcam'
 
       find_by_id('webcam_url').fill_in with: 'example.com/image.jpg'
       find('input[type="submit"][value="Add Webcam"]').click
