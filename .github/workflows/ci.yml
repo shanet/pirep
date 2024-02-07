@@ -30,7 +30,7 @@ jobs:
       - name: Install Ruby & Gems
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.2
+          ruby-version: 3.3.0
           bundler-cache: true
 
       - name: Install Golang

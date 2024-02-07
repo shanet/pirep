@@ -1,4 +1,4 @@
-FROM ruby:3.2.2-slim-bookworm AS base
+FROM ruby:3.3.0-slim-bookworm AS base
 
 ARG PORT=8080
 
