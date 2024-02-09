@@ -7,6 +7,7 @@ import 'airports/airports';
 import 'airports/annotations';
 import 'airports/events';
 import 'airports/landing_rights';
+import 'airports/search';
 import 'manage/users_edit';
 import 'map/header';
 import 'map/map';

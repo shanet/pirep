@@ -1,0 +1,66 @@
+<%
+  @title = 'Advanced Airport Search'
+  @breadcrumbs = [['Airports'], ['Advanced Search']]
+%>
+
+<div class="advanced-search row">
+  <div class="col-12">
+    <h1 class="display-6 mb-3">Advanced Airport Search</h1>
+  </div>
+
+  <div class="col-12 col-md-4">
+    <%= form_tag advanced_search_airports_path, method: :get, class: 'mb-3' do %>
+      <div class="d-grid col-4 mx-auto mb-2">
+        <%= submit_tag 'Search', class: 'btn btn-primary' %>
+      </div>
+
+      <%= render 'airports/search/filter_location' %>
+      <hr class="m-0">
+      <%= render 'airports/search/filter_tags' %>
+      <hr class="m-0">
+      <%= render 'airports/search/filter_access' %>
+      <hr class="m-0">
+      <%= render 'airports/search/filter_runways' %>
+      <hr class="m-0">
+      <%= render 'airports/search/filter_elevation' %>
+      <hr class="m-0">
+      <%= render 'airports/search/filter_events' %>
+      <hr class="m-0">
+      <%= render 'airports/search/filter_facility_type' %>
+      <hr class="m-0">
+      <%= render 'airports/search/filter_weather' %>
+    <% end %>
+  </div>
+
+  <div class="col-12 col-md-8 mb-2">
+    <% if defined?(@error) %>
+      <div class="pt-5 text-center">
+        <h2><i class="fa-solid fa-magnifying-glass"></i></h2><br>
+        <%= @error %>
+      </div>
+
+    <% elsif @results.nil? %>
+      <div class="pt-5 text-center">
+        <h2><i class="fa-solid fa-filter"></i></h2><br>
+        Select search filters to search for airports.
+      </div>
+
+    <% elsif @results.empty? %>
+      <div class="pt-5 text-center">
+        <h2><i class="fa-solid fa-magnifying-glass"></i></h2><br>
+        No results.
+      </div>
+
+    <% else %>
+      <div class="mb-3">
+        <span class="badge rounded-pill text-bg-secondary">Search results: <%= number_with_delimiter(@total_results, delimiter: ',') %></span>
+      </div>
+
+      <% @results.each do |airport| %>
+        <%= render 'airports/search/airport_result', airport: airport %>
+      <% end %>
+
+      <%= render 'shared/pagination', records: @results, total_records: @total_results, page_size: @page_size %>
+    <% end %>
+  </div>
+</div>

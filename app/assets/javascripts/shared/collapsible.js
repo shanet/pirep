@@ -5,10 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
 function addCollapseListeners() {
   const collapsibleToggles = document.querySelectorAll('[data-bs-toggle="collapse"]');
 
-  for(let i=0; i<collapsibleToggles.length; i++) {
-    collapsibleToggles[i].addEventListener('click', () => {
-      const target = document.getElementById(collapsibleToggles[i].dataset.bsTarget);
-      target.classList.toggle('show');
+  collapsibleToggles.forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const target = document.getElementById(toggle.dataset.bsTarget);
+
+      if(target.classList.contains('show-instant')) {
+        target.classList.remove('show-instant');
+      } else {
+        target.classList.toggle('show');
+      }
+
+      // Let observers know this element was changed
+      toggle.dispatchEvent(new Event('collapsible'));
     });
-  }
+  });
 }

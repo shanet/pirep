@@ -1,52 +1,57 @@
 <%
   drawer ||= false
-  runways = @airport.runways.order(length: :desc)
-  runways = runways.limit(3) if drawer
+  airport ||= @airport
+
+  runways = airport.runways.order(length: :desc)
+
+  if defined?(runways_limit)
+    runways = runways.limit(runways_limit)
+  end
 %>
 
 <div class="row g-2 mb-3">
-  <% if !drawer && @airport.city.present? && @airport.state.present? %>
+  <% if !drawer && airport.city.present? && airport.state.present? %>
     <div class="col-12">
       <%= render partial: 'airports/statistics/statistics_box', locals: {
-        label: 'Location', value: "#{@airport.city.titleize}, #{@airport.state}", icon: 'location-dot', theme: 'blue-grey'
+        label: 'Location', value: "#{airport.city.titleize}, #{airport.state}", icon: 'location-dot', theme: 'blue-grey'
       } %>
     </div>
   <% end %>
 
   <div class="col-<%= drawer ? 12 : 6 %>">
     <%= render partial: 'airports/statistics/statistics_box', locals: {
-      label: 'Elevation', value: @airport.elevation, units: :ft, icon: :mountain, theme: @airport.elevation_threat_level
+      label: 'Elevation', value: airport.elevation, units: :ft, icon: :mountain, theme: airport.elevation_threat_level
     } %>
   </div>
 
-  <% if !drawer && @airport.sectional.present? %>
+  <% if !drawer && airport.sectional.present? %>
     <div class="col-6">
       <%= render partial: 'airports/statistics/statistics_box', locals: {
-        label: 'Sectional', value: @airport.sectional.titleize, icon: :map, theme: 'blue-grey'
+        label: 'Sectional', value: airport.sectional.titleize, icon: :map, theme: 'blue-grey'
       } %>
     </div>
   <% end %>
 
-  <% if !drawer && @airport.activation_date.present? %>
+  <% if !drawer && airport.activation_date.present? %>
     <div class="col-6">
       <%= render partial: 'airports/statistics/statistics_box', locals: {
-        label: 'Activation date', value: @airport.activation_date.strftime('%b %Y'), icon: 'cake-candles', theme: 'blue-grey'
+        label: 'Activation date', value: airport.activation_date.strftime('%b %Y'), icon: 'cake-candles', theme: 'blue-grey'
       } %>
     </div>
   <% end %>
 
-  <% if @airport.closed? && @airport.faa_data_cycle %>
+  <% if airport.closed? && airport.faa_data_cycle %>
     <div class="col-<%= drawer ? 12 : 6 %>">
       <%= render partial: 'airports/statistics/statistics_box', locals: {
-        label: 'Closed date', value: @airport.faa_data_cycle.strftime('%b %Y'), icon: 'skull-crossbones', theme: :red
+        label: 'Closed date', value: airport.faa_data_cycle.strftime('%b %Y'), icon: 'skull-crossbones', theme: :red
       } %>
     </div>
   <% end %>
 
-  <% if @airport.fuel_types %>
+  <% if airport.fuel_types %>
     <div class="col-<%= drawer ? 12 : 6 %>">
       <%= render partial: 'airports/statistics/statistics_box', locals: {
-        label: 'Fuel', value: fuel_label(@airport), icon: 'gas-pump', theme: (@airport.fuel_types.any? ? 'blue-grey' : :red)
+        label: 'Fuel', value: fuel_label(airport), icon: 'gas-pump', theme: (airport.fuel_types.any? ? 'blue-grey' : :red)
       } %>
     </div>
   <% end %>
@@ -62,7 +67,7 @@
   <% if ios?(request) %>
     <div class="col-<%= drawer ? 12 : 6 %>">
       <%= render partial: 'airports/statistics/statistics_box', locals: {
-        label: link_to('Open in ForeFlight', foreflight_url(@airport)), value: nil, icon: 'up-right-from-square', theme: :blue
+        label: link_to('Open in ForeFlight', foreflight_url(airport)), value: nil, icon: 'up-right-from-square', theme: :blue
       } %>
     </div>
   <% end %>

@@ -1,0 +1,14 @@
+<%= render 'airports/search/filter_header', title: 'Elevation', target: 'filter-group-elevation' %>
+
+<% content_for :collapsible_content, flush: true do %>
+  <div class="mb-2">
+    <%= label_tag :elevation, 'Maximum airport elevation:', class: 'form-label' %>
+
+    <div class="input-group range">
+      <span class="input-group-text"><code id="airport-elevation-label">Any</code></span>
+      <%= range_field_tag :elevation, 0, min: 0, max: 10_000, step: 500, class: 'form-range form-control h-auto px-2', data: {target: 'airport-elevation-label', min_value_label: 'Any'} %>
+    </div>
+  </div>
+<% end %>
+
+<%= render 'shared/collapsible', id: 'filter-group-elevation', classes: 'filter-group' %>

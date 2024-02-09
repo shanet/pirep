@@ -56,6 +56,8 @@ Rails.application.routes.draw do
 
   resources :airports do
     get 'search', action: :search, as: :search, on: :collection
+    get 'basic_search', action: :basic_search, as: :basic_search, on: :collection
+    get 'advanced_search', action: :advanced_search, as: :advanced_search, on: :collection
 
     member do
       get 'history', as: :history

@@ -1,0 +1,25 @@
+<%= render 'airports/search/filter_header', title: 'Runways', target: 'filter-group-runways' %>
+
+<% content_for :collapsible_content, flush: true do %>
+  <div class="mb-3">
+    <%= label_tag :runway_length, 'Minimum length:', class: 'form-label' %>
+
+    <div class="input-group range">
+      <span class="input-group-text"><code id="runway-length-label">Any</code></span>
+      <%= range_field_tag :runway_length, 0, min: 0, max: 10_000, step: 500, class: 'form-range form-control h-auto px-2', data: {target: 'runway-length-label', min_value_label: 'Any'} %>
+    </div>
+  </div>
+
+  <div class="d-flex flex-wrap justify-content-center gap-1">
+    <%= check_box_tag :runway_paved, class: 'btn-check' %>
+    <%= label_tag :runway_paved, 'Paved', class: 'btn btn-outline-primary' %>
+
+    <%= check_box_tag :runway_grass, class: 'btn-check' %>
+    <%= label_tag :runway_grass, 'Grass', class: 'btn btn-outline-primary' %>
+
+    <%= check_box_tag :runway_lighted, class: 'btn-check' %>
+    <%= label_tag :runway_lighted, 'Lighted', class: 'btn btn-outline-primary' %>
+  </div>
+<% end %>
+
+<%= render 'shared/collapsible', id: 'filter-group-runways', classes: 'filter-group' %>

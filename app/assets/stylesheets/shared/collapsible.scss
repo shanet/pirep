@@ -8,6 +8,10 @@
     transition: max-height 1s ease-in-out;
   }
 
+  &.show-instant {
+    max-height: 99em;
+  }
+
   > .content {
     background-color: #eee;
     padding: 10px;

@@ -1,0 +1,27 @@
+.advanced-search {
+  form {
+    .filter-group {
+      .notch {
+        display: none;
+      }
+
+      .content {
+        background: none;
+        border: none;
+      }
+
+      .input-group.range .input-group-text:first-child {
+        width: 25%;
+      }
+
+      .form-range:focus {
+        border-color: $input-border-color;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .result img {
+    max-height: 120px;
+  }
+}

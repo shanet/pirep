@@ -1,5 +1,6 @@
 module Exceptions
   class AirportDatabaseDownloadFailed < StandardError; end
+  class AirportNotFound < StandardError; end
   class AopaEventsFetchFailed < StandardError; end
   class AviationWeatherDownloadFailed < StandardError; end
   class ChartDownloadFailed < StandardError; end
@@ -11,6 +12,7 @@ module Exceptions
   class GdalBinaryNotFound < StandardError; end
   class GooglePhotosQueryFailed < StandardError; end
   class GoogleTimezoneQueryFailed < StandardError; end
+  class IncompleteLocationFilter < StandardError; end
   class MasterDataImporterTaskFailed < StandardError; end
   class MaxmindDatabaseChecksumDownloadFailed < StandardError; end
   class MaxmindDatabaseDownloadFailed < StandardError; end

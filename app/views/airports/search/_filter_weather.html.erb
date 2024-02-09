@@ -1,0 +1,19 @@
+<%= render 'airports/search/filter_header', title: 'Current Weather', target: 'filter-group-weather' %>
+
+<% content_for :collapsible_content, flush: true do %>
+  <div class="d-flex flex-wrap justify-content-center gap-1">
+    <%= check_box_tag :weather_vfr, class: 'btn-check' %>
+    <%= label_tag :weather_vfr, 'VFR', class: 'btn btn-outline-primary' %>
+
+    <%= check_box_tag :weather_mvfr, class: 'btn-check' %>
+    <%= label_tag :weather_mvfr, 'MVFR', class: 'btn btn-outline-primary' %>
+
+    <%= check_box_tag :weather_ifr, class: 'btn-check' %>
+    <%= label_tag :weather_ifr, 'IFR', class: 'btn btn-outline-primary' %>
+
+    <%= check_box_tag :weather_life, class: 'btn-check' %>
+    <%= label_tag :weather_life, 'LIFR', class: 'btn btn-outline-primary' %>
+  </div>
+<% end %>
+
+<%= render 'shared/collapsible', id: 'filter-group-weather', classes: 'filter-group' %>

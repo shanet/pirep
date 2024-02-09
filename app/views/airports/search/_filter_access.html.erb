@@ -1,0 +1,16 @@
+<%= render 'airports/search/filter_header', title: 'Access', target: 'filter-group-access' %>
+
+<% content_for :collapsible_content, flush: true do %>
+  <div class="d-flex flex-wrap justify-content-center gap-1">
+    <%= check_box_tag :access_public, class: 'btn-check' %>
+    <%= label_tag :access_public, 'Public', class: 'btn btn-outline-primary' %>
+
+    <%= check_box_tag :access_private, class: 'btn-check' %>
+    <%= label_tag :access_private, 'Private', class: 'btn btn-outline-primary' %>
+
+    <%= check_box_tag :access_restricted, class: 'btn-check' %>
+    <%= label_tag :access_restricted, 'Restricted', class: 'btn btn-outline-primary' %>
+  </div>
+<% end %>
+
+<%= render 'shared/collapsible', id: 'filter-group-access', classes: 'filter-group' %>

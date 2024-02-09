@@ -14,6 +14,16 @@
   text-overflow: ellipsis;
 }
 
+.search-options {
+  margin-left: 10px;
+  width: 320px;
+
+  @include media-breakpoint-down(md) {
+    margin-left: 5%;
+    width: 90%;
+  }
+}
+
 #search-results-parent {
   position: relative;
 

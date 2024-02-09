@@ -2,6 +2,8 @@ import * as utils from 'shared/utils';
 import * as welcomeInfo from 'shared/welcome_info';
 
 document.addEventListener('DOMContentLoaded', () => {
+  if(!document.querySelector('.airport-header')) return;
+
   initEditingTags();
   initTagDeleteIcons();
   initTagScrollTargets();

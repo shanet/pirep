@@ -1,0 +1,21 @@
+<%
+  options = [
+    ['3 Days', 3],
+    ['7 Days', 7],
+    ['30 Days', 30],
+    ['60 Days', 60],
+    ['90 Days', 90],
+  ]
+%>
+
+<%= render 'airports/search/filter_header', title: 'Upcoming Events', target: 'filter-group-events' %>
+
+<% content_for :collapsible_content, flush: true do %>
+  <div class="input-group">
+    <%= label_tag :events_threshold, 'Within next', class: 'input-group-text' %>
+
+    <%= select_tag :events_threshold, options_for_select(options), {include_blank: true, class: 'form-select'} %>
+  </div>
+<% end %>
+
+<%= render 'shared/collapsible', id: 'filter-group-events', classes: 'filter-group' %>

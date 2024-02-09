@@ -1,0 +1,16 @@
+<%= render 'airports/search/filter_header', title: 'Facility Type', target: 'filter-group-weather' %>
+
+<% content_for :collapsible_content, flush: true do %>
+  <div class="d-flex flex-wrap gap-1">
+    <% Airport::FACILITY_TYPES.reject {|_key, value| value[:hidden]}.each do |key, value| %>
+      <%= check_box_tag "facility_#{key}", class: 'btn-check' %>
+      <%= label_tag "facility_#{key}", value[:label], class: 'btn btn-outline-primary' %>
+    <% end %>
+  </div>
+
+  <div class="form-text">
+    Only airports are shown by default.
+  </div>
+<% end %>
+
+<%= render 'shared/collapsible', id: 'filter-group-weather', classes: 'filter-group' %>

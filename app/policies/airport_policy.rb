@@ -23,6 +23,14 @@ class AirportPolicy < ApplicationPolicy
     return true
   end
 
+  def basic_search?
+    return true
+  end
+
+  def advanced_search?
+    return true
+  end
+
   def history?
     return true
   end
