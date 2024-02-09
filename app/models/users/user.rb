@@ -31,4 +31,9 @@ class Users::User < ApplicationRecord
   def unknown?
     return type == Users::Unknown.name
   end
+
+  # Find the corresponding unknown user with the same IP address
+  def unknown
+    return Users::Unknown.find_by(ip_address: current_sign_in_ip)
+  end
 end

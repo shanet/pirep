@@ -1,4 +1,4 @@
-<%= form_with(model: (defined?(resource) ? resource : Users::User.new), scope: :user, url: registration_path('user'), html: {id: 'registration-form'}, local: !(defined?(parent) && parent == :map)) do |form| %>
+<%= form_with(model: (defined?(resource) && resource ? resource : Users::User.new), scope: :user, url: registration_path('user'), html: {id: 'registration-form'}, local: !(defined?(parent) && parent == :map)) do |form| %>
   <%= render 'shared/record_errors', record: form.object %>
 
   <div class="mb-3">
@@ -19,6 +19,11 @@
   <div class="mb-3">
     <%= form.label :password_confirmation, class: 'form-label' %>
     <%= form.password_field :password_confirmation, autocomplete: 'new-password', class: 'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :challenge, 'Anti-spam check: What three letter US government agency is responsible for regulating aviation?', class: 'form-label' %>
+    <%= form.password_field :challenge, class: 'form-control' %>
   </div>
 
   <div class="text-center mb-3">

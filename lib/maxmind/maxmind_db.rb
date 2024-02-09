@@ -16,7 +16,7 @@ module MaxmindDb
 
     def geoip_lookup(ip_address)
       result = maxmind_database.city(ip_address)
-      return {latitude: result.location.latitude, longitude: result.location.longitude}
+      return {latitude: result.location.latitude, longitude: result.location.longitude, country: result.registered_country.iso_code}
     rescue MaxMind::GeoIP2::AddressNotFoundError
       return nil
     rescue => error

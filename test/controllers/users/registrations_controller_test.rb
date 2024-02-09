@@ -17,7 +17,7 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
     user_attributes = attributes_for(:known)
 
     assert_difference('Users::User.count') do
-      post user_registration_path, params: {user: {email: user_attributes[:email], password: 'battery', password_confirmation: 'battery'}}
+      post user_registration_path, params: {user: {email: user_attributes[:email], password: 'correct', password_confirmation: 'correct', challenge: 'faa'}}
       assert_redirected_to root_path
     end
 
@@ -32,7 +32,16 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
     user_attributes = attributes_for(:known)
 
     assert_difference('Users::User.count', 0) do
-      post user_registration_path, params: {user: {email: user_attributes[:email], password: 'battery', password_confirmation: 'different'}}
+      post user_registration_path, params: {user: {email: user_attributes[:email], password: 'horse', password_confirmation: 'different', challenge: 'faa'}}
+      assert_response :success
+    end
+  end
+
+  test 'create, wrong challenge' do
+    user_attributes = attributes_for(:known)
+
+    assert_difference('Users::User.count', 0) do
+      post user_registration_path, params: {user: {email: user_attributes[:email], password: 'battery', password_confirmation: 'battery', challenge: 'navcanada'}}
       assert_response :success
     end
   end
@@ -40,7 +49,7 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
   # Admins should not be able to be created by explicitly specifying a user type
   test 'create, admin' do
     assert_difference('Users::User.count') do
-      post user_registration_path, params: {user: {email: 'bob@example.com', password: 'battery', password_confirmation: 'battery', type: 'Users::Admin'}}
+      post user_registration_path, params: {user: {email: 'bob@example.com', password: 'staple', password_confirmation: 'staple', type: 'Users::Admin', challenge: 'faa'}}
       assert_redirected_to root_path
       assert Users::User.order(:created_at).last.is_a?(Users::Known), 'Admin created through registation form'
     end
@@ -50,7 +59,7 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
     user_attributes = attributes_for(:known)
 
     assert_difference('Users::User.count') do
-      post user_registration_path, xhr: true, params: {user: {email: user_attributes[:email], password: 'battery', password_confirmation: 'battery'}}
+      post user_registration_path, xhr: true, params: {user: {email: user_attributes[:email], password: 'battery', password_confirmation: 'battery', challenge: 'the federal aviation administration'}}
       assert_response :success
     end
   end
@@ -59,7 +68,7 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
     user_attributes = attributes_for(:known)
 
     assert_difference('Users::User.count', 0) do
-      post user_registration_path, xhr: true, params: {user: {email: user_attributes[:email], password: 'battery', password_confirmation: 'different'}}
+      post user_registration_path, xhr: true, params: {user: {email: user_attributes[:email], password: 'battery', password_confirmation: 'different', challenge: 'faa'}}
       assert_response :success
     end
   end

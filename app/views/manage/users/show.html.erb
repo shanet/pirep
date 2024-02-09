@@ -23,6 +23,7 @@
       <% end %>
 
       <li class="list-group-item"><strong>Disabled:</strong> <i class="fa-solid fa-<%= @user.disabled_at ? 'square-check' : 'square-xmark' %>"></i></li>
+      <li class="list-group-item"><strong>Current Location:</strong> <%= geoip_lookup(@user.current_sign_in_ip || @user.ip_address)&.send(:[], :country) || 'Unknown' %></li>
 
       <% unless @user.unknown? %>
         <li class="list-group-item">
@@ -32,6 +33,7 @@
 
         <li class="list-group-item"><strong>Current IP:</strong> <%= google_maps_location_link(@user.current_sign_in_ip, @user.current_sign_in_ip) %></li>
         <li class="list-group-item"><strong>Last IP:</strong> <%= google_maps_location_link(@user.last_sign_in_ip, @user.last_sign_in_ip) %></li>
+        <li class="list-group-item"><strong>Unknown User:</strong> <%= @user.unknown ? link_to(user_label(@user.unknown), manage_user_path(@user.unknown)) : 'Not found' %></li>
       <% end %>
 
       <li class="list-group-item">

@@ -20,5 +20,6 @@ class MaxmindDbTest < ActiveSupport::TestCase
 
     assert result[:latitude].present?, 'Latitude not found for IP address'
     assert result[:longitude].present?, 'Longitude not found for IP address'
+    assert result[:country].present?, 'Country not found for IP address'
   end
 end

@@ -7,10 +7,17 @@ module Users
       @user2 = create(:known)
     end
 
-    ['new', 'create'].each do |action|
-      test action do
-        assert_allows_all :registration, action, allow_disabled: false
-      end
+    test 'new' do
+      assert_allows_all :registration, :new, allow_disabled: false
+    end
+
+    test 'create' do
+      assert_allows_all :registration, :create, allow_disabled: false
+
+      Rails.configuration.read_only.enable!
+      assert_denies_all :registration, :create
+    ensure
+      Rails.configuration.read_only.disable!
     end
 
     ['show', 'activity', 'edit', 'update', 'destroy', 'update_timezone'].each do |action|

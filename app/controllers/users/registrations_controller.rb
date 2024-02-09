@@ -13,6 +13,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     authorize :create?, policy_class: Users::RegistrationsPolicy
 
+    # Validate the anti-spam challenge (this is only intended to stop crawlers that simply try to create as many accounts as possible on any websites)
+    unless /faa|federal/i =~ params[:user][:challenge]
+      build_resource(sign_up_params)
+      resource.validate
+      resource.errors.add(:base, 'Incorrect anti-spam check')
+      return render(request.xhr? ? :create : :new)
+    end
+
     # New users should always be known users, not admins
     params[:user][:type] = 'Users::Known'
 
@@ -86,6 +94,6 @@ protected
   end
 
   def layout_for_action
-    return (action_name == 'new' ? 'devise' : 'application')
+    return (action_name.in?(['new', 'create']) ? 'devise' : 'application')
   end
 end
