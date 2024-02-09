@@ -1,10 +1,14 @@
-<% tag_configuration = Tag::TAGS[(defined?(tag_record) ? tag_record.name : tag_name)] %>
+<%
+  tag_name = (defined?(tag_record) ? tag_record.name : tag_name)
+  tag_configuration = Tag::TAGS[tag_name]
+%>
 
-<div class="tag-square card p-0 me-1 mb-1 theme-<%= tag_configuration[:theme] %>
+<div class="tag-square card p-0 theme-<%= tag_configuration[:theme] %>
   <%= defined?(editing) ? 'editing unselected' : '' %>
   <%= defined?(size) ? size : '' %>"
   <%= tag_configuration[:scroll_target] && !defined?(no_scroll) ? "data-scroll-target=\"#{tag_configuration[:scroll_target]}\"".html_safe : '' %>
-  data-tag-id="<%= defined?(tag_record) ? tag_record.id : '' %>">
+  data-tag-id="<%= defined?(tag_record) ? tag_record.id : '' %>"
+  data-tag-name="<%= tag_name %>">
 
   <div class="card-body h-100 p-0 d-flex flex-column justify-content-center align-items-center">
     <% if defined?(tag_record) && tag_configuration[:addable] %>

@@ -1,0 +1,22 @@
+<%= render 'airports/search/filter_header', title: 'Tags', target: 'filter-group-tags' %>
+
+<% content_for :collapsible_content, flush: true do %>
+  <div class="btn-group mb-2 mx-5">
+    <%= radio_button_tag :tags_match, :or, class: 'btn-check', data: {'no-badge' => true}, checked: true %>
+    <%= label_tag :tags_match_or, 'Match Any', class: 'btn btn-outline-primary' %>
+
+    <%= radio_button_tag :tags_match, :and, class: 'btn-check', data: {'no-badge' => true} %>
+    <%= label_tag :tags_match_and, 'Match All', class: 'btn btn-outline-primary' %>
+  </div>
+
+  <div class="d-flex flex-wrap justify-content-center gap-1">
+    <% Tag::TAGS.each do |tag_name, tag_configuration| %>
+      <% next unless tag_configuration[:searchable] %>
+
+      <%= render 'airports/tags/tag', tag_name: tag_name, editing: true %>
+      <%= hidden_field_tag "tag_#{tag_name}" %>
+    <% end %>
+  </div>
+<% end %>
+
+<%= render 'shared/collapsible', id: 'filter-group-tags', classes: 'filter-group' %>

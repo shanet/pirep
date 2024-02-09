@@ -3,7 +3,7 @@
   path_query ||= {}
 
   page = (params[:page] || 0).to_i
-  total_pages = (total_records / Rails.configuration.pagination_page_size.to_f).ceil
+  total_pages = (total_records / (page_size || Rails.configuration.pagination_page_size).to_f).ceil
 
   if page - 2 < 0
     start_range = [page - 2, 0].max
@@ -16,12 +16,18 @@
 
 <nav>
   <ul class="pagination justify-content-center">
-    <li class="page-item"><a class="page-link <%= page > 0 ? '' : 'disabled' %>" href="<%= send(path, {page: 0}.merge(path_query)) %>">First</a></li>
+    <li class="page-item">
+      <a class="page-link <%= page > 0 ? '' : 'disabled' %>" href="<%= defined?(path) ? send(path, {page: 0}.merge(path_query)) : '' %>" data-page="0">First</a>
+    </li>
 
     <% (start_range..end_range).each do |label| %>
-      <li class="page-item"><a class="page-link <%= label == page ? 'active' : '' %>" href="<%= send(path, {page: label}.merge(path_query)) %>"><%= label + 1 %></a></li>
+      <li class="page-item">
+        <a class="page-link <%= label == page ? 'active' : '' %>" href="<%= defined?(path) ? send(path, {page: label}.merge(path_query)) : '' %>" data-page="<%= label %>"><%= label + 1 %></a>
+      </li>
     <% end %>
 
-    <li class="page-item"><a class="page-link <%= page < (total_pages - 1) ? '' : 'disabled' %>" href="<%= send(path, {page: total_pages - 1}.merge(path_query)) %>">Last</a></li>
+    <li class="page-item">
+      <a class="page-link <%= page < (total_pages - 1) ? '' : 'disabled' %>" href="<%= defined?(path) ? send(path, {page: total_pages - 1}.merge(path_query)) : '' %>" data-page="<%= total_pages - 1 %>">Last</a>
+    </li>
   </ul>
 </nav>

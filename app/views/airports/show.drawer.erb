@@ -38,7 +38,7 @@
 <% end %>
 
 <div class="row mb-2">
-  <div class="col-sm d-flex flex-wrap">
+  <div class="col-sm d-flex flex-wrap gap-1">
     <% @airport.tags.each do |tag| %>
       <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag, size: :small, no_scroll: true} %>
     <% end %>
@@ -58,6 +58,6 @@
 
 <div class="row">
   <div class="col-sm mb-3 text-center">
-    <%= link_to 'More Info &gt;'.html_safe, airport_path(@airport.code), class: 'airport-more-button btn btn-primary btn' %></span>
+    <%= link_to 'More Info &gt;'.html_safe, airport_path(@airport.code), class: 'airport-more-button btn btn-primary' %></span>
   </div>
 </div>

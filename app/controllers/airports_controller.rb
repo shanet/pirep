@@ -1,3 +1,5 @@
+require 'exceptions'
+
 class AirportsController < ApplicationController
   layout 'blank'
 
@@ -75,6 +77,13 @@ class AirportsController < ApplicationController
   def search
     authorize :airport, :search?
 
+    @results = nil
+    render :search, layout: 'application'
+  end
+
+  def basic_search
+    authorize :airport, :basic_search?
+
     coordinates = (params['latitude'] && params['longitude'] ? {latitude: params['latitude'].to_f, longitude: params['longitude'].to_f} : nil)
 
     # Don't use wildcard searches if searching by an airport code (3 or 4 letters) as this will yield odd results for FAA codes that start with an ICAO prefix
@@ -82,6 +91,24 @@ class AirportsController < ApplicationController
 
     results = Search.query(params['query'], Airport, coordinates, wildcard: wildcard).limit(10).uniq
     render json: results.map {|airport| {code: airport.code, label: airport.name&.titleize, bounding_box: airport.bounding_box, zoom_level: airport.zoom_level}}
+  end
+
+  def advanced_search
+    authorize :airport, :advanced_search?
+
+    begin
+      results = AirportSearcher.new(advanced_search_params).results
+
+      @page_size = 10
+      @total_results = results&.count&.keys&.count || 0
+      @results = results&.page(params[:page], @page_size)
+    rescue Exceptions::AirportNotFound
+      @error = "Airport with code \"#{advanced_search_params[:airport_from]}\" not found."
+    rescue Exceptions::IncompleteLocationFilter
+      @error = 'Both distance and airport must be specified if filtering by location.'
+    end
+
+    render :search, layout: 'application'
   end
 
   def history
@@ -164,6 +191,40 @@ private
       :state,
       tags_attributes: [:name]
     )
+  end
+
+  def advanced_search_params
+    # rubocop:disable Layout/EmptyLinesAroundArguments
+    return params.permit(
+      :distance_from,
+      :airport_from,
+
+      :elevation,
+      :events_threshold,
+
+      :runway_length,
+      :runway_paved,
+      :runway_grass,
+      :runway_lighted,
+
+      :access_private,
+      :access_public,
+      :access_restricted,
+
+      :facility_airport,
+      :facility_heliport,
+      :facility_seaplane_base,
+      :facility_military,
+
+      :weather_vfr,
+      :weather_mvfr,
+      :weather_ifr,
+      :weather_lifr,
+
+      :tags_match,
+      *(Tag::TAGS.keys.map {|tag| "tag_#{tag}"})
+    )
+    # rubocop:enable Layout/EmptyLinesAroundArguments
   end
 
   def create_actions

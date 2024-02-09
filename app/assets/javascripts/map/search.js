@@ -7,6 +7,11 @@ import * as utils from 'shared/utils';
 let selectedSearchResultIndex = -1;
 
 document.addEventListener('DOMContentLoaded', () => {
+  initSearch();
+  initSearchOptions();
+}, {once: true});
+
+function initSearch() {
   const search = document.getElementById('search');
   if(!search) return;
 
@@ -81,7 +86,26 @@ document.addEventListener('DOMContentLoaded', () => {
   search.addEventListener('blur', () => {
     hideSearchResults();
   });
-}, {once: true});
+}
+
+function initSearchOptions() {
+  const dropdown = document.getElementById('search-dropdown');
+  if(!dropdown) return;
+
+  // Show/hide the search options container when the dropdown button is clicked
+  dropdown.addEventListener('click', () => {
+    const target = document.getElementById(dropdown.dataset.target);
+
+    target.classList.toggle('d-none');
+    target.classList.toggle('d-block');
+
+    dropdown.querySelector('i').classList.toggle('fa-chevron-down');
+    dropdown.querySelector('i').classList.toggle('fa-chevron-up');
+
+    // Manually trigger a window resize event so the filter labels are updated to align with the new position of the filters bar
+    window.dispatchEvent(new Event('resize'));
+  });
+}
 
 function showSearchResults(results) {
   const resultsList = document.getElementById('search-results');

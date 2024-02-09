@@ -26,6 +26,8 @@
           <% if Manage::DashboardPolicy.new(current_user, nil).index? %>
             <li class="nav-item"><%= link_to '<i class="fa-solid fa-gear me-1"></i>Manage'.html_safe, manage_root_path, class: "nav-link #{active_path?(manage_root_path)}" %></li>
           <% end %>
+
+          <li class="nav-item"><%= link_to '<i class="fa-solid fa-magnifying-glass me-1"></i>Search'.html_safe, search_airports_path, class: "nav-link #{active_path?(search_airports_path)}" %></li>
         <% end %>
       </ul>
 

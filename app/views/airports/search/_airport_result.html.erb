@@ -1,0 +1,38 @@
+<%
+  runway = airport.runways.order(length: :desc).first
+
+  photo = airport.featured_photo || airport.contributed_photos.first || airport.external_photos.first
+  photo_path = (photo ? cdn_url_for(photo) : image_path('airport_placeholder.jpg'))
+%>
+
+<div class="result row mb-4">
+  <div class="col-4 col-md-3">
+    <div class="row">
+      <div class="col-12 mb-4 d-flex justify-content-center">
+        <%= link_to image_tag(photo_path, class: 'd-block img-thumbnail') %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 d-flex justify-content-center">
+        <%= link_to 'More Info &gt;'.html_safe, airport_path(airport.code), class: 'airport-more-button btn btn-outline-primary' %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-8 col-md-9">
+    <h4><%= link_to "#{airport.code} - #{airport.name.titleize}", airport.code, class: 'text-decoration-none text-reset' %></h4>
+
+    <div class="d-flex flex-wrap gap-1 mb-2">
+      <% airport.tags.each do |tag| %>
+        <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag, size: :small, no_scroll: true} %>
+      <% end %>
+    </div>
+
+    <ul class="list-unstyled">
+      <li><i class="fa-solid fa-location-dot me-1"></i><%= airport.city.titleize %>, <%= airport.state %></li>
+      <li><i class="fa-solid fa-mountain me-1"></i>Elevation: <%= number_with_delimiter(airport.elevation, delimiter: ',') %>ft</li>
+      <li><i class="fa-solid fa-road me-1"></i>Longest runway: <%= number_with_delimiter(runway.length, delimiter: ',') %>ft</li>
+    </ul>
+  </div>
+</div>
