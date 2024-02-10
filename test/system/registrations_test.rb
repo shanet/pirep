@@ -44,7 +44,6 @@ private
     fill_in 'registration-email', with: 'new_user@example.com'
     fill_in 'registration-password', with: 'password'
     fill_in 'Password confirmation', with: (passwords_match ? 'password' : 'different')
-    find_by_id('user_challenge').fill_in with: 'faa'
     click_link_or_button 'Sign up'
   end
 

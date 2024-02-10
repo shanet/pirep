@@ -11,6 +11,7 @@ Rails.configuration.content_security_policy do |policy|
     Rails.configuration.action_controller.asset_host.presence&.gsub('https://', '') || :self,
     Rails.configuration.try(:tiles_host).presence&.gsub('https://', ''), # rubocop:disable Rails/SafeNavigation
     'api.mapbox.com',
+    'challenges.cloudflare.com',
     'events.mapbox.com',
     'sentry.io',
   ].compact
@@ -19,7 +20,7 @@ Rails.configuration.content_security_policy do |policy|
   policy.child_src(:blob)
   policy.connect_src(*(hosts + ['*.ingest.sentry.io', :self]))
   policy.default_src(*(hosts + [:self]))
-  policy.frame_src(*Rails.configuration.content_security_policy_whitelisted_frame_domains.to_a)
+  policy.frame_src(*(hosts + Rails.configuration.content_security_policy_whitelisted_frame_domains.to_a))
   policy.font_src(*hosts)
   policy.form_action(:self)
   policy.img_src('*', :data)

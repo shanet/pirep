@@ -1,3 +1,5 @@
+require 'cloudflare/cloudflare'
+
 class Users::RegistrationsController < Devise::RegistrationsController
   layout :layout_for_action
   respond_to :html, :js
@@ -14,10 +16,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
     authorize :create?, policy_class: Users::RegistrationsPolicy
 
     # Validate the anti-spam challenge (this is only intended to stop crawlers that simply try to create as many accounts as possible on any websites)
-    unless /faa|federal/i =~ params[:user][:challenge]
+    unless Cloudflare.client.valid_turnstile_response?(params['cf-turnstile-response'])
       build_resource(sign_up_params)
       resource.validate
-      resource.errors.add(:base, 'Incorrect anti-spam check')
+      resource.errors.add(:base, 'Anti-spam check failed')
       return render(request.xhr? ? :create : :new)
     end
 
