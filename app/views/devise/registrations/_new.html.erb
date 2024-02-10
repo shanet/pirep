@@ -1,8 +1,4 @@
 <%= form_with(model: (defined?(resource) && resource ? resource : Users::User.new), scope: :user, url: registration_path('user'), html: {id: 'registration-form'}, local: !(defined?(parent) && parent == :map)) do |form| %>
-  <div class="alert alert-danger my-2">
-    Thanks to piece of shit spammers, new account registration is temporarily disabled while more effective anti-spam measures are implemented.
-  </div>
-
   <%= render 'shared/record_errors', record: form.object %>
 
   <div class="mb-3">
@@ -26,12 +22,11 @@
   </div>
 
   <div class="mb-3">
-    <%= form.label :challenge, 'Anti-spam check: What three letter US government agency is responsible for regulating aviation?', class: 'form-label' %>
-    <%= form.password_field :challenge, class: 'form-control' %>
+    <%= render 'shared/turnstile' %>
   </div>
 
   <div class="text-center mb-3">
-    <%= form.submit 'Sign up', disabled: true, class: 'btn btn-primary' %>
+    <%= form.submit 'Sign up', class: 'btn btn-primary' %>
   </div>
 
   <div class="text-center">

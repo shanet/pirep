@@ -4,8 +4,7 @@ class Users::RegistrationsPolicy < ApplicationPolicy
   end
 
   def create?
-    return false
-    # return !@user.disabled_at && Rails.configuration.read_only.disabled?
+    return !@user.disabled_at && Rails.configuration.read_only.disabled?
   end
 
   # Only allow users to view/edit themselves
