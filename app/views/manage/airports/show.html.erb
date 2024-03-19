@@ -34,7 +34,6 @@
   <div class="col-12 col-md-4">
     <ul class="list-group">
       <li class="list-group-item"><strong>ICAO Code:</strong> <%= @airport.icao_code.presence || 'None' %></li>
-      <li class="list-group-item"><strong>Tags:</strong> <%= @airport.tags.map(&:label).join(', ') %></li>
       <li class="list-group-item"><strong>Revision count:</strong> <%= @airport.versions.count %></li>
       <li class="list-group-item"><strong>Unique contributors:</strong> <%= @airport.versions.pluck(:whodunnit).uniq.count %></li>
       <li class="list-group-item"><strong>Facility type:</strong> <%= Airport::FACILITY_TYPES[@airport.facility_type.to_sym][:label].singularize %></li>
@@ -59,7 +58,7 @@
   </div>
 
   <div class="col-12 col-md-8 my-3 my-md-0">
-    <h4>Description</h4>
+    <h5>Description</h5>
 
     <% if @airport.description.present? %>
       <div class="border-start border-primary border-3 ps-2 mb-3">
@@ -69,8 +68,17 @@
       Empty
     <% end %>
 
-    <div class="mt-3">
-      <h5>Webcams</h5>
+    <h5>Tags</h5>
+
+    <div class="d-flex flex-wrap gap-1 mb-2">
+      <% @airport.tags.each do |tag| %>
+        <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag, size: :small, no_scroll: true} %>
+      <% end %>
+    </div>
+
+    <h5>Webcams</h5>
+
+    <div>
       <%= render 'manage/airports/webcam_list' %>
     </div>
   </div>
