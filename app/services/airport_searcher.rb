@@ -1,6 +1,9 @@
 require 'exceptions'
 
 class AirportSearcher
+  RUNWAY_SURFACES_PAVED = ['ASPH', 'ASPH-CONC', 'ASPH-CONC-G', 'CONC', 'METAL', 'STEEL']
+  RUNWAY_SURFACES_GRASS = ['TURF', 'DIRT', 'GRAVEL', 'SNOW', 'ICE', 'TREATED', 'GRASS', 'SAND', 'WOOD']
+
   def initialize(filters)
     @airport_from = filters[:airport_from]&.upcase
     @distance_from = filters[:distance_from].to_i
@@ -28,7 +31,7 @@ class AirportSearcher
     @weather_lifr = filters[:weather_lifr]
 
     @tags_match = filters[:tags_match]
-    @tags = filters.each.select {|key, value| key.start_with?('tag_') && value == '1'}.map {|filter| filter.first.gsub(/^tag_/, '')}
+    @tags = filters.each.select {|key, value| key.start_with?('tag_') && value == '1'}.map {|filter| filter.first.to_s.gsub(/^tag_/, '')}
   end
 
   def results
@@ -111,24 +114,29 @@ private
   def tag_filter(query)
     return query if @tags.empty?
 
-    if @tags_match == 'or'
+    if @tags_match&.to_sym == :or
       return query.joins(:tags).where(tags: {name: @tags})
     end
 
-    return query.where(id: Airport.select(:id).group(:id).joins(:tags).where(tags: {name: @tags}).having("COUNT(DISTINCT #{Tag.table_name}.name) = ?", @tags.size))
+    return query.where(id: Airport
+      .select(:id)
+      .group(:id)
+      .joins(:tags)
+      .where(tags: {name: @tags})
+      .having("COUNT(DISTINCT #{Tag.table_name}.name) = ?", @tags.size))
   end
 
   def elevation_filter(query)
     return query unless @elevation > 0
 
-    return query.where('elevation < ?', @elevation)
+    return query.where('elevation <= ?', @elevation)
   end
 
   def runway_filter(query)
     query = query.joins(:runways).where('runways.length >= ?', @runway_length) if @runway_length > 0
     query = query.joins(:runways).where.not(runways: {lights: ''}) if @runway_lighted
-    query = query.joins(:runways).where(runways: {surface: ['ASPH', 'ASPH-CONC', 'CONC', 'METAL', 'STEEL']}) if @runway_paved
-    query = query.joins(:runways).where(runways: {surface: ['TURF', 'DIRT', 'GRAVEL', 'SNOW', 'ICE', 'TREATED', 'GRASS', 'SAND', 'WOOD']}) if @runway_grass
+    query = query.joins(:runways).where(runways: {surface: RUNWAY_SURFACES_PAVED}) if @runway_paved
+    query = query.joins(:runways).where(runways: {surface: RUNWAY_SURFACES_GRASS}) if @runway_grass
 
     return query
   end

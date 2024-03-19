@@ -1,6 +1,8 @@
 require 'exceptions'
 
 class AirportsController < ApplicationController
+  SEARCH_PAGE_SIZE = 10
+
   layout 'blank'
 
   before_action :set_airport, only: [:update, :history, :uncached_photo_gallery]
@@ -99,7 +101,7 @@ class AirportsController < ApplicationController
     begin
       results = AirportSearcher.new(advanced_search_params).results
 
-      @page_size = 10
+      @page_size = SEARCH_PAGE_SIZE
       @total_results = results&.count&.keys&.count || 0
       @results = results&.page(params[:page], @page_size)
     rescue Exceptions::AirportNotFound
