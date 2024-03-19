@@ -47,8 +47,9 @@ function onSearchInputChanged(filterGroup, input) {
     if(operation === BADGE_INCREMENT) {
       activeFilters[filterGroup.id].add(listenerElement.id);
     } else {
-      // TODO: only remove if ALL inputs in an input group are now empty
+      // If an input group, Only decrement if all of the inputs in the group are now empty
       if(listenerElement.classList.contains('input-group') && !isInputEmpty(listenerElement)) return;
+
       activeFilters[filterGroup.id].delete(listenerElement.id);
     }
 
@@ -70,7 +71,6 @@ function isInputEmpty(element) {
   switch(element.type) {
     case 'checkbox':
       return !element.checked;
-    case 'number':
     case 'range':
       return element.value === element.getAttribute('value');
     default:
@@ -113,7 +113,7 @@ function updateUrlParams() {
 }
 
 function updatePagerLinks(formParams) {
-  // Write the form paramters to each of the pager links so the page has the right filters when getting it
+  // Write the form parameters to each of the pager links so the page has the right filters when getting it
   document.querySelectorAll('.pagination .page-item > a').forEach((pageLink) => {
     formParams.set('page', pageLink.dataset.page);
     const path = `${window.location.pathname}?${formParams.toString()}${window.location.hash}`;
@@ -127,6 +127,7 @@ function initRangeFields() {
   rangeFields.forEach((rangeField) => {
     const label = document.getElementById(rangeField.dataset.target);
 
+    // Update the corresponding label for the range input
     const updateFunction = () => {
       if(rangeField.value === rangeField.min) {
         label.innerText = rangeField.dataset.minValueLabel;
@@ -173,6 +174,7 @@ function initSearchFieldsFromUrl() {
         input.value = value;
     }
 
+    // Let the input know its value has changed to the listeners to set the search parameters are called
     input.dispatchEvent(new Event('change'));
   });
 

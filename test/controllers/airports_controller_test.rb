@@ -180,13 +180,29 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
   end
 
-  test 'searches airports' do
+  test 'basic search for airports' do
     [@airport.code, @airport.icao_code].each do |query|
-      get search_airports_path(query: query, latitude: @airport.latitude, longitude: @airport.longitude)
+      get basic_search_airports_path(query: query, latitude: @airport.latitude, longitude: @airport.longitude)
 
       assert_response :success
       assert_equal @airport.code, response.parsed_body.first['code'], 'Airport not returned from search'
     end
+  end
+
+  test 'search page' do
+    get search_airports_path
+    assert_response :success
+  end
+
+  test 'advanced search for airports' do
+    get advanced_search_airports_path, params: {elevation: '1000'}
+    assert_response :success
+
+    get advanced_search_airports_path, params: {airport_from: @airport.code}
+    assert_response :success
+
+    get advanced_search_airports_path, params: {airport_from: 'BLAH'}
+    assert_response :success
   end
 
   test 'history' do

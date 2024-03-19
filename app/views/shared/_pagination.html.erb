@@ -3,7 +3,7 @@
   path_query ||= {}
 
   page = (params[:page] || 0).to_i
-  total_pages = (total_records / (page_size || Rails.configuration.pagination_page_size).to_f).ceil
+  total_pages = (total_records / (defined?(page_size) ? page_size : Rails.configuration.pagination_page_size).to_f).ceil
 
   if page - 2 < 0
     start_range = [page - 2, 0].max

@@ -6,7 +6,7 @@
     <%= number_field_tag 'distance_from', nil, min: 1, max: 3000, placeholder: 100, autocomplete: :number, class: 'form-control flex-shrink-1' %>
 
     <span class="input-group-text">miles of</span>
-    <%= text_field_tag 'airport_from', '', placeholder: 'KPAE', autocomplete: :text, class: 'form-control flex-grow-1' %>
+    <%= text_field_tag 'airport_from', '', maxlength: 6, placeholder: 'KPAE', autocomplete: :text, class: 'form-control flex-grow-1' %>
   </div>
 <% end %>
 
