@@ -31,9 +31,7 @@
       <%= form.label :email, class: 'form-label' %>
       <%= form.email_field :email, autocomplete: 'email', class: 'form-control' %>
     </div>
-  </div>
 
-  <div class="row">
     <div class="col-12 col-md-4 my-2">
       <%= form.label :ip_address, 'IP address', class: 'form-label' %>
       <%= form.text_field :ip_address, class: 'form-control' %>
@@ -41,7 +39,7 @@
   </div>
 
   <div class="row">
-    <div class="col-12 col-md-4 my-2">
+    <div class="col-12 col-md-3 my-2">
       <%= form.label :disabled_at, class: 'form-label' %>
       <div class="input-group">
         <%= form.text_field :disabled_at, class: 'form-control' %>
@@ -54,7 +52,7 @@
       </div>
     </div>
 
-    <div class="col-12 col-md-4 my-2">
+    <div class="col-12 col-md-3 my-2">
       <%= form.label :locked_at, class: 'form-label' %>
       <div class="input-group">
         <%= form.text_field :locked_at, class: 'form-control' %>
@@ -67,7 +65,7 @@
       </div>
     </div>
 
-    <div class="col-12 col-md-4 my-2">
+    <div class="col-12 col-md-3 my-2">
       <%= form.label :confirmed_at, class: 'form-label' %>
       <div class="input-group">
         <%= form.text_field :confirmed_at, class: 'form-control' %>
@@ -76,6 +74,19 @@
           <a href="#" class="input-group-text clear-timestamp" data-target="users_user_confirmed_at">Clear</a>
         <% else %>
           <a href="#" class="input-group-text set-timestamp" data-target="users_user_confirmed_at">Now</a>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-3 my-2">
+      <%= form.label :verified_at, class: 'form-label' %>
+      <div class="input-group">
+        <%= form.text_field :verified_at, class: 'form-control' %>
+
+        <% if @user.verified_at %>
+          <a href="#" class="input-group-text clear-timestamp" data-target="users_user_verified_at">Clear</a>
+        <% else %>
+          <a href="#" class="input-group-text set-timestamp" data-target="users_user_verified_at">Now</a>
         <% end %>
       </div>
     </div>

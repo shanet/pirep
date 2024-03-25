@@ -5,14 +5,16 @@ class EventPolicyTest < PolicyTest
     @event = create(:event)
   end
 
-  ['create', 'edit', 'update', 'destroy'].each do |action|
+  ['create', 'update', 'destroy'].each do |action|
     test action do
-      assert_allows_all @event, action, allow_disabled: false
+      assert_allows_all @event, action, allow_disabled: false, allow_unverified: false
     end
   end
 
-  test 'show' do
-    assert_allows_all @event, :show
+  ['show', 'edit'].each do |action|
+    test action do
+      assert_allows_all @event, action
+    end
   end
 
   test 'revert' do

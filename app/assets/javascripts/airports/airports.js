@@ -1,9 +1,11 @@
 import * as utils from 'shared/utils';
+import * as verificationModal from 'shared/verification_modal';
 import * as welcomeInfo from 'shared/welcome_info';
 
 document.addEventListener('DOMContentLoaded', () => {
   if(!document.querySelector('.airport-header')) return;
 
+  verificationModal.initVerificationModal();
   initEditingTags();
   initTagDeleteIcons();
   initTagScrollTargets();
@@ -39,23 +41,23 @@ function initTagDeleteIcons() {
 
   addTags.addEventListener('click', () => {
     // Show/hide the tag delete icons
-    for(let i=0; i<deleteIcons.length; i++) {
-      deleteIcons[i].style.display = (['none', ''].indexOf(deleteIcons[i].style.display) !== -1 ? 'block' : 'none');
-    }
+    deleteIcons.forEach((deleteIcon) => {
+      deleteIcon.style.display = (['none', ''].indexOf(deleteIcon.style.display) !== -1 ? 'block' : 'none');
+    });
   });
 }
 
 function initTagScrollTargets() {
   const scrollTags = document.querySelectorAll('.tag-square[data-scroll-target]');
 
-  for(let i=0; i<scrollTags.length; i++) {
-    scrollTags[i].addEventListener('click', () => {
+  scrollTags.forEach((scrollTag) => {
+    scrollTag.addEventListener('click', () => {
       // Don't scroll if the tags are being edited
       if(document.querySelector('#add-tag-form.show')) return;
 
-      document.getElementById(scrollTags[i].dataset.scrollTarget).scrollIntoView({behavior: 'smooth'});
+      document.getElementById(scrollTag.dataset.scrollTarget).scrollIntoView({behavior: 'smooth'});
     });
-  }
+  });
 }
 
 function initShowMoreWebcams() {
@@ -108,7 +110,7 @@ function initExtraRemarks() {
 }
 
 function initMapBackButton() {
-  const mapBackButtons = document.getElementsByClassName('map-back');
+  const mapBackButtons = document.querySelectorAll('.map-back');
   if(mapBackButtons.length === 0) return;
 
   // If arrived at this page from the map index then try to use the history API to go back so it uses the cached map state rather than doing a full page load
@@ -117,23 +119,20 @@ function initMapBackButton() {
   // Let the map index know we're coming from the airport page to customize the drawer loading
   utils.setPreviousPage('airport');
 
-  for(let i=0; i<mapBackButtons.length; i++) {
-    const button = mapBackButtons[i];
-
-    button.addEventListener('click', (event) => {
+  mapBackButtons.forEach((backButton) => {
+    backButton.addEventListener('click', (event) => {
       if(useHistoryApi && window.history.length > 1) {
         window.history.back();
         event.preventDefault();
       }
     });
-  }
+  });
 }
 
 function initCoverImageForm() {
-  const coverImageDropdowns = document.getElementsByClassName('cover-image-dropdown');
+  const coverImageDropdowns = document.querySelectorAll('.cover-image-dropdown');
 
-  for(let i=0; i<coverImageDropdowns.length; i++) {
-    const dropdown = coverImageDropdowns[i];
+  coverImageDropdowns.forEach((dropdown) => {
     const toggleButton = dropdown.querySelector('.dropdown-toggle');
 
     toggleButton.addEventListener('click', () => {
@@ -143,12 +142,18 @@ function initCoverImageForm() {
     const options = dropdown.querySelectorAll('.dropdown-menu li');
     const form = dropdown.querySelector('form');
 
-    for(let j=0; j<options.length; j++) {
-      options[j].addEventListener('click', () => {
-        form.querySelector('input[name="airport[cover_image]"]').value = options[j].dataset.coverImage;
-        form.submit();
+    options.forEach((option) => {
+      option.addEventListener('click', () => {
+        form.querySelector('input[name="airport[cover_image]"]').value = option.dataset.coverImage;
+
+        // Manually trigger a submit event so the verification modal can intercept it if verification is required, otherwise just submit the form
+        if(verificationModal.isVerificationRequired()) {
+          form.dispatchEvent(new Event('submit'));
+        } else {
+          form.submit();
+        }
       });
-    }
+    });
 
     // Close the dropdown when it loses focus
     toggleButton.addEventListener('blur', (event) => {
@@ -158,7 +163,7 @@ function initCoverImageForm() {
 
       dropdown.querySelector('.dropdown-menu').classList.toggle('d-block');
     });
-  }
+  });
 }
 
 function initWelcomeInfo() {

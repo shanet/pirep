@@ -43,6 +43,9 @@ Rails.application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
+  # Auto-verify users when created so tests don't have to worry about setting up verified user fixtures for everything
+  config.verify_users_on_create = true
+
   # Turn off PaperTrail in test for performance
   PaperTrail.enabled = false
 

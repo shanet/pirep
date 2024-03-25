@@ -1,12 +1,12 @@
 require 'test_helper'
 
 class PolicyTest < ActiveSupport::TestCase
-  def assert_allows(user, record, action, message=nil, disabled_user: false)
-    assert execute_policy(user, record, action, disabled_user: disabled_user), message
+  def assert_allows(user, record, action, message=nil, disabled_user: false, verified_user: true)
+    assert execute_policy(user, record, action, disabled_user: disabled_user, verified_user: verified_user), message
   end
 
-  def assert_denies(user, record, action, message=nil, disabled_user: false)
-    assert_not execute_policy(user, record, action, disabled_user: disabled_user), message
+  def assert_denies(user, record, action, message=nil, disabled_user: false, verified_user: true)
+    assert_not execute_policy(user, record, action, disabled_user: disabled_user, verified_user: verified_user), message
   end
 
   # Allows only admins
@@ -31,10 +31,17 @@ class PolicyTest < ActiveSupport::TestCase
   end
 
   # Allows everyone, including unknown users
-  def assert_allows_all(record, action, allow_disabled: true)
-    assert_allows :unknown, record, action, "Denied unknown user to #{record}/#{action}"
+  def assert_allows_all(record, action, allow_disabled: true, allow_unverified: true)
+    assert_allows :unknown, record, action, "Denied verified unknown user to #{record}/#{action}"
     assert_allows :known, record, action, "Denied known user to #{record}/#{action}"
     assert_allows :admin, record, action, "Denied admin to #{record}/#{action}"
+
+    # Check that verified unknown users are allowed/denied based on the flag
+    if allow_unverified
+      assert_allows :unknown, record, action, "Denied unverified unknown user to #{record}/#{action}", verified_user: false
+    else
+      assert_denies :unknown, record, action, "Allowed unverified unknown user to #{record}/#{action}", verified_user: false
+    end
 
     # Check that disabled users are allowed/denied based on the flag
     if allow_disabled
@@ -77,16 +84,20 @@ class PolicyTest < ActiveSupport::TestCase
 
 private
 
-  def execute_policy(user, record, action, disabled_user: false)
-    user = create_user(user, disabled_user: disabled_user)
+  def execute_policy(user, record, action, disabled_user: false, verified_user: true)
+    user = create_user(user, disabled_user: disabled_user, verified_user: verified_user)
     klass = self.class.name.gsub(/Test$/, '').constantize
 
     return klass.new(user, record).send("#{action}?")
   end
 
-  def create_user(user_or_type, disabled_user: false)
+  def create_user(user_or_type, disabled_user: false, verified_user: true)
     return user_or_type if user_or_type.is_a? Users::User
 
-    return create(user_or_type, disabled_at: (disabled_user ? Time.zone.now : nil))
+    return create(
+      user_or_type,
+      disabled_at: (disabled_user ? Time.zone.now : nil),
+      verified_at: (verified_user ? Time.zone.now : nil)
+    )
   end
 end

@@ -15,6 +15,11 @@
       <% if @user.unknown? %>
         <li class="list-group-item"><strong>IP Address:</strong> <%= @user.ip_address %></li>
         <li class="list-group-item"><strong>Location:</strong> <%= google_maps_location_link(@user.ip_address) %></li>
+
+        <li class="list-group-item">
+          <strong>Verified at:</strong> <%= @user.verified_at ? "#{time_ago_in_words(@user.verified_at).capitalize} ago" : 'Never' %>
+          <br><small class="text-body-secondary"><%= format_timestamp @user.verified_at %></small>
+        </li>
       <% else %>
         <li class="list-group-item"><strong>Name:</strong> <%= @user.name %></li>
         <li class="list-group-item"><strong>Email Address:</strong> <%= @user.email %></li>

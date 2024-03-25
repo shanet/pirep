@@ -6,7 +6,7 @@ class TagPolicyTest < PolicyTest
   end
 
   test 'destroy' do
-    assert_allows_all @tag, :destroy, allow_disabled: false
+    assert_allows_all @tag, :destroy, allow_disabled: false, allow_unverified: false
   end
 
   test 'revert' do

@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'cloudflare/cloudflare'
 
 class AirportsControllerTest < ActionDispatch::IntegrationTest
   setup do
@@ -53,6 +54,27 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
         end
       end
     end
+  end
+
+  test 'create airport, failing turnstile' do
+    Rails.configuration.verify_users_on_create = false
+    Rails.application.credentials.turnstile_secret_key = Cloudflare::TURNSTILE_FAILING
+
+    assert_difference('Airport.count', 0) do
+      post airports_path(format: :js, params: {airport: {
+        name: 'Unmapped airport',
+        latitude: @airport.latitude,
+        longitude: @airport.longitude,
+        elevation: @airport.elevation,
+        state: 'closed',
+        landing_rights: :private_,
+      }}, 'cf-turnstile-response' => 'foo')
+
+      assert_response :success
+    end
+  ensure
+    Rails.configuration.verify_users_on_create = true
+    Rails.application.credentials.turnstile_secret_key = nil
   end
 
   test 'shows airport' do

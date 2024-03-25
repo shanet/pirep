@@ -32,4 +32,8 @@ class Users::RegistrationsPolicy < ApplicationPolicy
   def update_timezone?
     return unknown? == false && @user == @record
   end
+
+  def verify?
+    return !@user.disabled_at
+  end
 end

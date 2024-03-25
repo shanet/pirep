@@ -1,0 +1,28 @@
+<% unless active_user.verified? %>
+  <div id="verification-modal" class="modal fade" tabindex="-1" data-verification-required="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <%= form_with(model: active_user, scope: :user, url: verify_user_path, local: false, html: {'data-skip-verification' => true}) do |form| %>
+          <div class="modal-header">
+            <h5 class="modal-title"><i class="fa-solid fa-pen-to-square me-1"></i>Enable Editing</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body">
+            <p>Thanks for helping contribute to an airport on Pirep!</p>
+            <p>We just need to verify that you're human before saving your edits. You'll only need to do this once.</p>
+
+            <%= render 'shared/turnstile', callback: 'verificationModalCallback' %>
+
+            <small class="text-muted">Alternatively, create an account to avoid this check.</small>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <%= form.submit 'Submit', class: 'btn btn-primary' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
