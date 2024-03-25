@@ -47,7 +47,12 @@ private
 
     # Create a new unknown user if requested. We may want to skip this so we're not creating users on each page view for example.
     method = (create_unknown ? :create_or_find_by! : :find_by)
-    return Users::Unknown.send(method, ip_address: request.ip)
+    user = Users::Unknown.send(method, ip_address: request.ip)
+
+    # Auto-verify users so tests don't need to set up verified user fixtures for everything (unless the verification behavior is being tested)
+    user&.update!(verified_at: Time.zone.now) if Rails.env.test? && Rails.configuration.verify_users_on_create
+
+    return user
   end
 
   # Tell Pundit to use the active user wrapper instead of current user directly

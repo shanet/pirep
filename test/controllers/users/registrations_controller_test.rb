@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'cloudflare/cloudflare'
 
 class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers

@@ -29,6 +29,19 @@ class AirportsController < ApplicationController
 
   def create
     @airport = Airport.new_unmapped(new_airport_params)
+
+    # Validate the turnstile response for unverified users
+    if !active_user.verified? && !Cloudflare.client.valid_turnstile_response?(params['cf-turnstile-response'])
+      @airport.errors.add(:base, 'Anti-spam check failed')
+      @form_element_id = 'new-airport'
+      skip_authorization
+      return render :error_response
+    end
+
+    # Mark the user as verified if not already after the spam check was passed above
+    active_user.update!(verified_at: Time.zone.now) unless active_user.verified?
+
+    # Only authorize after checking if the user is verified above as the policy will fail without being a verified user
     authorize @airport
 
     if @airport.save

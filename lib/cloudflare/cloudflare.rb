@@ -3,6 +3,7 @@ require_relative 'cloudflare_stubs'
 
 module Cloudflare
   # https://developers.cloudflare.com/turnstile/reference/testing/
+  TURNSTILE_SITE_KEY = '1x00000000000000000000AA'
   TURNSTILE_PASSING = '1x0000000000000000000000000000000AA'
   TURNSTILE_FAILING = '2x0000000000000000000000000000000AA'
 

@@ -10,7 +10,7 @@ const DRAWER_CONTENT_ID = 'drawer-new-airport';
 
 export async function loadDrawer() {
   // Get the path to request airport info from dynamically
-  // Tthis means swapping out a placeholder value with the airport code we want to get
+  // This means swapping out a placeholder value with the airport code we want to get
   const {newAirportPath} = document.getElementById('map').dataset;
   const response = await fetch(newAirportPath);
 
@@ -46,6 +46,10 @@ export function initializeDrawer() {
   document.getElementById('airport_state_closed').addEventListener('click', () => {
     document.getElementById('landing-rights-container').classList.add('d-none');
   });
+
+  // Since the drawer is loaded via ajax we need to explictly render Turnstile elements
+  const turnstileElement = document.querySelector('#new-airport .cf-turnstile');
+  if(turnstileElement) window.turnstile.render(turnstileElement);
 }
 
 export function locationSelected(latitude, longitude, elevation) {

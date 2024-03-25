@@ -7,7 +7,7 @@ class CommentPolicyTest < PolicyTest
 
   ['create', 'helpful', 'flag_outdated', 'undo_outdated'].each do |action|
     test action do
-      assert_allows_all @comment, action, allow_disabled: false
+      assert_allows_all @comment, action, allow_disabled: false, allow_unverified: false
 
       # Check that a comment cannot be left on a locked airport
       disabled_airport_comment = create(:comment, airport: create(:airport, locked_at: Time.zone.now))

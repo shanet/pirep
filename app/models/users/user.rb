@@ -36,4 +36,8 @@ class Users::User < ApplicationRecord
   def unknown
     return Users::Unknown.find_by(ip_address: current_sign_in_ip)
   end
+
+  def verified?
+    return !unknown? || verified_at
+  end
 end

@@ -7,7 +7,7 @@ class WebcamPolicyTest < PolicyTest
 
   ['create', 'destroy'].each do |action|
     test action do
-      assert_allows_all @webcam, action, allow_disabled: false
+      assert_allows_all @webcam, action, allow_disabled: false, allow_unverified: false
 
       Rails.configuration.read_only.enable!
       assert_denies_all @webcam, action

@@ -41,6 +41,12 @@
         <%= render partial: 'airports/landing_rights/landing_rights_selector', formats: :html, locals: {form: form} %>
       </div>
 
+      <% unless active_user.verified? %>
+        <div class="mb-3">
+          <%= render partial: 'shared/turnstile', formats: :html %>
+        </div>
+      <% end %>
+
       <div class="mb-2">
         <div class="form-text mb-2">Airport tags, description, photos, etc. can be edited once the airport is saved.</div>
         <%= form.submit 'Submit', class: 'btn btn-primary' %>

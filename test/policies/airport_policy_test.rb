@@ -17,7 +17,7 @@ class AirportPolicyTest < PolicyTest
 
   ['create', 'update'].each do |action|
     test action do
-      assert_allows_all @airport, action, allow_disabled: false
+      assert_allows_all @airport, action, allow_disabled: false, allow_unverified: false
 
       Rails.configuration.read_only.enable!
       assert_denies_all @airport, action

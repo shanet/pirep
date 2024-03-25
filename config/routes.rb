@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     get 'user', to: 'users/registrations#show'
     get 'user/activity', to: 'users/registrations#activity', as: :activity_user
     patch 'user/timezone', to: 'users/registrations#update_timezone', as: :update_timezone_user
+    patch 'user/verify', to: 'users/registrations#verify', as: :verify_user
   end
 
   # Enable the GoodJob dashboard

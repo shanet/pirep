@@ -67,6 +67,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def verify
+    authorize active_user, policy_class: Users::RegistrationsPolicy
+
+    if Cloudflare.client.valid_turnstile_response?(params['cf-turnstile-response'])
+      active_user.update!(verified_at: Time.zone.now) unless active_user.verified_at
+      head :ok
+    else
+      head :forbidden
+    end
+  end
+
 protected
 
   def configure_sign_up_params
