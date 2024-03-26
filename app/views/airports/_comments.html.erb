@@ -4,7 +4,7 @@
   </div>
 
   <ul class="list-group list-group-flush">
-    <% @airport.comments.order(:created_at).each do |comment| %>
+    <% @airport.comments.order(created_at: :desc).each do |comment| %>
       <li class="comment list-group-item" data-comment-id="<%= comment.id %>">
         <div class="alert alert-warning py-1 outdated-at <%= comment.outdated_at ? '' : 'd-none' %>">
           <i class="fas fa-flag"></i> This comment was flagged as outdated on <span class="date"><%= format_timestamp(comment.outdated_at, format: '%B %-d, %Y') %></span>.
