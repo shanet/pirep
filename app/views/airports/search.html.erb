@@ -34,21 +34,21 @@
 
   <div class="results col-12 col-md-8 mb-2">
     <% if defined?(@error) %>
-      <div class="pt-5 text-center">
-        <h2><i class="fa-solid fa-magnifying-glass"></i></h2><br>
-        <%= @error %>
+      <div class="pt-3 pt-md-5 text-center">
+        <h2><i class="fa-solid fa-magnifying-glass"></i></h2>
+        <p><%= @error %></p>
       </div>
 
     <% elsif @results.nil? %>
-      <div class="pt-5 text-center">
-        <h2><i class="fa-solid fa-filter"></i></h2><br>
-        Select search filters to search for airports.
+      <div class="pt-3 pt-md-5 text-center">
+        <h2><i class="fa-solid fa-filter"></i></h2>
+        <p>Select search filters to search for airports.</p>
       </div>
 
     <% elsif @results.empty? %>
-      <div class="pt-5 text-center">
-        <h2><i class="fa-solid fa-magnifying-glass"></i></h2><br>
-        No results.
+      <div class="pt-3 pt-md-5 text-center">
+        <h2><i class="fa-solid fa-magnifying-glass"></i></h2>
+        <p>No results.</p>
       </div>
 
     <% else %>
