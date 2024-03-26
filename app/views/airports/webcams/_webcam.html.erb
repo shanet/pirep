@@ -3,7 +3,7 @@
 <div class="position-relative text-center mb-2">
   <%= button_to '<i class="fa-solid fa-trash text-danger"></i>'.html_safe, webcam_path(webcam),
     method: :delete,
-    class: 'delete-overlay position-absolute end-0 btn btn-sm btn-light',
+    class: 'delete-overlay position-absolute end-0 btn btn-sm btn-light-dark',
     data: {confirm: 'Are you sure you want to remove this webcam?'} %>
 
   <% if webcam.image? %>
