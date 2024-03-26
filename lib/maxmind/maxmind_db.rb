@@ -35,13 +35,13 @@ module MaxmindDb
         database = File.open(File.join(directory, 'database.tar.gz'), 'wb')
         checksum = File.open(File.join(directory, 'database.tar.gz.sha256'), 'w')
 
-        response = Faraday.get(DATABASE_URL)
+        response = faraday_get_follow_redirects(DATABASE_URL)
         raise Exceptions::MaxmindDatabaseDownloadFailed unless response.success?
 
         database.write(response.body)
 
         # Download the database checuksum and replace the filename in the checksum with the one we wrote above (since by default it has a date string in the filename)
-        response = Faraday.get("#{DATABASE_URL}.sha256")
+        response = faraday_get_follow_redirects("#{DATABASE_URL}.sha256")
         raise Exceptions::MaxmindDatabaseChecksumDownloadFailed unless response.success?
 
         checksum.write(response.body.gsub(/  .+.tar.gz/, "  #{database.path}"))
@@ -74,6 +74,18 @@ module MaxmindDb
                             else
                               MaxMind::GeoIP2::Reader.new(database: DATABASE_PATH.to_s)
                             end
+    end
+
+    # Maxmind will redirect database downloads to a cloud provider storage URL so we need to follow redirects
+    # This is more minimal than adding another Faraday middleware gem. Maybe this should be moved to a monkeypatch?
+    def faraday_get_follow_redirects(url)
+      response = Faraday.get(url)
+
+      if response.status.in?([301, 302]) && response.headers['Location']
+        return faraday_get_follow_redirects(response.headers['Location'])
+      end
+
+      return response
     end
   end
 end
