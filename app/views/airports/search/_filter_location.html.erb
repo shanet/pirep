@@ -1,12 +1,27 @@
 <%= render 'airports/search/filter_header', title: 'Location', target: 'filter-group-location' %>
 
 <% content_for :collapsible_content, flush: true do %>
+  <div class="btn-group mb-2 mx-5">
+    <%= radio_button_tag :location_type, :miles, class: 'btn-check', data: {'no-badge' => true}, checked: true %>
+    <%= label_tag :location_type_miles, 'By Miles', class: 'btn btn-outline-primary' %>
+
+    <%= radio_button_tag :location_type, :hours, class: 'btn-check', data: {'no-badge' => true} %>
+    <%= label_tag :location_type_hours, 'By Hours', class: 'btn btn-outline-primary' %>
+  </div>
+
   <div id="location" class="input-group">
     <span class="input-group-text">Within</span>
-    <%= number_field_tag 'distance_from', nil, min: 1, max: 3000, placeholder: 100, autocomplete: :number, class: 'form-control flex-shrink-1' %>
+    <%= number_field_tag 'distance_miles', nil, min: 1, max: 3000, placeholder: 100, autocomplete: :number, class: 'form-control flex-shrink-1' %>
+    <%= number_field_tag 'distance_hours', nil, min: 0, max: 30, placeholder: 2, autocomplete: :number, step: '0.1', class: 'form-control flex-shrink-1 d-none' %>
 
-    <span class="input-group-text">miles of</span>
+    <span id="distance_units" class="input-group-text">miles of</span>
     <%= text_field_tag 'airport_from', '', maxlength: 6, placeholder: 'KPAE', autocomplete: :text, class: 'form-control flex-grow-1' %>
+
+    <div id="cruise_speed" class="input-group mt-3 d-none">
+      <span class="input-group-text">Cruise speed:</span>
+      <%= text_field_tag 'cruise_speed', '', maxlength: 6, placeholder: '120', autocomplete: :text, class: 'form-control flex-shrink-1', data: {'no-badge' => true} %>
+      <span class="input-group-text">kts</span>
+    </div>
   </div>
 <% end %>
 

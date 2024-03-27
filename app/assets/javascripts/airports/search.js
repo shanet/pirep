@@ -9,8 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initFilterGroupHeaders();
   initFilterGroupBadges();
   initRangeFields();
-  initSearchFieldsFromUrl();
+  initLocationFilterToggle();
   initTagFields();
+
+  // This should be called last so the event listeners set above are called when the form inputs are set
+  initSearchFieldsFromUrl();
 }, {once: true});
 
 function initFilterGroupHeaders() {
@@ -157,14 +160,19 @@ function initTagFields() {
 
 function initSearchFieldsFromUrl() {
   new URL(window.location).searchParams.forEach((value, key) => {
-    const input = getSearchForm().querySelector(`input[name="${key}"]`) || getSearchForm().querySelector(`#${key}`);
+    let input = getSearchForm().querySelector(`input[name="${key}"]`) || getSearchForm().querySelector(`#${key}`);
     if(!input) return;
 
     switch(input.type) {
       case 'radio':
         // If a radio button we need to iterate all buttons in the group to find the one with the given value
         getSearchForm().querySelectorAll(`input[name="${input.name}"]`).forEach((radioButton) => {
-          radioButton.checked = (radioButton.value === value);
+          if(radioButton.value === value) {
+            radioButton.checked = true;
+
+            // Reassign the input so when the event is dispatched below it goes to the changed radio button
+            input = radioButton;
+          }
         });
         break;
       case 'checkbox':
@@ -179,6 +187,24 @@ function initSearchFieldsFromUrl() {
   });
 
   openActiveFilterGroups();
+}
+
+function initLocationFilterToggle() {
+  const form = getSearchForm();
+
+  form.querySelector('#location_type_miles').addEventListener('change', () => {
+    form.querySelector('#distance_miles').classList.remove('d-none');
+    form.querySelector('#distance_hours').classList.add('d-none');
+    form.querySelector('#cruise_speed').classList.add('d-none');
+    form.querySelector('#distance_units').innerText = 'miles of';
+  });
+
+  form.querySelector('#location_type_hours').addEventListener('change', () => {
+    form.querySelector('#distance_miles').classList.add('d-none');
+    form.querySelector('#distance_hours').classList.remove('d-none');
+    form.querySelector('#cruise_speed').classList.remove('d-none');
+    form.querySelector('#distance_units').innerText = 'hours from';
+  });
 }
 
 function openActiveFilterGroups() {

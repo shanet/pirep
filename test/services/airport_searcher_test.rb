@@ -8,12 +8,12 @@ class AirportSearcherTest < ActiveSupport::TestCase
 
   test 'is empty?' do
     assert AirportSearcher.new({}).empty?, 'Airport searcher not empty with no filters given'
-    assert AirportSearcher.new({distance_from: 0}).empty?, 'Airport searcher not empty with some filters given'
+    assert AirportSearcher.new({distance_miles: 0}).empty?, 'Airport searcher not empty with some filters given'
   end
 
   test 'is not empty?' do
     assert_not AirportSearcher.new({tag_food: '1'}).empty?, 'Airport searcher empty with filters given'
-    assert_not AirportSearcher.new({distance_from: 1}).empty?, 'Airport searcher empty with filters given'
+    assert_not AirportSearcher.new({distance_miles: 1}).empty?, 'Airport searcher empty with filters given'
     assert_not AirportSearcher.new({airport_from: 'KPAE'}).empty?, 'Airport searcher empty with filters given'
   end
 
@@ -29,7 +29,7 @@ class AirportSearcherTest < ActiveSupport::TestCase
 
     filters = {
       airport_from: @airport1.code,
-      distance_from: 10,
+      distance_miles: 10,
       elevation: 10_000,
       runway_length: 1,
       events_threshold: 30,
@@ -43,27 +43,46 @@ class AirportSearcherTest < ActiveSupport::TestCase
 
   test 'filters location with invalid airport' do
     assert_raises(Exceptions::AirportNotFound) do
-      AirportSearcher.new({airport_from: 'KXXX', distance_from: 42}).results
+      AirportSearcher.new({airport_from: 'KXXX', distance_miles: 42, location_type: :miles}).results
     end
   end
 
   test 'filters location with incomplete inputs' do
     assert_raises(Exceptions::IncompleteLocationFilter) do
-      AirportSearcher.new({airport_from: @airport1.code}).results
+      AirportSearcher.new({airport_from: @airport1.code, location_type: :miles}).results
     end
 
     assert_raises(Exceptions::IncompleteLocationFilter) do
-      AirportSearcher.new({distance_from: 42}).results
+      AirportSearcher.new({distance_miles: 42, location_type: :miles}).results
+    end
+
+    assert_raises(Exceptions::IncompleteLocationFilter) do
+      AirportSearcher.new({distance_hours: 2, location_type: :hours}).results
+    end
+
+    assert_raises(Exceptions::IncompleteLocationFilter) do
+      AirportSearcher.new({airport_from: @airport1.code, distance_hours: 2, location_type: :hours}).results
     end
   end
 
-  test 'filters location' do
+  test 'filters location by miles' do
     @airport1.update!(coordinates: [46, -120])
 
-    assert_equal [@airport2], AirportSearcher.new({airport_from: @airport2.code, distance_from: 5}).results, 'Unexpected location filtering'
+    assert_equal [@airport2], AirportSearcher.new({airport_from: @airport2.code, distance_miles: 5, location_type: :miles}).results, 'Unexpected location filtering by miles'
 
     # Order matters here; the closest airport should be first
-    assert_equal [@airport2, @airport1], AirportSearcher.new({airport_from: @airport2.icao_code, distance_from: 500}).results, 'Unexpected location filtering'
+    assert_equal [@airport2, @airport1], AirportSearcher.new({airport_from: @airport2.icao_code, distance_miles: 500, location_type: :miles}).results, 'Unexpected location filtering by miles'
+  end
+
+  test 'filters location by hours' do
+    @airport1.update!(coordinates: [46, -120])
+
+    assert_equal [@airport2], AirportSearcher.new({airport_from: @airport2.code, distance_hours: 0.5, location_type: :hours, cruise_speed: 100}).results, 'Unexpected location filtering by hours'
+
+    # Order matters here; the closest airport should be first
+    assert_equal [@airport2, @airport1],
+                 AirportSearcher.new({airport_from: @airport2.icao_code, distance_hours: 500, location_type: :hours, cruise_speed: 100}).results,
+                 'Unexpected location filtering by hours'
   end
 
   test 'filters access' do

@@ -10,7 +10,7 @@ class AirportsAdvancedSearchTest < ApplicationSystemTestCase
     visit advanced_search_airports_path
 
     click_link_or_button 'Location'
-    fill_in 'distance_from', with: '10'
+    fill_in 'distance_miles', with: '10'
     fill_in 'airport_from', with: @airport2.code
 
     find('input[type="submit"]').click
@@ -19,7 +19,7 @@ class AirportsAdvancedSearchTest < ApplicationSystemTestCase
     assert_equal 2, all('.results .result').count, 'Wrong number of search results'
 
     assert 'show-instant'.in?(find_by_id('filter-group-location')[:class].split), 'Location filter group not open after search'
-    assert_equal '10', find_by_id('distance_from').value, 'Distance from filter not still populated after search'
+    assert_equal '10', find_by_id('distance_miles').value, 'Distance from filter not still populated after search'
     assert_equal @airport2.code, find_by_id('airport_from').value, 'Airport from filter not still populated after search'
   end
 
@@ -27,7 +27,7 @@ class AirportsAdvancedSearchTest < ApplicationSystemTestCase
     visit advanced_search_airports_path
 
     click_link_or_button 'Location'
-    fill_in 'distance_from', with: '10'
+    fill_in 'distance_miles', with: '10'
     all('h1').first.click # Remove focus from the input
     assert_filter_group_count 1, 'filter-group-location'
 
@@ -37,7 +37,7 @@ class AirportsAdvancedSearchTest < ApplicationSystemTestCase
     assert_filter_group_count 1, 'filter-group-location'
 
     # The count should be decremented only when all inputs in the input group are empty
-    fill_in 'distance_from', with: ''
+    fill_in 'distance_miles', with: ''
     assert_filter_group_count 1, 'filter-group-location'
     fill_in 'airport_from', with: ''
     assert_filter_group_count 0, 'filter-group-location'
@@ -100,7 +100,7 @@ class AirportsAdvancedSearchTest < ApplicationSystemTestCase
     visit advanced_search_airports_path
 
     click_link_or_button 'Location'
-    fill_in 'distance_from', with: '10'
+    fill_in 'distance_miles', with: '10'
     fill_in 'airport_from', with: 'KAAA'
 
     find('input[type="submit"]').click
@@ -116,7 +116,21 @@ class AirportsAdvancedSearchTest < ApplicationSystemTestCase
 
     find('input[type="submit"]').click
 
-    assert_equal 'Both distance and airport must be specified if filtering by location.', find('.results').text, 'Missing location filter error text not shown'
+    assert_equal 'All location fields must be entered if filtering by location.', find('.results').text, 'Missing location filter error text not shown'
+  end
+
+  test 'switches location types' do
+    visit advanced_search_airports_path
+
+    click_link_or_button 'Location'
+    assert_selector '#distance_miles'
+    assert_no_selector '#distance_hours'
+    assert_no_selector '#cruise_speed'
+
+    find('label[for="location_type_hours"]').click
+    assert_no_selector '#distance_miles'
+    assert_selector '#distance_hours'
+    assert_selector '#cruise_speed'
   end
 
 private
