@@ -120,7 +120,7 @@ class AirportsController < ApplicationController
     rescue Exceptions::AirportNotFound
       @error = "Airport with code \"#{advanced_search_params[:airport_from]}\" not found."
     rescue Exceptions::IncompleteLocationFilter
-      @error = 'Both distance and airport must be specified if filtering by location.'
+      @error = 'All location fields must be entered if filtering by location.'
     end
 
     render :search, layout: 'application'
@@ -211,8 +211,11 @@ private
   def advanced_search_params
     # rubocop:disable Layout/EmptyLinesAroundArguments
     return params.permit(
-      :distance_from,
+      :location_type,
+      :distance_miles,
+      :distance_hours,
       :airport_from,
+      :cruise_speed,
 
       :elevation,
       :events_threshold,

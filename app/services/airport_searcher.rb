@@ -5,8 +5,11 @@ class AirportSearcher
   RUNWAY_SURFACES_GRASS = ['TURF', 'DIRT', 'GRAVEL', 'SNOW', 'ICE', 'TREATED', 'GRASS', 'SAND', 'WOOD']
 
   def initialize(filters)
+    @location_type = filters[:location_type]&.to_sym
     @airport_from = filters[:airport_from]&.upcase
-    @distance_from = filters[:distance_from].to_i
+    @distance_miles = filters[:distance_miles].to_i
+    @distance_hours = filters[:distance_hours].to_f
+    @cruise_speed = filters[:cruise_speed].to_i
 
     @elevation = filters[:elevation].to_i
     @events_threshold = filters[:events_threshold].to_i
@@ -55,7 +58,9 @@ class AirportSearcher
   def empty?
     return !(
       @airport_from.presence ||
-      @distance_from > 0 ||
+      @distance_miles > 0 ||
+      @distance_hours > 0 ||
+      @cruise_speed > 0 ||
 
       @elevation > 0 ||
       @events_threshold > 0 ||
@@ -86,17 +91,31 @@ class AirportSearcher
 private
 
   def location_filter(query)
+    return query unless @location_type
+
+    distance = case @location_type
+                 when :miles
+                   @distance_miles
+                 when :hours
+                   raise Exceptions::IncompleteLocationFilter unless @cruise_speed > 0
+
+                   @distance_hours * @cruise_speed
+               end
+
     # Ensure that if one of the values is present then the other is as well
-    raise Exceptions::IncompleteLocationFilter if @airport_from.present? ^ (@distance_from > 0)
+    raise Exceptions::IncompleteLocationFilter if @airport_from.present? ^ (distance > 0)
 
     # But it's okay if both are omitted
-    return query unless @airport_from.presence && @distance_from
+    return query unless @airport_from.presence && distance
 
     airport = Airport.find_by(code: @airport_from) || Airport.find_by(icao_code: @airport_from)
     raise Exceptions::AirportNotFound unless airport
 
+    # Convert nautical miles to statue miles
+    distance *= 1.15
+
     # Filter by distance and then order by distance
-    query = query.where('coordinates <@> point(?,?) <= ?', airport.latitude, airport.longitude, @distance_from)
+    query = query.where('coordinates <@> point(?,?) <= ?', airport.latitude, airport.longitude, distance)
     return query.order(Arel.sql(ApplicationRecord.sanitize_sql_array(['coordinates <@> point(?,?)', airport.latitude, airport.longitude])))
   end
 
