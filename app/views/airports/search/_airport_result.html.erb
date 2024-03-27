@@ -30,7 +30,7 @@
     </div>
 
     <ul class="list-unstyled">
-      <li><i class="fa-solid fa-location-dot me-1"></i><%= airport.city.titleize %>, <%= airport.state %></li>
+      <% if airport.city && airport.state %><li><i class="fa-solid fa-location-dot me-1"></i><%= airport.city.titleize %>, <%= airport.state %></li><% end %>
       <li><i class="fa-solid fa-mountain me-1"></i>Elevation: <%= number_with_delimiter(airport.elevation, delimiter: ',') %>ft</li>
       <li><i class="fa-solid fa-road me-1"></i>Longest runway: <%= number_with_delimiter(runway.length, delimiter: ',') %>ft</li>
     </ul>
