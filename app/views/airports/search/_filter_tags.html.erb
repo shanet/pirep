@@ -14,7 +14,7 @@
       <% next unless tag_configuration[:searchable] %>
 
       <%= render 'airports/tags/tag', tag_name: tag_name, editing: true %>
-      <%= hidden_field_tag "tag_#{tag_name}" %>
+      <%= hidden_field_tag "tag_#{tag_name}", nil, data: {'tag-name' => tag_name} %>
     <% end %>
   </div>
 <% end %>

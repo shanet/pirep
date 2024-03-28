@@ -70,6 +70,17 @@ class AirportsAdvancedSearchTest < ApplicationSystemTestCase
     assert_not 'access_public=1'.in?(URI.parse(current_url).query), 'Unselected input present in query string'
   end
 
+  test 'restores inputs from URL parameters' do
+    visit advanced_search_airports_path(tag_food: 1)
+
+    # The food tag should be visible and selected
+    assert_selector 'div.tag-square[data-tag-name="food"]'
+    assert_no_selector 'div.tag-square.unselected[data-tag-name="food"]'
+
+    # Other tags should be visible but unselected
+    assert_selector 'div.tag-square.unselected[data-tag-name="camping"]'
+  end
+
   test 'sets range input label' do
     visit advanced_search_airports_path
 

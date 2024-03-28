@@ -1,7 +1,7 @@
 <%= render 'airports/search/filter_header', title: 'Location', target: 'filter-group-location' %>
 
 <% content_for :collapsible_content, flush: true do %>
-  <div class="btn-group mb-2 mx-5">
+  <div class="btn-group mb-3 mx-5">
     <%= radio_button_tag :location_type, :miles, class: 'btn-check', data: {'no-badge' => true}, checked: true %>
     <%= label_tag :location_type_miles, 'By Miles', class: 'btn btn-outline-primary' %>
 
@@ -19,7 +19,7 @@
 
     <div id="cruise_speed" class="input-group mt-3 d-none">
       <span class="input-group-text">Cruise speed:</span>
-      <%= text_field_tag 'cruise_speed', '', maxlength: 6, placeholder: '120', autocomplete: :text, class: 'form-control flex-shrink-1', data: {'no-badge' => true} %>
+      <%= number_field_tag 'cruise_speed', nil, min: 1, max: 500, placeholder: 120, autocomplete: :number, class: 'form-control flex-shrink-1', data: {'no-badge' => true} %>
       <span class="input-group-text">kts</span>
     </div>
   </div>

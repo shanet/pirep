@@ -95,17 +95,20 @@ private
 
     distance = case @location_type
                  when :miles
+                   # Ensure that if one of the values is present then the other is as well
+                   raise Exceptions::IncompleteLocationFilter if @airport_from.present? ^ (@distance_miles > 0)
+
                    @distance_miles
                  when :hours
-                   raise Exceptions::IncompleteLocationFilter unless @cruise_speed > 0
+                   # Ensure that if one of the values is present then the others are as well
+                   unless [0, 3].include?([@airport_from.present?, @distance_hours > 0, @cruise_speed > 0].select(&:itself).count)
+                     raise Exceptions::IncompleteLocationFilter
+                   end
 
                    @distance_hours * @cruise_speed
                end
 
-    # Ensure that if one of the values is present then the other is as well
-    raise Exceptions::IncompleteLocationFilter if @airport_from.present? ^ (distance > 0)
-
-    # But it's okay if both are omitted
+    # Do nothing if we don't have an airport and distance
     return query unless @airport_from.presence && distance
 
     airport = Airport.find_by(code: @airport_from) || Airport.find_by(icao_code: @airport_from)

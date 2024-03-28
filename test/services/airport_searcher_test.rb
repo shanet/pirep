@@ -63,6 +63,22 @@ class AirportSearcherTest < ActiveSupport::TestCase
     assert_raises(Exceptions::IncompleteLocationFilter) do
       AirportSearcher.new({airport_from: @airport1.code, distance_hours: 2, location_type: :hours}).results
     end
+
+    assert_raises(Exceptions::IncompleteLocationFilter) do
+      AirportSearcher.new({airport_from: @airport1.code, location_type: :hours}).results
+    end
+
+    assert_raises(Exceptions::IncompleteLocationFilter) do
+      AirportSearcher.new({distance_hours: 2, cruise_speed: 100, location_type: :hours}).results
+    end
+
+    assert_raises(Exceptions::IncompleteLocationFilter) do
+      AirportSearcher.new({cruise_speed: 100, location_type: :hours}).results
+    end
+
+    # These should not raise any exceptions
+    AirportSearcher.new({location_type: :miles}).results
+    AirportSearcher.new({location_type: :hours}).results
   end
 
   test 'filters location by miles' do

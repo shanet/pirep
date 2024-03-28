@@ -147,7 +147,6 @@ function initRangeFields() {
 function initTagFields() {
   getSearchForm().querySelectorAll('.tag-square').forEach((tag) => {
     const input = document.getElementById(`tag_${tag.dataset.tagName}`);
-    if(input.value === '1') tag.classList.remove('unselected');
 
     tag.addEventListener('click', () => {
       tag.classList.toggle('unselected');
@@ -177,6 +176,15 @@ function initSearchFieldsFromUrl() {
         break;
       case 'checkbox':
         input.checked = (value === '1');
+        break;
+      case 'hidden':
+        // Tag fields use hidden inputs so those need to be handled specially
+        if(input.dataset.tagName && value === '1') {
+          const tag = getSearchForm().querySelector(`div[data-tag-name="${input.dataset.tagName}"]`);
+          if(tag) tag.classList.remove('unselected');
+        }
+
+        input.value = value;
         break;
       default:
         input.value = value;
