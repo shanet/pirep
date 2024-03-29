@@ -10,6 +10,7 @@
 
   &.show-instant {
     max-height: 99em;
+    transition: none;
   }
 
   > .content {

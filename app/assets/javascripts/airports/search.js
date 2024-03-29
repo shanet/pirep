@@ -1,3 +1,5 @@
+import * as utils from 'shared/utils';
+
 const BADGE_INCREMENT = 1;
 const BADGE_DECREMENT = 2;
 
@@ -14,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // This should be called last so the event listeners set above are called when the form inputs are set
   initSearchFieldsFromUrl();
+
+  scrollToResults();
 }, {once: true});
 
 function initFilterGroupHeaders() {
@@ -225,6 +229,13 @@ function openActiveFilterGroups() {
       header.dispatchEvent(new Event('collapsible'));
     }
   });
+}
+
+function scrollToResults() {
+  // Only scroll to results when the layout is one column
+  if(!utils.isBreakpointDown('sm')) return;
+
+  document.querySelector('.results').scrollIntoView();
 }
 
 function getSearchForm() {
