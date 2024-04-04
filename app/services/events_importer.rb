@@ -72,7 +72,7 @@ private
   def airport_for_event(event)
     latitude = event[:latitude].to_f
     longitude = event[:longitude].to_f
-    order = ApplicationRecord.sanitize_sql_for_order([Arel.sql('coordinates <-> point(?, ?)'), latitude, longitude])
+    order = ApplicationRecord.sanitize_sql_for_order([Arel.sql('coordinates <-> point(?, ?)'), longitude, latitude])
 
     # Scope the facility types down to only airports since it's possible that there's heliports
     # or seaplane bases within an airport and it's not likely for events to be happening there.
@@ -81,17 +81,17 @@ private
 
     # First try to find all public airports with the same city and state as the event if one was given
     if event[:city].present? && event[:state].present?
-      airport = Airport.where(**conditions.merge(city: event[:city].upcase, state: event[:state].upcase)).where(sanity_check, latitude, longitude).order(order).first
+      airport = Airport.where(**conditions.merge(city: event[:city].upcase, state: event[:state].upcase)).where(sanity_check, longitude, latitude).order(order).first
       return airport if airport
     end
 
     # Now just try to find public airports
-    airport = Airport.where(**conditions).where(sanity_check, latitude, longitude).order(order).first
+    airport = Airport.where(**conditions).where(sanity_check, longitude, latitude).order(order).first
     return airport if airport
 
     # If still nothing try private airports before giving up
     conditions.delete(:facility_use)
-    return Airport.where(**conditions).where(sanity_check, latitude, longitude).order(order).first
+    return Airport.where(**conditions).where(sanity_check, longitude, latitude).order(order).first
   end
 
   def valid_event?(event)

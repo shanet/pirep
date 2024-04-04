@@ -105,7 +105,8 @@ private
                      raise Exceptions::IncompleteLocationFilter
                    end
 
-                   @distance_hours * @cruise_speed
+                   # Convert nautical miles to statue miles
+                   @distance_hours * @cruise_speed *= 1.15
                end
 
     # Do nothing if we don't have an airport and distance
@@ -114,12 +115,9 @@ private
     airport = Airport.find_by(code: @airport_from) || Airport.find_by(icao_code: @airport_from)
     raise Exceptions::AirportNotFound unless airport
 
-    # Convert nautical miles to statue miles
-    distance *= 1.15
-
     # Filter by distance and then order by distance
-    query = query.where('coordinates <@> point(?,?) <= ?', airport.latitude, airport.longitude, distance)
-    return query.order(Arel.sql(ApplicationRecord.sanitize_sql_array(['coordinates <@> point(?,?)', airport.latitude, airport.longitude])))
+    query = query.where('coordinates <@> point(?,?) <= ?', airport.longitude, airport.latitude, distance)
+    return query.order(Arel.sql(ApplicationRecord.sanitize_sql_array(['coordinates <@> point(?,?)', airport.longitude, airport.latitude])))
   end
 
   def access_filter(query)

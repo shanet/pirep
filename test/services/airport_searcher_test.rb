@@ -82,7 +82,7 @@ class AirportSearcherTest < ActiveSupport::TestCase
   end
 
   test 'filters location by miles' do
-    @airport1.update!(coordinates: [46, -120])
+    @airport1.update!(coordinates: [-120, 46])
 
     assert_equal [@airport2], AirportSearcher.new({airport_from: @airport2.code, distance_miles: 5, location_type: :miles}).results, 'Unexpected location filtering by miles'
 
@@ -91,7 +91,7 @@ class AirportSearcherTest < ActiveSupport::TestCase
   end
 
   test 'filters location by hours' do
-    @airport1.update!(coordinates: [46, -120])
+    @airport1.update!(coordinates: [-120, 46])
 
     assert_equal [@airport2], AirportSearcher.new({airport_from: @airport2.code, distance_hours: 0.5, location_type: :hours, cruise_speed: 100}).results, 'Unexpected location filtering by hours'
 

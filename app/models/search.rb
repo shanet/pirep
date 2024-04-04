@@ -57,7 +57,7 @@ class Search < ApplicationRecord
     #
     # Likewise, when doing the ranking we want to prioritize results for airport codes over airport nodes. The weights are set such that the
     # A and B weights will have higher ranking nearly always.
-    coordinates_weight = (coordinates ? "* (point(#{coordinates[:latitude]}, #{coordinates[:longitude]}) <@> #{table_name}.coordinates)" : '')
+    coordinates_weight = (coordinates ? "* (point(#{coordinates[:longitude]}, #{coordinates[:latitude]}) <@> #{table_name}.coordinates)" : '')
     rank_column = "ts_rank('{1, .9, .1, 0}', term_vector, '#{query}') #{coordinates_weight} AS rank"
 
     # If we're given multiple models to search return search records directly. If we're only given one particular model then we can return that model's records
