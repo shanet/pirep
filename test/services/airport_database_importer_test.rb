@@ -31,7 +31,7 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
     assert_equal @faa_airport[:ownership_type], faa_airport.ownership_type
     assert_equal @faa_airport[:latitude], faa_airport.latitude
     assert_equal @faa_airport[:longitude], faa_airport.longitude
-    assert_equal ActiveRecord::Point.new(@faa_airport[:latitude], @faa_airport[:longitude]), faa_airport.coordinates
+    assert_equal ActiveRecord::Point.new(@faa_airport[:longitude], @faa_airport[:latitude]), faa_airport.coordinates
     assert_equal @faa_airport[:elevation], faa_airport.elevation
     assert_equal @faa_airport[:city], faa_airport.city
     assert_equal @faa_airport[:state], faa_airport.state
@@ -58,7 +58,7 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
     assert_equal @our_airports_airport[:ownership_type], our_airports_airport.ownership_type
     assert_equal @our_airports_airport[:latitude], our_airports_airport.latitude
     assert_equal @our_airports_airport[:longitude], our_airports_airport.longitude
-    assert_equal ActiveRecord::Point.new(@our_airports_airport[:latitude], @our_airports_airport[:longitude]), our_airports_airport.coordinates
+    assert_equal ActiveRecord::Point.new(@our_airports_airport[:longitude], @our_airports_airport[:latitude]), our_airports_airport.coordinates
     assert_equal @our_airports_airport[:elevation], our_airports_airport.elevation
     assert_equal @our_airports_airport[:city], our_airports_airport.city
     assert_equal @our_airports_airport[:state], our_airports_airport.state

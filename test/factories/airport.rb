@@ -5,7 +5,7 @@ FactoryBot.define do
     sequence(:icao_code) {|count| "KPAE#{count}"}
     latitude             {47.9073174}
     longitude            {-122.282094}
-    coordinates          {[latitude, longitude]}
+    coordinates          {[longitude, latitude]}
     city                 {'EVERETT'}
     state                {'WA'}
     country              {'us'}

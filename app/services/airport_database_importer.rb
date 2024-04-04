@@ -61,7 +61,7 @@ private
       ownership_type:  airport_data[:ownership_type],
       latitude:        airport_data[:latitude],
       longitude:       airport_data[:longitude],
-      coordinates:     [airport_data[:latitude], airport_data[:longitude]],
+      coordinates:     [airport_data[:longitude], airport_data[:latitude]],
       elevation:       airport_data[:elevation],
       city:            airport_data[:city],
       state:           airport_data[:state],
