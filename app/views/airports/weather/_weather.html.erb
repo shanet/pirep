@@ -1,6 +1,8 @@
 <% return unless @airport.has_weather? %>
 
-<div class="weather-reports card mb-2">
+<div id="weather-reports" class="weather-reports card mb-2">
+  <a href="#weather-reports"></a>
+
   <div class="card-header <%= weather_background_color(@airport.metar.flight_category) %>">
     <i class="fa-solid <%= weather_icon(@airport) %>"></i> Current Weather &mdash; <span class="fw-bold"><%= @airport.metar.flight_category %></span>
   </div>

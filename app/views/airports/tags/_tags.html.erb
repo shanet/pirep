@@ -6,7 +6,7 @@
 
 <div class="d-flex flex-wrap gap-1 mb-2 <% if @airport.tags.count > 2 %>justify-content-center<% end %>">
   <% @airport.tags.each do |tag| %>
-    <%= render partial: 'airports/tags/tag', locals: {tag_record: tag} %>
+    <%= render partial: 'airports/tags/tag', locals: {tag_record: tag, scroll_on_click: true} %>
   <% end %>
 
   <div class="tag-square add card p-0 me-1 mb-1" data-bs-toggle="collapse" data-bs-target="add-tag-form">

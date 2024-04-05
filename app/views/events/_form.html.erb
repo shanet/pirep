@@ -67,6 +67,6 @@
 
   <div>
     <%= form.hidden_field :airport_id, value: (defined?(@airport) ? @airport.id : form.object.airport&.id) %>
-    <%= form.submit value: (form.object.persisted? ? 'Submit' : 'Add Event'), class: 'btn btn-primary' %>
+    <%= form.submit value: (form.object.persisted? ? 'Submit' : 'Add Event'), class: 'btn btn-primary', data: {disable_with: (form.object.persisted? ? 'Submit' : 'Add Event')} %>
   </div>
 <% end %>
