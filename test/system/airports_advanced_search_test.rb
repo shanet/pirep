@@ -144,6 +144,20 @@ class AirportsAdvancedSearchTest < ApplicationSystemTestCase
     assert_selector '#cruise_speed'
   end
 
+  test 'links to tag anchor' do
+    create(:tag, name: :webcam, airport: @airport1)
+    visit advanced_search_airports_path
+
+    click_link_or_button 'Access'
+    find('label[for="access_public"]').click
+    find('input[type="submit"]').click
+
+    # Clicking on the webcam tag should link to the airport page with its anchor set
+    click_link_or_button 'Webcam'
+    assert_selector '.airport-header'
+    assert '#webcam'.in?(current_url), 'Anchor not in URL'
+  end
+
 private
 
   def assert_filter_group_count(count, group)

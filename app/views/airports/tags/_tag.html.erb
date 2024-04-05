@@ -3,10 +3,15 @@
   tag_configuration = Tag::TAGS[tag_name]
 %>
 
+<%# Provide an option to make the tag into a link if clicked %>
+<% if defined?(hyperlink) && hyperlink.present? %>
+  <a href="<%= hyperlink %>" class="text-decoration-none">
+<% end %>
+
 <div class="tag-square card p-0 theme-<%= tag_configuration[:theme] %>
   <%= defined?(editing) ? 'editing unselected' : '' %>
   <%= defined?(size) ? size : '' %>"
-  <%= tag_configuration[:scroll_target] && !defined?(no_scroll) ? "data-scroll-target=\"#{tag_configuration[:scroll_target]}\"".html_safe : '' %>
+  <%= tag_configuration[:scroll_target] && defined?(scroll_on_click) && scroll_on_click.present? ? "data-scroll-target=\"#{tag_configuration[:scroll_target]}\"".html_safe : '' %>
   data-tag-id="<%= defined?(tag_record) ? tag_record.id : '' %>"
   data-tag-name="<%= tag_name %>">
 
@@ -24,3 +29,7 @@
     </div>
   </div>
 </div>
+
+<% if defined?(hyperlink) && hyperlink.present? %>
+  </a>
+<% end %>

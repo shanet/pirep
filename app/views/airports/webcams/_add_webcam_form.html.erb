@@ -9,7 +9,7 @@
       <%= form.text_field :url, class: 'form-control' %>
 
       <%= form.hidden_field :airport_id, value: @airport.id %>
-      <%= form.submit value: 'Add Webcam', class: 'btn btn-primary' %>
+      <%= form.submit value: 'Add Webcam', class: 'btn btn-primary', data: {disable_with: 'Add Webcam'} %>
     </div>
   <% end %>
 <% end %>

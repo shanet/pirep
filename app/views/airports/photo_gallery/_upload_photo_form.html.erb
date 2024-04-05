@@ -6,7 +6,7 @@
   <%= form_with model: @airport, local: true do |form| %>
     <div class="input-group mb-3">
       <%= form.file_field :photos, multiple: true, class: 'form-control' %>
-      <%= form.submit value: 'Upload Photo', class: 'btn btn-primary' %>
+      <%= form.submit value: 'Upload Photo', class: 'btn btn-primary', data: {disable_with: 'Upload Photo'} %>
     </div>
 
     <div class="alert alert-warning mt-3 mb-0 py-2">

@@ -25,7 +25,12 @@
 
     <div class="d-flex flex-wrap gap-1 mb-2">
       <% airport.tags.each do |tag| %>
-        <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag, size: :small, no_scroll: true} %>
+        <%# Make the tag a link to the relevant section on the airport page if clicked %>
+        <% if Tag::TAGS[tag.name][:scroll_target] %>
+          <% link = airport_path(airport, anchor: Tag::TAGS[tag.name][:scroll_target]) %>
+        <% end %>
+
+        <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_name: tag.name, size: :small, hyperlink: link} %>
       <% end %>
     </div>
 

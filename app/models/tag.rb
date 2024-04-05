@@ -133,6 +133,7 @@ class Tag < ApplicationRecord
       icon: 'cloud-sun',
       theme: 'lime',
       searchable: true,
+      scroll_target: 'weather-reports',
     },
     webcam: {
       label: 'Webcam',
