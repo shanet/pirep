@@ -9,12 +9,8 @@ class Search < ApplicationRecord
   belongs_to :searchable, polymorphic: true
 
   def self.reindex!
-    search_records = []
-
     # Collect indexing statements from all searchable models
-    SEARCH_MODELS.each do |model|
-      search_records << model.search_index
-    end
+    search_records = SEARCH_MODELS.map(&:search_index)
 
     statements = [
       # Drop and create a new temporary search table by copying the structure of the existing one
