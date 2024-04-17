@@ -36,10 +36,11 @@ private
       ApplicationRecord.transaction do
         airport.metar&.destroy!
 
-        airport.metar = Metar.new({
+        Metar.create!({
+          airport: airport,
           cloud_layers: cloud_layers,
           dewpoint: metar.at_xpath('dewpoint_c')&.text&.to_f,
-          flight_category: metar.at_xpath('flight_category').text,
+          flight_category: metar.at_xpath('flight_category').text.presence || 'VFR',
           observed_at: Time.zone.parse(metar.at_xpath('observation_time').text),
           raw: metar.at_xpath('raw_text').text,
           temperature: metar.at_xpath('temp_c')&.text&.to_f,
