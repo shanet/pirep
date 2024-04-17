@@ -47,7 +47,7 @@ jobs:
           go install github.com/shanet/terraform-lexicographical-lint@latest
 
       - name: Install Yarn
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: latest
           cache: yarn
