@@ -24,9 +24,9 @@ resource "aws_lb" "load_balancer" {
 module "service_jobs" {
   source = "./service"
 
-  certificate_arn     = var.certificate_arn
-  health_check_path   = var.health_check_path_jobs
-  listener_port_http  = null
+  certificate_arn    = var.certificate_arn
+  health_check_path  = var.health_check_path_jobs
+  listener_port_http = null
   # listener_port_https = 444
   listener_port_https = null
   load_balancer       = aws_lb.load_balancer.arn

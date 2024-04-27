@@ -4,8 +4,8 @@ resource "aws_codedeploy_app" "this" {
 }
 
 module "deployment_group_jobs" {
-  source = "./deployment_group"
   count  = (contains(keys(var.services), "jobs") ? 1 : 0)
+  source = "./deployment_group"
 
   codedeploy_application     = aws_codedeploy_app.this.name
   ecs_cluster_name           = var.ecs_cluster_name
@@ -18,8 +18,8 @@ module "deployment_group_jobs" {
 }
 
 module "deployment_group_web" {
-  source = "./deployment_group"
   count  = (contains(keys(var.services), "web") ? 1 : 0)
+  source = "./deployment_group"
 
   codedeploy_application     = aws_codedeploy_app.this.name
   ecs_cluster_name           = var.ecs_cluster_name

@@ -25,9 +25,9 @@ resource "aws_ecs_cluster" "this" {
 module "service_jobs" {
   source = "./service"
 
-  cloudwatch_log_group                = var.cloudwatch_log_groups.jobs
-  container_command                   = "[bundle, exec, good_job, start]"
-  container_count                     = 0
+  cloudwatch_log_group = var.cloudwatch_log_groups.jobs
+  container_command    = "[bundle, exec, good_job, start]"
+  container_count      = 0
   # container_count                     = 1
   cpu                                 = 512 # 0.5 vCPU
   ecs_cluster                         = aws_ecs_cluster.this.id
@@ -48,7 +48,7 @@ module "service_jobs" {
 module "service_web" {
   source = "./service"
 
-  cloudwatch_log_group                = var.cloudwatch_log_groups.web
+  cloudwatch_log_group = var.cloudwatch_log_groups.web
   # container_command                   = "[puma, --config, config/puma.rb]"
   container_command                   = "[bash, scripts/ecs_main.sh]"
   container_count                     = 1

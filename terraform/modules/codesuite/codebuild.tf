@@ -12,21 +12,6 @@ resource "aws_codebuild_project" "image" {
     privileged_mode = true
     type            = "LINUX_CONTAINER"
 
-    environment_variable {
-      name  = "DOCKER_HUB_USERNAME"
-      value = jsondecode(data.aws_ssm_parameter.docker_hub_credentials.value)["username"]
-    }
-
-    environment_variable {
-      name  = "DOCKER_HUB_PASSWORD"
-      value = jsondecode(data.aws_ssm_parameter.docker_hub_credentials.value)["password"]
-    }
-
-    environment_variable {
-      name  = "ECR_REPOSITORY_URL"
-      value = var.ecr_repository_url
-    }
-
     dynamic "environment_variable" {
       for_each = (contains(keys(var.services), "jobs") ? [1] : [])
       content {
@@ -43,16 +28,6 @@ resource "aws_codebuild_project" "image" {
       }
     }
 
-    environment_variable {
-      name  = "NAME_PREFIX"
-      value = var.name_prefix
-    }
-
-    environment_variable {
-      name  = "PORT"
-      value = var.service_port
-    }
-
     dynamic "environment_variable" {
       for_each = (contains(keys(var.services), "jobs") ? [1] : [])
       content {
@@ -67,6 +42,31 @@ resource "aws_codebuild_project" "image" {
         name  = "TASK_DEFINITION_WEB_ARN"
         value = var.services.web.task_definition_arn
       }
+    }
+
+    environment_variable {
+      name  = "DOCKER_HUB_USERNAME"
+      value = jsondecode(data.aws_ssm_parameter.docker_hub_credentials.value)["username"]
+    }
+
+    environment_variable {
+      name  = "DOCKER_HUB_PASSWORD"
+      value = jsondecode(data.aws_ssm_parameter.docker_hub_credentials.value)["password"]
+    }
+
+    environment_variable {
+      name  = "ECR_REPOSITORY_URL"
+      value = var.ecr_repository_url
+    }
+
+    environment_variable {
+      name  = "NAME_PREFIX"
+      value = var.name_prefix
+    }
+
+    environment_variable {
+      name  = "PORT"
+      value = var.service_port
     }
   }
 
