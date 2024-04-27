@@ -30,7 +30,7 @@ resource "aws_db_instance" "database" {
   db_subnet_group_name      = var.subnet_group
   deletion_protection       = true
   engine                    = "postgres"
-  engine_version            = "14.7"
+  engine_version            = "14.10"
   final_snapshot_identifier = "${var.name_prefix}-final"
   identifier                = var.name_prefix
   instance_class            = local.instance_class
