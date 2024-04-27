@@ -74,14 +74,14 @@ module "codesuite" {
   service_port               = local.service_port
 
   services = {
-    jobs = {
-      ecs_service_name           = module.ecs.service_jobs.name
-      load_balancer_listener_arn = module.load_balancer.listener_jobs[0].arn
-      name_prefix                = "${local.name_prefix}-jobs"
-      target_group_blue_name     = module.load_balancer.target_group_jobs_blue.name
-      target_group_green_name    = module.load_balancer.target_group_jobs_green.name
-      task_definition_arn        = module.ecs.task_definition_jobs.arn
-    },
+    # jobs = {
+    #   ecs_service_name           = module.ecs.service_jobs.name
+    #   load_balancer_listener_arn = module.load_balancer.listener_jobs[0].arn
+    #   name_prefix                = "${local.name_prefix}-jobs"
+    #   target_group_blue_name     = module.load_balancer.target_group_jobs_blue.name
+    #   target_group_green_name    = module.load_balancer.target_group_jobs_green.name
+    #   task_definition_arn        = module.ecs.task_definition_jobs.arn
+    # },
     web = {
       ecs_service_name           = module.ecs.service_web.name
       load_balancer_listener_arn = module.load_balancer.listener_web[0].arn
