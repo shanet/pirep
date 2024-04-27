@@ -4,6 +4,9 @@ variable "github_repository" {}
 variable "iam_role_codebuild_arn" {}
 variable "iam_role_codedeploy_arn" {}
 variable "iam_role_codepipeline_arn" {}
+variable "migrations_container_name" {}
+variable "migrations_ecs_service" {}
+variable "migrations_task_definition" {}
 variable "name_prefix" {}
 variable "service_port" {}
 

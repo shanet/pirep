@@ -27,14 +27,20 @@ resource "aws_codebuild_project" "image" {
       value = var.ecr_repository_url
     }
 
-    environment_variable {
-      name  = "ECS_SERVICE_NAME_JOBS"
-      value = var.services.jobs.ecs_service_name
+    dynamic "environment_variable" {
+      for_each = (contains(keys(var.services), "jobs") ? [1] : [])
+      content {
+        name  = "ECS_SERVICE_NAME_JOBS"
+        value = var.services.jobs.ecs_service_name
+      }
     }
 
-    environment_variable {
-      name  = "ECS_SERVICE_NAME_WEB"
-      value = var.services.web.ecs_service_name
+    dynamic "environment_variable" {
+      for_each = (contains(keys(var.services), "web") ? [1] : [])
+      content {
+        name  = "ECS_SERVICE_NAME_WEB"
+        value = var.services.web.ecs_service_name
+      }
     }
 
     environment_variable {
@@ -47,14 +53,20 @@ resource "aws_codebuild_project" "image" {
       value = var.service_port
     }
 
-    environment_variable {
-      name  = "TASK_DEFINITION_JOBS_ARN"
-      value = var.services.jobs.task_definition_arn
+    dynamic "environment_variable" {
+      for_each = (contains(keys(var.services), "jobs") ? [1] : [])
+      content {
+        name  = "TASK_DEFINITION_JOBS_ARN"
+        value = var.services.jobs.task_definition_arn
+      }
     }
 
-    environment_variable {
-      name  = "TASK_DEFINITION_WEB_ARN"
-      value = var.services.web.task_definition_arn
+    dynamic "environment_variable" {
+      for_each = (contains(keys(var.services), "web") ? [1] : [])
+      content {
+        name  = "TASK_DEFINITION_WEB_ARN"
+        value = var.services.web.task_definition_arn
+      }
     }
   }
 
@@ -85,7 +97,7 @@ resource "aws_codebuild_project" "migrations" {
 
     environment_variable {
       name  = "ECS_SERVICE_NAME"
-      value = var.services.jobs.ecs_service_name
+      value = var.migrations_ecs_service
     }
 
     environment_variable {
@@ -93,7 +105,7 @@ resource "aws_codebuild_project" "migrations" {
       value = jsonencode({
         containerOverrides = [{
           command = ["bundle", "exec", "rails", "db:migrate"]
-          name    = var.services.jobs.name_prefix,
+          name    = var.migrations_container_name
         }]
       })
     }
@@ -105,7 +117,7 @@ resource "aws_codebuild_project" "migrations" {
 
     environment_variable {
       name  = "TASK_DEFINITION_ARN"
-      value = var.services.jobs.task_definition_arn
+      value = var.migrations_task_definition
     }
   }
 

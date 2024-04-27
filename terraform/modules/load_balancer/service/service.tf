@@ -28,6 +28,8 @@ module "target_group_green" {
 }
 
 resource "aws_lb_listener" "https" {
+  count = (var.listener_port_https != null ? 1 : 0)
+
   certificate_arn   = var.certificate_arn
   load_balancer_arn = var.load_balancer
   port              = var.listener_port_https

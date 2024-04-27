@@ -61,19 +61,22 @@ module "cloudwatch" {
 module "codesuite" {
   source = "../codesuite"
 
-  ecr_repository_url        = module.ecr.repository.repository_url
-  ecs_cluster_name          = module.ecs.cluster.name
-  github_repository         = local.github_repository
-  iam_role_codebuild_arn    = module.iam.codebuild_role.arn
-  iam_role_codedeploy_arn   = module.iam.codedeploy_role.arn
-  iam_role_codepipeline_arn = module.iam.codepipeline_role.arn
-  name_prefix               = local.name_prefix
-  service_port              = local.service_port
+  ecr_repository_url         = module.ecr.repository.repository_url
+  ecs_cluster_name           = module.ecs.cluster.name
+  github_repository          = local.github_repository
+  iam_role_codebuild_arn     = module.iam.codebuild_role.arn
+  iam_role_codedeploy_arn    = module.iam.codedeploy_role.arn
+  iam_role_codepipeline_arn  = module.iam.codepipeline_role.arn
+  migrations_container_name  = "${local.name_prefix}-jobs"
+  migrations_ecs_service     = module.ecs.service_jobs.name
+  migrations_task_definition = module.ecs.task_definition_jobs.arn
+  name_prefix                = local.name_prefix
+  service_port               = local.service_port
 
   services = {
     jobs = {
       ecs_service_name           = module.ecs.service_jobs.name
-      load_balancer_listener_arn = module.load_balancer.listener_jobs.arn
+      load_balancer_listener_arn = module.load_balancer.listener_jobs[0].arn
       name_prefix                = "${local.name_prefix}-jobs"
       target_group_blue_name     = module.load_balancer.target_group_jobs_blue.name
       target_group_green_name    = module.load_balancer.target_group_jobs_green.name
@@ -81,7 +84,7 @@ module "codesuite" {
     },
     web = {
       ecs_service_name           = module.ecs.service_web.name
-      load_balancer_listener_arn = module.load_balancer.listener_web.arn
+      load_balancer_listener_arn = module.load_balancer.listener_web[0].arn
       name_prefix                = "${local.name_prefix}-web"
       target_group_blue_name     = module.load_balancer.target_group_web_blue.name
       target_group_green_name    = module.load_balancer.target_group_web_green.name

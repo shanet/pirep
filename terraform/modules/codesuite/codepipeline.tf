@@ -68,43 +68,51 @@ resource "aws_codepipeline" "this" {
   stage {
     name = "Deploy"
 
-    action {
-      category        = "Deploy"
-      input_artifacts = ["build"]
-      name            = var.services.jobs.name_prefix
-      owner           = "AWS"
-      provider        = "CodeDeployToECS"
-      version         = "1"
+    dynamic "action" {
+      for_each = (contains(keys(var.services), "jobs") ? [1] : [])
 
-      configuration = {
-        ApplicationName                = aws_codedeploy_app.this.name,
-        AppSpecTemplateArtifact        = "build"
-        AppSpecTemplatePath            = "appspec_jobs.yml"
-        DeploymentGroupName            = module.deployment_group_jobs.group.deployment_group_name,
-        Image1ArtifactName             = "build"
-        Image1ContainerName            = "IMAGE_URI"
-        TaskDefinitionTemplateArtifact = "build"
-        TaskDefinitionTemplatePath     = "task_definition_jobs.json"
+      content {
+        category        = "Deploy"
+        input_artifacts = ["build"]
+        name            = var.services.jobs.name_prefix
+        owner           = "AWS"
+        provider        = "CodeDeployToECS"
+        version         = "1"
+
+        configuration = {
+          ApplicationName                = aws_codedeploy_app.this.name,
+          AppSpecTemplateArtifact        = "build"
+          AppSpecTemplatePath            = "appspec_jobs.yml"
+          DeploymentGroupName            = module.deployment_group_jobs[0].group.deployment_group_name,
+          Image1ArtifactName             = "build"
+          Image1ContainerName            = "IMAGE_URI"
+          TaskDefinitionTemplateArtifact = "build"
+          TaskDefinitionTemplatePath     = "task_definition_jobs.json"
+        }
       }
     }
 
-    action {
-      category        = "Deploy"
-      input_artifacts = ["build"]
-      name            = var.services.web.name_prefix
-      owner           = "AWS"
-      provider        = "CodeDeployToECS"
-      version         = "1"
+    dynamic "action" {
+      for_each = (contains(keys(var.services), "web") ? [1] : [])
 
-      configuration = {
-        ApplicationName                = aws_codedeploy_app.this.name,
-        AppSpecTemplateArtifact        = "build"
-        AppSpecTemplatePath            = "appspec_web.yml"
-        DeploymentGroupName            = module.deployment_group_web.group.deployment_group_name,
-        Image1ArtifactName             = "build"
-        Image1ContainerName            = "IMAGE_URI"
-        TaskDefinitionTemplateArtifact = "build"
-        TaskDefinitionTemplatePath     = "task_definition_web.json"
+      content {
+        category        = "Deploy"
+        input_artifacts = ["build"]
+        name            = var.services.web.name_prefix
+        owner           = "AWS"
+        provider        = "CodeDeployToECS"
+        version         = "1"
+
+        configuration = {
+          ApplicationName                = aws_codedeploy_app.this.name,
+          AppSpecTemplateArtifact        = "build"
+          AppSpecTemplatePath            = "appspec_web.yml"
+          DeploymentGroupName            = module.deployment_group_web[0].group.deployment_group_name,
+          Image1ArtifactName             = "build"
+          Image1ContainerName            = "IMAGE_URI"
+          TaskDefinitionTemplateArtifact = "build"
+          TaskDefinitionTemplatePath     = "task_definition_web.json"
+        }
       }
     }
   }
