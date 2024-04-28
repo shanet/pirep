@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Install a newer version of GDAL (version >= 3.6.2, we may be able to go back to the default in a future Ubuntu version)
       - name: Update GDAL
@@ -34,7 +34,7 @@ jobs:
           bundler-cache: true
 
       - name: Install Golang
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version: ^1 # We don't particularly care about the Go version, but one needs to be specified for $GOBIN to be set (https://github.com/actions/setup-go/issues/49)
 
@@ -69,7 +69,7 @@ jobs:
 
       - name: 'Upload Artifacts'
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Test Failure Artifacts
           retention-days: 1
