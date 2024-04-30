@@ -60,7 +60,7 @@ module "service_web" {
   enviroment_variables_secret_static  = var.enviroment_variables_secret_static
   iam_role_execution                  = var.iam_role_execution
   iam_role_task                       = var.iam_role_task
-  memory                              = 1024 # mb
+  memory                              = 2048 # mb
   name_prefix                         = "${var.name_prefix}-web"
   port                                = var.service_port
   security_group                      = var.security_group_ecs
