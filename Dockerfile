@@ -4,11 +4,11 @@ ARG PORT=8080
 
 ENV \
   BUNDLE_WITHOUT="development test" \
-  GOOD_JOB_PROBE_PORT=${PORT} \
   RAILS_ENV=production \
   RAILS_LOG_TO_STDOUT=true \
   RAILS_SERVE_STATIC_FILES=true \
   RUBY_YJIT_ENABLE=1
+  # GOOD_JOB_PROBE_PORT=${PORT} \
 
 WORKDIR /srv/http
 
