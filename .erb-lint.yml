@@ -1,6 +1,8 @@
 linters:
   ErbSafety:
     enabled: false
+  NoJavascriptTagHelper:
+    enabled: false
 
   Rubocop:
     enabled: true
@@ -31,8 +33,6 @@ linters:
       Style/TrailingCommaInHashLiteral:
         Enabled: false
 
-  NoJavascriptTagHelper:
-    enabled: false
-
 exclude:
   - "**/*.xml.erb"
+  - "app/views/layouts/_analytics.html.erb"

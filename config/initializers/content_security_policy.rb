@@ -13,6 +13,8 @@ Rails.configuration.content_security_policy do |policy|
     'api.mapbox.com',
     'challenges.cloudflare.com',
     'events.mapbox.com',
+    'pirep.containers.piwik.pro',
+    'pirep.piwik.pro',
     'sentry.io',
   ].compact
 

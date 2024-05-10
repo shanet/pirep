@@ -20,6 +20,7 @@
 <% end %>
 
 <%= stylesheet_link_tag 'application', media: 'all' %>
+<%= render 'layouts/analytics' if Rails.env.production? %>
 <%= render 'layouts/sentry' %>
 <%= render 'layouts/timezone' %>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
