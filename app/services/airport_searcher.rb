@@ -149,11 +149,11 @@ private
   def elevation_filter(query)
     return query unless @elevation > 0
 
-    return query.where('elevation <= ?', @elevation)
+    return query.where(elevation: ..@elevation)
   end
 
   def runway_filter(query)
-    query = query.joins(:runways).where('runways.length >= ?', @runway_length) if @runway_length > 0
+    query = query.joins(:runways).where(runways: {length: @runway_length..}) if @runway_length > 0
     query = query.joins(:runways).where.not(runways: {lights: ''}) if @runway_lighted
     query = query.joins(:runways).where(runways: {surface: RUNWAY_SURFACES_PAVED}) if @runway_paved
     query = query.joins(:runways).where(runways: {surface: RUNWAY_SURFACES_GRASS}) if @runway_grass
@@ -189,6 +189,6 @@ private
   def events_filter(query)
     return query unless @events_threshold > 0
 
-    return query.joins(:events).where('events.start_date <= ?', @events_threshold.days.from_now)
+    return query.joins(:events).where(events: {start_date: ..@events_threshold.days.from_now})
   end
 end

@@ -147,7 +147,7 @@ private
     # We can do this by checking which airports have their data cycle not set to the current one which
     # would denote it had been removed from the FAA's database. This will serve as roughly the date it
     # was closed and we can then add a closed tag to it for display on the map.
-    closed_airports = Airport.where('faa_data_cycle < ?', @current_data_cycle)
+    closed_airports = Airport.where(faa_data_cycle: ...@current_data_cycle)
       .where("NOT EXISTS (#{Tag.select('1').where(name: :closed).where('tags.airport_id = airports.id').to_sql})")
 
     closed_airports.each do |airport|
