@@ -83,7 +83,7 @@ class Event < ApplicationRecord
 
   def url=(url)
     url = "https://#{url}" if url.present? && !url.start_with?('https://', 'http://')
-    super(url)
+    super
   end
 
 private

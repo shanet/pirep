@@ -12,7 +12,7 @@ module ActiveSupport
   module Cache
     class PostgresCacheStore < Store
       def initialize(options={})
-        super(options)
+        super
 
         @model = CacheModel
         @monitor = Monitor.new
