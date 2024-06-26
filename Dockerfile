@@ -37,7 +37,7 @@ FROM base AS build
 RUN apt-get install --yes build-essential
 
 # Install NodeJS
-RUN echo "deb https://deb.nodesource.com/node_20.x bookworm main" > /etc/apt/sources.list.d/node.list
+RUN echo "deb https://deb.nodesource.com/node_22.x bookworm main" > /etc/apt/sources.list.d/node.list
 RUN curl https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
 
 # Install Yarn
