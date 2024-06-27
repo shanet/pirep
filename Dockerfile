@@ -27,8 +27,8 @@ RUN apt-get install --yes \
   zsh
 
 # Install Postgres client
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/postgres.list
-RUN curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RUN curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor --output /usr/share/keyrings/postgresql.gpg
+RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/postgresql.list
 RUN apt-get update && apt-get install --yes postgresql-client-14
 
 # -----------------------------------------------------------------------------
@@ -37,12 +37,12 @@ FROM base AS build
 RUN apt-get install --yes build-essential
 
 # Install NodeJS
-RUN echo "deb https://deb.nodesource.com/node_22.x bookworm main" > /etc/apt/sources.list.d/node.list
-RUN curl https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+RUN curl https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor --output /usr/share/keyrings/nodejs.gpg
+RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_22.x nodistro main" > /etc/apt/sources.list.d/nodejs.list
 
 # Install Yarn
-RUN echo 'deb http://dl.yarnpkg.com/debian/ stable main' > /etc/apt/sources.list.d/yarn.list
-RUN curl https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN curl https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor --output /usr/share/keyrings/yarn.gpg
+RUN echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/yarn.gpg] http://dl.yarnpkg.com/debian/ stable main' > /etc/apt/sources.list.d/yarn.list
 
 RUN apt-get update && apt-get install --yes nodejs yarn
 
