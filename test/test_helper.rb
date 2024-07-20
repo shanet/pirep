@@ -11,6 +11,9 @@ require_relative Rails.root.join('lib/active_support/cache/store/postgres_cache_
 Aws.config[:stub_responses] = true
 WebMock.disable_net_connect!(allow_localhost: true, allow: 'chromedriver.storage.googleapis.com')
 
+# Ensure we've run any pending GoodJob database migrations
+GoodJob.migrated?
+
 Minitest.after_run do
   # Clean up the asset directories (multiple are created with unique names to prevent test threads from stepping on one another)
   ['assets/tiles_test_*', 'assets/airports_cache_test_*'].each do |pattern|
