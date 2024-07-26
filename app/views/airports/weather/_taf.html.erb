@@ -4,25 +4,31 @@
 </div>
 
 <table class="table mt-2 mb-1">
-  <thead>
-    <tr>
-      <th class="fw-medium">Ceiling</th>
-      <th class="fw-medium">Wind</th>
-      <th class="fw-medium">Weather</th>
-      <th class="fw-medium">Visbility</th>
-    </tr>
-  </thead>
   <tbody>
     <tr>
+      <td class="fw-medium">Ceiling:</td>
       <td><%= taf.ceiling == WeatherReport::SKY_CLEAR ? 'Sky clear' : "#{number_with_delimiter taf.ceiling}ft" %></td>
+    </tr>
+
+    <tr>
+      <td class="fw-medium">Wind:</td>
       <td><%= render 'airports/weather/winds', weather_report: taf %></td>
+    </tr>
+
+    <tr>
+      <td class="fw-medium">Weather:</td>
       <td><%= WeatherReportParser.new(taf).weather_label&.capitalize.presence || 'N/A' %></td>
+    </tr>
+
+    <tr>
+      <td class="fw-medium">Visbility:</td>
       <td><%= taf.visibility %>SM</td>
     </tr>
 
     <% if taf.cloud_layers.filter {|cloud_layer| cloud_layer['coverage'] != 'CLR'}.any? %>
       <tr>
-        <td colspan="6"><span class="fw-medium">Clouds:</span> <%= cloud_layers_to_s(taf) %></td>
+        <td class="fw-medium">Clouds:</td>
+        <td><%= cloud_layers_to_s(taf) %></td>
       </tr>
     <% end %>
   </tbody>

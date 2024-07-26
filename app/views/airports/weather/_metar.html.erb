@@ -4,29 +4,41 @@
 </div>
 
 <table class="table mt-2 mb-1">
-  <thead>
-    <tr>
-      <th class="fw-medium">Ceiling</th>
-      <th class="fw-medium">Wind</th>
-      <th class="fw-medium">Temperature</th>
-      <th class="fw-medium">Dewpoint</th>
-      <th class="fw-medium">Weather</th>
-      <th class="fw-medium">Visbility</th>
-    </tr>
-  </thead>
   <tbody>
     <tr>
+      <td class="fw-medium">Ceiling:</td>
       <td><%= @airport.metar.ceiling == WeatherReport::SKY_CLEAR ? 'Sky clear' : "#{number_with_delimiter @airport.metar.ceiling}ft" %></td>
+    </tr>
+
+    <tr>
+      <td class="fw-medium">Wind:</td>
       <td><%= render 'airports/weather/winds', weather_report: @airport.metar %></td>
+    </tr>
+
+    <tr>
+      <td class="fw-medium">Temperature:</td>
       <td><%= @airport.metar.temperature&.to_i %>&deg;F</td>
+    </tr>
+
+    <tr>
+      <td class="fw-medium">Dewpoint:</td>
       <td><%= @airport.metar.dewpoint&.to_i %>&deg;F</td>
+    </tr>
+
+    <tr>
+      <td class="fw-medium">Weather:</td>
       <td><%= WeatherReportParser.new(@airport.metar).weather_label&.capitalize.presence || 'N/A' %></td>
+    </tr>
+
+    <tr>
+      <td class="fw-medium">Visbility:</td>
       <td><%= @airport.metar.visibility %>SM</td>
     </tr>
 
     <% if @airport.metar.cloud_layers.filter {|cloud_layer| cloud_layer['coverage'] != 'CLR'}.any? %>
       <tr>
-        <td colspan="6"><span class="fw-medium">Clouds:</span> <%= cloud_layers_to_s(@airport.metar) %></td>
+        <td class="fw-medium">Clouds:</td>
+        <td><%= cloud_layers_to_s(@airport.metar) %></td>
       </tr>
     <% end %>
   </tbody>

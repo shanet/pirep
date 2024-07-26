@@ -7,7 +7,7 @@
     if weather_report.wind_direction == WeatherReport::WINDS_VARIABLE
       lines << 'Variable'
     else
-      lines << "#{weather_report.wind_direction}&deg; @ #{weather_report.wind_speed}kt"
+      lines << "#{weather_report.wind_direction.to_s.rjust(3, '0')}&deg; @ #{weather_report.wind_speed}kt"
     end
 
     if weather_report.wind_gusts
