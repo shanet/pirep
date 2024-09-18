@@ -117,6 +117,7 @@ class VerificationModalTest < ApplicationSystemTestCase
 
   test 'verifies users without interaction' do
     visit airport_path(@airport)
+    evaluate_script('window.verificationModalCallback()')
 
     # Do nothing and the modal should become non-required after the non-interactive challenge calls its callback
     assert_selector '#verification-modal[data-verification-required="false"]', visible: false

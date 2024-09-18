@@ -26,14 +26,14 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
     assert_selector '.airport-annotations-saved'
     assert_equal @label, @airport.reload.annotations.first['label'], 'Annotation not saved'
 
+    previous_annotation = @airport.annotations.first
+
     # Re-enter editing mode for the annotation and test dragging it to a new position
     find('.annotation .label').click
     move_annotation(100, 100)
     stop_editing_annotations
 
     # Check that the annotation's latitude and longitude were moved in the right directions by the drag
-    previous_annotation = @airport.annotations.first
-
     assert previous_annotation['latitude'] > @airport.reload.annotations.first['latitude'], 'Annotation latitude not updated when moved'
     assert previous_annotation['longitude'] < @airport.reload.annotations.first['longitude'], 'Annotation longitude not updated when moved'
 

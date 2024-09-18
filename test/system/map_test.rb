@@ -71,10 +71,10 @@ class MapTest < ApplicationSystemTestCase
 
   test 'opens airport drawer for hidden airport' do
     # Seaplane bases won't be visible by default
-    seaplane = create(:airport, facility_type: :seaplane_base, latitude: @airport.latitude + 0.25)
+    seaplane = create(:airport, facility_type: :seaplane_base, latitude: @airport.latitude + 0.01)
 
     # Heliports should never be in the hidden airports layer
-    heliport = create(:airport, facility_type: :heliport, latitude: @airport.latitude - 0.25)
+    heliport = create(:airport, facility_type: :heliport, latitude: @airport.latitude - 0.01)
 
     visit map_path
     wait_for_map_ready
@@ -84,8 +84,8 @@ class MapTest < ApplicationSystemTestCase
     assert_no_selector '#drawer-content .airport-drawer-header'
 
     # Zoom in sufficiently so the hidden airports layer is shown
-    map_set_zoom_level(9)
-    assert_equal 9, map_zoom_level, 'Map did not zoom in for hidden airports layer to be shown'
+    map_set_zoom_level(10)
+    assert_equal 10, map_zoom_level, 'Map did not zoom in for hidden airports layer to be shown'
     open_airport(seaplane)
 
     assert seaplane.code.in?(airport_markers('airports_hidden').pluck('code')), 'Hidden airport marker not shown on map'
