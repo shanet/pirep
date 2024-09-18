@@ -1,3 +1,5 @@
+require 'ostruct'
+
 module MaxmindDbStubs
   def self.stub_requests
     WebMock.stub_request(:get, /https:\/\/download\.maxmind\.com\/app\/geoip_download\?edition_id=GeoLite2-City&license_key=.*&suffix=tar\.gz$/)

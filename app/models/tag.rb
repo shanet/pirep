@@ -157,7 +157,7 @@ class Tag < ApplicationRecord
     },
   }
 
-  enum name: TAGS.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
+  enum :name, TAGS.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
 
   def self.addable_tags
     return TAGS.select {|_key, value| value[:addable]}
