@@ -32,8 +32,8 @@ class Event < ApplicationRecord
     yearly: 'Year',
   }
 
-  enum recurring_cadence: RECURRING_CADENCE.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
-  enum data_source: {aopa: 'aopa', eaa: 'eaa', user_contributed: 'user_contributed'}
+  enum :recurring_cadence, RECURRING_CADENCE.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
+  enum :data_source, {aopa: 'aopa', eaa: 'eaa', user_contributed: 'user_contributed'}
 
   # All single events in the future and all recurring events
   scope :upcoming, -> {where('start_date > ?', Time.zone.now).or(where.not(recurring_cadence: nil))}

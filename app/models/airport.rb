@@ -143,9 +143,9 @@ class Airport < ApplicationRecord
   # Only create versions when there's a change to one of the columns listed above
   has_paper_trail only: self::HISTORY_COLUMNS.keys
 
-  enum facility_type: FACILITY_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
-  enum landing_rights: LANDING_RIGHTS_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
-  enum data_source: {faa: 'faa', our_airports: 'our_airports', user_contributed: 'user_contributed'}
+  enum :facility_type, FACILITY_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
+  enum :landing_rights, LANDING_RIGHTS_TYPES.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
+  enum :data_source, {faa: 'faa', our_airports: 'our_airports', user_contributed: 'user_contributed'}
 
   validates :code, uniqueness: true, presence: true
   validates :name, presence: true
