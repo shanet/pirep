@@ -255,6 +255,8 @@ class AirportsTest < ApplicationSystemTestCase
     find('.carousel-indicators button[data-bs-target="2"]').click
     find('.carousel-item .featured').click
 
+    assert_selector 'button.featured', text: 'Featured Photo'
+
     assert_equal url_for(@airport.reload.featured_photo), find('.carousel-item img')[:src], 'Unexpected featured photo'
     assert_equal 'Featured Photo', find('.carousel-item .featured.disable').text, 'First photo not set as featured with disabled button'
   end
