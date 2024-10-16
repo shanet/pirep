@@ -26,6 +26,9 @@ class MapTest < ApplicationSystemTestCase
       # Has header
       assert_selector '.airport-drawer-header', text: "#{@airport.code} - #{@airport.name.titleize}"
 
+      # Wait for the uncached images to be fetched
+      assert_selector('.carousel[data-uncached-photos-loaded="true"]')
+
       # Has photos
       expected_photo_path = URI.parse(url_for(@airport.contributed_photos.first)).path
       actual_photo_path = URI.parse(find('.carousel img')[:src]).path
