@@ -55,7 +55,7 @@ class AirportsController < ApplicationController
       AirportGeojsonDumperJob.perform_later
 
       # This should be a flash instead of a flash.now since the create template is a redirect so we want it to be displayed on the next page load
-      flash[:notice] = 'New airport added to map, please fill out any known additional information about it.' # rubocop:disable Rails/ActionControllerFlashBeforeRender
+      flash[:notice] = 'New airport added to map, please fill out any known additional information about it.'
       render :create
     else
       @form_element_id = 'new-airport'
