@@ -48,7 +48,7 @@ private
   end
 
   def assert_registration_success
-    assert_selector '#flashes', text: 'Welcome! You have signed up successfully.'
+    assert_selector '.toast-body', text: 'Welcome! You have signed up successfully.'
     assert_selector '.map-header', text: 'Logout'
   end
 end
