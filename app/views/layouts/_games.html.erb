@@ -1,2 +1,5 @@
-<!-- Hey there! This is just a fun little game for nerds: https://ipv4.games -->
-<img id="games" src="https://ipv4.games/claim?name=ephemeral.cx">
+<%# Only put this in prod to avoid timeouts in test when network connections are disabled %>
+<% if Rails.env.production? %>
+  <!-- Hey there! This is just a fun little game for nerds: https://ipv4.games -->
+  <img id="games" src="https://ipv4.games/claim?name=ephemeral.cx">
+<% end %>
