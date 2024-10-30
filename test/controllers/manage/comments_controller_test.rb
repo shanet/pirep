@@ -11,6 +11,11 @@ class Manage::CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test 'handles negative page parameter' do
+    get manage_comments_path(page: -1)
+    assert_response :success
+  end
+
   test 'show' do
     get manage_comment_path(@comment)
     assert_response :success
