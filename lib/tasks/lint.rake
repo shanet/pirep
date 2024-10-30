@@ -18,7 +18,7 @@ namespace :lint do
 
   desc 'Run ERB linter'
   task :erb do
-    sh "bundle exec erblint #{autocorrect? ? '--autocorrect' : ''} \"app/views/**/*.*.erb\"", verbose: false
+    sh "bundle exec erb_lint #{autocorrect? ? '--autocorrect' : ''} \"app/views/**/*.*.erb\"", verbose: false
   end
 
   desc 'Run CSS linter'
