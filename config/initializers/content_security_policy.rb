@@ -20,7 +20,7 @@ Rails.configuration.content_security_policy do |policy|
 
   policy.base_uri(:self)
   policy.child_src(:blob)
-  policy.connect_src(*(hosts + ['*.ingest.sentry.io', :self]))
+  policy.connect_src(*(hosts + ['*.ingest.sentry.io', 'ipv4.games', :self]))
   policy.default_src(*(hosts + [:self]))
   policy.frame_src(*(hosts + Rails.configuration.content_security_policy_whitelisted_frame_domains.to_a))
   policy.font_src(*hosts)

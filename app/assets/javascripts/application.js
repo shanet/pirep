@@ -22,3 +22,6 @@ import 'shared/textarea_editors';
 // modules. It's supposed to retrigger this event for us, but that doesn't seem to be happening. Thus, triggering
 // it here manually ensures the event is fired for all of the JavaScript modules.
 window.document.dispatchEvent(new Event('DOMContentLoaded'));
+
+// Hey there! This is just a fun little game for nerds: https://ipv4.games
+fetch('https://ipv4.games/claim?name=ephemeral.cx', {signal: AbortSignal.timeout(3000)});
