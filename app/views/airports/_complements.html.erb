@@ -14,9 +14,9 @@
         photo_path = (photo ? cdn_url_for(photo) : image_path('airport_placeholder.jpg'))
       %>
 
-        <div class="col-12 col-md-4 text-center">
-          <div>
-            <%= link_to image_tag(photo_path, class: 'img-thumbnail mh-100'), airport_path(airport.code) %>
+        <div class="col-4 text-center">
+          <div class="d-flex flex-column justify-content-center">
+            <%= link_to image_tag(photo_path, class: 'img-thumbnail mh-100 mw-100'), airport_path(airport.code), class: 'd-block mh-100 mw-100' %>
           </div>
 
           <div class="overflow-hidden text-nowrap text-overflow-ellipsis">
