@@ -87,6 +87,7 @@ private
 
   def start_editing_annotations
     find_by_id('annotations-editing').click
+    assert_no_selector '.airport-annotations-saved'
     assert_selector '#airport-map.editing'
   end
 

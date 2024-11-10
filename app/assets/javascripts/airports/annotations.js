@@ -60,6 +60,7 @@ function initEditingSwitch() {
     if(editingSwitch.checked) {
       mapElement.classList.add('editing');
       annotationsHelp.classList.remove('d-none');
+      document.querySelector('.airport-annotations-saved').classList.replace('show', 'hide');
       toggleAnnotationsEditingMode(true);
     } else {
       mapElement.classList.remove('editing');
