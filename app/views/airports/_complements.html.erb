@@ -1,0 +1,28 @@
+<% complements = @airport.complements.limit(10).sample(3) %>
+
+<% if complements.any? %>
+  <div class="card mb-2">
+    <div class="card-header">
+      <i class="fas fa-lightbulb"></i> Similar Airports
+    </div>
+  </div>
+
+  <div class="airport-complements row mb-3">
+    <% complements.each do |airport| %>
+      <%
+        photo = airport.featured_photo || airport.contributed_photos.first || airport.external_photos.first
+        photo_path = (photo ? cdn_url_for(photo) : image_path('airport_placeholder.jpg'))
+      %>
+
+        <div class="col-12 col-md-4 text-center">
+          <div>
+            <%= link_to image_tag(photo_path, class: 'img-thumbnail mh-100'), airport_path(airport.code) %>
+          </div>
+
+          <div class="overflow-hidden text-nowrap text-overflow-ellipsis">
+            <small><%= link_to "#{airport.code} - #{airport.name.titleize}", airport_path(airport.code), class: 'link-secondary' %></small>
+          </div>
+        </div>
+    <% end %>
+  </div>
+<% end %>

@@ -459,6 +459,17 @@ class Airport < ApplicationRecord
     end
   end
 
+  def complements
+    # Find airports with the most overlapping tags ordered by distance
+    return Airport
+        .joins(:tags)
+        .where(tags: {name: tags.where(name: Tag.addable_tags.keys).select(:name)})
+        .where.not(id: id)
+        .group('airports.id')
+        .order('COUNT(tags.name) DESC')
+        .order(Arel.sql(ApplicationRecord.sanitize_sql_array(['coordinates <@> point(?,?)', longitude, latitude])))
+  end
+
   HISTORY_COLUMNS.each_key do |column|
     define_method "#{column}_updated_at" do
       versions.where('object_changes ? :column', column: column).reorder(created_at: :desc).limit(1).pick(:created_at)

@@ -390,6 +390,18 @@ class AirportsTest < ApplicationSystemTestCase
     assert_no_selector '.taf'
   end
 
+  test 'has complementary airports' do
+    10.times {create(:airport, tags: [create(:tag, name: :camping)])}
+
+    visit airport_path(@airport.code)
+    assert_selector '.airport-complements > div', count: 3
+  end
+
+  test 'does not have complementary airports' do
+    visit airport_path(@airport.code)
+    assert_no_selector '.airport-complements'
+  end
+
 private
 
   def assert_editor_has_text(label, property, text)

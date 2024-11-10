@@ -25,7 +25,6 @@
 .annotation {
   .label {
     background: rgba(0, 0, 0, .5);
-    text-overflow: ellipsis;
   }
 
   // Don't display the label when the annotation is in editing mode and vice versa for the input group

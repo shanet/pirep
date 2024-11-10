@@ -325,4 +325,27 @@ class AirportTest < ActiveSupport::TestCase
     airport = create(:airport, timezone: nil)
     assert_equal Rails.configuration.time_zone, airport.timezone, 'Did not fallback to default timezone'
   end
+
+  test 'complementary airports' do
+    airport = create(:airport, tags: [create(:tag, name: :food), create(:tag, name: :lodging), create(:tag, name: :fishing), create(:tag, name: :events)])
+
+    # Airports with shared but non-addable tags should not be complementary
+    create(:airport, tags: [create(:tag, name: :events)])
+
+    # Airports with non-shared tags should not be complementary
+    create(:airport, tags: [create(:tag, name: :camping)])
+
+    complementary_airport = create(:airport, tags: [create(:tag, name: :lodging)])
+
+    complementary_close_airport = create(:airport, latitude: airport.latitude + 1, longitude: airport.longitude + 1,
+                                                   tags: [create(:tag, name: :food), create(:tag, name: :lodging), create(:tag, name: :golfing)])
+
+    complementary_far_airport = create(:airport, latitude: airport.latitude + 10, longitude: airport.longitude + 10,
+                                                 tags: [create(:tag, name: :food), create(:tag, name: :lodging), create(:tag, name: :golfing)])
+
+    # Complementary airports should be ordered first by number of intersecting tags and then by promximity
+    assert_equal [complementary_close_airport, complementary_far_airport, complementary_airport], airport.complements, 'Unexpected complementary airports'
+
+    assert_equal [], create(:airport, tags: []).complements, 'Empty airport had complementary airports'
+  end
 end

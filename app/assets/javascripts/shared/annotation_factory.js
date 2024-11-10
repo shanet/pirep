@@ -61,7 +61,7 @@ function createAnnotation(map, labelValue, id, options) {
       </button>
     </div>
 
-    <div class="label px-2 border border-white border-2 rounded-2 text-white text-nowrap overflow-hidden">
+    <div class="label px-2 border border-white border-2 rounded-2 text-white text-nowrap text-overflow-ellipsis overflow-hidden">
       ${EMPTY_LABEL}
     </div>
   `;
