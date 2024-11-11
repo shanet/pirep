@@ -34,6 +34,8 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
     stop_editing_annotations
 
     # Check that the annotation's latitude and longitude were moved in the right directions by the drag
+    ap previous_annotation['latitude']
+    ap @airport.reload.annotations.first['latitude']
     assert previous_annotation['latitude'] > @airport.reload.annotations.first['latitude'], 'Annotation latitude not updated when moved'
     assert previous_annotation['longitude'] < @airport.reload.annotations.first['longitude'], 'Annotation longitude not updated when moved'
 
