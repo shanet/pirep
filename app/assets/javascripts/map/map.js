@@ -69,13 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
     await fetchMapImages();
     await fetchAirports();
 
+    addChartLayersToMap();
+
     AIRPORT_LAYERS.forEach((layer) => {
       addAirportLayerToMap(layer.id, layer.geojson, layer.minZoom, layer.marker);
     });
 
     filterAirportsOnMap();
     applyUrlSearchParamsOnMap();
-    addChartLayersToMap();
     set3dButtonLabel();
     addEventHandlersToMap();
     if(hasMapboxAccessToken()) mapUtils.add3dTerrain(map);
