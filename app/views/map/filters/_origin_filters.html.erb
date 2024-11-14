@@ -1,0 +1,5 @@
+<div class="row d-flex flex-wrap gap-1 mb-2 justify-content-center">
+  <% Tag.origin_tags.keys.each do |tag_name| %>
+    <%= render partial: 'airports/tags/tag', locals: {tag_name: tag_name, size: :small, editing: true, dismiss: defined?(dismiss)} %>
+  <% end %>
+</div>

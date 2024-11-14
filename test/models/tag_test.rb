@@ -1,9 +1,14 @@
 require 'test_helper'
 
 class TagTest < ActiveSupport::TestCase
-  test 'does not have addable tags' do
+  test 'does not have non-addable tags' do
     nonaddable_tag = Tag::TAGS.find {|_key, value| !value[:addable]}.first
-    assert_not Tag.addable_tags[nonaddable_tag], 'Nonaddable tag included in addable tags list'
+    assert_not Tag.addable_tags[nonaddable_tag], 'Non-addable tag included in addable tags list'
+  end
+
+  test 'does not have non-origin tags' do
+    nonorigin_tag = Tag::TAGS.find {|_key, value| !value[:origin]}.first
+    assert_not Tag.origin_tags[nonorigin_tag], 'Non-origin tag included in origin tags list'
   end
 
   test 'removes empty tag for airport on save' do

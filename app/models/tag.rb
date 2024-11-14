@@ -48,6 +48,8 @@ class Tag < ApplicationRecord
       icon: 'calendar-days',
       theme: 'light-blue',
       searchable: true,
+      origin: true,
+      scroll_target: 'events',
     },
     food: {
       label: 'Food',
@@ -55,6 +57,7 @@ class Tag < ApplicationRecord
       theme: 'deep-orange',
       addable: true,
       searchable: true,
+      origin: true,
     },
     camping: {
       label: 'Camping',
@@ -62,6 +65,7 @@ class Tag < ApplicationRecord
       theme: 'green',
       addable: true,
       searchable: true,
+      origin: true,
     },
     lodging: {
       label: 'Lodging',
@@ -69,6 +73,7 @@ class Tag < ApplicationRecord
       theme: 'brown',
       addable: true,
       searchable: true,
+      origin: true,
     },
     car: {
       label: 'Car Rental',
@@ -77,6 +82,7 @@ class Tag < ApplicationRecord
       addable: true,
       searchable: true,
       scroll_target: 'crew-car',
+      origin: true,
     },
     bicycles: {
       label: 'Bicycles',
@@ -84,6 +90,7 @@ class Tag < ApplicationRecord
       theme: 'green',
       addable: true,
       searchable: true,
+      origin: true,
     },
     swimming: {
       label: 'Swimming',
@@ -91,6 +98,7 @@ class Tag < ApplicationRecord
       theme: 'blue',
       addable: true,
       searchable: true,
+      origin: true,
     },
     golfing: {
       label: 'Golfing',
@@ -98,6 +106,7 @@ class Tag < ApplicationRecord
       theme: 'light-green',
       addable: true,
       searchable: true,
+      origin: true,
     },
     fishing: {
       label: 'Fishing',
@@ -105,6 +114,7 @@ class Tag < ApplicationRecord
       theme: 'cyan',
       addable: true,
       searchable: true,
+      origin: true,
     },
     hot_springs: {
       label: 'Hot Springs',
@@ -159,8 +169,14 @@ class Tag < ApplicationRecord
 
   enum :name, TAGS.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
 
+  # Tags addable to an airport by a user
   def self.addable_tags
     return TAGS.select {|_key, value| value[:addable]}
+  end
+
+  # Tags that are used in the filters on the origin info modal
+  def self.origin_tags
+    return TAGS.select {|_key, value| value[:origin]}
   end
 
   def name

@@ -1,10 +1,15 @@
 const DRAWER_CONTENT_ID = 'drawer-login';
 
+let initialized = false;
+
 export async function loadDrawer() {
   return DRAWER_CONTENT_ID;
 }
 
 export function initializeDrawer() {
+  if(initialized) return;
+  initialized = true;
+
   const tabs = document.querySelectorAll('#login-tabs a.nav-link');
 
   for(let i=0; i<tabs.length; i++) {

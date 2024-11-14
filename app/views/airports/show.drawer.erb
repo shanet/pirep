@@ -40,11 +40,17 @@
 <div class="row mb-2">
   <div class="col-sm d-flex flex-wrap gap-1">
     <% @airport.tags.each do |tag| %>
-      <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag, size: :small} %>
+      <%# Make the tag a link to the relevant section on the airport page if clicked %>
+      <% if Tag::TAGS[tag.name][:scroll_target] %>
+        <% link = airport_path(@airport.code, anchor: Tag::TAGS[tag.name][:scroll_target]) %>
+      <% end %>
+
+      <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag, size: :small, hyperlink: link} %>
     <% end %>
   </div>
 </div>
 
+<%= render 'airports/events/events' %>
 <%= render partial: 'airports/statistics/statistics_boxes', formats: :html, locals: {drawer: true, runways_limit: 3} %>
 <%= render partial: 'airports/landing_rights/landing_rights', formats: :html %>
 

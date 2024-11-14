@@ -1,0 +1,15 @@
+<div id="origin-info-modal" class="origin-info toast mb-3">
+  <div class="toast-body">
+    <button type="button" class="btn-close float-end"></button>
+
+    <figure class="border-start border-primary border-3 ms-1 ps-2">
+      <blockquote class="blockquote fs-6 lh-sm">
+        <%= t :site_description %>
+      </blockquote>
+    </figure>
+
+    <p><i class="fas fa-circle-play ms-1 me-2"></i><span class="fw-bold"><%= t :origin_filters_hook %></span><br><small class="text-muted"><%= t :origin_filters_description %></small></p>
+
+    <%= render 'map/filters/origin_filters', dismiss: true %>
+  </div>
+</div>

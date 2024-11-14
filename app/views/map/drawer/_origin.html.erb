@@ -1,0 +1,23 @@
+<div id="origin" class="origin-info mt-3">
+  <h5 class="mb-3"><i class="far fa-thumbs-up me-1"></i>Welcome to Pirep!</h5>
+
+  <figure class="border-start border-primary border-3 ms-1 ps-2">
+    <blockquote class="blockquote fs-6">
+      <%= t :site_description %>
+    </blockquote>
+  </figure>
+
+  <h5><i class="fas fa-circle-play ms-1 me-2"></i>Get Started</h5>
+
+  <p class="text-center"><span class="fw-bold"><%= t :origin_filters_hook %></span><br><small class="text-muted"><%= t :origin_filters_description %></small></p>
+
+  <%= render 'map/filters/origin_filters' %>
+
+  <h5><i class="fas fa-filter me-2"></i>Using this site</h5>
+
+  <p>Pirep uses tags to organize airports. <%= t :airport_tags %></p>
+  <p><%= t(:airport_search, search_link: link_to('advanced airport search', search_airports_path)).html_safe %></p>
+
+  <h5><i class="fas fa-people-group me-2"></i>Help improve Pirep!</h5>
+  <p>Pirep only exists because of the many contributions from pilots like yourself. If you find Pirep useful, pass it forward by sharing some of your local airport knowledge. Every contribution helps make GA stronger!<i class="fas fa-heart ms-1"></i></p>
+</div>

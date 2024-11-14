@@ -56,6 +56,6 @@ class Manage::DashboardTest < ApplicationSystemTestCase
     find('.color-scheme-selector').click
     find('#color-scheme-options .dropdown-item[data-color-scheme="light"]').click
     assert_selector '#color-scheme-options .dropdown-item.active[data-color-scheme="light"]', visible: false
-    assert_no_selector 'body[data-bs-theme="dark]'
+    assert_no_selector 'body[data-bs-theme="dark"]'
   end
 end

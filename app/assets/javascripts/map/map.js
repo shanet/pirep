@@ -7,10 +7,10 @@ import * as filters from 'map/filters';
 import * as flashes from 'map/flashes';
 import * as mapUtils from 'shared/map_utils';
 import * as newAirportDrawer from 'map/drawer_new_airport';
+import * as originInfo from 'map/origin_info';
 import * as search from 'map/search';
 import * as urlSearchParams from 'map/url_search_params';
 import * as utils from 'shared/utils';
-import * as welcomeInfo from 'map/welcome_info';
 
 export const MARKER_VISIBLE = 'marker_visible';
 export const MARKER_HIDDEN = 'marker_hidden';
@@ -185,7 +185,7 @@ function addEventHandlersToMap() {
     });
   });
 
-  map.on('movestart', welcomeInfo.hideWelcomeInfo);
+  map.on('movestart', originInfo.hide);
   map.on('moveend', fetchAirportAnnotations);
   map.on('move', fetchAirportAnnotations);
 

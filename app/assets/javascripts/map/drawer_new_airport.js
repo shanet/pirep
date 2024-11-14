@@ -8,6 +8,8 @@ import * as utils from 'shared/utils';
 const NEW_AIRPORT_LAYER = 'new_airport';
 const DRAWER_CONTENT_ID = 'drawer-new-airport';
 
+let initialized = false;
+
 export async function loadDrawer() {
   // Get the path to request airport info from dynamically
   // This means swapping out a placeholder value with the airport code we want to get
@@ -24,6 +26,9 @@ export async function loadDrawer() {
 }
 
 export function initializeDrawer() {
+  if(initialized) return;
+  initialized = true;
+
   // Put the map into adding mode when the select coordinates button is clicked so a crosshair cursor is shown
   document.querySelector('#new-airport .select-coordinates').addEventListener('click', () => {
     document.getElementById('map').classList.add('adding');

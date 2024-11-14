@@ -1,6 +1,7 @@
 import * as drawerAbout from 'map/drawer_about';
 import * as drawerLogin from 'map/drawer_login';
 import * as drawerNewAirport from 'map/drawer_new_airport';
+import * as drawerOrigin from 'map/drawer_origin';
 import * as drawerShowAirport from 'map/drawer_show_airport';
 import * as map from 'map/map';
 import * as mapUtils from 'map/utils';
@@ -10,6 +11,7 @@ import * as utils from 'shared/utils';
 export const DRAWER_ABOUT = 'about';
 export const DRAWER_LOGIN = 'login';
 export const DRAWER_NEW_AIRPORT = 'new_airport';
+export const DRAWER_ORIGIN = 'origin';
 export const DRAWER_SHOW_AIRPORT = 'airport';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,6 +48,9 @@ export async function loadDrawer(type, ...args) {
       break;
     case DRAWER_NEW_AIRPORT:
       drawer = drawerNewAirport;
+      break;
+    case DRAWER_ORIGIN:
+      drawer = drawerOrigin;
       break;
     case DRAWER_SHOW_AIRPORT:
       drawer = drawerShowAirport;

@@ -1,10 +1,11 @@
 <%
   read_only = defined?(read_only) && read_only
   last_updated = model.send("#{column}_updated_at")
+  normalized_column = column.to_s.gsub('_', '-')
 %>
 
-<div id="<%= column.to_s.gsub('_', '-') %>" class="card">
-  <a href="#<%= column.to_s.gsub('_', '-') %>"></a>
+<div id="<%= normalized_column %>" class="card">
+  <a href="#<%= normalized_column %>"></a>
 
   <div class="card-header pe-2">
     <div class="d-flex justify-content-between align-items-center">
@@ -18,7 +19,7 @@
   </div>
 
   <div>
-    <%= text_area_tag nil, model.send(column), data: {
+    <%= text_area_tag "#{normalized_column}-textarea", model.send(column), data: {
       editor: true,
       height: textarea_editor_height(defined?(height) && height ? height : :large),
       read_only: read_only,

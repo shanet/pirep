@@ -1,9 +1,33 @@
+$action-button-size: 3rem;
+
 #action-buttons {
   margin-bottom: $map-fixed-offset;
   margin-right: $map-fixed-offset;
+  position: relative;
 
   > button {
-    height: 3rem;
-    width: 3rem;
+    height: $action-button-size;
+    width: $action-button-size;
+  }
+
+  #filters-button-tooltip {
+    animation: jiggle 1s infinite;
+    background-color: $filters-background;
+    border-radius: 5px;
+    color: $white;
+    position: absolute;
+    right: 100%;
+    top: calc($action-button-size / 6);
+  }
+}
+
+@keyframes jiggle {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-5px);
   }
 }

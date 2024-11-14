@@ -1,16 +1,18 @@
 const COLOR_SCHEME_KEY = 'color_scheme';
 
 document.addEventListener('DOMContentLoaded', () => {
-  initColorSchemeSelectors();
+  initColorSchemeDropdownSelectors();
+  initColorSchemeButtonGroupSelectors();
   setPageColorScheme(getPreferredColorScheme());
 }, {once: true});
 
-function initColorSchemeSelectors() {
+// A dropdown color selector element is used in the footer
+function initColorSchemeDropdownSelectors() {
   document.querySelectorAll('.color-scheme-selector .dropdown-toggle').forEach((selector) => {
-    setColorSchemeSelectorIcon(selector);
+    setColorSchemeSelectorDropdownIcon(selector);
 
     selector.addEventListener('click', () => {
-      initColorSchemeSelectorOptions(selector);
+      initColorSchemeDropdownSelectorOptions(selector);
     });
 
     selector.addEventListener('blur', (event) => {
@@ -25,7 +27,24 @@ function initColorSchemeSelectors() {
   });
 }
 
-function initColorSchemeSelectorOptions(toggleElement) {
+// A button group color selector element is used on the map hamburger menu
+function initColorSchemeButtonGroupSelectors() {
+  document.querySelectorAll('.color-scheme-selector.btn-group').forEach((buttonGroup) => {
+    setActiveColorSchemeButtonGroupSelectorButton(buttonGroup);
+
+    buttonGroup.querySelectorAll('label').forEach((label) => {
+      label.addEventListener('click', () => {
+        // Get the corresponding input for the label
+        const input = document.getElementById(label.htmlFor);
+
+        setPreferredColorScheme(input.dataset.colorScheme);
+        setPageColorScheme(getPreferredColorScheme());
+      });
+    });
+  });
+}
+
+function initColorSchemeDropdownSelectorOptions(toggleElement) {
   // Show the menu
   const target = document.getElementById(toggleElement.dataset.bsToggle);
   target.classList.toggle('show');
@@ -33,20 +52,20 @@ function initColorSchemeSelectorOptions(toggleElement) {
   const options = target.querySelectorAll('.dropdown-item');
 
   options.forEach((option) => {
-    setActiveColorSchemeSelectorOption(options);
+    setActiveColorSchemeDropdownSelectorOption(options);
 
     // When switching color schemes save it in local storage then update to that schema and update the selector icon
     option.addEventListener('click', () => {
       setPreferredColorScheme(option.dataset.colorScheme);
       setPageColorScheme(getPreferredColorScheme());
-      setColorSchemeSelectorIcon(toggleElement);
-      setActiveColorSchemeSelectorOption(options);
+      setColorSchemeSelectorDropdownIcon(toggleElement);
+      setActiveColorSchemeDropdownSelectorOption(options);
       target.classList.remove('show');
     });
   });
 }
 
-function setActiveColorSchemeSelectorOption(options) {
+function setActiveColorSchemeDropdownSelectorOption(options) {
   options.forEach((option) => {
     if(readPreferredColorScheme() === option.dataset.colorScheme) {
       option.classList.add('active');
@@ -56,7 +75,13 @@ function setActiveColorSchemeSelectorOption(options) {
   });
 }
 
-function setColorSchemeSelectorIcon(toggleElement) {
+function setActiveColorSchemeButtonGroupSelectorButton(buttonGroup) {
+  buttonGroup.querySelectorAll('input.btn-check').forEach((button) => {
+    button.checked = (button.dataset.colorScheme === readPreferredColorScheme());
+  });
+}
+
+function setColorSchemeSelectorDropdownIcon(toggleElement) {
   const icon = toggleElement.querySelector('i');
   icon.classList = iconForColorScheme(readPreferredColorScheme());
 }
