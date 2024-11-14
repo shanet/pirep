@@ -7,13 +7,15 @@ class SessionsTest < ApplicationSystemTestCase
       sign_in user
 
       click_link_or_button 'Logout'
-      assert_selector '.map-header', text: 'Log In'
+      find_by_id('hamburger-icon').click
+      assert_selector '#hamburger-menu', text: 'Log In / Register'
     end
   end
 
   test 'handle log in failure via map controller' do
     visit root_path
-    click_link_or_button 'Log In'
+    find_by_id('hamburger-icon').click
+    click_link_or_button 'Log In / Register'
 
     fill_in 'user_email', with: 'fake@example.com'
     fill_in 'user_password', with: 'hunter2'

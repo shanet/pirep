@@ -78,5 +78,8 @@ function initMapPitchButton() {
 }
 
 function initFiltersButton() {
-  document.getElementById('filters-button')?.addEventListener('click', filters.toggleFiltersDrawer);
+  document.getElementById('filters-button')?.addEventListener('click', () => {
+    document.getElementById('filters-button-tooltip').classList.add('d-none');
+    filters.toggleFiltersDrawer();
+  });
 }

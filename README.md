@@ -7,7 +7,7 @@
 About
 =====
 
-[Pirep](https://pirep.io) is a free, collaborative database of all public and private airports located within the United States. All pilots are welcome to contribute, edit, and improve any airport they have local knowledge about, no registration required.
+[Pirep](https://pirep.io) is a free, collaborative database of all public and private airports. All pilots are welcome to contribute, edit, and improve any airport they have local knowledge about, no registration required.
 
 ![](/docs/images/readme_screenshot.jpg?raw=true)
 

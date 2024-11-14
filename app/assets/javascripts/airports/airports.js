@@ -1,6 +1,6 @@
+import * as originInfo from 'shared/origin_info';
 import * as utils from 'shared/utils';
 import * as verificationModal from 'shared/verification_modal';
-import * as welcomeInfo from 'shared/welcome_info';
 
 document.addEventListener('DOMContentLoaded', () => {
   if(!document.querySelector('.airport-header')) return;
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initExtraRemarks();
   initMapBackButton();
   initCoverImageForm();
-  initWelcomeInfo();
+  initOriginInfo();
 }, {once: true});
 
 function initEditingTags() {
@@ -166,12 +166,12 @@ function initCoverImageForm() {
   });
 }
 
-function initWelcomeInfo() {
-  const welcomeNotice = document.getElementById('welcome-info-notice');
-  if(!welcomeNotice || !welcomeInfo.shouldShowWelcomeInfo()) return;
+function initOriginInfo() {
+  const originNotice = document.getElementById('origin-info-notice');
+  if(!originNotice || !originInfo.shouldShowOriginInfo()) return;
 
-  // Only show the welcome info once
-  welcomeInfo.welcomeInfoShown();
+  // Only show the origin info once
+  originInfo.originInfoShown();
 
-  welcomeNotice.classList.remove('d-none');
+  originNotice.classList.remove('d-none');
 }

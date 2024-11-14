@@ -4,28 +4,17 @@ import * as utils from 'map/utils';
 document.addEventListener('DOMContentLoaded', () => {
   if(!document.getElementsByClassName('map-header').length) return;
 
-  initHeaderLinks();
+  initHeaderDrawerLinks();
   initHamburgerMenu();
 }, {once: true});
 
-function initHeaderLinks() {
-  const aboutLinks = document.getElementsByClassName('about-link');
-
-  for(let i=0; i<aboutLinks.length; i++) {
-    aboutLinks[i].addEventListener('click', () => {
-      drawer.loadDrawer(drawer.DRAWER_ABOUT);
+function initHeaderDrawerLinks() {
+  document.querySelectorAll('.drawer-link').forEach((drawerLink) => {
+    drawerLink.addEventListener('click', () => {
+      drawer.loadDrawer(drawerLink.dataset.target);
       drawer.openDrawer();
     });
-  }
-
-  const loginLinks = document.getElementsByClassName('login-link');
-
-  for(let i=0; i<loginLinks.length; i++) {
-    loginLinks[i].addEventListener('click', () => {
-      drawer.loadDrawer(drawer.DRAWER_LOGIN);
-      drawer.openDrawer();
-    });
-  }
+  });
 }
 
 function initHamburgerMenu() {
@@ -35,9 +24,13 @@ function initHamburgerMenu() {
   hamburgerIcon.addEventListener('click', toggleHamburgerMenu);
 
   // Close the menu when it loses focus
-  hamburgerIcon.querySelector('button').addEventListener('blur', (event) => {
+  hamburgerIcon.addEventListener('blur', (event) => {
     // Don't close the menu if clicking on a link in it
-    if(Array.from(document.getElementById(hamburgerIcon.dataset.target).querySelectorAll('a')).indexOf(event.relatedTarget) !== -1) return;
+    if(Array.from(document.getElementById(hamburgerIcon.dataset.target).querySelectorAll('a, label, input')).indexOf(event.relatedTarget) !== -1) {
+      // Give it back focus so the next blur event will still close the modal as expected
+      hamburgerIcon.focus();
+      return;
+    }
 
     closeHamburgerMenu();
   });

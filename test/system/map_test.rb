@@ -5,6 +5,7 @@ class MapTest < ApplicationSystemTestCase
 
   setup do
     @airport = create(:airport)
+    2.times {create(:event, airport: @airport, start_date: 1.day.from_now, end_date: 2.days.from_now)}
   end
 
   test 'set default map center location' do
@@ -36,6 +37,10 @@ class MapTest < ApplicationSystemTestCase
 
       # Does not have featured photo form
       assert_no_selector '.carousel-item .featured'
+
+      # Has first upcoming event
+      assert_selector '.event .card-header a', count: 1
+      assert_selector '.event .list-group-item', count: 1, text: @airport.events.upcoming.first.name
 
       # Has elevation
       assert_selector '.statistics-box', text: "#{number_with_delimiter(@airport.elevation, delimiter: ',')}ft"
@@ -111,6 +116,11 @@ class MapTest < ApplicationSystemTestCase
     assert_selector '#about'
   end
 
+  test 'opens origin drawer' do
+    visit map_path(params: {drawer: :origin})
+    assert_selector '#origin'
+  end
+
   test 'searches airports' do
     visit map_path
     wait_for_map_ready
@@ -180,6 +190,9 @@ class MapTest < ApplicationSystemTestCase
     assert_equal 1, airport_markers.count, 'Airports not filtered by tag'
     assert_selector '.filter[data-filter-group="tags"][data-filter-name="populated"].disabled'
 
+    # The cooresponding origin info tag square filter should be enabled as well
+    assert tag_square_filter_enabled?('camping'), 'Origin info tag square filter not enabled'
+
     # Selecting another tag should show both again
     click_filter('golfing')
     assert_equal 2, airport_markers.count, 'Airports not filtered by tag'
@@ -188,6 +201,24 @@ class MapTest < ApplicationSystemTestCase
     click_filter('tags')
     click_filter('populated')
     assert_equal 0, airport_markers.count, 'Airports not filtered by tag'
+  end
+
+  test 'filters by tag in origin info' do
+    visit map_path
+    wait_for_map_ready
+
+    find_by_id('hamburger-icon').click
+    click_link_or_button('Getting Started')
+
+    within('#origin') do
+      # There should be a tag filter for each of the origin tags
+      assert_selector '#origin .tag-square', count: Tag.origin_tags.count
+
+      find('.tag-square.unselected[data-tag-name="golfing"]').click
+      assert tag_square_filter_enabled?('golfing'), 'Origin info tag square filter not enabled when clicked'
+    end
+
+    assert filter_enabled?('golfing'), 'Filter not enabled when origin info filter enabled'
   end
 
   test 'clear filter group' do
@@ -325,6 +356,16 @@ class MapTest < ApplicationSystemTestCase
     (filter_facility_types + filter_tags).each do |filter|
       assert filter_enabled?(filter), "Filter #{filter} not enabled from URL parameter"
     end
+
+    # The filters in the origin info drawer should be enabled as well
+    find_by_id('hamburger-icon').click
+    click_link_or_button('Getting Started')
+
+    within('#origin') do
+      filter_tags.select {|tag| tag.in?(Tag.origin_tags.keys)}.each do |tag|
+        assert tag_square_filter_enabled?(tag), "Tag square filter #{tag} not enabled from URL parameter"
+      end
+    end
   end
 
   test 'adds unmapped airport' do
@@ -402,12 +443,29 @@ class MapTest < ApplicationSystemTestCase
     assert find('meta[property="og:title"]', visible: false)[:content].present?, 'Opengraph tags not present'
   end
 
-  test 'shows about drawer on first visit as welcome info' do
+  test 'shows origin drawer on first visit' do
     visit map_path
-    assert_selector '#drawer-content #about'
+    assert_selector '#drawer-content #origin'
 
     visit map_path
-    assert_no_selector '#drawer-content #about'
+    assert_no_selector '#drawer-content #origin'
+  end
+
+  test 'changes theme' do
+    visit map_path
+
+    # It should be light mode by default
+    assert_no_selector 'body[data-bs-theme="dark]'
+
+    find_by_id('hamburger-icon').click
+    assert find_by_id('color-scheme-auto').checked?, 'Auto mode control not selected by default'
+
+    # Switch to dark mode
+    find('label[for="color-scheme-dark"]').click
+    assert_selector 'body[data-bs-theme="dark"]'
+
+    # The menu should still be open after clicking the button
+    assert_selector '#hamburger-menu'
   end
 
 private
@@ -430,6 +488,10 @@ private
 
   def filter_enabled?(filter_name)
     return !has_css?("a[data-filter-name=\"#{filter_name}\"].disabled")
+  end
+
+  def tag_square_filter_enabled?(tag_name)
+    return has_css?(".tag-square[data-tag-name=\"#{tag_name}\"]:not(.unselected)")
   end
 
   def airport_markers(airports_layer='airports_visible')

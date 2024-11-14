@@ -80,7 +80,8 @@ class ActionDispatch::SystemTestCase
     case controller
       when :map
         visit root_path
-        click_link_or_button 'Log In'
+        find_by_id('hamburger-icon').click
+        click_link_or_button 'Log In / Register'
       when :sessions
         visit new_user_session_path
       else
@@ -95,7 +96,8 @@ class ActionDispatch::SystemTestCase
     if user.is_a? Users::Admin
       assert_selector '.navbar', text: 'Logout'
     else
-      assert_selector '.map-header', text: 'Logout', wait: (ENV['CI'] ? 300 : 30)
+      find_by_id('hamburger-icon').click
+      assert_selector '#hamburger-menu', text: 'Logout'
     end
   end
 end

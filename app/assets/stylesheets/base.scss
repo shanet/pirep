@@ -1,0 +1,53 @@
+// General utility classes that are used anywhere. These are mostly to fill gaps in Bootstrap
+
+.text-overflow-ellipsis {
+  text-overflow: ellipsis;
+}
+
+.clearfix {
+  clear: both;
+}
+
+.bg-lifr-subtle {
+  background-color: $bg-lifr-subtle;
+}
+
+// Display dark logos when in dark mode
+img.logo.logo-dark {
+  display: none;
+}
+
+@include color-mode(dark) {
+  img.logo {
+    display: none;
+
+    &.logo-dark {
+      display: inline;
+    }
+  }
+}
+
+// These are custom element themes that change light to dark when dark mode is enabled
+.btn-light-dark {
+  @include button-variant(
+    #f8f9fa,
+    #f8f9fa,
+    $hover-background: shade-color(#f8f9fa, $btn-hover-bg-shade-amount),
+    $hover-border: shade-color(#f8f9fa, $btn-hover-border-shade-amount),
+    $active-background: shade-color(#f8f9fa, $btn-active-bg-shade-amount),
+    $active-border: shade-color(#f8f9fa, $btn-active-border-shade-amount)
+  );
+}
+
+@include color-mode(dark) {
+  .btn-light-dark {
+    @include button-variant(
+      #343a40,
+      #343a40,
+      $hover-background: shade-color(#343a40, $btn-hover-bg-shade-amount),
+      $hover-border: shade-color(#343a40, $btn-hover-border-shade-amount),
+      $active-background: shade-color(#343a40, $btn-active-bg-shade-amount),
+      $active-border: shade-color(#343a40, $btn-active-border-shade-amount)
+    );
+  }
+}

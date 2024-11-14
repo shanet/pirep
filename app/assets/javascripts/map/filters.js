@@ -1,3 +1,4 @@
+import * as drawerOrigin from 'map/drawer_origin';
 import * as map from 'map/map';
 import * as urlSearchParams from 'map/url_search_params';
 import * as utils from 'map/utils';
@@ -58,7 +59,7 @@ function initFilters() {
   }
 }
 
-export function enableFilter(filter) {
+export function enableFilter(filter, skipCallbacks) {
   const {filterName, filterGroup} = filter.dataset;
   const {filterLabel} = filterLabels[filterName];
 
@@ -66,7 +67,7 @@ export function enableFilter(filter) {
 
   // Disable the populated filter if another tag filter was enabled
   if(filterGroup === FILTER_GROUP_TAGS && filterName !== TAG_POPULATED) {
-    disableFilter(getFilter(FILTER_GROUP_TAGS, TAG_POPULATED));
+    disableFilter(getFilter(FILTER_GROUP_TAGS, TAG_POPULATED), true);
   }
 
   // Enable all filter elements for the selected filter group/name
@@ -82,11 +83,16 @@ export function enableFilter(filter) {
 
   urlSearchParams.addFilter(filterGroup, filterName);
 
-  // Update the map with the new filter state
-  map.filterAirportsOnMap();
+  if(!skipCallbacks) {
+    // Update the map with the new filter state
+    map.filterAirportsOnMap();
+
+    // Update the state of the origin filters too
+    drawerOrigin.enableFilter(filterName);
+  }
 }
 
-export function disableFilter(filter) {
+export function disableFilter(filter, skipCallbacks) {
   const {filterName, filterGroup} = filter.dataset;
   const {filterLabel} = filterLabels[filterName];
 
@@ -94,7 +100,7 @@ export function disableFilter(filter) {
 
   // Enable the populated filter when all other tag filters are disabled
   if(filterGroup === FILTER_GROUP_TAGS && filterName !== TAG_POPULATED && enabledFilters[filterGroup].size === 0) {
-    enableFilter(getFilter(FILTER_GROUP_TAGS, TAG_POPULATED));
+    enableFilter(getFilter(FILTER_GROUP_TAGS, TAG_POPULATED), true);
   }
 
   const filters = document.querySelectorAll(`.filter[data-filter-group="${filterGroup}"][data-filter-name="${filterName}"]`);
@@ -107,8 +113,13 @@ export function disableFilter(filter) {
 
   urlSearchParams.removeFilter(filterGroup, filterName);
 
-  // Update the map with the new filter state
-  map.filterAirportsOnMap();
+  if(!skipCallbacks) {
+    // Update the map with the new filter state
+    map.filterAirportsOnMap();
+
+    // Update the state of the origin filters too
+    drawerOrigin.disableFilter(filterName);
+  }
 }
 
 function initFilterGroupLabels() {
@@ -279,14 +290,15 @@ function initFilterHandles() {
   const header = document.getElementById('filters-header');
   const footer = document.getElementById('filters-footer');
   const filters = document.querySelector('#filters > nav');
-  const scrollDelta = document.querySelector('.filter').offsetHeight;
 
   // Scroll up/down when clicking on the filter header/footer
   header.addEventListener('click', () => {
+    const scrollDelta = document.querySelector('.filter').offsetHeight;
     filters.scrollBy({top: -scrollDelta, left: 0, behavior: 'smooth'});
   });
 
   footer.addEventListener('click', () => {
+    const scrollDelta = document.querySelector('.filter').offsetHeight;
     filters.scrollBy({top: scrollDelta, left: 0, behavior: 'smooth'});
   });
 }

@@ -34,7 +34,8 @@ private
 
   def register_user_map_controller(passwords_match: true)
     visit root_path
-    click_link_or_button 'Log In'
+    find_by_id('hamburger-icon').click
+    click_link_or_button 'Log In / Register'
     click_link_or_button 'Register'
 
     submit_registration_form(passwords_match: passwords_match)
@@ -49,6 +50,7 @@ private
 
   def assert_registration_success
     assert_selector '.toast-body', text: 'Welcome! You have signed up successfully.'
-    assert_selector '.map-header', text: 'Logout'
+    find_by_id('hamburger-icon').click
+    assert_selector '#hamburger-menu', text: 'Logout'
   end
 end

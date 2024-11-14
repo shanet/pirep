@@ -10,6 +10,7 @@
 @import 'fontawesome/solid';
 @import 'mapbox-gl';
 
+@import 'base';
 @import 'themes';
 
 @import 'airports/history';
@@ -36,7 +37,6 @@
 @import 'map/search';
 
 @import 'shared/about';
-@import 'shared/base';
 @import 'shared/annotations';
 @import 'shared/breakpoints';
 @import 'shared/collapsible';

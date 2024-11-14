@@ -14,7 +14,7 @@
       Access: <%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:long_description] %>
     </div>
 
-    <% if defined? show_edit_form %>
+    <% if defined?(show_edit_form) %>
       <div class="small my-1">
         <% if @airport.landing_rights == :private_ %>
           <% if @airport.facility_type == 'military' %>
@@ -43,5 +43,5 @@
     <%= render 'airports/landing_rights/landing_rights_form' %>
   <% end %>
 
-  <%= render 'shared/collapsible', id: 'landing-rights-form', classes: 'mb-3' %>
+  <%= render 'shared/collapsible', id: 'landing-rights-form', classes: 'mt-2 mb-3' %>
 <% end %>

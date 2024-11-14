@@ -1,7 +1,11 @@
 .EasyMDEContainer { // stylelint-disable-line selector-class-pattern
   .editor-toolbar {
+    border-bottom: 1px solid $card-border-color;
+    border-left: none;
+    border-right: none;
+    border-top: none;
     display: none;
-    padding: $spacer * .25;
+    padding: $spacer * .3;
 
     .editor-save {
       float: right;
@@ -14,6 +18,8 @@
 
   // stylelint-disable selector-class-pattern
   .CodeMirror {
+    border: none;
+
     .CodeMirror-lines,
     .CodeMirror-line {
       padding: 0;
@@ -52,6 +58,10 @@
     .easymde-dropdown-content {
       background-color: $body-bg-dark;
       border: $light-border-subtle-dark 1px solid;
+    }
+
+    .editor-toolbar {
+      border-bottom: $light-border-subtle-dark 1px solid;
     }
 
     .editor-toolbar button:hover {

@@ -20,7 +20,7 @@ function initMap() {
   const mapOptions = {
     accessToken: (hasMapboxAccessToken() ? mapElement.dataset.mapboxApiKey : undefined),
     container: 'airport-map',
-    minZoom: 12,
+    minZoom: 5,
     style: (hasMapboxAccessToken() ? 'mapbox://styles/mapbox/satellite-streets-v11' : undefined),
     testMode: !hasMapboxAccessToken(),
   };

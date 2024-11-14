@@ -11,12 +11,12 @@ $animation-duration: .2s;
     }
   }
 
-  #welcome-info-toast:not(.d-block) + .toast {
+  #origin-info-modal:not(.d-block) + .toast {
     margin-top: $spacer * 5;
   }
 }
 
-#welcome-info-toast {
+#origin-info-modal {
   background-color: $white;
   width: 95%;
 }

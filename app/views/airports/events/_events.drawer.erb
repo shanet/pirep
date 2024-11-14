@@ -1,0 +1,15 @@
+<% if @airport.events.upcoming.any? %>
+  <div class="event card mb-2">
+    <div class="card-header">
+      <i class="fas fa-calendar-days"></i> Upcoming Events<span class="badge rounded-pill bg-secondary ms-1"><%= @airport.events.upcoming.count %></span>
+
+      <% if @airport.events.upcoming.count > 1 %>
+        <small class="ms-1"><%= link_to '(view all)', airport_path(@airport.code, anchor: 'events') %></small>
+      <% end %>
+    </div>
+
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"><%= render partial: 'airports/events/event', formats: :html, locals: {event: @airport.events.upcoming.first, drawer: true} %></li>
+    </ul>
+  </div>
+<% end %>
