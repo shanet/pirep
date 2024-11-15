@@ -17,6 +17,7 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
     assert_selector '#annotations-help'
 
     # Add an annotation, fill in the textfield, and save it
+    scroll_to(find('#airport-map canvas'))
     find('#airport-map canvas').click
     find('.annotation input[type="text"]').set(@label)
     find('.annotation button.save').click # rubocop:disable Capybara/SpecificActions
@@ -34,8 +35,6 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
     stop_editing_annotations
 
     # Check that the annotation's latitude and longitude were moved in the right directions by the drag
-    ap previous_annotation['latitude']
-    ap @airport.reload.annotations.first['latitude']
     assert previous_annotation['latitude'] > @airport.reload.annotations.first['latitude'], 'Annotation latitude not updated when moved'
     assert previous_annotation['longitude'] < @airport.reload.annotations.first['longitude'], 'Annotation longitude not updated when moved'
 
@@ -102,10 +101,6 @@ private
 
   def move_annotation(delta_x, delta_y)
     annotation_icon = find('#airport-map .mapboxgl-marker')
-
-    # Scroll to the annotation so we can move it down without going out of the viewport of the browser since Capybara will only drag within the viewport
-    scroll_to(annotation_icon)
-
     page.driver.browser.action.move_to(annotation_icon.native).click_and_hold.move_by(delta_x, delta_y).release.perform
   end
 end
