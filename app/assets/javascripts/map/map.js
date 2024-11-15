@@ -3,6 +3,7 @@ import 'mapbox-gl';
 import * as actionButtons from 'map/action_buttons';
 import * as annotationFactory from 'shared/annotation_factory';
 import * as drawer from 'map/drawer';
+import * as header from 'map/header';
 import * as filters from 'map/filters';
 import * as flashes from 'map/flashes';
 import * as mapUtils from 'shared/map_utils';
@@ -185,11 +186,16 @@ function addEventHandlersToMap() {
     });
   });
 
-  map.on('movestart', originInfo.hide);
+  map.on('movestart', () => {
+    header.closeHamburgerMenu();
+    originInfo.hide();
+  });
+
   map.on('moveend', fetchAirportAnnotations);
   map.on('move', fetchAirportAnnotations);
-
   map.on('pitchend', set3dButtonLabel);
+  map.on('idle', initialAirportAnnotationsFetch);
+  map.on('sourcedata', exposeObjectsForTesting);
 
   // If coming from an airport page the zoom level may have a default value. We want to clear
   // this as soon as the zoom is changed on the map as Mapbox stores its own state in the URL.
@@ -205,9 +211,6 @@ function addEventHandlersToMap() {
 
     console.error(error); // eslint-disable-line no-console
   });
-
-  map.on('idle', initialAirportAnnotationsFetch);
-  map.on('sourcedata', exposeObjectsForTesting);
 }
 
 // If the map loads with an airport zoomed in on we need to fetch its annotations but this can only be done once the airports layer
