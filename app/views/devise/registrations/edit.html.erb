@@ -1,6 +1,6 @@
 <%
   @title = 'Edit Account'
-  @breadcrumbs = [['Users', manage_users_path], [@user.email, user_path], ['Edit']]
+  @breadcrumbs = [['Users', manage_users_path], [@user.name.presence || @user.email, user_path], ['Edit']]
 %>
 
 <h1 class="display-6">Edit Account</h1>
@@ -11,12 +11,14 @@
       <%= render 'shared/record_errors', record: form.object %>
 
       <div class="mb-3">
-        <%= form.label :name, class: 'form-label' %>
+        <%= form.label :name, class: 'form-label mb-0', value: 'Username' %>
+        <p class="form-text mb-2"><%= t(:name_description) %></p>
         <%= form.text_field :name, autofocus: true, class: 'form-control' %>
       </div>
 
       <div class="mb-3">
-        <%= form.label :email, class: 'form-label' %>
+        <%= form.label :email, class: 'form-label mb-0' %>
+        <p class="form-text mb-2"><%= t(:email_description) %></p>
         <%= form.email_field :email, autocomplete: 'email', class: 'form-control' %>
       </div>
 
@@ -28,7 +30,7 @@
       <div class="mb-3 border rounded p-3">
         <div class="mb-2">
           <h5>Change Password</h5>
-          <small class="fst-italic">Leave blank to skip password change</small>
+          <p class="form-text">Leave blank to skip password change</p>
         </div>
 
         <div class="mb-3">
@@ -37,12 +39,8 @@
         </div>
 
         <div class="mb-3">
-          <%= form.label :password, value: 'New password', class: 'form-label' %>
-
-          <% if @minimum_password_length %>
-            <small class="fst-italic">(<%= @minimum_password_length %> characters minimum)</small>
-          <% end %>
-
+          <%= form.label :password, value: 'New password', class: 'form-label mb-0' %>
+          <p class="form-text mb-2"><%= t(:password_description, minimum_password_length: @minimum_password_length) %></p>
           <%= form.password_field :password, autocomplete: 'new-password', class: 'form-control' %>
         </div>
 

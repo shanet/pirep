@@ -79,6 +79,13 @@ Rails.application.routes.draw do
   resources :events, only: [:create, :edit, :update, :show, :destroy]
   resources :tags, only: :destroy
 
+  resources :users, only: [], controller: 'users/users' do
+    member do
+      get 'show', as: :users_show
+      get 'activity', as: :users_activity
+    end
+  end
+
   resources :versions, only: [] do
     member do
       patch 'revert', action: :revert, as: :revert

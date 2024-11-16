@@ -22,7 +22,7 @@
 
     <% if actions.count > actions_limit %>
       <div class="list-group-item">
-        <small class="fst-italic text-body-secondary">Showing <%= actions_limit %> most recent contributions only &mdash; <%= link_to 'view all activity', activity_manage_user_path(user) %>.</small>
+        <small class="fst-italic text-body-secondary">Showing <%= actions_limit %> most recent contributions only &mdash; <%= link_to 'view all activity', all_activity_path %>.</small>
       </div>
     <% end %>
   </ul>

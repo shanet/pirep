@@ -30,11 +30,15 @@ module AirportsHelper
     user = Users::User.find_by(id: version.whodunnit)
     return 'System' unless user
 
-    if user.unknown?
-      return link_to user.ip_address, manage_user_path(user)
+    if current_user&.admin?
+      return link_to user.ip_address, manage_user_path(user) if user.unknown?
+
+      return link_to user.email, manage_user_path(user)
     end
 
-    return link_to user.email, manage_user_path(user)
+    return link_to user.ip_address, users_show_user_path(user) if user.unknown?
+
+    return link_to user.name.presence || t(:anonymous_label), users_show_user_path(user)
   end
 
   def version_title(version, column)

@@ -21,7 +21,15 @@
           <br><small class="text-body-secondary"><%= format_timestamp @user.verified_at %></small>
         </li>
       <% else %>
-        <li class="list-group-item"><strong>Name:</strong> <%= @user.name %></li>
+        <li class="list-group-item">
+          <strong>Username:</strong>
+          <% if @user.name.present? %>
+            <%= @user.name %>
+          <% else %>
+            <span class="text-body-secondary"><%= t(:anonymous_label) %></span>
+          <% end %>
+        </li>
+
         <li class="list-group-item"><strong>Email Address:</strong> <%= @user.email %></li>
         <li class="list-group-item"><strong>Email Confirmed:</strong> <i class="fa-solid fa-<%= @user.confirmed_at ? 'square-check' : 'square-xmark' %>"></i></li>
         <li class="list-group-item"><strong>Locked:</strong> <i class="fa-solid fa-<%= @user.locked_at ? 'square-check' : 'square-xmark' %>"></i></li>

@@ -1,9 +1,9 @@
 <%
   @title = 'Activity'
-  @breadcrumbs = [['Users'], [@user.name.presence || @user.email, user_path], ['Activity']]
+  @breadcrumbs = [['Users'], [public_user_label(@user), users_show_user_path(@user)], ['Activity']]
 %>
 
-<h1 class="display-6">Activity for <%= (@user.unknown? ? @user.ip_address : @user.name.presence || @user.email) %></h1>
+<h1 class="display-6">Activity for <%= public_user_label(@user) %></h1>
 
 <div class="row">
   <div class="col">
