@@ -49,6 +49,7 @@
     left: calc($handle-size / 2 * -1 - $handle-margin);
     position: absolute;
     top: 45px;
+    z-index: $zindex-fixed + 1; // +1 so the handle shows on top of the photo gallery controls
 
     button {
       background-color: $white;

@@ -31,7 +31,13 @@
 
 en:
   site_description: Pirep is a free, collaborative database of all public and private airports. All pilots are welcome to contribute their local knowledge to any airport, no registration required.
+
   airport_tags: Use the filters to discover destinations for restaurants, camping, golfing, etc. or just explore what's around you.
   airport_search: Search by travel time, runway length &amp; type, elevation, upcoming events, and more on the %{search_link}.
   origin_filters_hook: What kind of airports are you looking for?
   origin_filters_description: Enable filters to look for interesting, new destinations around you.
+
+  name_description: This is public. Leave blank to remain anonymous.
+  email_description: This is private and won't be shared.
+  password_description: "%{minimum_password_length} characters minimum."
+  anonymous_label: "[anonymous]"

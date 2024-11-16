@@ -56,6 +56,10 @@ module ApplicationHelper
     return (user.unknown? ? user.ip_address : user.email)
   end
 
+  def public_user_label(user)
+    return (user.unknown? ? user.ip_address : user.name.presence || t(:anonymous_label))
+  end
+
   def active_path?(route, exact: false)
     if exact
       return (request.path == route ? 'active' : '')

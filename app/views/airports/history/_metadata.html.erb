@@ -12,9 +12,7 @@
           <br>Reverted at: <%= format_timestamp(version.reverted_at, timezone: @airport.timezone) %>
         <% end %>
 
-        <% if current_user&.admin? %>
-          <br><%= version_author(version) %>
-        <% end %>
+        <br><%= version_author(version) %>
       </small>
 
       <div>

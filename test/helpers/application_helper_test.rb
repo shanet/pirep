@@ -28,6 +28,16 @@ class ApplicationTest < ActionView::TestCase
     assert_equal known.email, user_label(known)
   end
 
+  test 'public user label' do
+    unknown = create(:unknown)
+    known_with_name = create(:known, name: 'The Red Baron')
+    known_without_name = create(:known, name: nil)
+
+    assert_equal unknown.ip_address, public_user_label(unknown)
+    assert_equal known_with_name.name, public_user_label(known_with_name)
+    assert_equal t(:anonymous_label), public_user_label(known_without_name)
+  end
+
   test 'FAA data content URL' do
     filename = 'diagram.png'
     assert_equal "/assets/diagrams/current/#{filename}", faa_data_content_url(:diagrams, filename: filename), 'Unexpected diagrams URL without CDN'

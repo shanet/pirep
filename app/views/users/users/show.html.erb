@@ -1,17 +1,11 @@
 <%
-  @title = 'Account'
-  @breadcrumbs = [['Users'], [@user.name.presence || @user.email]]
+  @title = @user.name.presence
+  @breadcrumbs = [['Users'], [public_user_label(@user)]]
 %>
 
 <div class="row">
-  <div class="col-8">
-    <h1 class="display-6">Account</h1>
-  </div>
-
-  <div class="col-4">
-    <div class="d-flex justify-content-end mb-3">
-      <%= link_to 'Edit', edit_user_registration_path(@user), class: 'btn btn-primary' %>
-    </div>
+  <div class="col-12">
+    <h1 class="display-6"><%= public_user_label(@user) %></h1>
   </div>
 </div>
 
@@ -25,15 +19,11 @@
       <li class="list-group-item">
         <strong>Username:</strong>
         <% if @user.name.present? %>
-          <%= @user.name %>
+          <%= @user.name.presence %>
         <% else %>
           <span class="text-body-secondary"><%= t(:anonymous_label) %></span>
         <% end %>
       </li>
-
-      <li class="list-group-item"><strong>Email Address:</strong> <%= @user.email %></li>
-      <li class="list-group-item"><strong>Email Confirmed:</strong> <i class="fa-solid fa-<%= @user.confirmed_at ? 'square-check' : 'square-xmark' %>"></i></li>
-      <li class="list-group-item"><strong>Timezone:</strong> <%= @user.timezone %></li>
 
       <li class="list-group-item">
         <strong>Last seen:</strong> <%= @user.last_seen_at ? "#{time_ago_in_words(@user.last_seen_at).capitalize} ago" : 'Never' %>
@@ -49,6 +39,6 @@
 
   <div class="col-12 col-md-8">
     <%= render 'shared/users/statistics', user: @user %>
-    <%= render 'shared/users/activity_timeline', user: @user, all_activity_path: activity_user_path %>
+    <%= render 'shared/users/activity_timeline', user: @user, all_activity_path: users_activity_user_path(@user) %>
   </div>
 </div>

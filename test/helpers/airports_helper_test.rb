@@ -3,6 +3,10 @@ require 'test_helper'
 class AirportsHelperTest < ActionView::TestCase
   include AirportsHelper
 
+  setup do
+    @current_user = nil
+  end
+
   test 'show notices' do
     assert_not show_notices?(create(:airport)), 'Normal airport shows notices'
     assert show_notices?(create(:airport, :empty)), 'Empty airport does not show notices'
@@ -10,7 +14,26 @@ class AirportsHelperTest < ActionView::TestCase
     assert show_notices?(create(:airport, :unmapped)), 'Unmapped airport does not show notices'
   end
 
-  test 'version author' do
+  test 'version author when unknown' do
+    unknown = create(:unknown)
+    known = create(:known)
+
+    with_versioning do
+      version = create(:airport).versions.first
+
+      # A nil whodunnit should return a default string
+      assert_equal 'System', version_author(version)
+
+      version.update!(whodunnit: unknown.id)
+      assert users_show_user_path(unknown).in?(version_author(version))
+
+      version.update!(whodunnit: known.id)
+      assert users_show_user_path(known).in?(version_author(version))
+    end
+  end
+
+  test 'version author when admin' do
+    @current_user = create(:admin)
     unknown = create(:unknown)
     known = create(:known)
 
@@ -144,5 +167,11 @@ class AirportsHelperTest < ActionView::TestCase
   test 'cloud layers to_s' do
     assert_equal 'Few @ 3,000ft, Overcast @ 5,000ft', cloud_layers_to_s(create(:metar)), 'Wrong cloud layers string'
     assert_equal '', cloud_layers_to_s(create(:metar, cloud_layers: [])), 'Wrong cloud layers string for no clouds'
+  end
+
+private
+
+  def current_user
+    return @current_user
   end
 end

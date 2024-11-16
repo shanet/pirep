@@ -14,7 +14,23 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test 'create, known' do
+  test 'create, known with username' do
+    user_attributes = attributes_for(:known)
+
+    assert_difference('Users::User.count') do
+      post user_registration_path, params: {user: {name: user_attributes[:name], email: user_attributes[:email], password: 'correct', password_confirmation: 'correct'}}
+      assert_redirected_to root_path
+    end
+
+    user = Users::Known.last
+
+    assert_equal user_attributes[:name], user.name, 'Incorrect name for new user'
+    assert_equal user_attributes[:email], user.email, 'Incorrect email for new user'
+    assert user.is_a?(Users::Known), 'Incorrect type for new user'
+    assert_not_nil user.confirmation_token, 'Confirmation token not set for new user'
+  end
+
+  test 'create, known without username' do
     user_attributes = attributes_for(:known)
 
     assert_difference('Users::User.count') do
@@ -22,11 +38,7 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
       assert_redirected_to root_path
     end
 
-    user = Users::Known.last
-
-    assert_equal user_attributes[:email], user.email, 'Incorrect email for new user'
-    assert user.is_a?(Users::Known), 'Incorrect type for new user'
-    assert_not_nil user.confirmation_token, 'Confirmation token not set for new user'
+    assert_nil Users::Known.last.name, 'Incorrect name for new user'
   end
 
   test 'create, known, failed' do
