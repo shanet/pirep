@@ -7,6 +7,8 @@ class Users::User < ApplicationRecord
   has_many :actions, dependent: :destroy
   has_many :pageviews, dependent: :destroy
 
+  validates :name, uniqueness: true, allow_nil: true
+
   # Only allow unknown users to have IP addresses to avoid conflicts with known users that are identified by their email addresses
   validates :ip_address, presence: true, if: :unknown?
   validates :ip_address, absence: true, unless: :unknown?
@@ -15,6 +17,8 @@ class Users::User < ApplicationRecord
   searchable({column: :name, weight: :B})
   searchable({column: :ip_address})
   searchable({column: :last_sign_in_ip})
+
+  before_save :strip_whitespace
 
   def first_name
     return name&.split&.first
@@ -39,5 +43,13 @@ class Users::User < ApplicationRecord
 
   def verified?
     return !unknown? || verified_at
+  end
+
+private
+
+  def strip_whitespace
+    [:name, :email, :ip_address].each do |column|
+      self[column] = send(column)&.strip
+    end
   end
 end

@@ -26,4 +26,11 @@ class Users::UserTest < ActiveSupport::TestCase
     assert_not create(:known).unknown?
     assert create(:unknown).unknown?
   end
+
+  test 'strips whitespace from columns' do
+    user = create(:known, name: nil, email: ' bar@example.com ')
+
+    assert_nil user.name, 'Did not preserve nil name'
+    assert_equal 'bar@example.com', user.email, 'Did not strip whitespace from email'
+  end
 end
