@@ -1,15 +1,20 @@
 <div class="row border-bottom pb-2 mb-3">
-  <div class="col-4 text-center">
+  <div class="col-3 text-center">
+    <h3><%= number_with_delimiter(user.points, delimiter: ',') %>ft</h3>
+    <h6>Altitude</h6>
+  </div>
+
+  <div class="col-3 text-center">
     <h3><%= number_with_delimiter Action.where(user: user).count %></h3>
     <h6>Total Contributions</h6>
   </div>
 
-  <div class="col-4 text-center">
+  <div class="col-3 text-center">
     <h3><%= number_with_delimiter Action.where(user: user, type: :airport_edited).select(:actionable_id).distinct.count %></h3>
     <h6>Airports Edited</h6>
   </div>
 
-  <div class="col-4 text-center">
+  <div class="col-3 text-center">
     <h3><%= user.created_at.strftime('%b %Y') %></h3>
     <h6>Member Since</h6>
   </div>

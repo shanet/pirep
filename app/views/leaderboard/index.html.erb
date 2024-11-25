@@ -1,0 +1,42 @@
+<%
+  @title = 'Leaderboard'
+  @breadcrumbs = [['Leaderboard']]
+%>
+
+<div class="row mb-3">
+  <div class="col-12">
+    <h1 class="display-6">Leaderboard</h1>
+
+    The all time top <%= LeaderboardController::LEADERBOARD_LENGTH %> Pirep users.
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12 mb-3">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>User</th>
+          <th>Altitude</th>
+          <th>Contributions</th>
+          <th>Airports Edited</th>
+          <th>Member Since</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @users.each_with_index do |user, rank| %>
+          <tr>
+            <td class="col"><%= rank + 1 %></td>
+            <td class="col"><%= link_to public_user_label(user), users_show_user_path(user) %></td>
+            <td class="col"><%= number_with_delimiter(user.points, delimiter: ',') %>ft</td>
+            <td class="col"><%= number_with_delimiter(Action.where(user: user).count, delimiter: ',') %></td>
+            <td class="col"><%= number_with_delimiter(Action.where(user: user, type: :airport_edited).select(:actionable_id).distinct.count, delimiter: ',') %></td>
+            <td class="col"><%= user.created_at.strftime('%b %Y') %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

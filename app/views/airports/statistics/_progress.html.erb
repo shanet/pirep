@@ -1,0 +1,22 @@
+<% unless @airport.featured? %>
+  <% calculator = AirportCompletionProgressCalculator.new(@airport) %>
+
+  <div class="alert alert-primary">
+    <div class="progress mb-2">
+      <% percent = calculator.percent_complete %>
+      <% if percent.zero? %>
+        <div class="progress-bar progress-bar-striped progress-5 bg-danger"><%= percent %>%</div>
+      <% else %>
+        <div class="progress-bar progress-bar-striped progress-<%= percent %>"><%= percent %>%</div>
+      <% end %>
+    </div>
+
+    Are you familiar with this airport? Help complete its documentation by adding some of the following info if applicable:
+
+    <ul class="mb-0">
+      <% calculator.missing_information.values.sample(3).each do |item| %>
+        <li><%= item.html_safe %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

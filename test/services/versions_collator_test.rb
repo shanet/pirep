@@ -5,7 +5,7 @@ class VersionsCollatorTest < ActiveSupport::TestCase
     with_versioning do
       @airport = create(:airport)
       @description = @airport.description
-      @wifi = @airport.wifi
+      @fuel_location = @airport.fuel_location
 
       @user1 = create(:unknown)
       @user2 = create(:known)
@@ -17,7 +17,7 @@ class VersionsCollatorTest < ActiveSupport::TestCase
       # Create some versions to test against
       15.times do |i|
         # Change an extra field mid-way through to test if it gets added to the changes hash in the collated version
-        @airport.update!((i == 8 ? {description: i + 1, wifi: 'changed'} : {description: i + 1}))
+        @airport.update!((i == 8 ? {description: i + 1, fuel_location: 'changed'} : {description: i + 1}))
       end
 
       # Change the initial create versions (one for the initial create + one for the airport photo the factory adds through an update) to be created well in the past
@@ -70,8 +70,8 @@ class VersionsCollatorTest < ActiveSupport::TestCase
       # The fifth update version should pick up changes from a different field made in the middle of the updates
       assert_equal '8', @airport.versions[6].object_changes['description'].first, 'Incorrect object changes on collated version'
       assert_equal '15', @airport.versions[6].object_changes['description'].last, 'Incorrect object changes on collated version'
-      assert_equal @wifi, @airport.versions[6].object_changes['wifi'].first, 'Incorrect object changes on collated version'
-      assert_equal 'changed', @airport.versions[6].object_changes['wifi'].last, 'Incorrect object changes on collated version'
+      assert_equal @fuel_location, @airport.versions[6].object_changes['fuel_location'].first, 'Incorrect object changes on collated version'
+      assert_equal 'changed', @airport.versions[6].object_changes['fuel_location'].last, 'Incorrect object changes on collated version'
       assert_equal @user2.id, @airport.versions[6].whodunnit, 'User not preserved on collated version'
     end
   end

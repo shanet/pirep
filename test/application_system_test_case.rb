@@ -33,4 +33,32 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     warn page.driver.browser.logs.get(:browser)
     raise error
   end
+
+  def sign_in(user, controller: :map)
+    user = (user.is_a?(Users::User) ? user : create(user)) # rubocop:disable Rails/SaveBang
+
+    case controller
+      when :map
+        visit root_path
+        find_by_id('hamburger-icon').click
+        click_link_or_button 'Log In / Register'
+      when :sessions
+        visit new_user_session_path
+      else
+        flunk 'Unknown sign-in controller type'
+    end
+
+    fill_in 'user_email', with: user.email
+    fill_in 'user_password', with: user.password
+    click_link_or_button 'Log in'
+
+    # If an admin check that we're on the manage dashboard
+    if user.is_a? Users::Admin
+      assert_selector '.navbar', text: 'Logout'
+    else
+      assert_selector '.navigation', text: 'Account'
+      find_by_id('hamburger-icon').click
+      assert_selector '#hamburger-menu', text: 'Logout'
+    end
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_11_16_060942) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_22_091423) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -337,6 +337,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_11_16_060942) do
     t.datetime "disabled_at", precision: nil
     t.string "timezone"
     t.datetime "verified_at", precision: nil
+    t.integer "points"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["ip_address"], name: "index_users_on_ip_address", unique: true

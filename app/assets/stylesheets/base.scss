@@ -51,3 +51,12 @@ img.logo.logo-dark {
     );
   }
 }
+
+// This is kind of stupid, but since Bootstrap sets progress bars' progress via an
+// inline style and the CSP prevents those we need to define a rule for each percent
+// value and then assign progress for a progress bar via the appropriate class.
+@for $index from 0 through 100 {
+  .progress .progress-bar.progress-#{$index} {
+    width: #{$index}#{'%'};
+  }
+}

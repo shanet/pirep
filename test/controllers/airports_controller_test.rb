@@ -160,7 +160,7 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
         patch airport_path(@airport), params: {airport: {tags_attributes: {'0': {name: :camping, selected: true}}}}
 
         assert_redirected_to airport_path(@airport.code)
-        assert_equal :camping, @airport.reload.tags.last.name, 'Did not save tag'
+        assert @airport.reload.tags.has?(:camping), 'Did not save tag'
       end
     end
   end
@@ -173,7 +173,7 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
       assert_redirected_to airport_path(@airport.code)
       @airport = @airport.reload
       assert_equal :restricted, @airport.reload.landing_rights, 'Did not update landing rights'
-      assert_equal :restricted, @airport.reload.tags.last.name, 'Did not add landing rights tag'
+      assert @airport.reload.tags.has?(:restricted), 'Did not add landing rights tag'
     end
   end
 

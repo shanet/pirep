@@ -13,9 +13,14 @@ class Airport < ApplicationRecord
   has_many :remarks, dependent: :destroy
   has_many :runways, dependent: :destroy
   has_many :tafs, dependent: :destroy
-  has_many :tags, dependent: :destroy
   has_many :webcams, dependent: :destroy
   has_one :metar, dependent: :destroy
+
+  has_many :tags, dependent: :destroy do
+    def has?(tag)
+      return where(name: tag).count > 0
+    end
+  end
 
   belongs_to :featured_photo, class_name: 'ActiveStorage::Attachment', optional: true
   has_many_attached_with :contributed_photos, path: -> {"#{AIRPORT_PHOTOS_S3_PATH}/contributed/#{code.downcase}"}
@@ -34,6 +39,8 @@ class Airport < ApplicationRecord
   # Only run version collation after an update if one of the columns we create versions for was changed (airport database updates are much faster without these running)
   after_update :collate_versions!, if: proc {HISTORY_COLUMNS.keys.any? {|column| send("#{column}_previously_changed?")}}
   after_save :remove_empty_tag!
+  after_save :add_featured_tag!
+  after_save :remove_featured_tag!
 
   UNMAPPED_CODE_PREFIX = 'UNM'
 
@@ -247,7 +254,7 @@ class Airport < ApplicationRecord
 
   def empty?
     # Return if the airport is tagged with a user-addable tag
-    return false if tags.map {|tag| Tag::TAGS[tag.name][:addable]}.any?
+    return false if Tag.addable_tags.keys.intersect?(tags.pluck(:name).map(&:to_sym))
 
     # Return if landing rights/requirements are set
     return false if [:restricted, :permission].include?(landing_rights) || landing_requirements.present?
@@ -271,6 +278,26 @@ class Airport < ApplicationRecord
     tags.where(name: :empty).destroy_all
   end
 
+  def add_featured_tag!
+    # Add a featured tag if the airport has crossed the requisite threshold
+    return if featured? || !AirportCompletionProgressCalculator.new(self).featured?
+
+    tags << Tag.new(name: :featured)
+
+    # Schedule an airport cache refresh so the new tag shows up on the map
+    AirportGeojsonDumperJob.perform_later
+  end
+
+  def remove_featured_tag!
+    # If the airport is currently featured but it dropped below the featured threshold then remove the featured tag
+    return if !featured? || AirportCompletionProgressCalculator.new(self).featured?
+
+    tags.where(name: :featured).destroy_all
+
+    # Schedule an airport cache refresh so the airport is removed from the map
+    AirportGeojsonDumperJob.perform_later
+  end
+
   def update_landing_rights_tag
     # Remove tags other than the selected landing right value as the tag should match the selected landing rights value
     remove_tags = LANDING_RIGHTS_TYPES.keys
@@ -285,11 +312,15 @@ class Airport < ApplicationRecord
   end
 
   def closed?
-    return tags.where(name: :closed).count > 0
+    return tags.has?(:closed)
   end
 
   def unmapped?
-    return tags.where(name: :unmapped).count > 0
+    return tags.has?(:unmapped)
+  end
+
+  def featured?
+    return tags.has?(:featured)
   end
 
   def private?

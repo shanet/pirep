@@ -75,8 +75,8 @@ class AirportsTest < ApplicationSystemTestCase
   test 'add tag' do
     visit airport_path(@airport.code)
 
-    # There should be four tags by default (three from the factory and the "edit tags" button)
-    assert_equal 4, all('.tag-square').count
+    # There should be five tags by default (four from the factory and the "edit tags" button)
+    assert_equal 5, all('.tag-square').count
 
     # Add the first and last tag
     find('.tag-square.add').click
@@ -86,15 +86,15 @@ class AirportsTest < ApplicationSystemTestCase
 
     click_link_or_button 'Add Tags'
 
-    # There should now be six tags plus the "edit tags" button
-    assert_equal 6, all('.tag-square').count, 'Tags not added'
+    # There should now be seven tags plus the "edit tags" button
+    assert_equal 7, all('.tag-square').count, 'Tags not added'
   end
 
   test 'remove tag' do
     visit airport_path(@airport.code)
 
-    # There should be four tags by default (three from the factory and the "edit tags" button)
-    assert_equal 4, all('.tag-square').count
+    # There should be five tags by default (four from the factory and the "edit tags" button)
+    assert_equal 5, all('.tag-square').count
 
     # Remove the first tag
     find('.tag-square.add').click
@@ -108,8 +108,8 @@ class AirportsTest < ApplicationSystemTestCase
     create(:tag, name: :private_, airport: @airport)
     visit airport_path(@airport.code)
 
-    # There should be two tags by default (one from factory and "edit tags" button)
-    assert_equal 2, all('.tag-square').count
+    # There should be four tags by default (three from factory and the "edit tags" button)
+    assert_equal 4, all('.tag-square').count
 
     # Remove the first tag
     find('.tag-square.add').click
@@ -400,6 +400,20 @@ class AirportsTest < ApplicationSystemTestCase
   test 'does not have complementary airports' do
     visit airport_path(@airport.code)
     assert_no_selector '.airport-complements'
+  end
+
+  test 'has progress bar' do
+    airport = create(:airport, :empty)
+    visit airport_path(airport.code)
+
+    # An empty airport should show a (nearly) empty progress bar by default
+    assert_selector '.progress-bar.progress-5'
+  end
+
+  test 'does not have progress bar' do
+    airport = create(:airport, :featured)
+    visit airport_path(airport.code)
+    assert_no_selector '.progress-bar'
   end
 
 private

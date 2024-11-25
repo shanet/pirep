@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   get :about, to: 'meta#about'
   get :health, to: 'meta#health'
+  get :leaderboard, to: 'leaderboard#index'
   get :sitemap, to: 'meta#sitemap'
 
   devise_for :user, class_name: 'Users::User', controllers: {
