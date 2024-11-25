@@ -5,7 +5,10 @@ class WebcamTest < ActiveSupport::TestCase
     airport = create(:airport)
     assert airport.tags.where(name: :webcam).empty?, 'Airport already has webcam tag'
 
-    create(:webcam, airport: airport)
+    assert_enqueued_with(job: AirportGeojsonDumperJob) do
+      create(:webcam, airport: airport)
+    end
+
     assert airport.tags.where(name: :webcam).any?, 'Webcam tag not added to airport'
   end
 
@@ -18,8 +21,10 @@ class WebcamTest < ActiveSupport::TestCase
     webcam1.destroy!
     assert airport.tags.where(name: :webcam).any?, 'Webcam tag removed from airport'
 
-    webcam2.destroy!
-    assert airport.tags.where(name: :webcam).empty?, 'Webcam tag not removed from airport'
+    assert_enqueued_with(job: AirportGeojsonDumperJob) do
+      webcam2.destroy!
+      assert airport.tags.where(name: :webcam).empty?, 'Webcam tag not removed from airport'
+    end
   end
 
   test 'disallows duplicate URLs on airport' do

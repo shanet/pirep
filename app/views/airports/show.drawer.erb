@@ -32,7 +32,7 @@
 <% if show_notices?(@airport) %>
   <div class="row">
     <div class="col-sm">
-      <%= render partial: 'airports/notices', formats: :html, locals: {show_link: true} %>
+      <%= render partial: 'airports/notices', formats: :html, locals: {show_empty_notice: true} %>
     </div>
   </div>
 <% end %>

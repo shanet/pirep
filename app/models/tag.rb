@@ -7,30 +7,26 @@ class Tag < ApplicationRecord
   validates :name, presence: true
 
   after_save :remove_empty_tag!
+  after_save :add_featured_tag!
+  after_save :remove_featured_tag!
+
+  delegate :remove_empty_tag!, to: :airport
+  delegate :add_featured_tag!, to: :airport
+  delegate :remove_featured_tag!, to: :airport
 
   has_paper_trail meta: {airport_id: :airport_id}
 
   TAGS = {
+    featured: {
+      label: 'Featured',
+      icon: 'star',
+      theme: 'yellow',
+    },
     populated: {
       label: 'Documented',
       icon: 'book',
       theme: 'green',
       default: true,
-    },
-    empty: {
-      label: 'Undocu&shy;mented'.html_safe,
-      icon: 'question',
-      theme: 'pink',
-    },
-    public_: {
-      label: 'Public',
-      icon: 'lock-open',
-      theme: 'green',
-    },
-    private_: {
-      label: 'Private',
-      icon: 'lock',
-      theme: 'red',
     },
     restricted: {
       label: 'Restricted',
@@ -165,6 +161,21 @@ class Tag < ApplicationRecord
       theme: 'brown',
       searchable: true,
     },
+    public_: {
+      label: 'Public',
+      icon: 'lock-open',
+      theme: 'green',
+    },
+    private_: {
+      label: 'Private',
+      icon: 'lock',
+      theme: 'red',
+    },
+    empty: {
+      label: 'Undocu&shy;mented'.html_safe,
+      icon: 'question',
+      theme: 'pink',
+    },
   }
 
   enum :name, TAGS.each_with_object({}) {|(key, _value), hash| hash[key] = key.to_s;}
@@ -185,11 +196,5 @@ class Tag < ApplicationRecord
 
   def label
     return TAGS[name]&.[](:label)
-  end
-
-private
-
-  def remove_empty_tag!
-    airport.remove_empty_tag!
   end
 end

@@ -7,7 +7,11 @@
       %>
 
       <i class="<%= link[:icon] %>"></i> <%= link[:label] %>
-      <br><small class="text-body-secondary"><%= format_timestamp action.created_at %></small>
+      <br>
+      <small class="text-body-secondary">
+        <%= format_timestamp action.created_at %>
+        <% if link[:points] %>| +<%= number_with_delimiter(link[:points], delimiter: ',') %>ft<% end %>
+      </small>
     </li>
   <% end %>
 </ul>

@@ -25,4 +25,10 @@ class Users::UsersControllerTest < ActionDispatch::IntegrationTest
     get users_activity_user_path(@unknown)
     assert_response :success
   end
+
+  test 'redirects to private show page if self' do
+    sign_in @known
+    get users_show_user_path(@known)
+    assert_redirected_to user_path
+  end
 end

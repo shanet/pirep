@@ -56,11 +56,11 @@ class AirportTest < ActiveSupport::TestCase
     assert_equal expected_geojson, @airport.to_geojson, 'Generated geojson for airport differs from expected'
   end
 
-  test 'airport is empty' do
+  test 'is empty' do
     assert create(:airport, :empty).empty?, 'Airport not empty'
   end
 
-  test 'airport is closed' do
+  test 'is closed' do
     airport = create(:airport, :closed)
     assert airport.closed?, 'Airport not closed'
   end
@@ -69,6 +69,11 @@ class AirportTest < ActiveSupport::TestCase
     assert_not @airport.unmapped?, 'Mapped airport considered unmapped'
     @airport.tags << create(:tag, name: :unmapped)
     assert @airport.unmapped?, 'Unmapped airport not considered unmapped'
+  end
+
+  test 'is featured' do
+    airport = create(:airport, :featured)
+    assert airport.featured?, 'Airport not featured'
   end
 
   test 'authoritative data source' do
@@ -114,18 +119,21 @@ class AirportTest < ActiveSupport::TestCase
 
   test 'updates tags when landing rights change' do
     airport = create(:airport)
-    assert_equal 1, airport.tags.count, 'Airport has multiple tags'
-    assert_equal :public_, airport.tags.first.name, 'Public tag not added to airport'
+    assert airport.tags.has?(:public_), 'Public tag not added to airport'
+    assert_not airport.tags.has?(:restricted_), 'Restricted tag added to airport'
+    assert_not airport.tags.has?(:private_), 'Private tag added to airport'
 
     airport.update!(landing_rights: :restricted)
     airport = airport.reload
-    assert_equal 1, airport.tags.count, 'Airport has multiple tags'
-    assert_equal :restricted, airport.tags.first.name, 'Public tag not added to airport'
+    assert airport.tags.has?(:restricted), 'Restricted tag not added to airport'
+    assert_not airport.tags.has?(:public_), 'Public tag added to airport'
+    assert_not airport.tags.has?(:private_), 'Private tag added to airport'
 
     airport.update!(landing_rights: :private_)
     airport = airport.reload
-    assert_equal 1, airport.tags.count, 'Airport has multiple tags'
-    assert_equal :private_, airport.tags.first.name, 'Public tag not added to airport'
+    assert airport.tags.has?(:private_), 'Private tag not added to airport'
+    assert_not airport.tags.has?(:restricted_), 'Restricted tag added to airport'
+    assert_not airport.tags.has?(:public_), 'Public tag added to airport'
   end
 
   test 'unselected tag names' do
@@ -228,7 +236,7 @@ class AirportTest < ActiveSupport::TestCase
       tag = create(:tag, airport: @airport)
       tag.destroy!
 
-      assert_equal 5, @airport.all_versions.count, 'Airport does not have own versions and associated tag versions'
+      assert_equal 6, @airport.all_versions.count, 'Airport does not have own versions and associated tag versions'
 
       (tag.versions + webcam.versions).each do |version|
         assert version.in?(@airport.all_versions), 'Tag/webcam versions not included with airport versions'
@@ -347,5 +355,26 @@ class AirportTest < ActiveSupport::TestCase
     assert_equal [complementary_close_airport, complementary_far_airport, complementary_airport], airport.complements, 'Unexpected complementary airports'
 
     assert_equal [], create(:airport, tags: []).complements, 'Empty airport had complementary airports'
+  end
+
+  test 'has tag?' do
+    airport = create(:airport, tags: [create(:tag, name: :food)])
+    assert airport.tags.has?(:food), 'Did not find existing tag'
+    assert_not airport.tags.has?(:private_), 'Found non-existant tag'
+  end
+
+  test 'becomes featured' do
+    assert_not @airport.featured?, 'Non-featured airport featured'
+
+    # Adding one more field should make the airport featured
+    assert_enqueued_with(job: AirportGeojsonDumperJob) do
+      @airport.update!(landing_requirements: 'foobar')
+      assert @airport.featured?, 'Airport not marked as featured'
+    end
+
+    assert_enqueued_with(job: AirportGeojsonDumperJob) do
+      @airport.update!(landing_requirements: nil)
+      assert_not @airport.featured?, 'Non-featured airport featured'
+    end
   end
 end

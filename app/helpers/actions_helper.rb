@@ -7,6 +7,7 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-square-plus',
           label: "#{action.actionable ? link_to(action.actionable.code, airport_path(action.actionable)) : DELETED}: Airport added".html_safe,
+          points: UserPointsCalculator.points_for_action(:airport_added),
         }
 
       when :airport_edited
@@ -18,12 +19,14 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-pen-to-square',
           label: "#{action.actionable ? link_to(action.actionable.code, airport_path(action.actionable)) : DELETED}: Airport edited | #{fields_updated.join(', ')}".html_safe,
+          points: UserPointsCalculator.points_for_action(:airport_edited),
         }
 
       when :airport_photo_uploaded
         return {
           icon: 'fa-solid fa-camera',
           label: "#{action.actionable ? link_to(action.actionable.code, airport_path(action.actionable)) : DELETED}: Airport photo uploaded".html_safe,
+          points: UserPointsCalculator.points_for_action(:airport_photo_uploaded),
         }
 
       # -----------------------------------------------------------------------
@@ -34,6 +37,7 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-comment',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Comment posted".html_safe,
+          points: UserPointsCalculator.points_for_action(:comment_added),
         }
 
       when :comment_helpful
@@ -42,6 +46,7 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-thumbs-up',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Comment found helpful".html_safe,
+          points: UserPointsCalculator.points_for_action(:comment_helpful),
         }
 
       when :comment_flagged
@@ -50,6 +55,7 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-flag',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Comment flagged as outdated".html_safe,
+          points: UserPointsCalculator.points_for_action(:comment_flagged),
         }
 
       when :comment_unflagged
@@ -58,6 +64,7 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-rotate-left',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Comment unflagged as outdated".html_safe,
+          points: UserPointsCalculator.points_for_action(:comment_unflagged),
         }
 
       # -----------------------------------------------------------------------
@@ -68,6 +75,7 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-calendar-plus',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Event added".html_safe,
+          points: UserPointsCalculator.points_for_action(:event_added),
         }
 
       when :event_edited
@@ -76,6 +84,7 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-calendar-days',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Event updated".html_safe,
+          points: UserPointsCalculator.points_for_action(:event_edited),
         }
 
       when :event_removed
@@ -84,6 +93,7 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-calendar-xmark',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Event removed".html_safe,
+          points: UserPointsCalculator.points_for_action(:event_removed),
         }
 
       # -----------------------------------------------------------------------
@@ -95,6 +105,7 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-square-plus',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Tag added | #{tag_label.presence || DELETED}".html_safe,
+          points: UserPointsCalculator.points_for_action(:tag_added),
         }
 
       when :tag_removed
@@ -104,6 +115,7 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-square-minus',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Tag removed | #{tag_label.presence || DELETED}".html_safe,
+          points: UserPointsCalculator.points_for_action(:tag_removed),
         }
 
       # -----------------------------------------------------------------------
@@ -114,6 +126,7 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-camera',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Webcam added".html_safe,
+          points: UserPointsCalculator.points_for_action(:webcam_added),
         }
 
       when :webcam_removed
@@ -122,6 +135,7 @@ module ActionsHelper
         return {
           icon: 'fa-solid fa-square-minus',
           label: "#{airport ? link_to(airport.code, airport_path(airport)) : DELETED}: Webcam removed".html_safe,
+          points: UserPointsCalculator.points_for_action(:webcam_removed),
         }
     end
 

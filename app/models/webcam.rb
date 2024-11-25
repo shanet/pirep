@@ -44,6 +44,9 @@ private
     return if airport.tags.find_by(name: :webcam)
 
     airport.tags << Tag.new(name: :webcam)
+
+    # Schedule an airport cache refresh so the new tag shows up on the map
+    AirportGeojsonDumperJob.perform_later
   end
 
   def remove_tag
@@ -51,5 +54,8 @@ private
     return if airport.webcams.any?
 
     airport.tags.where(name: :webcam).destroy_all
+
+    # Schedule an airport cache refresh so the airport is removed from the map
+    AirportGeojsonDumperJob.perform_later
   end
 end

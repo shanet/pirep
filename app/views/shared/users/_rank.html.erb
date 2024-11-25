@@ -1,0 +1,7 @@
+<% rank = UserPointsCalculator.new(@user).rank %>
+
+<% if rank %>
+  <div class="mb-2">
+    <span class="text-warning"><i class="fa-solid fa-crown me-1"></i></span><span class="fst-italic">#<%= rank %> Overall</span>
+  </div>
+<% end %>

@@ -9,6 +9,7 @@ class Action < ApplicationRecord
   # 1. Add it to the list below
   # 2. Add an entry to `dashboard_helper.rb`
   # 3. Add an entry to `actions_helper.rb` if exposed to users on activity page
+  # 4. Add a point value in user_points_calculator.rb
   ACTIONS = [
     :airport_added,
     :airport_edited,
@@ -32,6 +33,8 @@ class Action < ApplicationRecord
 
   validates :type, inclusion: {in: ACTIONS.map(&:to_s)}
 
+  after_save :update_user_points!
+
   # Actions that denote an "edit" (basically, not including comment actions as these aren't really contributions to airports)
   def self.edited_actions
     return [
@@ -51,5 +54,11 @@ class Action < ApplicationRecord
     return nil unless version
 
     return version.object&.[](attribute.to_s) || version.object_changes&.[](attribute.to_s)&.compact&.first
+  end
+
+private
+
+  def update_user_points!
+    user.update!(points: UserPointsCalculator.new(user).points)
   end
 end

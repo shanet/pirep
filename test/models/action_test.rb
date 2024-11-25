@@ -14,4 +14,12 @@ class ActionTest < ActiveSupport::TestCase
       assert_equal airport.code, action.reload.historical_value(:code), 'Did not get attribute from action version'
     end
   end
+
+  test 'updates user points after save' do
+    user = create(:known)
+
+    assert_difference(user.points, UserPointsCalculator.points_for_action(:airport_edited)) do
+      create(:action, type: :airport_edited, user: user)
+    end
+  end
 end

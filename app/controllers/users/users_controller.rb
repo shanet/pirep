@@ -2,6 +2,8 @@ class Users::UsersController < ApplicationController
   before_action :set_user, only: [:show, :activity]
 
   def show
+    # Send the user to their private user page if trying to view their own public user page
+    redirect_to(user_path) if @user == current_user
   end
 
   def activity

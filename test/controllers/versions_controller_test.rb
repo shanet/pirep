@@ -21,21 +21,24 @@ class VersionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'revert tags' do
-    with_versioning do
-      tag = create(:tag, airport: @airport)
+    airport = create(:airport, :empty)
 
-      assert_equal 2, @airport.tags.count, 'Airport has no tags'
+    with_versioning do
+      airport.tags << create(:tag, airport: airport)
+      airport.save!
+
+      assert_equal 2, airport.tags.count, 'Airport has no tags'
 
       # Revert the tag creation and expect the airport to have no tags
-      assert_difference('@airport.tags.count', -1) do
-        patch revert_version_path(tag.versions.last)
-        assert_redirected_to airport_path(@airport)
+      assert_difference('airport.tags.count', -1) do
+        patch revert_version_path(airport.tags.last.versions.last)
+        assert_redirected_to airport_path(airport)
       end
 
       # Revert the revert and expect the airport to have a tag again
-      assert_difference('@airport.tags.count') do
-        patch revert_version_path(tag.versions.last)
-        assert_redirected_to airport_path(@airport)
+      assert_difference('airport.tags.count') do
+        patch revert_version_path(airport.tags.last.versions.last)
+        assert_redirected_to airport_path(airport)
       end
     end
   end

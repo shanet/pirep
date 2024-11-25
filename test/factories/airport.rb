@@ -18,7 +18,6 @@ FactoryBot.define do
     fuel_location        {'Quisque malesuada quam nec ultricies placerat.'}
     crew_car             {'Integer lacinia elementum sapien, in fermentum nibh pretium et.'}
     landing_fees         {'Proin eget dignissim nunc.'}
-    wifi                 {'Integer convallis tincidunt mi, quis pulvinar nulla bibendum nec.'}
     fuel_types           {['100LL', 'UL100']}
     landing_rights       {:public_}
     sectional            {'seattle'}
@@ -46,13 +45,14 @@ FactoryBot.define do
     end
 
     trait :empty do
-      crew_car          {nil}
-      description       {nil}
-      fuel_location     {nil}
-      landing_fees      {nil}
-      transient_parking {nil}
-      wifi              {nil}
-      annotations       {nil}
+      crew_car           {nil}
+      description        {nil}
+      fuel_location      {nil}
+      landing_fees       {nil}
+      transient_parking  {nil}
+      wifi               {nil}
+      annotations        {nil}
+      contributed_photos {nil}
 
       after(:create) do |airport, _evaluator|
         create(:tag, name: :empty, airport: airport)
@@ -87,6 +87,11 @@ FactoryBot.define do
       after(:create) do |airport, _evaluator|
         create(:tag, name: :unmapped, airport: airport)
       end
+    end
+
+    # Based on the values above a featured airport should only need one more field filled out to cross the threshold
+    trait :featured do
+      landing_requirements {'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}
     end
   end
 end
