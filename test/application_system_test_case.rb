@@ -11,9 +11,6 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     # the need for sleep statements to wait for these animations to complete since it's all done within a canvas element.
     options.add_argument('--force-prefers-reduced-motion')
 
-    # Fix a CI issue with Ubuntu 24.04 ("session not created: DevToolsActivePort file doesn't exist")
-    options.add_argument('--remote-debugging-pipe')
-
     # Support Wayland if being used (`auto` should detect it, well, automatically, but this seems to cause CI failures)
     options.add_argument('--ozone-platform-hint=auto') if ENV['XDG_SESSION_TYPE'] == 'wayland'
   end
