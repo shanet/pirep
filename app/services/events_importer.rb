@@ -81,7 +81,7 @@ private
 
     # First try to find all public airports with the same city and state as the event if one was given
     if event[:city].present? && event[:state].present?
-      airport = Airport.where(**conditions.merge(city: event[:city].upcase, state: event[:state].upcase)).where(sanity_check, longitude, latitude).order(order).first
+      airport = Airport.where(**conditions, city: event[:city].upcase, state: event[:state].upcase).where(sanity_check, longitude, latitude).order(order).first
       return airport if airport
     end
 
