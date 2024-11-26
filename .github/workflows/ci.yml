@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     services:
       postgres:
@@ -18,11 +18,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      # Install a newer version of GDAL (version >= 3.6.2, we may be able to go back to the default in a future Ubuntu version)
-      - name: Update GDAL
-        run: |
-          echo "deb http://archive.ubuntu.com/ubuntu/ lunar main universe" | sudo tee /etc/apt/sources.list.d/lunar.list
 
       - name: Install Packages
         run: |
