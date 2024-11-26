@@ -23,15 +23,6 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install --yes gdal-bin gpg lsb-release libvips python3-gdal
 
-          # Remove the pre-installed Chrome version so a specific version can be installed below
-          sudo apt-get remove google-chrome-stable
-
-      - name: Install Chromium
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: 131
-          install-chromedriver: true
-
       - name: Install Ruby & Gems
         uses: ruby/setup-ruby@v1
         with:
