@@ -32,7 +32,7 @@
   <% end %>
 
   <div class="row">
-    <div class="col-12 col-md-6">
+    <div id="airport-left-column" class="col-12 col-md-6">
       <%= render partial: 'airports/photo_gallery/photo_gallery', formats: :html, locals: {photo_groups: @airport.all_photos, border: true} %>
       <%= render 'airports/photo_gallery/upload_photo_form' %>
       <%= render 'airports/tags/tags' %>
@@ -53,7 +53,7 @@
       <% end %>
     </div>
 
-    <div class="col-12 col-md-6">
+    <div id="airport-right-column" class="col-12 col-md-6">
       <%= render 'airports/statistics/statistics' %>
       <%= render 'airports/complements' %>
       <%= render 'airports/weather/weather' %>

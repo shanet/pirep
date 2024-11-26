@@ -1,9 +1,11 @@
-<div class="card mb-2">
-  <div class="card-header">
-    <i class="fas fa-plane-departure"></i> Airport Statistics
+<div id="airport-statistics">
+  <div class="card mb-2">
+    <div class="card-header">
+      <i class="fas fa-plane-departure"></i> Airport Statistics
+    </div>
   </div>
-</div>
 
-<%= render partial: 'airports/statistics/progress' %>
-<%= render partial: 'airports/statistics/statistics_boxes' %>
-<%= render partial: 'airports/landing_rights/landing_rights', locals: {show_edit_form: true} %>
+  <%= render partial: 'airports/statistics/progress' %>
+  <%= render partial: 'airports/statistics/statistics_boxes' %>
+  <%= render partial: 'airports/landing_rights/landing_rights', locals: {show_edit_form: true} %>
+</div>

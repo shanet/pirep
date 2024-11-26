@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMapBackButton();
   initCoverImageForm();
   initOriginInfo();
+  initMoveStatistics();
 }, {once: true});
 
 function initEditingTags() {
@@ -174,4 +175,23 @@ function initOriginInfo() {
   originInfo.originInfoShown();
 
   originNotice.classList.remove('d-none');
+}
+
+function initMoveStatistics() {
+  // Move the statistics box to near the top of the page when the layout collapses to a single column.
+  // It doesn't seem like Bootstrap has a good way to do this with CSS since doing so would require using
+  // flexbox ordering properties, but we'd need a masonry layout for the grid which isn't supported.
+  const moveStatistics = () => {
+    const statistics = document.getElementById('airport-statistics');
+
+    if(utils.isBreakpointDown('sm')) {
+      const leftColumn = document.getElementById('airport-left-column');
+      leftColumn.insertBefore(statistics, document.getElementById('tags'));
+    } else {
+      document.getElementById('airport-right-column').prepend(statistics);
+    }
+  };
+
+  window.addEventListener('resize', moveStatistics);
+  moveStatistics();
 }
