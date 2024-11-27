@@ -6,7 +6,27 @@ class AirportCompletionProgressCalculatorTest < ActiveSupport::TestCase
   end
 
   test 'progress for airport' do
-    assert_equal 90, AirportCompletionProgressCalculator.new(create(:airport)).percent_complete, 'Unexpect completion percent for airport'
+    assert_equal 90, AirportCompletionProgressCalculator.new(create(:airport)).percent_complete, 'Unexpected completion percent for airport'
+  end
+
+  test 'progress for airport with multiple items' do
+    airport = create(:airport, :empty)
+
+    # Certain items added to an airport should count multiple times
+    [:golfing, :museum].each do |tag_name|
+      airport.tags << create(:tag, name: tag_name)
+    end
+
+    3.times {airport.webcams << create(:webcam)}
+    3.times {airport.contributed_photos.attach(Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png'))}
+    airport.update!(annotations: (0..2).map {{label: '1', latitude: 0, longitude: 0}})
+
+    assert_equal 95, AirportCompletionProgressCalculator.new(airport).percent_complete, 'Unexpected completion percent for airport'
+  end
+
+  test 'progress for airport is capped at 100%' do
+    airport = create(:airport, annotations: (0..100).map {{label: '1', latitude: 0, longitude: 0}})
+    assert_equal AirportCompletionProgressCalculator::FEATURED_THRESHOLD, AirportCompletionProgressCalculator.new(airport).percent_complete, 'Unexpected completion percent for airport'
   end
 
   test 'missing information for airport' do

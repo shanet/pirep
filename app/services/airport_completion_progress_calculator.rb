@@ -14,7 +14,7 @@ class AirportCompletionProgressCalculator
   WEBCAMS = :webcams
 
   CONFIGURATION = {
-    ANNOTATIONS => {value: 10, label: 'Airport map annotations'},
+    ANNOTATIONS => {value: 5, label: 'Airport map annotations'},
     LANDING_REQUIREMENTS => {value: 10},
     LANDING_RIGHTS => {value: 10},
     PHOTOS => {value: 10, label: 'Airport photos'},
@@ -48,11 +48,11 @@ class AirportCompletionProgressCalculator
   end
 
   def missing_information
-    info = present_information
+    info = present_information.to_set
     missing_information = {}
 
     CONFIGURATION.each do |key, value|
-      missing_information[key] = value[:label] if info.exclude?(key) && value[:label]
+      missing_information[key] = value[:label] if !info.include?(key) && value[:label] # rubocop:disable Rails/NegateInclude
     end
 
     return missing_information
@@ -65,11 +65,15 @@ private
       (@airport.send(column).present? ? column : nil)
     end
 
-    return (textareas + [
-      (Tag.addable_tags.keys.intersect?(@airport.tags.pluck(:name).map(&:to_sym)) ? TAGS : nil),
-      (@airport.contributed_photos.any? ? PHOTOS : nil),
-      (@airport.annotations&.any? ? ANNOTATIONS : nil),
-      (@airport.webcams.any? ? WEBCAMS : nil),
+    tags = @airport.tags.pluck(:name).map do |tag_name|
+      Tag::TAGS[tag_name.to_sym][:addable] ? TAGS : nil
+    end
+
+    annotations = @airport.annotations&.map {|_annotation| ANNOTATIONS} || []
+    photos = @airport.contributed_photos.map {|_photo| PHOTOS}
+    webcams = @airport.webcams.map {|_webcam| WEBCAMS}
+
+    return (textareas + tags + annotations + photos + webcams + [
       (@airport.landing_rights == :restricted ? LANDING_RIGHTS : nil),
       (@airport.landing_requirements.present? ? LANDING_REQUIREMENTS : nil),
     ]).compact
