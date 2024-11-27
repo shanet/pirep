@@ -28,7 +28,8 @@
       }
 
       svg.editing {
-        animation: jiggle .15s infinite alternate;
+        animation: annotation-jiggle .15s infinite alternate;
+        // transform-origin: bottom;
       }
     }
   }
@@ -38,7 +39,7 @@
   }
 }
 
-@keyframes jiggle {
+@keyframes annotation-jiggle {
   from { transform: rotate(-4deg); }
   to { transform: rotate(4deg); }
 }
