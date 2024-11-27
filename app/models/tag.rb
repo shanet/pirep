@@ -21,6 +21,7 @@ class Tag < ApplicationRecord
       label: 'Featured',
       icon: 'star',
       theme: 'yellow',
+      origin: true,
     },
     populated: {
       label: 'Documented',
