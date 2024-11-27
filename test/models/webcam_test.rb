@@ -3,27 +3,30 @@ require 'test_helper'
 class WebcamTest < ActiveSupport::TestCase
   test 'adds webcam tag to airport' do
     airport = create(:airport)
-    assert airport.tags.where(name: :webcam).empty?, 'Airport already has webcam tag'
+    assert_not airport.tags.has?(:webcam), 'Airport already has webcam tag'
 
     assert_enqueued_with(job: AirportGeojsonDumperJob) do
       create(:webcam, airport: airport)
     end
 
-    assert airport.tags.where(name: :webcam).any?, 'Webcam tag not added to airport'
+    assert airport.tags.has?(:webcam), 'Webcam tag not added to airport'
   end
 
   test 'removes webcam tag from airport' do
     airport = create(:airport)
     webcam1 = create(:webcam, airport: airport)
     webcam2 = create(:webcam, airport: airport)
+    airport = airport.reload
+
+    assert airport.tags.has?(:webcam), 'Webcam tag not added to airport'
 
     # The webcam tags should only be removed when the last webcam on the airport is deleted
     webcam1.destroy!
-    assert airport.tags.where(name: :webcam).any?, 'Webcam tag removed from airport'
+    assert airport.tags.has?(:webcam), 'Webcam tag removed from airport'
 
     assert_enqueued_with(job: AirportGeojsonDumperJob) do
       webcam2.destroy!
-      assert airport.tags.where(name: :webcam).empty?, 'Webcam tag not removed from airport'
+      assert_not airport.tags.has?(:webcam), 'Webcam tag not removed from airport'
     end
   end
 

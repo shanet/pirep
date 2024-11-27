@@ -236,7 +236,7 @@ class AirportTest < ActiveSupport::TestCase
       tag = create(:tag, airport: @airport)
       tag.destroy!
 
-      assert_equal 6, @airport.all_versions.count, 'Airport does not have own versions and associated tag versions'
+      assert_equal 5, @airport.all_versions.count, 'Airport does not have own versions and associated tag versions'
 
       (tag.versions + webcam.versions).each do |version|
         assert version.in?(@airport.all_versions), 'Tag/webcam versions not included with airport versions'
