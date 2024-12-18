@@ -29,6 +29,12 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
 
     previous_annotation = @airport.annotations.first
 
+    # Wait for the saved text to disappear otherwise we'll roll right into the next condition with this element still present on the page
+    # which makes the check for the request being complete useless. This has a strict timeout of 3 seconds so wait that time period before
+    # confirming it was removed from the page.
+    sleep 3
+    assert_no_selector '.airport-annotations-saved'
+
     # Re-enter editing mode for the annotation and test dragging it to a new position
     find('.annotation .label').click
     move_annotation(100, 100)
