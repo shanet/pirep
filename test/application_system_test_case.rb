@@ -52,6 +52,9 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     fill_in 'user_password', with: user.password
     click_link_or_button 'Log in'
 
+    # Wait for the form to submit before continuing
+    assert_no_selector '#login-form input[type="submit"][disabled]'
+
     # If an admin check that we're on the manage dashboard
     if user.is_a? Users::Admin
       assert_selector '.navbar', text: 'Logout'

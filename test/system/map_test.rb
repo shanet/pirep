@@ -79,10 +79,10 @@ class MapTest < ApplicationSystemTestCase
 
   test 'opens airport drawer for hidden airport' do
     # Seaplane bases won't be visible by default
-    seaplane = create(:airport, facility_type: :seaplane_base, latitude: @airport.latitude + 0.1)
+    seaplane = create(:airport, name: 'Seaplane base', facility_type: :seaplane_base, latitude: @airport.latitude + 0.11)
 
     # Heliports should never be in the hidden airports layer
-    heliport = create(:airport, facility_type: :heliport, latitude: @airport.latitude - 0.1)
+    heliport = create(:airport, name: 'Heliport', facility_type: :heliport, latitude: @airport.latitude - 0.11)
 
     visit map_path
     wait_for_map_ready

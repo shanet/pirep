@@ -8,7 +8,7 @@ module Pirep
     # Always show Ruby deprecation warnings
     Warning[:deprecated] = true
 
-    config.load_defaults 7.1
+    config.load_defaults 8.0
 
     # Add db/ to the load path for classes the seeds use that live in there
     $LOAD_PATH << Rails.root.join('db')
