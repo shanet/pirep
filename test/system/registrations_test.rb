@@ -46,6 +46,9 @@ private
     fill_in 'registration-password', with: 'password'
     fill_in 'Password confirmation', with: (passwords_match ? 'password' : 'different')
     click_link_or_button 'Sign up'
+
+    # Wait for the form to submit before continuing
+    assert_no_selector '#registration-form input[type="submit"][disabled]'
   end
 
   def assert_registration_success

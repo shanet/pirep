@@ -43,6 +43,9 @@ module ApplicationHelper
   def cdn_url_for(record)
     return "#{Rails.configuration.action_controller.asset_host}/#{record.key}" if Rails.configuration.action_controller.asset_host.present?
 
+    # This seems to be necessary in Rails 8 now due to lazy loaded routes in dev/test?
+    Rails.application.reload_routes_unless_loaded if Rails.env.local?
+
     return url_for(record)
   end
 

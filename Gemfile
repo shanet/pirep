@@ -4,7 +4,7 @@ git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 ruby '3.3.4'
 
 # Core Rails gems
-gem 'rails', '7.2.1.2'
+gem 'rails', '8.0.1'
 
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'dartsass-rails', '~> 0.4.0'
@@ -20,6 +20,7 @@ gem 'aws-sdk-ecs'
 gem 'aws-sdk-s3'
 gem 'brakeman'
 gem 'bundler-audit'
+gem 'csv'
 gem 'devise'
 gem 'diffy'
 gem 'erb_lint'
@@ -28,7 +29,7 @@ gem 'foreman'
 gem 'good_job'
 gem 'ice_cube'
 gem 'image_processing'
-gem 'jit_preloader'
+# gem 'jit_preloader'
 gem 'kramdown'
 gem 'maxmind-geoip2'
 gem 'paper_trail'
