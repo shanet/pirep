@@ -8,6 +8,10 @@
   clear: both;
 }
 
+.avoid-page-break-inside {
+  break-inside: avoid;
+}
+
 .bg-lifr-subtle {
   background-color: $bg-lifr-subtle;
 }

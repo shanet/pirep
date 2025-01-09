@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+  <Document>
+    <name><%= @name %></name>
+
+    <% content_pack_icons.each do |content_pack, icon| %>
+      <Style id="<%= content_pack %>_icon">
+        <IconStyle>
+          <color><%= icon[:color] %></color>
+          <scale>1.1</scale>
+          <Icon>
+            <href><%= icon[:image] %></href>
+          </Icon>
+        </IconStyle>
+      </Style>
+    <% end %>
+
+    <Folder>
+      <% @airports.each do |airport| %>
+        <Placemark>
+          <name><%= airport.icao_code || airport.code %></name>
+          <description><![CDATA[<%= render partial: 'content_packs/airport_description', locals: {airport: airport}, formats: [:html] %>]]></description>
+          <styleUrl>#<%= @icon ? @icon : airport_icon(airport) %>_icon</styleUrl>
+
+          <Point>
+            <coordinates><%= airport.longitude %>,<%= airport.latitude %></coordinates>
+          </Point>
+        </Placemark>
+      <% end %>
+    </Folder>
+  </Document>
+</kml>

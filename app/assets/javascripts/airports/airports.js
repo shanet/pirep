@@ -178,6 +178,9 @@ function initOriginInfo() {
 }
 
 function initMoveStatistics() {
+  // Only do this for layouts that have two columns
+  if(!document.getElementById('airport-left-column')) return;
+
   // Move the statistics box to near the top of the page when the layout collapses to a single column.
   // It doesn't seem like Bootstrap has a good way to do this with CSS since doing so would require using
   // flexbox ordering properties, but we'd need a masonry layout for the grid which isn't supported.

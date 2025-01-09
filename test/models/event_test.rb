@@ -19,6 +19,14 @@ class EventTest < ActiveSupport::TestCase
     assert_equal upcoming_event, Event.upcoming.first, 'Incorrect event found as upcoming'
   end
 
+  test 'recurring events' do
+    create(:event)
+    recurring_event = create(:event, :recurring)
+
+    assert_equal 1, Event.recurring.count, 'Wrong number of recurring events'
+    assert_equal recurring_event, Event.recurring.first, 'Incorrect event found as recurring'
+  end
+
   test 'next start date for static event' do
     event = create(:event)
     assert_equal event.start_date, event.next_start_date, 'Wrong next start date for static event'

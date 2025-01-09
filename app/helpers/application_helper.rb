@@ -52,7 +52,7 @@ module ApplicationHelper
   def render_markdown(text)
     return '' if text.blank?
 
-    return sanitize(Kramdown::Document.new(text).to_html)
+    return sanitize(Kramdown::Document.new(text).to_html.strip)
   end
 
   def user_label(user)

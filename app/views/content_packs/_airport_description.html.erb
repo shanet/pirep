@@ -1,0 +1,71 @@
+<%# This template intended to be a self-contained HTML document rendered within ForeFlight %>
+
+<style>
+  body {
+    background-color: #0F1925;
+    color: #e4e4e4;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 1rem 0.5rem;
+  }
+
+  div {
+    margin-bottom: 0.5rem;
+  }
+
+  .alert {
+    background-color: #FFF3CD;
+    border-radius: 0.375rem;
+    border: 1px solid #FFE69C;
+    color: #664D03;
+    margin: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .text-bold {
+    font-weight: bold;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .text-light {
+    color: #6A7F92;
+  }
+</style>
+
+<div class="text-center">
+  <h3><%= airport.code %> - <%= airport.name.titleize %></h3>
+</div>
+
+<div class="alert">This is a snapshot of <%= airport.code %> as of <span class="font-bold"><%= Time.zone.now.strftime('%F') %></span>. <%= link_to 'View the live page', airport_url(airport.code) %> for current information.</div>
+
+<h4 class="text-light">Tags</h4>
+<% if airport.tags.any? %>
+  <ul>
+    <% airport.tags.each do |tag| %>
+      <li><%= Tag::TAGS[tag.name][:label] %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <div>This airport has no tags.</div>
+<% end %>
+
+<% [
+     {column: :description, title: Airport::TEXTAREA_EDITABLE_COLUMNS[:description]},
+     {column: :transient_parking, title: Airport::TEXTAREA_EDITABLE_COLUMNS[:transient_parking]},
+     {column: :fuel_location, title: Airport::TEXTAREA_EDITABLE_COLUMNS[:fuel_location]},
+     {column: :landing_fees, title: Airport::TEXTAREA_EDITABLE_COLUMNS[:landing_fees]},
+     {column: :crew_car, title: Airport::TEXTAREA_EDITABLE_COLUMNS[:crew_car]},
+     {column: :flying_clubs, title: Airport::TEXTAREA_EDITABLE_COLUMNS[:flying_clubs]},
+     {column: :wifi, title: Airport::TEXTAREA_EDITABLE_COLUMNS[:wifi]},
+   ].each do |textarea| %>
+  <% next if airport.send(textarea[:column]).blank? %>
+
+  <h4 class="text-light"><%= textarea[:title].html_safe %></h4>
+  <div><%= render_markdown(airport.send(textarea[:column])) %></div>
+<% end %>
+
+<hr>
+<div>See the airport info PDF for more information from Pirep on this airport.</div>

@@ -1,9 +1,9 @@
 require 'test_helper'
 
-class MasterDataImporterJobTest < ActiveJob::TestCase
-  test 'starts importer task' do
+class EcsTaskRunnerJobTest < ActiveJob::TestCase
+  test 'starts ECS task' do
     # Sanity check on this job running, all AWS responses are stubbed so there's nothing to check for here
-    MasterDataImporterJob.perform_now
+    EcsTaskRunnerJob.perform_now('task_definition')
     pass
   end
 end

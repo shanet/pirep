@@ -1,3 +1,5 @@
+<% read_only = defined?(read_only) && read_only %>
+
 <div id="comments" class="card my-3">
   <div class="card-header">
     <i class="fas fa-comments"></i> Comments
@@ -11,24 +13,26 @@
           <%= button_to [:undo_outdated, comment], remote: true, class: 'btn btn-link btn-sm p-0', form: {class: 'd-inline-block'} do %>(undo)<% end %>
         </div>
 
-        <div class="comment-actions text-end ms-2">
-          <%= button_to [:helpful, comment],
-            remote: true,
-            class: "btn btn-#{comment.found_helpful?(active_user) ? '' : 'outline-'}primary btn-sm btn-helpful",
-            disabled: comment.found_helpful?(active_user) do %>
-            <i class="fas fa-thumbs-up"></i> Helpful
-          <% end %>
-
-          <%= button_to [:flag_outdated, comment], remote: true, class: "btn btn-outline-warning btn-sm flag-outdated #{comment.outdated_at ? ' d-none' : ''}" do %>
-            <i class="fas fa-flag"></i> Flag as outdated
-          <% end %>
-
-          <% if CommentPolicy.new(current_user, comment).destroy? %>
-            <%= button_to comment, method: :delete, data: {confirm: 'Are you sure you want to permanently delete this comment?'}, class: 'btn btn-outline-danger btn-sm' do %>
-              <i class="fa-solid fa-trash"></i> Delete
+        <% unless read_only %>
+          <div class="comment-actions text-end ms-2">
+            <%= button_to [:helpful, comment],
+              remote: true,
+              class: "btn btn-#{comment.found_helpful?(active_user) ? '' : 'outline-'}primary btn-sm btn-helpful",
+              disabled: comment.found_helpful?(active_user) do %>
+              <i class="fas fa-thumbs-up"></i> Helpful
             <% end %>
-          <% end %>
-        </div>
+
+            <%= button_to [:flag_outdated, comment], remote: true, class: "btn btn-outline-warning btn-sm flag-outdated #{comment.outdated_at ? ' d-none' : ''}" do %>
+              <i class="fas fa-flag"></i> Flag as outdated
+            <% end %>
+
+            <% if CommentPolicy.new(current_user, comment).destroy? %>
+              <%= button_to comment, method: :delete, data: {confirm: 'Are you sure you want to permanently delete this comment?'}, class: 'btn btn-outline-danger btn-sm' do %>
+                <i class="fa-solid fa-trash"></i> Delete
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
 
         <div class="border-start border-primary border-3 ps-2 my-1">
           <%= render_markdown comment.body %>
@@ -45,13 +49,15 @@
     <% end %>
   </ul>
 
-  <%= form_with model: Comment.new, local: true do |form| %>
-    <div class="form-group p-3">
-      <i class="fas fa-comment"></i> Leave a comment <span class="text-body-secondary">&mdash; <em>What was your experience like at this airport?</em></span>
+  <% unless read_only %>
+    <%= form_with model: Comment.new, local: true do |form| %>
+      <div class="form-group p-3">
+        <i class="fas fa-comment"></i> Leave a comment <span class="text-body-secondary">&mdash; <em>What was your experience like at this airport?</em></span>
 
-      <%= form.text_area :body, class: 'form-control comment-textarea my-3' %>
-      <%= form.hidden_field :airport_id, value: @airport.id %>
-      <%= form.submit 'Add Comment', class: 'btn btn-primary' %>
-    </div>
+        <%= form.text_area :body, class: 'form-control comment-textarea my-3' %>
+        <%= form.hidden_field :airport_id, value: @airport.id %>
+        <%= form.submit 'Add Comment', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
   <% end %>
 </div>

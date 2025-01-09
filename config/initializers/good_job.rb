@@ -14,6 +14,12 @@ Rails.configuration.good_job = {
       class: 'AirportGeojsonDumperJob',
     },
 
+    content_packs_creator: {
+      cron: '0 0 1 * *', # Every 1st of the month
+      class: 'EcsTaskRunnerJob',
+      args: 'pirep-production-content_packs',
+    },
+
     events_importer_job: {
       cron: '0 7 * * *', # Every day
       class: 'EventsImporterJob',

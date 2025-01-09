@@ -1,14 +1,20 @@
-<div class="d-flex justify-content-between px-1">
-  <div class="airport-annotations-saved status-indicator hide"></div>
+<% read_only = defined?(read_only) && read_only %>
 
-  <div class="form-check form-switch flex-fill text-end">
-    <input id="annotations-editing" class="form-check-input float-none me-1" type="checkbox" role="switch">
-    <label class="form-check-label" for="annotations-editing">Edit airport annotations</label>
+<% unless read_only %>
+  <div class="d-flex justify-content-between px-1">
+    <div class="airport-annotations-saved status-indicator hide"></div>
+
+    <div class="form-check form-switch flex-fill text-end">
+      <input id="annotations-editing" class="form-check-input float-none me-1" type="checkbox" role="switch">
+      <label class="form-check-label" for="annotations-editing">Edit airport annotations</label>
+    </div>
   </div>
-</div>
+<% end %>
 
 <div id="airport-map-wrapper" class="mb-3">
-  <div id="annotations-help" class="d-none text-white text-center">Click/tap to add an annotation marker to the map</div>
+  <% unless read_only %>
+    <div id="annotations-help" class="d-none text-white text-center">Click/tap to add an annotation marker to the map</div>
+  <% end %>
 
   <div id="airport-map"
     data-bounding-box="<%= @airport.bounding_box.to_json %>"
@@ -20,6 +26,8 @@
     data-zoom-level="<%= @airport.zoom_level %>"></div>
 </div>
 
-<%= form_with model: @airport, local: false do |form| %>
-  <%= form.hidden_field :annotations %>
+<% unless read_only %>
+  <%= form_with model: @airport, local: false do |form| %>
+    <%= form.hidden_field :annotations %>
+  <% end %>
 <% end %>

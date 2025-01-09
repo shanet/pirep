@@ -1,7 +1,6 @@
 require 'etc'
 require 'exceptions'
 require 'faa/faa_api'
-require 'open3'
 
 class FaaChartsDownloader
   def download_and_convert(chart_type, charts_to_download: nil, upload_to_s3: Rails.env.production?)
@@ -144,18 +143,7 @@ private
   end
 
   def execute_command(*command)
-    stdout_stderr, status = Open3.capture2e(*command)
-
-    unless status.success?
-      Rails.logger.error("Failed to run command: #{command.join(' ')}")
-
-      # Print to stdout for tests so it's more obvious what the failure was
-      Rails.env.test? ? puts(stdout_stderr) : Rails.logger.error(stdout_stderr) # rubocop:disable Rails/Output
-
-      return false
-    end
-
-    return true
+    return ExternalCommandRunner.execute(*command).first.success?
   end
 
   def verify_gdal_binaries_exist

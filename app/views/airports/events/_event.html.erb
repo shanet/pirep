@@ -3,12 +3,14 @@
 
   # For a start and end date on the same day we don't need to echo the full date again, only the hour and minute
   end_date_timestamp_format = (event.start_date.day == event.end_date.day ? '%l:%M%P' : start_date_timestamp_format)
+
+  read_only = defined?(read_only) && read_only
 %>
 
 <div class="d-flex justify-content-between">
   <h5><%= event.name.upcase_first %></h5>
 
-  <% unless defined?(drawer) %>
+  <% unless read_only %>
     <div>
       <%= link_to('<i class="fa-solid fa-file-arrow-down"></i> Export'.html_safe, event_path(event, format: :ical), class: 'btn btn-outline-primary btn-sm ') %>
       <%= link_to('<i class="fa-solid fa-edit"></i> Edit'.html_safe, edit_event_path(event), class: 'btn btn-outline-primary btn-sm ') %>

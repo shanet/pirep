@@ -1,0 +1,61 @@
+<% @title = "#{@airport.code} - #{@airport.name.titleize}" %>
+
+<%= render partial: 'airports/header/header', formats: :html, locals: {snapshot_layout: true} %>
+
+<div class="container-lg">
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="alert alert-warning mb-3">
+        <i class="fa-solid fa-triangle-exclamation me-1"></i>This is a snapshot of <%= @airport.code %> as of <span class="fw-bold"><%= Time.zone.now.strftime('%F') %></span>. The information here may be outdated.
+
+        <div class="mt-2">
+          <%= link_to 'View live page', airport_url(@airport), class: 'btn btn-primary me-2' %> <%= link_to 'Update content pack', content_packs_url, class: 'btn btn-secondary' %>
+        </div>
+      </div>
+
+      <%= render partial: 'airports/notices', formats: :html %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="avoid-page-break-inside"><%= render partial: 'airports/statistics/statistics', formats: :html, locals: {snapshot_layout: true} %></div>
+      <div class="avoid-page-break-inside mb-3"><%= render 'airports/photo_gallery/photo_gallery' %></div>
+      <div class="avoid-page-break-inside"><%= render 'airports/tags/tags' %></div>
+      <div class="avoid-page-break-inside"><%= render 'airports/events/events' %></div>
+
+      <%
+        [
+          {column: :description, icon: 'fa-book-open', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:description]},
+          {column: :transient_parking, icon: 'fa-parking', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:transient_parking], height: :small},
+          {column: :fuel_location, icon: 'fa-gas-pump', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:fuel_location], height: :small},
+          {column: :landing_fees, icon: 'fa-dollar-sign', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:landing_fees], height: :small},
+          {column: :crew_car, icon: 'fa-car', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:crew_car], height: :small},
+          {column: :flying_clubs, icon: 'fa-people-group', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:flying_clubs], height: :small},
+          {column: :wifi, icon: 'fa-wifi', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:wifi], height: :small},
+        ].each do |textarea|
+      %>
+        <%# Don't show any fields that aren't filled out since there's no purpose to showing empty fields if they cannot be edited %>
+        <% next if @airport.send(textarea[:column]).blank? %>
+
+        <div class="avoid-page-break-inside">
+          <%= render partial: 'airports/textarea_editor', formats: :html, locals: {
+            model: @airport,
+            column: textarea[:column],
+            icon: textarea[:icon],
+            title: textarea[:title],
+            height: textarea[:height],
+            read_only: true
+          } %>
+        </div>
+      <% end %>
+
+      <div class="avoid-page-break-inside"><%= render partial: 'airports/webcams/webcams', formats: :html, locals: {snapshot_layout: true, read_only: true} %></div>
+      <div class="avoid-page-break-inside"><%= render partial: 'airports/map', formats: :html, locals: {read_only: true} %></div>
+
+      <% if @airport.comments.any? %>
+        <%= render partial: 'airports/comments', formats: :html, locals: {read_only: true} %>
+      <% end %>
+    </div>
+  </div>
+</div>

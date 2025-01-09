@@ -38,6 +38,8 @@ class Event < ApplicationRecord
   # All single events in the future and all recurring events
   scope :upcoming, -> {where('start_date > ?', Time.zone.now).or(where.not(recurring_cadence: nil))}
 
+  scope :recurring, -> {where.not(recurring_cadence: nil)}
+
   def recurring?
     return recurring_cadence.present?
   end

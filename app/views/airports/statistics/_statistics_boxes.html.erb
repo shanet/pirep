@@ -9,7 +9,7 @@
   end
 %>
 
-<div class="row g-2 mb-3">
+<div class="row g-2 mb-2">
   <% if !drawer && airport.city.present? && airport.state.present? %>
     <div class="col-12">
       <%= render partial: 'airports/statistics/statistics_box', locals: {

@@ -1,0 +1,78 @@
+<%
+  @title = 'ForeFlight Content Packs'
+  @breadcrumbs = [['ForeFlight Content Packs']]
+%>
+
+<div class="row mb-1">
+  <div class="col-12">
+    <h1 class="display-6">ForeFlight Content Packs</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12 col-lg-8 mb-3">
+    <h4>What are Content Packs?</h4>
+    <p>Content packs import a snapshot of Pirep's airport database directly into ForeFlight to take on the go. Multiple content packs are provided, one for all of Pirep's airports or targeted content packs with only specific airports tags.</p>
+
+    <div class="alert alert-warning mb-3">
+      <i class="fa-solid fa-triangle-exclamation me-1"></i>ForeFlight does not support automatic updating of content packs. Content packs must be manually updated periodically by re-downloading them from this page to ensure the data they contain remains up to date.
+    </div>
+
+    <p><a href="https://foreflight.com/products/foreflight-mobile/user-content/content-packs" target="_blank"><i class="fas fa-up-right-from-square me-1"></i>Read more about Content Packs</a></p>
+
+    <h4>Content Pack Installation</h4>
+
+    <% if ios?(request) %>
+      <p>Downloading a content pack below will open ForeFlight automatically to install it. Simply download the pack and allow ForeFlight to install it in the "Custom Content" section of the app.</p>
+    <% else %>
+      <p>It is easiest to install a content pack by opening this page directly on your iPad or iPhone. However, they can also be installed by downloading the .zip archives below, transferring it to your device, and then opening it with ForeFlight from a file manager app.</p>
+    <% end %>
+
+    <h4>Content Pack Usage</h4>
+
+    <p>Once added to ForeFlight, airports may be viewed via a layer on ForeFlight's main map view.</p>
+  </div>
+</div>
+
+<div class="row">
+  <% ContentPacksCreator::CONTENT_PACKS.each do |content_pack_id, content_pack_configuration| %>
+    <div class="col-12 col-md-6 col-lg-4 mb-3">
+      <div class="card h-100">
+        <%= image_tag content_pack_configuration[:image], class: 'card-img-top' %>
+
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title mb-3"><%= content_pack_configuration[:name] %></h5>
+
+          <div class="flex-grow-1 mb-3">
+            <p class="card-text"><%= content_pack_configuration[:description] %></p>
+
+            <div class="card-text">
+              <div class="mb-2">Airport tags included:</div>
+
+              <div class="d-flex flex-wrap gap-1">
+                <% content_pack_configuration[:tags].each do |tag| %>
+                  <%= render partial: 'airports/tags/tag', locals: {tag_name: tag, size: :small} %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <% if ios?(request) %>
+              <% path = File.basename(ContentPacksCreator.path_for_content_pack(content_pack_id)) %>
+              <%= link_to 'Download', "https://foreflight.com/content?downloadURL=#{content_pack_url(content_pack_id)}", class: 'btn btn-primary' %>
+              <%#= link_to 'Content Pack', "https://foreflight.com/content?downloadURL=https://cdn.pirep.io/content/#{path}" %>
+            <% else %>
+              <%= link_to 'Download', content_pack_path(content_pack_id), class: 'btn btn-primary' %>
+            <% end %>
+            <small class="ms-2 text-muted">File size: ~<%= (ContentPacksCreator.content_pack_file_size(content_pack_id).to_f / 1_000 / 1_000).round %>mb</small>
+          </div>
+        </div>
+
+        <div class="card-footer text-muted text-center">
+          Last updated: <%= format_timestamp(ContentPacksCreator.content_pack_updated_at(content_pack_id)) %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

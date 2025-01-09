@@ -322,7 +322,7 @@ class AirportsTest < ApplicationSystemTestCase
     # Sanity check on the meta tags being present
     assert_equal "#{@airport.code} - #{@airport.name.titleize} Airport", find('meta[name="title"]', visible: false)[:content], 'Unexpected meta name'
     assert_equal @airport.description, find('meta[name="description"]', visible: false)[:content], 'Unexpected meta description'
-    assert_equal @airport.description, find('meta[property="og:description"]', visible: false)[:content], 'Unexpected Opengraph description'
+    assert_equal Kramdown::Document.new(@airport.description).to_html.strip, find('meta[property="og:description"]', visible: false)[:content], 'Unexpected Opengraph description'
   end
 
   test 'display origin info on first visit' do

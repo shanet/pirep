@@ -88,6 +88,11 @@ class AirportsControllerTest < ActionDispatch::IntegrationTest
       assert_response :success, 'Failed to get airport page as drawer'
     end
 
+    assert_difference('Pageview.count', 0) do
+      get airport_path(@airport, format: :snapshot), headers: {HTTP_USER_AGENT: 'Mozilla/5.0 (X11; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/111.0.1'}
+      assert_response :success, 'Failed to get airport page as snapshot'
+    end
+
     get airport_path(@airport.code)
     assert_response :success, 'Failed to get airport by code'
 

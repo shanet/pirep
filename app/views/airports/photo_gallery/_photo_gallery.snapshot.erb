@@ -1,0 +1,15 @@
+<%
+  # Only display the first photo for the airport, if we have one
+  photo = @airport.all_photos.values.flatten.first
+  return unless photo
+%>
+
+<%= render partial: 'airports/photo_gallery/photo_gallery_image', formats: :html, locals: {
+    photo: photo,
+    group: nil,
+    featured: false,
+    active: true,
+    size: :large,
+    center: true,
+    featured_form: false
+} %>
