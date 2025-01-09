@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer-core');
 (async () => {
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/chromium',
-    args: ['--headless', '--enable-gpu']
+    args: ['--headless', '--enable-gpu', '--no-sandbox']
   });
 
   const render_queue_path = process.argv[2];
