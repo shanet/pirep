@@ -86,9 +86,10 @@ module AirportsHelper
     return annotations.map {|annotation| "#{annotation['label']}: (#{annotation['latitude']}, #{annotation['longitude']})"}.join("\n")
   end
 
-  def opengraph_description(airport, lines: 2)
+  def opengraph_description(airport, lines: 2, render_markdown: true)
     if airport.description.present?
-      return airport.description.split("\n")[0...lines].join("\n")
+      description_slice = airport.description.split("\n")[0...lines].join("\n")
+      return (render_markdown ? render_markdown(description_slice) : description_slice)
     end
 
     help_text = 'Help us collect information on it at Pirep!'

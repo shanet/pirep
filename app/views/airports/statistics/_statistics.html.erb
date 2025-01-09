@@ -5,7 +5,10 @@
     </div>
   </div>
 
-  <%= render partial: 'airports/statistics/progress' %>
+  <% unless defined?(snapshot_layout) %>
+    <%= render partial: 'airports/statistics/progress' %>
+  <% end %>
+
   <%= render partial: 'airports/statistics/statistics_boxes' %>
-  <%= render partial: 'airports/landing_rights/landing_rights', locals: {show_edit_form: true} %>
+  <%= render partial: 'airports/landing_rights/landing_rights', locals: {read_only: defined?(snapshot_layout)} %>
 </div>

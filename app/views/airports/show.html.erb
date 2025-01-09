@@ -1,7 +1,7 @@
 <%
   @title = "#{@airport.code} - #{@airport.name.titleize}"
   @meta_title = "#{@title} Airport"
-  @meta_description = opengraph_description(@airport, lines: 1)
+  @meta_description = opengraph_description(@airport, lines: 1, render_markdown: false)
 
   @opengraph = {
     description: opengraph_description(@airport),
@@ -41,7 +41,7 @@
       <%
         [
           {column: :description, icon: 'fa-book-open', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:description]},
-          {column: :transient_parking, icon: 'fa-parking', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:transient_parking], height: :medium},
+          {column: :transient_parking, icon: 'fa-parking', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:transient_parking], height: :small},
           {column: :fuel_location, icon: 'fa-gas-pump', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:fuel_location], height: :small},
           {column: :landing_fees, icon: 'fa-dollar-sign', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:landing_fees], height: :small},
           {column: :crew_car, icon: 'fa-car', title: Airport::TEXTAREA_EDITABLE_COLUMNS[:crew_car], height: :small},

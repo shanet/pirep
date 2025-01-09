@@ -18,7 +18,7 @@ class AirportsController < ApplicationController
     if cache
       redirect_to "#{Rails.configuration.action_controller.asset_host || ''}#{cache}", allow_other_host: true
     else
-      render json: Airport.geojson.to_json
+      render json: Airport.geojson
     end
   end
 
@@ -160,6 +160,7 @@ class AirportsController < ApplicationController
     return head :no_content unless @uncached_external_photos
 
     @border = ActiveModel::Type::Boolean.new.cast(params[:border])
+    @read_only = ActiveModel::Type::Boolean.new.cast(params[:read_only])
     render :uncached_photo_gallery, layout: false
   end
 
@@ -284,6 +285,9 @@ private
   def record_pageview
     # Skip recording pageviews for spiders
     return if Pageview.spider?(request.user_agent)
+
+    # Don't record pageviews when creating snapshots of airports
+    return if request.format.snapshot?
 
     @airport.pageviews << Pageview.new(user: active_user, ip_address: request.remote_ip, user_agent: request.user_agent)
   end

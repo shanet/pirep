@@ -1,6 +1,29 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "0a434ece487baa720416d0fc191b458b53cbb1b5cb3d07979272a87f176efa64",
+      "check_name": "SendFile",
+      "message": "Parameter value used in file name",
+      "file": "app/controllers/content_packs_controller.rb",
+      "line": 13,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "send_file(ContentPacksCreator.path_for_content_pack(params[:id]), :type => \"application/zip\", :filename => File.basename(ContentPacksCreator.path_for_content_pack(params[:id])))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ContentPacksController",
+        "method": "show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "cwe_id": [
+        22
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 4,
       "fingerprint": "287419f85185e75d819251266e0c681334d4fb1655610682b4dbf693dbfffd76",
@@ -25,7 +48,7 @@
         {
           "type": "template",
           "name": "manage/airports/show",
-          "line": 74,
+          "line": 82,
           "file": "app/views/manage/airports/show.html.erb",
           "rendered": {
             "name": "manage/airports/_webcam_list",
@@ -97,7 +120,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/airport.rb",
-      "line": 183,
+      "line": 190,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Arel.sql(\"CAST(SUBSTR(code, #{(\"UNM\".length + 1)}) AS INTEGER)\")",
       "render_path": null,
@@ -112,51 +135,8 @@
         89
       ],
       "note": ""
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "f38c3ec89ad5865e44a91f9ed47e5d85b1c9677592394791ae4ed3ba4cb8d774",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/airports/tags/_tag.html.erb",
-      "line": 9,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Tag::TAGS[(tag_record.name or tag_name)][:scroll_target]",
-      "render_path": [
-        {
-          "type": "template",
-          "name": "airports/search",
-          "line": 19,
-          "file": "app/views/airports/search.html.erb",
-          "rendered": {
-            "name": "airports/search/_filter_tags",
-            "file": "app/views/airports/search/_filter_tags.html.erb"
-          }
-        },
-        {
-          "type": "template",
-          "name": "airports/search/_filter_tags",
-          "line": 16,
-          "file": "app/views/airports/search/_filter_tags.html.erb",
-          "rendered": {
-            "name": "airports/tags/_tag",
-            "file": "app/views/airports/tags/_tag.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "airports/tags/_tag"
-      },
-      "user_input": "Tag::TAGS[(tag_record.name or tag_name)]",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": ""
     }
   ],
-  "updated": "2024-03-13 00:40:51 -0700",
-  "brakeman_version": "6.1.2"
+  "updated": "2025-01-08 22:40:47 -0800",
+  "brakeman_version": "6.2.2"
 }

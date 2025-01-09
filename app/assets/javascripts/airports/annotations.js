@@ -54,6 +54,8 @@ function initEditingSwitch() {
   const editingSwitch = document.getElementById('annotations-editing');
   const annotationsHelp = document.getElementById('annotations-help');
 
+  if(!editingSwitch) return;
+
   // When editing mode is enabled, show the help text, put all annotations into edit mode
   // When editing mode is disabled, do the reverse but also do a save of the annotations
   editingSwitch.addEventListener('change', () => {

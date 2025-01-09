@@ -1,10 +1,12 @@
+<% read_only = defined?(read_only) && read_only %>
+
 <% if !@airport.authoritative? && @airport.landing_rights == :public_ %>
   <div class="alert alert-warning mb-3">
     <i class="fa-solid fa-triangle-exclamation me-1"></i>Warning: This airport was imported from a non-authoritative source. Its public/private status may not be accurate.
   </div>
 <% end %>
 
-<div class="landing-rights d-flex <%= defined?(show_edit_form) ? '' : 'mb-3' %>">
+<div class="landing-rights d-flex <%= read_only ? 'mb-3' : '' %>">
   <div class="icon text-center d-flex justify-content-center align-items-center theme-<%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:color] %>">
     <i class="fas fa-<%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:icon] %>"></i>
   </div>
@@ -14,7 +16,7 @@
       Access: <%= Airport::LANDING_RIGHTS_TYPES[@airport.landing_rights][:long_description] %>
     </div>
 
-    <% if defined?(show_edit_form) %>
+    <% unless read_only %>
       <div class="small my-1">
         <% if @airport.landing_rights == :private_ %>
           <% if @airport.facility_type == 'military' %>
@@ -38,7 +40,7 @@
   </div>
 </div>
 
-<% if defined?(show_edit_form) %>
+<% unless read_only %>
   <% content_for :collapsible_content, flush: true do %>
     <%= render 'airports/landing_rights/landing_rights_form' %>
   <% end %>

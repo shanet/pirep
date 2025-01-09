@@ -1,0 +1,13 @@
+<% if @airport.events.recurring.any? %>
+  <div class="event card mb-3">
+    <div class="card-header">
+      <i class="fas fa-calendar-days me-1"></i>Recurring Events</span>
+    </div>
+
+    <ul class="list-group list-group-flush">
+      <% @airport.events.recurring.each do |event| %>
+        <li class="list-group-item"><%= render partial: 'airports/events/event', formats: :html, locals: {event: event, read_only: true} %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

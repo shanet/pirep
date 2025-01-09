@@ -1,41 +1,47 @@
-<% embedded_webcams = @airport.webcams.select(&:embedded?) %>
+<%
+  read_only = defined?(read_only) && read_only
+  embedded_webcams = @airport.webcams.select(&:embedded?)
+%>
 
-<div id="webcams" class="card mb-2">
+<div id="webcams" class="card <%= defined?(snapshot_layout) ? 'mb-3' : 'mb-2' %>">
   <a href="#webcams"></a>
 
   <div class="card-header">
     <i class="fas fa-camera"></i> Airport <%= 'Webcam'.pluralize(@airport.webcams.count) %>
   </div>
 
-  <%# Render all link webcams in a list group %>
-  <%= render 'airports/webcams/webcams_list', webcams: @airport.webcams.reject(&:embedded?) %>
+  <%# Render all link webcams in a list group (for the snapshot layout show embedded webcams' links too since it's not useful to display their live view) %>
+  <%= render 'airports/webcams/webcams_list', webcams: (defined?(snapshot_layout) ? @airport.webcams : @airport.webcams.reject(&:embedded?)), read_only: read_only %>
 </div>
 
-<%# Render only the first embedded webcam and then put the rest in a collapisble container to avoid taking up too much vertical space %>
-<% if embedded_webcams.any? %>
-  <%= render 'airports/webcams/webcam', webcam: embedded_webcams.first %>
-<% end %>
-
-<div class="text-end mb-2">
-  <% if @airport.webcams.empty? %>
-    <small class="text-body-secondary me-2">No webcams added yet.</small>
+<%# There's no use in displaying live webcams in the snapshot view %>
+<% unless defined?(snapshot_layout) %>
+  <%# Render only the first embedded webcam and then put the rest in a collapisble container to avoid taking up too much vertical space %>
+  <% if embedded_webcams.any? %>
+    <%= render 'airports/webcams/webcam', webcam: embedded_webcams.first, read_only: read_only %>
   <% end %>
 
-  <button type="button" class="btn btn-outline-primary btn-sm mb-2" data-bs-toggle="collapse" data-bs-target="add-webcam-form">Add Webcam</a>
+  <div class="text-end mb-2">
+    <% if @airport.webcams.empty? %>
+      <small class="text-body-secondary me-2">No webcams added yet.</small>
+    <% end %>
 
-  <% if embedded_webcams.count > 1 %>
-    <button id="show-more-webcams" class="btn btn-outline-primary btn-sm mb-2 ms-2" data-bs-toggle="collapse" data-bs-target="show-all-webcams">Show More</a></button>
-  <% end %>
-</div>
+    <button type="button" class="btn btn-outline-primary btn-sm mb-2" data-bs-toggle="collapse" data-bs-target="add-webcam-form">Add Webcam</a>
 
-<%= render 'airports/webcams/add_webcam_form' %>
+    <% if embedded_webcams.count > 1 %>
+      <button id="show-more-webcams" class="btn btn-outline-primary btn-sm mb-2 ms-2" data-bs-toggle="collapse" data-bs-target="show-all-webcams">Show More</a></button>
+    <% end %>
+  </div>
 
-<% content_for :collapsible_content, flush: true do %>
-  <% if embedded_webcams.count > 1 %>
-    <% embedded_webcams[1..].each do |webcam| %>
-      <%= render 'airports/webcams/webcam', webcam: webcam %>
+  <%= render 'airports/webcams/add_webcam_form' %>
+
+  <% content_for :collapsible_content, flush: true do %>
+    <% if embedded_webcams.count > 1 %>
+      <% embedded_webcams[1..].each do |webcam| %>
+        <%= render 'airports/webcams/webcam', webcam: webcam %>
+      <% end %>
     <% end %>
   <% end %>
-<% end %>
 
-<%= render 'shared/collapsible', id: 'show-all-webcams', classes: 'mb-2' %>
+  <%= render 'shared/collapsible', id: 'show-all-webcams', classes: 'mb-2' %>
+<% end %>

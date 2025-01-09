@@ -77,6 +77,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :content_packs, only: [:index, :show]
   resources :events, only: [:create, :edit, :update, :show, :destroy]
   resources :tags, only: :destroy
 

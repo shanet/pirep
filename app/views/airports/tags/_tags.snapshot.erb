@@ -1,0 +1,11 @@
+<div id="tags" class="card mb-2">
+  <div class="card-header">
+    <i class="fas fa-tags"></i> Tags
+  </div>
+</div>
+
+<div class="d-flex flex-wrap gap-1 mb-3">
+  <% @airport.tags.each do |tag| %>
+    <%= render partial: 'airports/tags/tag', formats: :html, locals: {tag_record: tag} %>
+  <% end %>
+</div>

@@ -8,7 +8,9 @@
   <div class="airport-subheader <%= cover_image ? '' : "theme-#{@airport.theme}" %>">
     <div class="container-lg d-flex justify-content-center justify-content-md-between align-items-center py-2">
       <div class="d-none d-md-block">
-        <%= render 'airports/header/left_actions', color: (cover_image ? :light : :dark) %>
+        <% unless defined?(snapshot_layout) %>
+          <%= render 'airports/header/left_actions', color: (cover_image ? :light : :dark) %>
+        <% end %>
       </div>
 
       <div class="mx-2">
@@ -20,7 +22,9 @@
       </div>
 
       <div class="d-none d-md-flex justify-content-end gap-1">
-        <%= render 'airports/header/right_actions', color: (cover_image ? :light : :dark), hide_cover_image_dropdown: defined?(hide_cover_image_dropdown) %>
+        <% unless defined?(snapshot_layout) %>
+          <%= render 'airports/header/right_actions', color: (cover_image ? :light : :dark), hide_cover_image_dropdown: defined?(hide_cover_image_dropdown) %>
+        <% end %>
       </div>
     </div>
   </div>
@@ -29,16 +33,18 @@
 <%# This is a bit hacky, but we need a spacer below the header that must be a separate element to avoid messing up the formatting of the header %>
 <div class="mb-md-3"></div>
 
-<div class="actions container-lg">
-  <div class="row">
-    <div class="col-12 d-md-none d-flex justify-content-center flex-wrap py-3 py-md-0 gap-2">
-      <%= render 'airports/header/left_actions', color: :dark %>
-      <%= render 'airports/header/right_actions', color: :dark, hide_cover_image_dropdown: defined?(hide_cover_image_dropdown) %>
+<% unless defined?(snapshot_layout) %>
+  <div class="actions container-lg">
+    <div class="row">
+      <div class="col-12 d-md-none d-flex justify-content-center flex-wrap py-3 py-md-0 gap-2">
+        <%= render 'airports/header/left_actions', color: :dark %>
+        <%= render 'airports/header/right_actions', color: :dark, hide_cover_image_dropdown: defined?(hide_cover_image_dropdown) %>
+      </div>
     </div>
   </div>
-</div>
+<% end %>
 
-<% if defined? @breadcrumbs %>
+<% if defined?(@breadcrumbs) %>
   <div class="container-lg">
     <div class="row">
       <div class="col-12 mb-2">
