@@ -5,7 +5,7 @@ module "task_definition_content_packs" {
   source = "./task_definition"
 
   cloudwatch_log_group                = var.cloudwatch_log_groups.jobs
-  container_command                   = "[bundle, exec, rails, runner, scripts/content_packs_creator.rb]"
+  container_command                   = "[bash, scripts/content_packs_creator.sh]"
   cpu                                 = 4096 # 4 vCPU
   efs_access_point                    = aws_efs_access_point.this.id
   efs_volume                          = aws_efs_file_system.this.id
