@@ -1,6 +1,6 @@
 require 'application_system_test_case'
 
-class Leaderboard < ApplicationSystemTestCase
+class LeaderboardTest < ApplicationSystemTestCase
   setup do
     @users = (LeaderboardController::LEADERBOARD_LENGTH + 1).times.map do |index|
       create(:known, points: index)
