@@ -4,10 +4,16 @@ const fs = require('node:fs');
 const puppeteer = require('puppeteer-core');
 
 (async () => {
-  const browser = await puppeteer.launch({
-    executablePath: '/usr/bin/chromium',
-    args: ['--headless', '--enable-gpu', '--no-sandbox']
-  });
+  try {
+    const browser = await puppeteer.launch({
+      executablePath: '/usr/bin/chromium',
+      args: ['--headless', '--enable-gpu', '--no-sandbox']
+    });
+  } catch(error) {
+    console.log('Failed to launch Puppeteer');
+    console.log(error);
+    process.exit(1);
+  }
 
   const render_queue_path = process.argv[2];
   console.log(`Reading render queue from ${render_queue_path}`);
@@ -26,10 +32,17 @@ const puppeteer = require('puppeteer-core');
         printBackground: true,
       });
     } catch(error) {
+      console.error(`Failed to render PDF for ${pdf['url']}`);
       console.error(error);
       process.exit(1);
     }
   }
 
-  await browser.close();
+  try {
+    await browser.close();
+  } catch(error) {
+    console.error('Failed to close browser');
+    console.error(error);
+    process.exit(1);
+  }
 })();
