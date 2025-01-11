@@ -86,10 +86,12 @@ module AirportsHelper
     return annotations.map {|annotation| "#{annotation['label']}: (#{annotation['latitude']}, #{annotation['longitude']})"}.join("\n")
   end
 
-  def opengraph_description(airport, lines: 2, render_markdown: true)
+  def opengraph_description(airport, lines: 2)
     if airport.description.present?
       description_slice = airport.description.split("\n")[0...lines].join("\n")
-      return (render_markdown ? render_markdown(description_slice) : description_slice)
+
+      # Render the description as markdown and then remove any HTML tags to get rid of the markdown syntax and also remove any HTML tags that result from rendering it
+      return strip_tags(render_markdown(description_slice))
     end
 
     help_text = 'Help us collect information on it at Pirep!'

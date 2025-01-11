@@ -58,10 +58,13 @@ class AirportsHelperTest < ActionView::TestCase
 
   test 'opengraph description' do
     airport = create(:airport)
-    assert_equal Kramdown::Document.new(airport.description).to_html.strip, opengraph_description(airport), 'Did not use airport description'
+    assert_equal airport.description, opengraph_description(airport), 'Did not use airport description'
 
     airport.update!(description: "1\n2\n3")
-    assert_equal "<p>1\n2</p>", opengraph_description(airport), 'Used more than two lines from description'
+    assert_equal "1\n2", opengraph_description(airport), 'Used more than two lines from description'
+
+    airport.update!(description: "[example.com](https://example.com)")
+    assert_equal "example.com", opengraph_description(airport), 'Did not remove markdown from description'
 
     airport.update!(description: nil)
     assert opengraph_description(airport).start_with?(airport.name.titleize)
