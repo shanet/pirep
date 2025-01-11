@@ -22,8 +22,6 @@ jobs:
       - name: Install Packages
         run: |
           sudo apt-get update && sudo apt-get install --yes
-            chromium
-            chromium-sandbox
             gdal-bin
             gpg
             lsb-release

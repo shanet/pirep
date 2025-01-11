@@ -15,7 +15,6 @@ WORKDIR /srv/http
 RUN apt-get update && apt-get upgrade --yes
 RUN apt-get install --yes \
   chromium \
-  chromium-sandbox \
   curl \
   dnsutils \
   gdal-bin \
