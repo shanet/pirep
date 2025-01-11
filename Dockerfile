@@ -73,6 +73,7 @@ COPY scripts/zshrc /home/pirep/.zshrc
 
 # Copy the application code and compiled assets & gems from the previous stage
 COPY . .
+COPY --from=build /srv/http/node_modules node_modules
 COPY --from=build /srv/http/public/assets public/assets
 COPY --from=build /usr/local/bundle /usr/local/bundle
 
