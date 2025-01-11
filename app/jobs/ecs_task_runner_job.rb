@@ -6,15 +6,15 @@ class EcsTaskRunnerJob < ApplicationJob
 
   def perform(task_definition_name)
     network_configuration = find_network_configuration(ECS_CLUSTER, ECS_SERVICE_JOBS)
-    raise Exceptions::MasterDataImporterTaskFailed, 'ECS service network configuration not found' unless network_configuration
+    raise Exceptions::EcsTaskRunnerFailed, 'ECS service network configuration not found' unless network_configuration
 
     task_definition = find_task_definition(task_definition_name)
-    raise Exceptions::MasterDataImporterTaskFailed, 'ECS task definition not found' unless task_definition
+    raise Exceptions::EcsTaskRunnerFailed, 'ECS task definition not found' unless task_definition
 
     Rails.logger.info("Using task definition: #{task_definition}")
 
     task_arn = run_task(ECS_CLUSTER, task_definition, network_configuration)
-    raise Exceptions::MasterDataImporterTaskFailed, 'Failed to run task' unless task_arn
+    raise Exceptions::EcsTaskRunnerFailed, 'Failed to run task' unless task_arn
 
     Rails.logger.info("ECS task started: #{task_arn}")
   end

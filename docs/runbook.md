@@ -66,7 +66,7 @@ If a new environment needs to be set up or the existing production environment n
   1. `rails db:create`
   2. `rails db:schema:load`
   3. `rails db:seed` (note the default username and password)
-  4. `rails c` then `MasterDataImporterJob.perform_now`
+  4. `rails c` then `EcsTaskRunnerJob.perform_now('pirep-production-importer')`
     * This will start an importer task to download airport data, diagrams, and charts. This will take many hours to complete. Progress can be monitored in CloudWatch.
 
 ## Deployment
