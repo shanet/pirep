@@ -16,14 +16,19 @@ const puppeteer = require('puppeteer-core');
   for(const pdf of render_queue) {
     console.log(`Rendering ${pdf['url']} to ${pdf['output']}`);
 
-    const page = await browser.newPage();
-    await page.goto(pdf['url'], {waitUntil: 'networkidle2'});
+    try {
+      const page = await browser.newPage();
+      await page.goto(pdf['url'], {waitUntil: 'networkidle2'});
 
-    await page.pdf({
-      path: pdf['output'],
-      format: 'A4',
-      printBackground: true,
-    });
+      await page.pdf({
+        path: pdf['output'],
+        format: 'A4',
+        printBackground: true,
+      });
+    } catch(error) {
+      console.error(error);
+      process.exit(1);
+    }
   }
 
   await browser.close();
