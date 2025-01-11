@@ -9,11 +9,11 @@ module Exceptions
   class DatabaseBackupFailed < StandardError; end
   class DiagramUploadFailed < StandardError; end
   class EaaEventsFetchFailed < StandardError; end
+  class EcsTaskRunnerFailed < StandardError; end
   class GdalBinaryNotFound < StandardError; end
   class GooglePhotosQueryFailed < StandardError; end
   class GoogleTimezoneQueryFailed < StandardError; end
   class IncompleteLocationFilter < StandardError; end
-  class EcsTaskRunnerFailed < StandardError; end
   class MaxmindDatabaseChecksumDownloadFailed < StandardError; end
   class MaxmindDatabaseDownloadFailed < StandardError; end
   class MaxmindDatabaseIntegrityCheckFailed < StandardError; end
