@@ -21,11 +21,11 @@ jobs:
 
       - name: Install Packages
         run: |
-          sudo apt-get update && sudo apt-get install --yes
-            gdal-bin
-            gpg
-            lsb-release
-            libvips
+          sudo apt-get update && sudo apt-get install --yes \
+            gdal-bin \
+            gpg \
+            lsb-release \
+            libvips \
             python3-gdal
 
       - name: Install Ruby & Gems
