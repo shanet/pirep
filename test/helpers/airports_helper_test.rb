@@ -63,8 +63,8 @@ class AirportsHelperTest < ActionView::TestCase
     airport.update!(description: "1\n2\n3")
     assert_equal "1\n2", opengraph_description(airport), 'Used more than two lines from description'
 
-    airport.update!(description: "[example.com](https://example.com)")
-    assert_equal "example.com", opengraph_description(airport), 'Did not remove markdown from description'
+    airport.update!(description: '[example.com](https://example.com)')
+    assert_equal 'example.com', opengraph_description(airport), 'Did not remove markdown from description'
 
     airport.update!(description: nil)
     assert opengraph_description(airport).start_with?(airport.name.titleize)
