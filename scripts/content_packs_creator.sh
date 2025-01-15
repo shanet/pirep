@@ -7,6 +7,9 @@
 puma --config config/puma.rb &
 WEB_SERVER_PID=$!
 
+# Chromium/Puppeteer has problems with jemalloc; don't use it
+export LD_PRELOAD=""
+
 rails runner "ContentPacksCreator.new.create_content_packs"
 
 # Kill the web server process once done (give it some time to gracefully exit and then sigkill it to ensure the ECS task stops)

@@ -4,10 +4,14 @@ const fs = require('node:fs');
 const puppeteer = require('puppeteer-core');
 
 (async () => {
+  let browser;
+
   try {
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
+      args: ['--enable-gpu', '--no-sandbox'],
+      dumpio: true,
       executablePath: '/usr/bin/chromium',
-      args: ['--headless', '--enable-gpu', '--no-sandbox']
+      headless: true,
     });
   } catch(error) {
     console.log('Failed to launch Puppeteer');

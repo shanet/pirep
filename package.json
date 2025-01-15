@@ -6,7 +6,7 @@
     "bootstrap": "^5.3.3",
     "easymde": "^2.18.0",
     "mapbox-gl": "^3.6.0",
-    "puppeteer-core": "^23.11.1"
+    "puppeteer-core": "^24.0.0"
   },
   "version": "0.1.0",
   "devDependencies": {
