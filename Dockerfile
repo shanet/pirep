@@ -13,10 +13,11 @@ ENV \
 WORKDIR /srv/http
 
 RUN apt-get update && apt-get upgrade --yes
-RUN apt-get install --yes \
+RUN apt-get install --yes --no-install-recommends \
   chromium \
   curl \
   dnsutils \
+  fish \
   gdal-bin \
   gnupg \
   htop \
@@ -24,8 +25,7 @@ RUN apt-get install --yes \
   libpq-dev \
   libvips \
   nano \
-  unzip \
-  zsh
+  unzip
 
 # Install Postgres client
 RUN curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor --output /usr/share/keyrings/postgresql.gpg
@@ -66,11 +66,7 @@ ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
 
 # The UID and GID should match the values in the EFS config (efs.tf)
 RUN addgroup --gid 1000 pirep
-RUN adduser --shell /bin/zsh --disabled-password --gecos "" --uid 1000 --gid 1000 pirep
-
-# Set some nice zsh preferences for SSH shells
-COPY scripts/zshrc /root/.zshrc
-COPY scripts/zshrc /home/pirep/.zshrc
+RUN adduser --shell /bin/fish --disabled-password --gecos "" --uid 1000 --gid 1000 pirep
 
 # Copy the application code and compiled assets & gems from the previous stage
 COPY . .
@@ -86,6 +82,10 @@ RUN ln -s /mnt/efs/airports_cache public/assets/airports_cache
 
 RUN chown -R pirep:pirep .
 USER pirep
+
+# Set fish shell preferences
+RUN fish --command "set --universal fish_greeting \"\""
+
 EXPOSE ${PORT}
 
 # The command is set in the task definition as an override since it will vary per service

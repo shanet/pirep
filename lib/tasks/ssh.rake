@@ -46,7 +46,7 @@ def choose_container(containers)
 end
 
 def open_session(cluster, container)
-  session = ecs_client.execute_command(cluster: cluster, task: container[:task_id], container: container[:container_name], interactive: true, command: '/bin/zsh')
+  session = ecs_client.execute_command(cluster: cluster, task: container[:task_id], container: container[:container_name], interactive: true, command: '/bin/fish')
 
   Process.exec(
     'session-manager-plugin',
