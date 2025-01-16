@@ -11,7 +11,7 @@ class ContentPacksCreator
       icon: 'target.png',
       color: 'FFB1355E',
       tags: [:food, :lodging, :camping, :car, :golfing],
-      image: 'town.jpg',
+      image: 'content_pack_all_airports.jpg',
       description: 'All of the airports from other content packs in one download.',
     },
     restaurants: {
@@ -43,7 +43,7 @@ class ContentPacksCreator
       icon: 'square.png',
       color: 'FF266EFF',
       tags: [:car],
-      image: 'content_pack_lodging.jpg',
+      image: 'content_pack_cars.jpg',
       description: 'Airports with a crew car or commercial car rental service.',
     },
     golfing: {
