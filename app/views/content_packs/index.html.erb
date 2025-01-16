@@ -58,13 +58,7 @@
           </div>
 
           <div>
-            <% if ios?(request) %>
-              <% path = File.basename(ContentPacksCreator.path_for_content_pack(content_pack_id)) %>
-              <%= link_to 'Download', "https://foreflight.com/content?downloadURL=#{content_pack_url(content_pack_id)}", class: 'btn btn-primary' %>
-              <%#= link_to 'Content Pack', "https://foreflight.com/content?downloadURL=https://cdn.pirep.io/content/#{path}" %>
-            <% else %>
-              <%= link_to 'Download', content_pack_path(content_pack_id), class: 'btn btn-primary' %>
-            <% end %>
+            <%= link_to 'Download', content_path_url(content_pack_id), class: 'btn btn-primary' %>
             <small class="ms-2 text-muted">File size: ~<%= (ContentPacksCreator.content_pack_file_size(content_pack_id).to_f / 1_000 / 1_000).round %>mb</small>
           </div>
         </div>
