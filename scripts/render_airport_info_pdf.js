@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer-core');
 
   try {
     browser = await puppeteer.launch({
-      args: ['--disable-gpu', '--no-sandbox'],
+      args: ['--enable-gpu', '--no-sandbox'],
       dumpio: true,
       executablePath: '/usr/bin/chromium',
       headless: true,
@@ -28,11 +28,12 @@ const puppeteer = require('puppeteer-core');
 
     try {
       const page = await browser.newPage();
-      await page.goto(pdf['url'], {waitUntil: 'networkidle2'});
+      await page.goto(pdf['url'], {waitUntil: 'networkidle0'});
 
       await page.pdf({
-        path: pdf['output'],
         format: 'A4',
+        path: pdf['output'],
+        preferCSSPageSize: true,
         printBackground: true,
       });
     } catch(error) {

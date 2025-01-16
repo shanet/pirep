@@ -26,6 +26,7 @@ function initMap() {
   };
 
   const boundingBox = JSON.parse(mapElement.dataset.boundingBox);
+
   if(boundingBox) {
     mapOptions.bounds = boundingBox.flat();
     mapOptions.fitBoundsOptions = {padding: 75};
@@ -33,6 +34,9 @@ function initMap() {
     mapOptions.center = [mapElement.dataset.centerLongitude, mapElement.dataset.centerLatitude];
     mapOptions.zoom = mapElement.dataset.zoomLevel;
   }
+
+  // This option needs set for Puppeteer to capture the map when rendering a PDF but it's a performance hit so only do it in this snapshot layout
+  if(mapElement.dataset.snapshotLayout === "true") mapOptions.preserveDrawingBuffer = true;
 
   map = new mapboxgl.Map(mapOptions); // eslint-disable-line no-undef
 

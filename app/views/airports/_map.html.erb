@@ -23,7 +23,8 @@
     data-is-test="<%= Rails.env.test? %>"
     data-mapbox-api-key="<%= Rails.application.credentials.mapbox_api_key %>"
     data-annotations="<%= (@airport.annotations || []).to_json %>"
-    data-zoom-level="<%= @airport.zoom_level %>"></div>
+    data-zoom-level="<%= @airport.zoom_level %>"
+    data-snapshot="<%= defined?(snapshot_layout) ? 'true' : 'false' %>"></div>
 </div>
 
 <% unless read_only %>

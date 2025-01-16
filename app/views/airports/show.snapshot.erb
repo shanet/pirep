@@ -1,5 +1,11 @@
 <% @title = "#{@airport.code} - #{@airport.name.titleize}" %>
 
+<%# Add margin to the print view layout for when this page is rendered to a PDF by Puppeteer %>
+<%= content_tag(:style, nonce: content_security_policy_nonce) do %>
+  @page {margin: 1rem 0;}
+  @page :first {margin-top: 0;}
+<% end %>
+
 <%= render partial: 'airports/header/header', formats: :html, locals: {snapshot_layout: true} %>
 
 <div class="container-lg">
@@ -51,7 +57,7 @@
       <% end %>
 
       <div class="avoid-page-break-inside"><%= render partial: 'airports/webcams/webcams', formats: :html, locals: {snapshot_layout: true, read_only: true} %></div>
-      <div class="avoid-page-break-inside"><%= render partial: 'airports/map', formats: :html, locals: {read_only: true} %></div>
+      <div class="avoid-page-break-inside"><%= render partial: 'airports/map', formats: :html, locals: {snapshot_layout: true, read_only: true} %></div>
 
       <% if @airport.comments.any? %>
         <%= render partial: 'airports/comments', formats: :html, locals: {read_only: true} %>
