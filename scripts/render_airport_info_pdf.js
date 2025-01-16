@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer-core');
 
   try {
     browser = await puppeteer.launch({
-      args: ['--disable-gpu', '--no-sandbox'],
+      args: ['--enable-gpu', '--use-gl=swiftshader', '--no-sandbox'],
       dumpio: true,
       executablePath: '/usr/bin/chromium',
       headless: true,
