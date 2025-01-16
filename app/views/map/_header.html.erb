@@ -37,18 +37,18 @@
   <div class="d-flex justify-content-end">
     <ul class="list-group">
       <% if user_signed_in? %>
-        <li class="list-group-item selectable p-0"><%= link_to '<i class="fas fa-right-from-bracket me-1"></i>Logout'.html_safe, destroy_user_session_path, method: :delete, class: 'p-3' %></li>
+        <li class="list-group-item selectable p-0"><%= link_to '<i class="fas fa-right-from-bracket me-1"></i>Logout'.html_safe, destroy_user_session_path, method: :delete, class: 'p-3', tabindex: -1 %></li>
       <% else %>
-        <li class="list-group-item selectable p-0"><a href="#" class="drawer-link p-3" data-target="login"><i class="fas fa-right-to-bracket me-1"></i>Log In / Register</a></li>
+        <li class="list-group-item selectable p-0"><a href="#" class="drawer-link p-3" data-target="login" tabindex="-1"><i class="fas fa-right-to-bracket me-1"></i>Log In / Register</a></li>
       <% end %>
 
-      <li class="list-group-item selectable p-0"><%= link_to '<i class="fas fa-magnifying-glass me-1"></i>Advanced Airport Search'.html_safe, search_airports_path, class: 'p-3' %></li>
-      <li class="list-group-item selectable p-0"><%= link_to '<i class="fas fa-trophy me-1"></i>Leaderboard'.html_safe, leaderboard_path, class: 'p-3' %></li>
-      <li class="list-group-item selectable p-0"><a href="#" class="drawer-link p-3" data-target="origin"><i class="fas fa-circle-play me-1"></i>Getting Started</a></li>
-      <li class="list-group-item selectable p-0"><%= link_to '<i class="fas fa-tablet-screen-button me-1"></i>ForeFlight Content Packs'.html_safe, content_packs_path, class: 'p-3' %></li>
-      <li class="list-group-item selectable p-0"><a href="#" class="drawer-link p-3" data-target="about"><i class="fas fa-question-circle me-1"></i>About Pirep</a></li>
+      <li class="list-group-item selectable p-0"><%= link_to '<i class="fas fa-magnifying-glass me-1"></i>Advanced Airport Search'.html_safe, search_airports_path, class: 'p-3', tabindex: -1 %></li>
+      <li class="list-group-item selectable p-0"><%= link_to '<i class="fas fa-trophy me-1"></i>Leaderboard'.html_safe, leaderboard_path, class: 'p-3', tabindex: -1 %></li>
+      <li class="list-group-item selectable p-0"><a href="#" class="drawer-link p-3" data-target="origin" tabindex="-1"><i class="fas fa-circle-play me-1"></i>Getting Started</a></li>
+      <li class="list-group-item selectable p-0"><%= link_to '<i class="fas fa-tablet-screen-button me-1"></i>ForeFlight Content Packs'.html_safe, content_packs_path, class: 'p-3', tabindex: -1 %></li>
+      <li class="list-group-item selectable p-0"><a href="#" class="drawer-link p-3" data-target="about" tabindex="-1"><i class="fas fa-question-circle me-1"></i>About Pirep</a></li>
 
-      <li class="list-group-item d-flex justify-content-between align-items-center">
+      <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center">
         <div class="me-2">Theme:</div>
 
         <div class="color-scheme-selector btn-group">
