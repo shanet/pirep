@@ -80,11 +80,11 @@ RUN bundle exec bootsnap precompile --gemfile app lib
 # Create the symlink for the airports cache directory to the EFS volume
 RUN ln -s /mnt/efs/airports_cache public/assets/airports_cache
 
-RUN chown -R pirep:pirep .
-USER pirep
-
 # Set fish shell preferences
 RUN fish --command "set --universal fish_greeting \"\""
+
+RUN chown -R pirep:pirep .
+USER pirep
 
 EXPOSE ${PORT}
 
