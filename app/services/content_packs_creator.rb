@@ -10,7 +10,7 @@ class ContentPacksCreator
       name: 'All Airports',
       icon: 'target.png',
       color: 'FFB1355E',
-      tags: [:food, :lodging, :camping, :golfing],
+      tags: [:food, :lodging, :camping, :car, :golfing],
       image: 'town.jpg',
       description: 'All of the airports from other content packs in one download.',
     },
@@ -37,6 +37,14 @@ class ContentPacksCreator
       tags: [:camping],
       image: 'content_pack_camping.jpg',
       description: 'Airports you can camp at or with a campground nearby.',
+    },
+    cars: {
+      name: 'Car Rentals',
+      icon: 'square.png',
+      color: 'FF266EFF',
+      tags: [:car],
+      image: 'content_pack_lodging.jpg',
+      description: 'Airports with a crew car or commercial car rental service.',
     },
     golfing: {
       name: 'Golfing',
