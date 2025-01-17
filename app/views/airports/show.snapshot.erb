@@ -15,7 +15,11 @@
         <i class="fa-solid fa-triangle-exclamation me-1"></i>This is a snapshot of <%= @airport.code %> as of <span class="fw-bold"><%= Time.zone.now.strftime('%F') %></span>. The information here may be outdated.
 
         <div class="mt-2">
-          <%= link_to 'View live page', airport_url(@airport), class: 'btn btn-primary me-2' %> <%= link_to 'Update content pack', content_packs_url, class: 'btn btn-secondary' %>
+          <%# Always use the configured domain explicitly in production since this page will be called from localhost and Rails will use the request headers for the URL hostname otherwise %>
+          <% airport_link = (Rails.env.production? ? "https://#{Rails.configuration.domain}#{airport_path(@airport.code)}" : airport_url(@airport.code)) %>
+          <% content_packs_link = (Rails.env.production? ? "https://#{Rails.configuration.domain}#{content_packs_path}" : content_packs_url) %>
+
+          <%= link_to 'View live page', airport_link, class: 'btn btn-primary me-2' %> <%= link_to 'Update content pack', content_packs_link, class: 'btn btn-secondary' %>
         </div>
       </div>
 
