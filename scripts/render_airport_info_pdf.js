@@ -7,8 +7,17 @@ const puppeteer = require('puppeteer-core');
   let browser;
 
   try {
+    // In production, the local webserver serving the snapshot pages for the PDFs will be HTTP but assets from the CDN
+    // are over HTTPS. To get Chrome to load these as mixed content we need to disable some security settings below.
+    // It would be nice to start Puma with TLS, but Chrome still won't render assets for some reason? Hmm.
     browser = await puppeteer.launch({
-      args: ['--disable-gpu', '--enable-unsafe-swiftshader', '--no-sandbox'],
+      args: [
+        '--allow-running-insecure-content',
+        '--disable-gpu',
+        '--disable-web-security',
+        '--enable-unsafe-swiftshader',
+        '--no-sandbox',
+      ],
       dumpio: true,
       executablePath: '/usr/bin/chromium',
       headless: true,
