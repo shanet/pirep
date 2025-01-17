@@ -88,7 +88,5 @@ USER pirep
 
 EXPOSE ${PORT}
 
-RUN echo '[{"url": "https://pirep.io/airports/pae.snapshot", "output": "out.pdf"}]' > test.json
-
 # The command is set in the task definition as an override since it will vary per service
 CMD []
