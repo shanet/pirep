@@ -18,7 +18,7 @@ const puppeteer = require('puppeteer-core');
         '--enable-unsafe-swiftshader',
         '--no-sandbox',
       ],
-      dumpio: true,
+      // dumpio: true, // Uncomment for debugging
       executablePath: '/usr/bin/chromium',
       headless: true,
     });
@@ -33,7 +33,8 @@ const puppeteer = require('puppeteer-core');
   const render_queue = JSON.parse(fs.readFileSync(render_queue_path, 'utf8'));
 
   for(const pdf of render_queue) {
-    console.log(`Rendering ${pdf['url']} to ${pdf['output']}`);
+    // Uncomment for debugging
+    // console.log(`Rendering ${pdf['url']} to ${pdf['output']}`);
 
     try {
       const page = await browser.newPage();

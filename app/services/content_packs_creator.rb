@@ -190,7 +190,7 @@ private
     status, output = ExternalCommandRunner.execute(*command)
     return if status.success?
 
-    raise("Failed to render airport info PDFs: #{output}")
+    raise("Failed to render airport info PDFs (#{status}); #{output}")
   end
 
   def content_pack_manifest(name, version)
