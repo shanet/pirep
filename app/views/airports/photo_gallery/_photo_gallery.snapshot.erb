@@ -4,7 +4,8 @@
   return unless photo
 %>
 
-<%= render partial: 'airports/photo_gallery/photo_gallery_image', formats: :html, locals: {
+<div class="carousel">
+  <%= render partial: 'airports/photo_gallery/photo_gallery_image', formats: :html, locals: {
     photo: photo,
     group: nil,
     featured: false,
@@ -12,4 +13,5 @@
     size: :large,
     center: true,
     featured_form: false
-} %>
+  } %>
+</div>
