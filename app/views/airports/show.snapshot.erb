@@ -60,7 +60,10 @@
         </div>
       <% end %>
 
-      <div class="avoid-page-break-inside"><%= render partial: 'airports/webcams/webcams', formats: :html, locals: {snapshot_layout: true, read_only: true} %></div>
+      <% if @airport.webcams.any? %>
+        <div class="avoid-page-break-inside"><%= render partial: 'airports/webcams/webcams', formats: :html, locals: {snapshot_layout: true, read_only: true} %></div>
+      <% end %>
+
       <div class="avoid-page-break-inside"><%= render partial: 'airports/map', formats: :html, locals: {snapshot_layout: true, read_only: true} %></div>
 
       <% if @airport.comments.any? %>
