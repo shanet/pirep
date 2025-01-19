@@ -36,7 +36,7 @@ function initMap() {
   }
 
   // This option needs set for Puppeteer to capture the map when rendering a PDF but it's a performance hit so only do it in this snapshot layout
-  if(mapElement.dataset.snapshotLayout === "true") mapOptions.preserveDrawingBuffer = true;
+  if(mapElement.dataset.snapshotLayout === 'true') mapOptions.preserveDrawingBuffer = true;
 
   map = new mapboxgl.Map(mapOptions); // eslint-disable-line no-undef
 

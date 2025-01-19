@@ -236,7 +236,7 @@ private
     end
 
     def cache
-      return File.join(*[(Rails.configuration.try(:efs_path) || [Rails.root, FaaApi::Service::CACHE_DIRECTORY, Rails.env]), 'airport_info_pdfs']) # rubocop:disable Rails/FilePath, Rails/SafeNavigation
+      return File.join((Rails.configuration.try(:efs_path) || [Rails.root, FaaApi::Service::CACHE_DIRECTORY, Rails.env]), 'airport_info_pdfs') # rubocop:disable Rails/FilePath, Rails/SafeNavigation
     end
   end
 end

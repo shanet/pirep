@@ -3,6 +3,8 @@
 const fs = require('node:fs');
 const puppeteer = require('puppeteer-core');
 
+const RETRY_LIMIT = 3;
+
 (async () => {
   let browser;
 
@@ -36,20 +38,33 @@ const puppeteer = require('puppeteer-core');
     // Uncomment for debugging
     // console.log(`Rendering ${pdf['url']} to ${pdf['output']}`);
 
-    try {
-      const page = await browser.newPage();
-      await page.goto(pdf['url'], {waitUntil: 'networkidle0'});
+    let retries = 0;
 
-      await page.pdf({
-        format: 'A4',
-        path: pdf['output'],
-        preferCSSPageSize: true,
-        printBackground: true,
-      });
-    } catch(error) {
-      console.error(`Failed to render PDF for ${pdf['url']}`);
-      console.error(error);
-      process.exit(1);
+    while(retries < RETRY_LIMIT) {
+      try {
+        const page = await browser.newPage();
+        await page.goto(pdf['url'], {waitUntil: 'networkidle0'});
+
+        await page.pdf({
+          format: 'A4',
+          path: pdf['output'],
+          preferCSSPageSize: true,
+          printBackground: true,
+        });
+
+        break;
+      } catch(error) {
+        // Puppeteer seems to be kind of flaky with rendering pages as PDFs so try a few times before giving up
+        if(error instanceof puppeteer.ProtocolError && retries <= RETRY_LIMIT) {
+          console.error(`Failed to render PDF for ${pdf['url']}, retrying (attempt ${retries + 1})`);
+          retries++;
+          continue;
+        }
+
+        console.error(`Failed to render PDF for ${pdf['url']}, giving up`);
+        console.error(error);
+        process.exit(1);
+      }
     }
   }
 
