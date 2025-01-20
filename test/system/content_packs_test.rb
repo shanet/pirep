@@ -12,13 +12,15 @@ class ContentPacksTest < ApplicationSystemTestCase
       airport_food = create(:airport, tags: [create(:tag, name: :food), create(:tag, name: :lodging)])
       airport_lodging = create(:airport, tags: [create(:tag, name: :lodging)])
       airport_camping = create(:airport, tags: [create(:tag, name: :camping)])
+      airport_car = create(:airport, tags: [create(:tag, name: :car)])
       airport_golfing = create(:airport, tags: [create(:tag, name: :golfing)])
 
       expectations = {
-        all_airports: {count: 4, airports: [airport_food, airport_lodging, airport_camping, airport_golfing]},
+        all_airports: {count: 5, airports: [airport_food, airport_lodging, airport_camping, airport_car, airport_golfing]},
         restaurants: {count: 1, airports: [airport_food]},
         lodging: {count: 2, airports: [airport_food, airport_lodging]},
         camping: {count: 1, airports: [airport_camping, airport_golfing]},
+        cars: {count: 1, airports: [airport_car]},
         golfing: {count: 1, airports: [airport_golfing]},
       }
     end

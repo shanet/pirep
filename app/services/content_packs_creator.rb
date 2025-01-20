@@ -187,10 +187,14 @@ private
     File.write(render_queue_path, render_queue.to_json)
 
     command = ['node', Rails.root.join('scripts/render_airport_info_pdf.js'), render_queue_path]
-    status, output = ExternalCommandRunner.execute(*command)
+
+    status, _output = ExternalCommandRunner.execute(*command) do |output|
+      Rails.logger.info(output)
+    end
+
     return if status.success?
 
-    raise("Failed to render airport info PDFs (#{status}); #{output}")
+    raise("Failed to render airport info PDFs: #{status}")
   end
 
   def content_pack_manifest(name, version)
