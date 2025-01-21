@@ -43,7 +43,7 @@ const RETRY_LIMIT = 3;
     while(retries < RETRY_LIMIT) {
       try {
         const page = await browser.newPage();
-        await page.goto(pdf['url'], {waitUntil: 'networkidle0'});
+        await page.goto(pdf['url'], {waitUntil: 'networkidle0', timeout: 300000}); // 5 minute timeout for slow software-based WebGL rendering
 
         await page.pdf({
           format: 'A4',
