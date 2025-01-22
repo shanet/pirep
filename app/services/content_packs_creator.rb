@@ -69,7 +69,7 @@ class ContentPacksCreator
     report = {}
 
     CONTENT_PACKS.each do |content_pack_id, content_pack_configuration|
-      Rails.logger.info("Creating content pack version #{version} for #{content_pack_id}")
+      self.class.log("Creating content pack version #{version} for #{content_pack_id}")
 
       content_pack_path = File.join(self.class.cache, "#{content_pack_id}.zip")
       report[content_pack_id] = create_content_pack(content_pack_id, content_pack_configuration, version, content_pack_path)
@@ -80,7 +80,7 @@ class ContentPacksCreator
 
     delete_old_content_packs!(version)
 
-    Rails.logger.info("Content pack rendering report: #{report}")
+    self.class.log("Content pack rendering report: #{report}")
     return report
   end
 
@@ -112,10 +112,10 @@ class ContentPacksCreator
         cached_path = airport_info_pdf_cached?(airport)
 
         if cached_path
-          Rails.logger.info("Using cached airport info PDF for #{airport.code}")
+          self.class.log("Using cached airport info PDF for #{airport.code}")
           pdf_paths[airport.id] = cached_path
         else
-          Rails.logger.info("Stale cached airport info PDF for #{airport.code}")
+          self.class.log("Stale cached airport info PDF for #{airport.code}")
           pdf_paths[airport.id] = File.join(self.class.cache, "#{airport.code}_#{version}.pdf")
 
           render_queue << {
@@ -125,12 +125,12 @@ class ContentPacksCreator
         end
       end
 
-      Rails.logger.info('Rendering airport info PDFs')
+      self.class.log('Rendering airport info PDFs')
       render_airport_info_pdfs(render_queue)
 
       # Add each of the rendered PDFs to the archive
       airports.each do |airport|
-        Rails.logger.info("Adding #{airport.code} to content pack")
+        self.class.log("Adding #{airport.code} to content pack")
         archive.add("#{directory_prefix}/navdata/#{airport.icao_code || airport.code} Info.pdf", pdf_paths[airport.id])
       end
     end
@@ -189,7 +189,7 @@ private
     command = ['node', Rails.root.join('scripts/render_airport_info_pdf.js'), render_queue_path]
 
     status, _output = ExternalCommandRunner.execute(*command) do |output|
-      Rails.logger.info(output)
+      self.class.log("Puppeteer output: #{output}")
     end
 
     return if status.success?
@@ -210,7 +210,7 @@ private
     Dir.glob(File.join(self.class.directory, '*')).each do |file|
       next if current_version.in?(file)
 
-      Rails.logger.info("Deleting old content pack: #{file}")
+      self.class.log("Deleting old content pack: #{file}")
       File.unlink(file)
     end
   end
@@ -229,7 +229,7 @@ private
 
     return cached_path if timestamp > airport.updated_at
 
-    Rails.logger.info("Deleting stale airport info PDF cache for #{airport.code}")
+    self.class.log("Deleting stale airport info PDF cache for #{airport.code}")
     FileUtils.rm_f(cached_path)
     return false
   end
@@ -241,6 +241,12 @@ private
 
     def cache
       return File.join((Rails.configuration.try(:efs_path) || [Rails.root, FaaApi::Service::CACHE_DIRECTORY, Rails.env]), 'airport_info_pdfs') # rubocop:disable Rails/FilePath, Rails/SafeNavigation
+    end
+
+    def log(message)
+      Rails.logger.tagged(name.underscore) do
+        Rails.logger.info(message)
+      end
     end
   end
 end
