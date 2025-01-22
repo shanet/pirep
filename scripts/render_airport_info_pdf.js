@@ -9,6 +9,8 @@ const RETRY_LIMIT = 3;
   let browser;
 
   try {
+    console.log('Launching browser');
+
     // In production, the local webserver serving the snapshot pages for the PDFs will be HTTP but assets from the CDN
     // are over HTTPS. To get Chrome to load these as mixed content we need to disable some security settings below.
     // It would be nice to start Puma with TLS, but Chrome still won't render assets for some reason? Hmm.
@@ -20,13 +22,15 @@ const RETRY_LIMIT = 3;
         '--enable-unsafe-swiftshader',
         '--no-sandbox',
       ],
-      // dumpio: true, // Uncomment for debugging
+      dumpio: true, // Uncomment for debugging
       executablePath: '/usr/bin/chromium',
       headless: true,
     });
+
+    console.log('Browser started');
   } catch(error) {
-    console.log('Failed to launch Puppeteer');
-    console.log(error);
+    console.error('Failed to launch browser');
+    console.error(error);
     process.exit(1);
   }
 
@@ -35,8 +39,7 @@ const RETRY_LIMIT = 3;
   const render_queue = JSON.parse(fs.readFileSync(render_queue_path, 'utf8'));
 
   for(const pdf of render_queue) {
-    // Uncomment for debugging
-    // console.log(`Rendering ${pdf['url']} to ${pdf['output']}`);
+    console.log(`Rendering ${pdf['url']} to ${pdf['output']}`);
 
     let retries = 0;
 
@@ -69,10 +72,13 @@ const RETRY_LIMIT = 3;
   }
 
   try {
+    console.log('Closing browser');
     await browser.close();
   } catch(error) {
     console.error('Failed to close browser');
     console.error(error);
     process.exit(1);
   }
+
+  console.log('Rendering complete')
 })();
