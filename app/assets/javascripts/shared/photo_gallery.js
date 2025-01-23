@@ -3,12 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
 }, {once: true});
 
 export function initializePhotoGalleries() {
-  const photoGalleries = document.getElementsByClassName('carousel');
-
-  for(let i=0; i<photoGalleries.length; i++) {
-    initializePhotoGallery(photoGalleries[i]);
-    fetchUncachedPhotoGallery(photoGalleries[i]);
-  }
+  document.querySelectorAll('.carousel:not(.read-only)').forEach((photoGallery) => {
+    initializePhotoGallery(photoGallery);
+    fetchUncachedPhotoGallery(photoGallery);
+  });
 }
 
 function initializePhotoGallery(photoGallery) {
