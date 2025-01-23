@@ -22,7 +22,7 @@ const RETRY_LIMIT = 3;
         '--enable-unsafe-swiftshader',
         '--no-sandbox',
       ],
-      dumpio: true, // Uncomment for debugging
+      dumpio: true,
       executablePath: '/usr/bin/chromium',
       headless: true,
     });
@@ -39,13 +39,19 @@ const RETRY_LIMIT = 3;
   const render_queue = JSON.parse(fs.readFileSync(render_queue_path, 'utf8'));
 
   for(const pdf of render_queue) {
-    console.log(`Rendering ${pdf['url']} to ${pdf['output']}`);
+    console.log(`[+] Rendering ${pdf['url']} to ${pdf['output']}`);
 
     let retries = 0;
 
     while(retries < RETRY_LIMIT) {
       try {
         const page = await browser.newPage();
+
+        page.on('console', message => console.log(`${pdf['url']}: ${message.type().substr(0, 3).toUpperCase()} ${message.text()}`));
+        page.on('pageerror', ({message}) => console.log(`${pdf['url']}: ${message}`));
+        // page.on('response', response => console.log(`${pdf['url']}: ${response.status()} ${response.url()}`));
+        page.on('requestfailed', request => console.log(`${pdf['url']}: ${request.failure().errorText} ${request.url()}`));
+
         await page.goto(pdf['url'], {waitUntil: 'networkidle0', timeout: 300000}); // 5 minute timeout for slow software-based WebGL rendering
 
         await page.pdf({
@@ -69,6 +75,8 @@ const RETRY_LIMIT = 3;
         process.exit(1);
       }
     }
+
+    console.log(`[-] Rendering ${pdf['url']} to ${pdf['output']}`);
   }
 
   try {
