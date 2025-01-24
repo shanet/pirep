@@ -3,6 +3,7 @@
 const fs = require('node:fs');
 const puppeteer = require('puppeteer-core');
 
+const TIMEOUT = 300000; // Give a long 5 minute timeout for slow software-based WebGL rendering
 const RETRY_LIMIT = 3;
 
 (async () => {
@@ -52,7 +53,10 @@ const RETRY_LIMIT = 3;
         // page.on('response', response => console.log(`${pdf['url']}: ${response.status()} ${response.url()}`));
         page.on('requestfailed', request => console.log(`${pdf['url']}: ${request.failure().errorText} ${request.url()}`));
 
-        await page.goto(pdf['url'], {waitUntil: 'networkidle0', timeout: 300000}); // 5 minute timeout for slow software-based WebGL rendering
+        await page.goto(pdf['url'], {waitUntil: 'networkidle0', timeout: TIMEOUT});
+
+        // Wait for the map to fully load its tiles and annotations
+        await page.waitForSelector('#airport-map[data-ready="true"]', {timeout: TIMEOUT});
 
         await page.pdf({
           format: 'A4',

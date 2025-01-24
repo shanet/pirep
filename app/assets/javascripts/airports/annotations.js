@@ -98,7 +98,7 @@ function restoreAnnotations() {
     annotationFactory.addAnnotationToMap(map, annotationsJson[i].latitude, annotationsJson[i].longitude, annotationsJson[i].label, {editing: false, saveCallback: saveAnnotations});
   }
 
-  exposeObjectsForTesting();
+  onMapReady();
 }
 
 function saveAnnotations() {
@@ -144,11 +144,8 @@ function showAnnotationsStatus(message, isSuccess, timeout) {
   }, timeout || 3000);
 }
 
-function exposeObjectsForTesting() {
-  // Don't expose anything if not running tests
-  if(!mapElement.dataset.isTest) return;
-
-  // Let the tests know that the map is fully ready to use (once we have the airports layer shown)
+function onMapReady() {
+  // Let Puppeteer/the tests know that the map is fully ready to use (once we have the annotations shown)
   mapElement.dataset.ready = true;
 }
 
