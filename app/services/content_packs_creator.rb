@@ -182,7 +182,7 @@ private
     return Airport.includes(:tags).where(tags: {name: content_pack_configuration[:tags]})
   end
 
-  def render_airport_info_pdfs(content_pack__id, render_queue)
+  def render_airport_info_pdfs(content_pack_id, render_queue)
     render_queue_path = Rails.root.join('tmp/content_packs_render_queue.json')
     File.write(render_queue_path, render_queue.to_json)
 
