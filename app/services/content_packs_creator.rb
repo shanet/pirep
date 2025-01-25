@@ -126,7 +126,7 @@ class ContentPacksCreator
       end
 
       self.class.log('Rendering airport info PDFs')
-      render_airport_info_pdfs(render_queue)
+      render_airport_info_pdfs(content_pack_id, render_queue)
 
       # Add each of the rendered PDFs to the archive
       airports.each do |airport|
@@ -182,14 +182,16 @@ private
     return Airport.includes(:tags).where(tags: {name: content_pack_configuration[:tags]})
   end
 
-  def render_airport_info_pdfs(render_queue)
+  def render_airport_info_pdfs(content_pack__id, render_queue)
     render_queue_path = Rails.root.join('tmp/content_packs_render_queue.json')
     File.write(render_queue_path, render_queue.to_json)
 
     command = ['node', Rails.root.join('scripts/render_airport_info_pdf.js'), render_queue_path]
 
     status, _output = ExternalCommandRunner.execute(*command) do |output|
-      self.class.log("Puppeteer output: #{output}")
+      Rails.logger.tagged(content_pack_id) do
+        self.class.log("Puppeteer output: #{output}")
+      end
     end
 
     return if status.success?
