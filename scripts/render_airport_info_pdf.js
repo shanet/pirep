@@ -23,12 +23,6 @@ async function main() {
       try {
         const page = await browser.newPage();
 
-        // Uncomment for debugging browser console info on the page
-        page.on('console', message => console.log(`${pdf['url']}: ${message.type().substr(0, 3).toUpperCase()} ${message.text()}`));
-        page.on('pageerror', ({message}) => console.log(`${pdf['url']}: ${message}`));
-        // page.on('requestfailed', request => console.log(`${pdf['url']}: ${request.failure().errorText} ${request.url()}`));
-        // page.on('response', response => console.log(`${pdf['url']}: ${response.status()} - ${response.url()}`));
-
         await page.goto(pdf['url'], {waitUntil: 'networkidle0', timeout: TIMEOUT});
 
         // Wait for the map to fully load its tiles and annotations
