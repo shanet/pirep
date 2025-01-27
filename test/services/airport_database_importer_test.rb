@@ -144,7 +144,7 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
   end
 
   test 'does not change updated_at timestamp if there are no changes' do
-    travel_to(1.day.ago) do
+    travel_to(FaaApi::Service::CYCLE_LENGTHS[:airports].ago) do
       AirportDatabaseImporter.new(@airports).import!
     end
 
