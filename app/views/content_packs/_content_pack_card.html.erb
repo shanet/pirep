@@ -20,7 +20,7 @@
       </div>
 
       <div>
-        <%= link_to 'Download', content_path_url(content_pack_id), class: 'btn btn-primary' %>
+        <%= link_to 'Download', content_pack_versioned_url(content_pack_id), class: 'btn btn-primary' %>
         <small class="ms-2 text-muted">File size: ~<%= number_to_human_size(ContentPacksCreator.content_pack_file_size(content_pack_id), precision: 0) %></small>
       </div>
     </div>
