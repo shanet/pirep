@@ -143,6 +143,18 @@ class AirportDatabaseImporterTest < ActiveSupport::TestCase
     assert_equal faa_airport_fixture[:airport_name], airport.name, 'Airport updated from different data source'
   end
 
+  test 'does not change updated_at timestamp if there are no changes' do
+    travel_to(1.day.ago) do
+      AirportDatabaseImporter.new(@airports).import!
+    end
+
+    airport = Airport.find_by(code: @faa_airport[:airport_code])
+    timestamp = airport.updated_at
+
+    AirportDatabaseImporter.new(@airports).import!
+    assert_equal timestamp, airport.reload.updated_at, 'Airport updated_at timestamp changed even with no changes'
+  end
+
 private
 
   def faa_airport_fixture(**overrides)
