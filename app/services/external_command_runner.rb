@@ -8,7 +8,7 @@ class ExternalCommandRunner
     output = ''
     status = nil
 
-    Open3.popen2e(*command) do |stdin, stdout_stderr, wait_thread|
+    Open3.popen2e(*command) do |_stdin, stdout_stderr, wait_thread|
       stdout_stderr.each do |line|
         yield line if block_given?
         output += line
