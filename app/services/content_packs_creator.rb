@@ -12,7 +12,7 @@ class ContentPacksCreator
       color: 'FFB1355E',
       tags: [:food, :lodging, :camping, :car, :golfing],
       image: 'content_pack_all_airports.jpg',
-      description: 'All of the airports from other content packs in one download.',
+      description: 'All of the airports from the other content packs in one download.',
     },
     restaurants: {
       name: 'Restaurants',
@@ -28,7 +28,7 @@ class ContentPacksCreator
       color: 'FF636E8D',
       tags: [:lodging],
       image: 'content_pack_lodging.jpg',
-      description: 'Airports with a place to stay for the night. Either on the field or within walking distance.',
+      description: 'Airports with a place to stay for the night--either on the field or within walking distance.',
     },
     camping: {
       name: 'Camping',
