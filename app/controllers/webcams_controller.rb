@@ -24,7 +24,7 @@ class WebcamsController < ApplicationController
 private
 
   def webcam_params
-    params.require(:webcam).permit(:airport_id, :url)
+    params.expect(webcam: [:airport_id, :url])
   end
 
   def set_webcam

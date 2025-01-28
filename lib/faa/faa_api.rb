@@ -63,7 +63,7 @@ module FaaApi
       # Only download the given charts if specified (ensure these are pulled out in the same order as they are defined)
       if charts_to_download
         charts_to_download = Array(charts_to_download).map(&:to_sym)
-        charts_to_download = charts_config.select {|key, _value| key.in?(charts_to_download)}
+        charts_to_download = charts_config.slice(*charts_to_download)
       else
         charts_to_download = charts_config
       end

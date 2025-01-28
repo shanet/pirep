@@ -57,6 +57,6 @@ private
   end
 
   def comment_params
-    return params.require(:comment).permit(:body, :airport_id)
+    return params.expect(comment: [:body, :airport_id])
   end
 end

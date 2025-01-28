@@ -43,6 +43,6 @@ private
   end
 
   def comment_params
-    return params.require(:comment).permit(:body, :helpful_count, :reviewed_at)
+    return params.expect(comment: [:body, :helpful_count, :reviewed_at])
   end
 end

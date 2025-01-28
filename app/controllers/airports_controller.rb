@@ -180,7 +180,7 @@ private
     # Filter out any tags that are not selected since the UI shows all tags as options to add
     params['airport']&.[]('tags_attributes')&.select! {|_index, tag| tag['selected'] == 'true'}
 
-    return params.require(:airport).permit(
+    return params.require(:airport).permit( # rubocop:disable Rails/StrongParametersExpect
       :description,
       :transient_parking,
       :fuel_location,
@@ -198,15 +198,17 @@ private
   end
 
   def new_airport_params
-    return params.require(:airport).permit(
-      :name,
-      :latitude,
-      :longitude,
-      :elevation,
-      :landing_rights,
-      :landing_requirements,
-      :state,
-      tags_attributes: [:name]
+    return params.expect(
+      airport: [
+        :name,
+        :latitude,
+        :longitude,
+        :elevation,
+        :landing_rights,
+        :landing_requirements,
+        :state,
+        {tags_attributes: [:name]},
+      ]
     )
   end
 

@@ -24,7 +24,7 @@ private
   end
 
   def version_params
-    return params.require(:version).permit(:reviewed_at)
+    return params.expect(version: [:reviewed_at])
   end
 
   def airport_for_version(version)

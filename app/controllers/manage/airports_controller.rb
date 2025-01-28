@@ -88,24 +88,26 @@ private
   end
 
   def airport_params
-    return params.require(:airport).permit(
-      :code,
-      :name,
-      :fuel_types,
-      :latitude,
-      :longitude,
-      :city,
-      :state,
-      :elevation,
-      :facility_type,
-      :facility_use,
-      :ownership_type,
-      :reviewed_at,
-      :locked_at
+    return params.expect(
+      airport: [
+        :code,
+        :name,
+        :fuel_types,
+        :latitude,
+        :longitude,
+        :city,
+        :state,
+        :elevation,
+        :facility_type,
+        :facility_use,
+        :ownership_type,
+        :reviewed_at,
+        :locked_at,
+      ]
     )
   end
 
   def version_params
-    return params.require(:version).permit(:reviewed_at)
+    return params.expect(version: [:reviewed_at])
   end
 end

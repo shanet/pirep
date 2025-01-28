@@ -90,19 +90,21 @@ private
       params[:event][:end_date] = params[:event][:end_date]&.in_time_zone(timezone) if params[:event][:end_date].present?
     end
 
-    return params.require(:event).permit(
-      :airport_id,
-      :description,
-      :end_date,
-      :host,
-      :location,
-      :name,
-      :recurring_cadence,
-      :recurring_day_of_month,
-      :recurring_interval,
-      :recurring_week_of_month,
-      :start_date,
-      :url
+    return params.expect(
+      event: [
+        :airport_id,
+        :description,
+        :end_date,
+        :host,
+        :location,
+        :name,
+        :recurring_cadence,
+        :recurring_day_of_month,
+        :recurring_interval,
+        :recurring_week_of_month,
+        :start_date,
+        :url,
+      ]
     )
   end
 end
