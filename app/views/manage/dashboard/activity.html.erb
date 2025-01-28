@@ -15,7 +15,7 @@
     <%= render 'activity_list', records: @read_airports[:all_time],
       title: "Top #{@limit} Viewed Airports &ndash; All Time".html_safe,
       count: @read_airports[:all_time].count(Airport.table_name) do |airport| %>
-      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= airport.rank %> views
+      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= number_with_delimiter(airport.rank) %> views
     <% end %>
   </div>
 
@@ -23,7 +23,7 @@
     <%= render 'activity_list', records: @read_airports[:month],
       title: "Top #{@limit} Viewed Airports &ndash; Past 30 days".html_safe,
       count: @read_airports[:month].count(Airport.table_name) do |airport| %>
-      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= airport.rank %> views
+      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= number_with_delimiter(airport.rank) %> views
     <% end %>
   </div>
 </div>
@@ -33,7 +33,7 @@
     <%= render 'activity_list', records: @edited_airports[:all_time],
       title: "Top #{@limit} Edited Airports &ndash; All Time".html_safe,
       count: @edited_airports[:all_time].count(Airport.table_name) do |airport| %>
-      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= airport.rank %> edits
+      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= number_with_delimiter(airport.rank) %> edits
     <% end %>
   </div>
 
@@ -41,7 +41,7 @@
     <%= render 'activity_list', records: @edited_airports[:month],
       title: "Top #{@limit} Edited Airports &ndash; Past 30 days".html_safe,
       count: @edited_airports[:month].count(Airport.table_name) do |airport| %>
-      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= airport.rank %> edits
+      <%= link_to airport.code, manage_airport_path(airport) %> - <%= airport.name.titleize %>: <%= number_with_delimiter(airport.rank) %> edits
     <% end %>
   </div>
 </div>
@@ -51,7 +51,7 @@
     <%= render 'activity_list', records: @active_users[:all_time],
       title: "Top #{@limit} Users &ndash; All Time".html_safe,
       count: @active_users[:all_time].count(Users::User.table_name) do |user| %>
-      <%= link_to user_label(user), manage_user_path(user) %>: <%= user.rank %> edits
+      <%= link_to user_label(user), manage_user_path(user) %>: <%= number_with_delimiter(user.rank) %> edits
     <% end %>
   </div>
 
@@ -59,7 +59,7 @@
     <%= render 'activity_list', records: @active_users[:month],
       title: "Top #{@limit} Users &ndash; Past 30 days".html_safe,
       count: @active_users[:month].count(Users::User.table_name) do |user| %>
-      <%= link_to user_label(user), manage_user_path(user) %>: <%= user.rank %> edits
+      <%= link_to user_label(user), manage_user_path(user) %>: <%= number_with_delimiter(user.rank) %> edits
     <% end %>
   </div>
 </div>
