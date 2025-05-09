@@ -11,7 +11,7 @@ module MaxmindDb
   end
 
   class Service
-    DATABASE_PATH = File.join((Rails.configuration.try(:efs_path).presence || Rails.root), "lib/maxmind/geolite2_city_#{Rails.env}.mmdb") # rubocop:disable Rails/FilePath, Rails/SafeNavigation
+    DATABASE_PATH = File.join(Rails.configuration.try(:efs_path).presence || Rails.root, "lib/maxmind/geolite2_city_#{Rails.env}.mmdb") # rubocop:disable Rails/FilePath, Rails/SafeNavigation
     DATABASE_URL = "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=#{Rails.application.credentials.maxmind_license_key}&suffix=tar.gz"
 
     def geoip_lookup(ip_address)

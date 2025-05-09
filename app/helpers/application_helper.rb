@@ -31,11 +31,11 @@ module ApplicationHelper
     host = (product == :charts ? Rails.configuration.try(:tiles_host) : Rails.configuration.action_controller.asset_host) # rubocop:disable Rails/SafeNavigation
 
     return File.join(
-      (host.presence || ''),
-      (Rails.configuration.try(:cdn_content_path).presence || 'assets'), # rubocop:disable Rails/SafeNavigation
+      host.presence || '',
+      Rails.configuration.try(:cdn_content_path).presence || 'assets', # rubocop:disable Rails/SafeNavigation
       (path || product).to_s,
       Rails.configuration.faa_data_cycle.current(product),
-      (filename || '')
+      filename || ''
     ).to_s
   end
 

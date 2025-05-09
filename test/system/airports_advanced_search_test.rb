@@ -28,12 +28,12 @@ class AirportsAdvancedSearchTest < ApplicationSystemTestCase
 
     click_link_or_button 'Location'
     fill_in 'distance_miles', with: '10'
-    all('h1').first.click # Remove focus from the input
+    first('h1').click # Remove focus from the input
     assert_filter_group_count 1, 'filter-group-location'
 
     # Entering a value for another input in an input group should not increment the count
     fill_in 'airport_from', with: @airport2.code
-    all('h1').first.click # Remove focus from the input
+    first('h1').click # Remove focus from the input
     assert_filter_group_count 1, 'filter-group-location'
 
     # The count should be decremented only when all inputs in the input group are empty

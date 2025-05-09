@@ -70,7 +70,7 @@ class AirportsAnnotationsTest < ApplicationSystemTestCase
     assert_selector '.annotation.editing', count: @annotated_airport.annotations.count
 
     # Saving one annotation should leave the remaining ones in editing mode
-    find('.annotation button.save', match: :first).click # rubocop:disable Capybara/SpecificActions
+    first('.annotation button.save').click
     assert_selector '.annotation.editing', count: @annotated_airport.annotations.count - 1
 
     # All annotations should be taken out of editing mode when the toggle switch is flipped

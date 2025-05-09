@@ -291,7 +291,7 @@ class AirportsTest < ApplicationSystemTestCase
     find_by_id('comment_body').fill_in with: comment
     click_link_or_button 'Add Comment'
 
-    assert_equal comment, all('.comment p').first.text, 'New comment not on page'
+    assert_equal comment, first('.comment p').text, 'New comment not on page'
   end
 
   test 'helpful comment' do

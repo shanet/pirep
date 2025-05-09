@@ -53,7 +53,7 @@ def open_session(cluster, container)
     {sessionId: session.session.session_id, streamUrl: session.session.stream_url, tokenValue: session.session.token_value}.to_json,
     'us-west-2',
     'StartSession',
-    (ENV['AWS_PROFILE'] || ''),
+    ENV['AWS_PROFILE'] || '',
     {Target: "ecs:#{cluster}_#{container[:task_id]}_#{container[:container_id]}"}.to_json,
     'https://ecs.us-west-2.amazonaws.com'
   )
