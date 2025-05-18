@@ -1,7 +1,7 @@
 variable "name_prefix" {}
 
 locals {
-  log_retention_period = 60 # days
+  log_retention_period = 7 # days
 }
 
 resource "aws_cloudwatch_log_group" "jobs" {
