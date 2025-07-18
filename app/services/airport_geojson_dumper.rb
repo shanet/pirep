@@ -1,6 +1,6 @@
 class AirportGeojsonDumper
   # Isolate parallel test runs with different filenames between processes
-  DIRECTORY = "airports_cache#{Rails.env.test? ? "_test_#{SecureRandom.uuid}" : ''}"
+  DIRECTORY = "airports_cache#{"_test_#{SecureRandom.uuid}" if Rails.env.test?}"
   FILENAME_PATTERN = 'airports-*.json'
 
   # Disable caching of airport geojson in test since even though the cache file is isolated per-process

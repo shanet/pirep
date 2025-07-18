@@ -2,7 +2,7 @@ class ContentPacksCreator
   include Rails.application.routes.url_helpers
 
   # Isolate parallel test runs with different filenames between processes
-  DIRECTORY = "content_packs#{Rails.env.test? ? "_test_#{SecureRandom.uuid}" : ''}"
+  DIRECTORY = "content_packs#{"_test_#{SecureRandom.uuid}" if Rails.env.test?}"
 
   # The color codes below are AABBGGRR. Why? KML likes to make life difficult for no reason.
   CONTENT_PACKS = {

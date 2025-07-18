@@ -29,7 +29,7 @@ task :deploy do # rubocop:disable Rails/RakeEnvironment
   log 'Deployment complete'
 end
 
-def monitor_stage(pipeline_name, stage_name)
+def monitor_stage(pipeline_name, stage_name) # rubocop:disable Naming/PredicateMethod
   stage_status = nil
   rollback_prompted = false
   continue_statuses = ['InProgress', 'Stopped', 'Failed']
@@ -146,7 +146,7 @@ def puts_stage_status(stage_status)
   end
 
   # Provide detailed info on each action if there are multiple. Otherwise the status of the overall status is sufficient.
-  if stage_status[:action_states].count > 1
+  if stage_status[:action_states].many?
     actions_status = "\n\t" + stage_status[:action_states].map do |action| # rubocop:disable Style/StringConcatenation
       message = action[:name]
       message += ": #{action[:status]}" if action[:status]

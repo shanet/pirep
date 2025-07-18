@@ -87,13 +87,13 @@ private
   def update_tags(airport)
     # Tag public and private airports
     # Skip military airports as those are all private so there's no need to tag them
-    if !airport.facility_type == :military && airport.tags.where(name: [:private_, :public_, :restricted]).count == 0
+    if !airport.facility_type == :military && airport.tags.where(name: [:private_, :public_, :restricted]).none?
       tag = (airport.facility_use == 'PR' ? :private_ : :public_)
       airport.tags << Tag.new(name: tag)
     end
 
     # Tag airports without any user contributed data yet
-    if airport.empty? && airport.tags.where(name: :empty).count == 0 # rubocop:disable Style/GuardClause
+    if airport.empty? && airport.tags.where(name: :empty).none? # rubocop:disable Style/GuardClause
       airport.tags << Tag.new(name: :empty)
     end
   end

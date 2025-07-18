@@ -10,7 +10,7 @@ class FaaChartsDownloader
     verify_gdal_binaries_exist
     faa_client = FaaApi.client
 
-    tiles_directory_prefix = "tiles#{Rails.env.test? ? "_test_#{SecureRandom.hex}" : ''}/#{Rails.configuration.faa_data_cycle.next(:charts)}/#{chart_type}"
+    tiles_directory_prefix = "tiles#{"_test_#{SecureRandom.hex}" if Rails.env.test?}/#{Rails.configuration.faa_data_cycle.next(:charts)}/#{chart_type}"
     output_directory = Rails.root.join("public/assets/#{tiles_directory_prefix}").to_s
 
     Dir.mktmpdir do |tmp_directory|
@@ -142,7 +142,7 @@ private
     end
   end
 
-  def execute_command(*command)
+  def execute_command(*command) # rubocop:disable Naming/PredicateMethod
     return ExternalCommandRunner.execute(*command).first.success?
   end
 

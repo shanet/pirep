@@ -45,7 +45,7 @@ module ActiveSupport
       end
 
       # Deletes all keys that have expired
-      def cleanup(*)
+      def cleanup(*) # rubocop:disable Naming/PredicateMethod
         @model.expired_records.each do |record|
           delete_entry(record.key)
         end
@@ -60,7 +60,7 @@ module ActiveSupport
 
     private
 
-      def write_entry(key, entry, **options)
+      def write_entry(key, entry, **options) # rubocop:disable Naming/PredicateMethod
         # Seralize the entry per Rails' cache store class before writing it to the database
         payload = serialize_entry(entry, **options)
         @model.write(key, payload, entry)

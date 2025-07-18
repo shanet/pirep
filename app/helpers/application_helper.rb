@@ -24,7 +24,7 @@ module ApplicationHelper
 
   def gravatar_url(email_address, size: nil)
     hash = Digest::MD5.hexdigest(email_address.downcase)
-    return "https://www.gravatar.com/avatar/#{hash}#{size ? "?s=#{size}" : ''}"
+    return "https://www.gravatar.com/avatar/#{hash}#{"?s=#{size}" if size}"
   end
 
   def faa_data_content_url(product, filename: nil, path: nil)
@@ -63,7 +63,7 @@ module ApplicationHelper
     return (user.unknown? ? user.ip_address : user.name.presence || t(:anonymous_label))
   end
 
-  def active_path?(route, exact: false)
+  def active_path?(route, exact: false) # rubocop:disable Naming/PredicateMethod
     if exact
       return (request.path == route ? 'active' : '')
     end

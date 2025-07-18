@@ -18,22 +18,22 @@ namespace :lint do
 
   desc 'Run ERB linter'
   task :erb do
-    sh "bundle exec erb_lint #{autocorrect? ? '--autocorrect' : ''} \"app/views/**/*.*.erb\"", verbose: false
+    sh "bundle exec erb_lint #{'--autocorrect' if autocorrect?} \"app/views/**/*.*.erb\"", verbose: false
   end
 
   desc 'Run CSS linter'
   task :css do
-    sh "yarn run stylelint #{autocorrect? ? '--fix' : ''} \"app/assets/stylesheets/**/*.{css,scss}\"", verbose: false
+    sh "yarn run stylelint #{'--fix' if autocorrect?} \"app/assets/stylesheets/**/*.{css,scss}\"", verbose: false
   end
 
   desc 'Run JavaScript linter'
   task :js do
-    sh "yarn run eslint #{autocorrect? ? '--fix' : ''} \"app/assets/javascripts/**/*.js\"", verbose: false
+    sh "yarn run eslint #{'--fix' if autocorrect?} \"app/assets/javascripts/**/*.js\"", verbose: false
   end
 
   desc 'Run Terraform formatter'
   task :terraform do
-    sh "terraform fmt --recursive #{ENV['CI'] ? '--diff --check' : ''} terraform", verbose: false
+    sh "terraform fmt --recursive #{'--diff --check' if ENV['CI']} terraform", verbose: false
 
     # Check that the linter is installed
     sh 'which terraform-lexicographical-lint > /dev/null 2>&1', verbose: false do |success, _result|

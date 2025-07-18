@@ -18,7 +18,7 @@ class Airport < ApplicationRecord
 
   has_many :tags, dependent: :destroy do
     def has?(tag)
-      return where(name: tag).count > 0
+      return where(name: tag).any?
     end
   end
 
@@ -334,12 +334,12 @@ class Airport < ApplicationRecord
     return data_source == 'faa'
   end
 
-  def has_weather? # rubocop:disable Naming/PredicateName
+  def has_weather? # rubocop:disable Naming/PredicatePrefix
     # Don't show weather if it's outdated for some reason (except in development to avoid needing to constantly update records for them to show up)
     return metar.present? && (metar.created_at > 2.hours.ago || Rails.env.development?)
   end
 
-  def has_bounding_box? # rubocop:disable Naming/PredicateName
+  def has_bounding_box? # rubocop:disable Naming/PredicatePrefix
     return uses_bounding_box? && bbox_ne_latitude.present?
   end
 
