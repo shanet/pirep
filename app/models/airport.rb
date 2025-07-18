@@ -67,12 +67,15 @@ class Airport < ApplicationRecord
       theme: 'red',
     },
     balloonport: {
+      label: 'Balloonports',
       hidden: true,
     },
     gliderport: {
+      label: 'Gliderports',
       hidden: true,
     },
     ultralight: {
+      label: 'Ultralightports',
       hidden: true,
     },
   }
