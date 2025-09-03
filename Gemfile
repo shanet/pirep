@@ -4,7 +4,7 @@ git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 ruby '3.4.1'
 
 # Core Rails gems
-gem 'rails', '8.0.2'
+gem 'rails', '8.0.2.1'
 
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'dartsass-rails', '~> 0.4.0'
