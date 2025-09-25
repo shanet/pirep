@@ -284,6 +284,7 @@ GEM
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     orm_adapter (0.5.0)
+    ostruct (0.6.1)
     paper_trail (16.0.0)
       activerecord (>= 6.1)
       request_store (~> 1.4)
@@ -483,6 +484,7 @@ DEPENDENCIES
   kramdown
   listen (~> 3.2)
   maxmind-geoip2
+  ostruct
   paper_trail
   pg (>= 0.18, < 2.0)
   puma
