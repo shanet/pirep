@@ -22,6 +22,7 @@ access_logs.html
 
 # Ignore keys for decrypting credentials
 /config/*.key
+/config/credentials.yml.enc
 /config/credentials/*.key
 /config/credentials/development.yml.enc
 
