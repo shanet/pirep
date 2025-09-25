@@ -420,7 +420,7 @@ class Airport < ApplicationRecord
 
   def unselected_tag_names
     # Remove already added tags on the airport from the full set of tags
-    return (Tag.addable_tags.keys - tags.pluck(:name).map(&:to_sym))
+    return Tag.addable_tags.keys - tags.pluck(:name).map(&:to_sym)
   end
 
   def elevation_threat_level
