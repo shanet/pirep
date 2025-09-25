@@ -211,9 +211,8 @@ module FaaApi
       Zip::File.open(archive_path) do |archive|
         # Extract each file in the archive to the destination directory
         archive.each do |file|
-          path = File.join(destination_directory, file.name)
-          archive.extract(file, path)
-        rescue Zip::DestinationFileExistsError
+          archive.extract(file, destination_directory: destination_directory)
+        rescue Zip::DestinationExistsError
           # Ignore the file if it already exists, we must have already extracted it
         end
       end
