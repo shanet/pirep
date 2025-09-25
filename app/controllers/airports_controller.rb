@@ -244,7 +244,7 @@ private
       :weather_lifr,
 
       :tags_match,
-      *(Tag::TAGS.keys.map {|tag| "tag_#{tag}"})
+      *Tag::TAGS.keys.map {|tag| "tag_#{tag}"}
     )
     # rubocop:enable Layout/EmptyLinesAroundArguments
   end

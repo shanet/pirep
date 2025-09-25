@@ -36,7 +36,7 @@ class AirportCompletionProgressCalculator
   end
 
   def featured?
-    return (percent_complete >= FEATURED_THRESHOLD)
+    return percent_complete >= FEATURED_THRESHOLD
   end
 
   def percent_complete

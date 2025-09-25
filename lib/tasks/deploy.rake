@@ -72,7 +72,7 @@ def monitor_stage(pipeline_name, stage_name) # rubocop:disable Naming/PredicateM
     sleep 5
   end
 
-  return (stage_status[:status] == 'Succeeded')
+  return stage_status[:status] == 'Succeeded'
 end
 
 def monitor_codedeploy(deployment_groups)
