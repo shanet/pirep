@@ -14,7 +14,7 @@ export function isBreakpointDown(breakpoint) {
   const breakpoints = [];
 
   // We want to know if the given breakpoint is at or below the active breakpoint so we need to collect everything below that level
-  /* eslint-disable no-fallthrough */
+   
   switch(breakpoint) {
     case 'xxl':
       breakpoints.push('xxl');
@@ -30,7 +30,7 @@ export function isBreakpointDown(breakpoint) {
       breakpoints.push('xs');
     default:
   }
-  /* eslint-enable no-fallthrough */
+   
 
   return (breakpoints.indexOf(getActiveBreakpoint()) !== -1);
 }

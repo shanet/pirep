@@ -12,7 +12,7 @@ export function addAnnotationToMap(map, latitude, longitude, labelValue, options
 
   const annotation = createAnnotation(map, labelValue, annotationId, options);
 
-  const popup = new mapboxgl.Popup({ // eslint-disable-line no-undef
+  const popup = new mapboxgl.Popup({  
     closeButton: false,
     closeOnClick: false,
     closeOnMove: false,
@@ -20,7 +20,7 @@ export function addAnnotationToMap(map, latitude, longitude, labelValue, options
     offset: 45,
   }).setDOMContent(annotation);
 
-  const marker = new mapboxgl.Marker({draggable: options.editing}) // eslint-disable-line no-undef
+  const marker = new mapboxgl.Marker({draggable: options.editing})  
     .setLngLat([longitude, latitude])
     .setPopup(popup)
     .addTo(map);

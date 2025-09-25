@@ -40,7 +40,7 @@ function initEditor(textarea) {
     }
   };
 
-  const editor = new EasyMDE({ // eslint-disable-line no-undef
+  const editor = new EasyMDE({  
     autoDownloadFontAwesome: false,
     element: textarea,
     hideIcons: ['image'],

@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Load won't be fired in test mode
-  (hasMapboxAccessToken() ? map.on('load', onMapLoad) : onMapLoad()); // eslint-disable-line no-unused-expressions
+  (hasMapboxAccessToken() ? map.on('load', onMapLoad) : onMapLoad());  
 }, {once: true});
 
 function initMap() {
@@ -100,7 +100,7 @@ function initMap() {
 
   const [coordinates, zoomLevel] = initialMapCenter();
 
-  map = new mapboxgl.Map({ // eslint-disable-line no-undef
+  map = new mapboxgl.Map({  
     accessToken: (hasMapboxAccessToken() ? mapElement.dataset.mapboxApiKey : undefined),
     attributionControl: false,
     center: coordinates.reverse(),
@@ -113,7 +113,7 @@ function initMap() {
     zoom: zoomLevel,
   });
 
-  map.addControl(new mapboxgl.AttributionControl(), 'bottom-left'); // eslint-disable-line no-undef
+  map.addControl(new mapboxgl.AttributionControl(), 'bottom-left');  
 }
 
 function initialMapCenter() {
@@ -209,7 +209,7 @@ function addEventHandlersToMap() {
     // but it does put all of these error messages in the JS console. We can ignore these since they're not actually errors.
     if(String(error.error).startsWith('Error: Could not load image because of The source image could not be decoded')) return;
 
-    console.error(error); // eslint-disable-line no-console
+    console.error(error);  
   });
 }
 
@@ -336,7 +336,7 @@ async function fetchAirportAnnotations() {
         .then((response) => response.json())
         .then((json) => {annotationsCache[airport] = json;})
         .catch(() => {
-          console.error(`An error occurred while retrieving annotations for airport ${airport}.`); // eslint-disable-line no-console
+          console.error(`An error occurred while retrieving annotations for airport ${airport}.`);  
         });
 
       requests.push(request);
@@ -396,7 +396,7 @@ export function openAirport(airportCode, boundingBox, zoomLevel, openDrawer) {
     }
   }
 
-  if(!airport) return console.log(`Airport ${airportCode} not found, aborting open`); // eslint-disable-line no-console
+  if(!airport) return console.log(`Airport ${airportCode} not found, aborting open`);  
 
   AIRPORT_LAYERS.forEach((layer) => {
     setAirportMarkerSelected(layer.id, layer.geojson, airport.id, layer.marker);
