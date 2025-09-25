@@ -161,7 +161,7 @@ function initFilterGroupLabels() {
 }
 
 function showFilterGroupHoverText(filterLabel) {
-  filterLabel.querySelector('span').innerText += FILTER_GROUP_HOVER_TEXT; // eslint-disable-line no-param-reassign
+  filterLabel.querySelector('span').innerText += FILTER_GROUP_HOVER_TEXT;  
 }
 
 function hideFilterGroupHoverText(filterLabel) {
@@ -243,7 +243,7 @@ function updateFilterLabelPosition(filterLabel, filter, delta) {
 
   if(delta) y += delta;
 
-  filterLabel.style.transform = `translate(${x}px, ${y}px)`; // eslint-disable-line no-param-reassign
+  filterLabel.style.transform = `translate(${x}px, ${y}px)`;  
 
   return {x, y};
 }
@@ -271,18 +271,18 @@ function updateFilterLabelOpacity(filterLabel) {
     opacity = 1;
   }
 
-  filterLabel.style.opacity = opacity; // eslint-disable-line no-param-reassign
+  filterLabel.style.opacity = opacity;  
 }
 
 function updateFilterLabelDisplay(filterLabel, filterLabelPosition) {
   const filtersBounds = document.getElementById('filters').getBoundingClientRect();
 
   if(filterLabelPosition.y <= filtersBounds.top) {
-    filterLabel.style.display = 'none'; // eslint-disable-line no-param-reassign
+    filterLabel.style.display = 'none';  
   } else if(filterLabelPosition.y >= filtersBounds.bottom) {
-    filterLabel.style.display = 'none'; // eslint-disable-line no-param-reassign
+    filterLabel.style.display = 'none';  
   } else {
-    filterLabel.style.display = 'block'; // eslint-disable-line no-param-reassign
+    filterLabel.style.display = 'block';  
   }
 }
 

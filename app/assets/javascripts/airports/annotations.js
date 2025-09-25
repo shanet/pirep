@@ -38,7 +38,7 @@ function initMap() {
   // This option needs set for Puppeteer to capture the map when rendering a PDF but it's a performance hit so only do it in this snapshot layout
   if(mapElement.dataset.snapshotLayout === 'true') mapOptions.preserveDrawingBuffer = true;
 
-  map = new mapboxgl.Map(mapOptions); // eslint-disable-line no-undef
+  map = new mapboxgl.Map(mapOptions);  
 
   map.on('click', (event) => {
     if(!isEditing()) return;
@@ -51,7 +51,7 @@ function initMap() {
   };
 
   // Load won't be fired in test mode
-  (hasMapboxAccessToken() ? map.on('load', onMapLoad) : onMapLoad()); // eslint-disable-line no-unused-expressions
+  (hasMapboxAccessToken() ? map.on('load', onMapLoad) : onMapLoad());  
 }
 
 function initEditingSwitch() {

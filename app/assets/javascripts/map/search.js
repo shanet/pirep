@@ -131,12 +131,12 @@ function showSearchResults(results) {
       hideSearchResults();
     });
 
-    /* eslint-disable no-loop-func */
+     
     node.addEventListener('mouseenter', () => {
       selectedSearchResultIndex = i;
       selectSearchResult(selectedSearchResultIndex);
     });
-    /* eslint-enable no-loop-func */
+     
   }
 
   resultsList.style.display = 'block';

@@ -1,4 +1,4 @@
-/* eslint-disable import/first, import/newline-after-import */
+ 
 
 import Rails from '@rails/ujs';
 Rails.start();

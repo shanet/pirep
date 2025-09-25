@@ -10,9 +10,8 @@
   },
   "version": "0.1.0",
   "devDependencies": {
-    "eslint": "^8.56.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.29.1",
+    "eslint": "^9.36.0",
+    "eslint-plugin-import": "^2.32.0",
     "stylelint": "^16.24.0",
     "stylelint-config-twbs-bootstrap": "^16.1.0",
     "stylelint-order": "^7.0.0"

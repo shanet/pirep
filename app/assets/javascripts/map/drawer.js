@@ -56,7 +56,7 @@ export async function loadDrawer(type, ...args) {
       drawer = drawerShowAirport;
       break;
     default:
-      console.log(`Unknown drawer type ${type}`); // eslint-disable-line no-console
+      console.log(`Unknown drawer type ${type}`);  
       return;
   }
 
