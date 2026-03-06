@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 
-ruby '3.4.1'
+ruby '4.0.1'
 
 # Core Rails gems
-gem 'rails', '8.0.2.1'
+gem 'rails', '8.1.2'
 
 gem 'bootsnap', require: false
 gem 'dartsass-rails', '~> 0.5.1'
@@ -65,5 +65,7 @@ end
 group :test do
   gem 'capybara', '>= 2.15'
   gem 'factory_bot_rails'
+  gem 'minitest'
+  gem 'minitest-mock'
   gem 'selenium-webdriver'
 end

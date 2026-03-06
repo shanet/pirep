@@ -1,19 +1,20 @@
 {
   "name": "pirep",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.7.2",
+    "@fortawesome/fontawesome-free": "^7.2.0",
     "bootstrap": "^5.3.8",
     "easymde": "^2.20.0",
-    "mapbox-gl": "^3.15.0",
-    "puppeteer-core": "^24.22.3"
+    "mapbox-gl": "^3.19.1",
+    "puppeteer-core": "^24.38.0"
   },
   "version": "0.1.0",
   "devDependencies": {
-    "eslint": "^9.36.0",
+    "eslint": "^10.0.2",
     "eslint-plugin-import": "^2.32.0",
-    "stylelint": "^16.24.0",
+    "stylelint": "^17.4.0",
     "stylelint-config-twbs-bootstrap": "^16.1.0",
-    "stylelint-order": "^7.0.0"
+    "stylelint-order": "^7.0.1"
   }
 }
