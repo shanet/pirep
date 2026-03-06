@@ -13,7 +13,7 @@ AllCops:
     - vendor/bundle/**/*
   DisplayCopNames: true
   NewCops: enable
-  TargetRubyVersion: 3.4.1
+  TargetRubyVersion: 4.0.1
 
 Rails:
   Enabled: true
@@ -142,6 +142,9 @@ Style/MutableConstant:
 
 Style/NumericPredicate:
   EnforcedStyle: comparison
+
+Style/RedundantParentheses:
+  Enabled: false
 
 Style/RedundantReturn:
   Enabled: false

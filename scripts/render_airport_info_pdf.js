@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require('node:fs');
-const puppeteer = require('puppeteer-core');
+import fs from 'node:fs';
+import puppeteer from 'puppeteer-core';
 
 const TIMEOUT = 300000; // Give a long 5 minute timeout for slow software-based WebGL rendering
 const RETRY_LIMIT = 3;
