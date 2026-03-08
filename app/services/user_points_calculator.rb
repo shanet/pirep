@@ -24,7 +24,7 @@ class UserPointsCalculator
   end
 
   def rank
-    position_query = <<-SQL.squish
+    position_query = <<~SQL.squish
       SELECT position FROM (
         SELECT id, ROW_NUMBER() OVER (ORDER BY points DESC) AS position
         FROM #{@user.class.table_name}
