@@ -20,10 +20,7 @@ class VerificationModalTest < ApplicationSystemTestCase
     # Ensure that the verification modal exists and is set to require verification
     assert_selector '#verification-modal[data-verification-required="true"].show'
 
-    # Submit the modal
-    within('#verification-modal') do
-      click_link_or_button 'Submit'
-    end
+    submit_modal
 
     # Verification should not be required anymore after submitting it on the next page
     assert_no_selector '#verification-modal', visible: false
@@ -43,10 +40,7 @@ class VerificationModalTest < ApplicationSystemTestCase
     # The verification modal should be shown
     assert_selector '#verification-modal[data-verification-required="true"].show'
 
-    # Submit the modal
-    within('#verification-modal') do
-      click_link_or_button 'Submit'
-    end
+    submit_modal
 
     # Verification should not be required anymore after submitting it on the next page
     assert_selector '#verification-modal[data-verification-required="false"]', visible: false
@@ -68,9 +62,7 @@ class VerificationModalTest < ApplicationSystemTestCase
 
     click_link_or_button 'Helpful'
 
-    within('#verification-modal') do
-      click_link_or_button 'Submit'
-    end
+    submit_modal
 
     assert_selector '.helpful-count'
   end
@@ -121,5 +113,19 @@ class VerificationModalTest < ApplicationSystemTestCase
 
     # Do nothing and the modal should become non-required after the non-interactive challenge calls its callback
     assert_selector '#verification-modal[data-verification-required="false"]', visible: false
+  end
+
+  private
+
+  def submit_modal
+    # Wait for modal to be shown
+    assert_selector '#verification-modal.show'
+
+    # Wait for submit button to be enabled (turnstile must finish loading first)
+    # Use a more atomic selector to avoid stale elements
+    submit_button_selector = '#verification-modal input[type="submit"][value="Submit"]:not([disabled])'
+
+    assert_selector submit_button_selector
+    find(submit_button_selector).click
   end
 end

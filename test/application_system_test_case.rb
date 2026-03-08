@@ -1,6 +1,9 @@
 require 'test_helper'
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
+  # Disable parallel execution for system tests to avoid resource contention
+  parallelize(workers: 1)
+
   driver = (ENV['HEADLESS'] == 'false' ? :chrome : :headless_chrome)
 
   driven_by :selenium, using: driver, screen_size: [1400, 1400] do |options|
@@ -52,13 +55,12 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     fill_in 'user_password', with: user.password
     click_link_or_button 'Log in'
 
-    # Wait for the form to submit before continuing
-    assert_no_selector '#login-form input[type="submit"][disabled]'
-
     # If an admin check that we're on the manage dashboard
     if user.is_a? Users::Admin
+      # Wait for redirect to manage dashboard
       assert_selector '.navbar', text: 'Logout'
     else
+      # Wait for login to complete by checking for Account link
       assert_selector '.navigation', text: 'Account'
       find_by_id('hamburger-icon').click
       assert_selector '#hamburger-menu', text: 'Logout'

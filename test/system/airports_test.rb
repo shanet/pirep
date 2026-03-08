@@ -166,7 +166,9 @@ class AirportsTest < ApplicationSystemTestCase
   test 'scrolls photos' do
     visit airport_path(@airport.code)
 
-    # Wait for the uncached images to be fetched
+    # Wait for uncached images to be fetched
+    assert_selector('.carousel[data-uncached-photos-loaded="true"]')
+
     within('.carousel[data-uncached-photos-loaded="true"]') do
       images = all('.carousel-item', visible: false)
       previous_button = find('.carousel-control-prev')
@@ -235,6 +237,9 @@ class AirportsTest < ApplicationSystemTestCase
 
   test 'upload photo' do
     visit airport_path(@airport.code)
+
+    # Wait for the gallery to finish loading uncached photos before counting
+    assert_selector('.carousel[data-uncached-photos-loaded="true"]')
 
     assert_difference -> {all('.carousel[data-uncached-photos-loaded="true"] img', visible: false).count} do
       click_link_or_button 'Add Photo'
