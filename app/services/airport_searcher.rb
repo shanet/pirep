@@ -139,11 +139,11 @@ private
     end
 
     return query.where(id: Airport
-      .select(:id)
-      .group(:id)
-      .joins(:tags)
-      .where(tags: {name: @tags})
-      .having("COUNT(DISTINCT #{Tag.table_name}.name) = ?", @tags.size))
+        .select(:id)
+        .group(:id)
+        .joins(:tags)
+        .where(tags: {name: @tags})
+        .having("COUNT(DISTINCT #{Tag.table_name}.name) = ?", @tags.size))
   end
 
   def elevation_filter(query)

@@ -32,8 +32,8 @@ module MaxmindDb
       Rails.logger.info('Updating Maxmind database')
 
       Dir.mktmpdir do |directory|
-        database = File.open(File.join(directory, 'database.tar.gz'), 'wb')
-        checksum = File.open(File.join(directory, 'database.tar.gz.sha256'), 'w')
+        database = File.open(File.join(directory, 'database.tar.gz'), 'wb') # rubocop:disable Style/FileOpen
+        checksum = File.open(File.join(directory, 'database.tar.gz.sha256'), 'w') # rubocop:disable Style/FileOpen
 
         response = faraday_get_follow_redirects(DATABASE_URL)
         raise Exceptions::MaxmindDatabaseDownloadFailed unless response.success?
