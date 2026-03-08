@@ -88,6 +88,12 @@ class MapTest < ApplicationSystemTestCase
     wait_for_map_ready
     map_set_zoom_level(6)
 
+    # Close any drawer that might be open
+    if has_selector?('.drawer .btn-close')
+      find('.drawer .btn-close').click
+      assert_no_selector '#drawer-content', visible: true
+    end
+
     # Hidden airports not shown when zoomed out on the map so clicking on the position for the marker should do nothing
     open_airport(seaplane)
     assert_no_selector '#drawer-content .airport-drawer-header'
@@ -393,6 +399,8 @@ class MapTest < ApplicationSystemTestCase
       click_link_or_button 'Submit'
     end
 
+    # Wait for the redirect to the airport show page
+    assert_selector('.airport-header', text: 'Secret Airport')
     assert_selector '.alert', text: 'New airport added to map'
   end
 

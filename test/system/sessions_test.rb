@@ -25,7 +25,7 @@ class SessionsTest < ApplicationSystemTestCase
     assert_selector '#login-tabs'
 
     # An error message should be shown
-    assert_selector '#login-form .ajax-errors', text: 'Invalid Email or password.'
+    assert_selector '#login-form .ajax-errors', text: 'Invalid email or password.'
   end
 
   [:known, :admin].each do |user|
@@ -42,6 +42,6 @@ class SessionsTest < ApplicationSystemTestCase
     click_link_or_button 'Log in'
 
     # An error message should be shown
-    assert_selector '.alert', text: 'Invalid Email or password.'
+    assert_selector '.alert', text: 'Invalid email or password.'
   end
 end
