@@ -4,6 +4,18 @@ on: [push]
 jobs:
   test:
     runs-on: ubuntu-24.04
+    name: ${{ matrix.name }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Lint
+            command: bin/rails lint
+          - name: Tests
+            command: bin/rails test --verbose
+          - name: System tests
+            command: bin/rails test:system --verbose
 
     services:
       postgres:
@@ -59,11 +71,8 @@ jobs:
       - name: Build CSS
         run: bin/rails dartsass:build
 
-      - name: Run lint
-        run: bin/rails lint
-
-      - name: Run Tests
-        run: bin/rails test:all --verbose
+      - name: Run ${{ matrix.name }}
+        run: ${{ matrix.command }}
         env:
           DATABASE_URL: postgres://pirep:postgres@localhost/pirep_test
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
@@ -72,7 +81,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: Test Failure Artifacts
+          name: ${{ matrix.name }} Failure Artifacts
           retention-days: 1
           path: |
             log/test.log
