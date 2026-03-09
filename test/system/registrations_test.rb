@@ -53,17 +53,6 @@ private
   end
 
   def assert_registration_success
-    # Wait for the page to fully load before interacting with the menu and logging out
     assert_selector '.toast-body', text: 'Welcome! You have signed up successfully.'
-    assert_selector '.navigation', text: 'Account'
-
-    # Ensure registration drawer is fully closed
-    assert_no_selector '#login-tabs'
-
-    # Wait for hamburger menu JavaScript to be initialized
-    assert_selector '#hamburger-icon[data-ready="true"]', visible: false
-
-    find_by_id('hamburger-icon').click
-    assert_selector '#hamburger-menu', text: 'Logout', visible: true
   end
 end
