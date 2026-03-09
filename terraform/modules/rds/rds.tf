@@ -18,8 +18,9 @@ resource "aws_db_parameter_group" "db_parameters" {
   name   = var.name_prefix
 
   parameter {
-    name  = "rds.force_ssl"
-    value = 1
+    apply_method = "pending-reboot"
+    name         = "rds.force_ssl"
+    value        = 1
   }
 }
 

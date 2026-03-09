@@ -8,7 +8,7 @@ resource "aws_vpc" "this" {
 }
 
 resource "aws_subnet" "public_az1" {
-  availability_zone = "${data.aws_region.current.name}a"
+  availability_zone = "${data.aws_region.current.region}a"
   cidr_block        = "10.0.1.0/24"
   ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 1)
   tags              = { Name = "${var.name_prefix}-public_az1" }
@@ -16,7 +16,7 @@ resource "aws_subnet" "public_az1" {
 }
 
 resource "aws_subnet" "public_az2" {
-  availability_zone = "${data.aws_region.current.name}b"
+  availability_zone = "${data.aws_region.current.region}b"
   cidr_block        = "10.0.2.0/24"
   ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 2)
   tags              = { Name = "${var.name_prefix}-public_az2" }
@@ -24,7 +24,7 @@ resource "aws_subnet" "public_az2" {
 }
 
 resource "aws_subnet" "private_az1" {
-  availability_zone = "${data.aws_region.current.name}a"
+  availability_zone = "${data.aws_region.current.region}a"
   cidr_block        = "10.0.11.0/24"
   ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 11)
   tags              = { Name = "${var.name_prefix}-private_az1" }
@@ -32,7 +32,7 @@ resource "aws_subnet" "private_az1" {
 }
 
 resource "aws_subnet" "private_az2" {
-  availability_zone = "${data.aws_region.current.name}b"
+  availability_zone = "${data.aws_region.current.region}b"
   cidr_block        = "10.0.12.0/24"
   ipv6_cidr_block   = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 12)
   tags              = { Name = "${var.name_prefix}-private_az2" }
@@ -75,7 +75,7 @@ resource "aws_route_table_association" "public_az2" {
 }
 
 resource "aws_vpc_endpoint" "s3" {
-  service_name = "com.amazonaws.${data.aws_region.current.name}.s3"
+  service_name = "com.amazonaws.${data.aws_region.current.region}.s3"
   tags         = { Name = "${var.name_prefix}-s3" }
   vpc_id       = aws_vpc.this.id
 }

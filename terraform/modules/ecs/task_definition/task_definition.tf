@@ -23,7 +23,7 @@ resource "aws_ecs_task_definition" "this" {
   task_role_arn            = var.iam_role_task
 
   container_definitions = jsonencode(yamldecode(templatefile("${path.module}/container_definition.yml", {
-    aws_region                          = data.aws_region.current.name
+    aws_region                          = data.aws_region.current.region
     command                             = var.container_command
     enviroment_variables_secret_dynamic = var.enviroment_variables_secret_dynamic
     enviroment_variables_secret_static  = var.enviroment_variables_secret_static
