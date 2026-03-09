@@ -8,7 +8,14 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   driven_by :selenium, using: driver, screen_size: [1400, 1400] do |options|
     # Enable WebGL for Mapbox
-    options.add_argument('--use-gl')
+    if ENV['CI']
+      # On CI without GPU, use SwiftShader for software WebGL rendering
+      options.add_argument('--disable-gpu')
+      options.add_argument('--use-angle=swiftshader')
+      options.add_argument('--ignore-gpu-blocklist')
+    else
+      options.add_argument('--use-gl')
+    end
 
     # Specifying prefers-reduced-motion tells Mapbox to disable fly-to animations which is useful for tests because it eliminates
     # the need for sleep statements to wait for these animations to complete since it's all done within a canvas element.
@@ -43,6 +50,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
       when :map
         visit root_path
         find_by_id('hamburger-icon').click
+        assert_selector '#hamburger-menu', visible: true
         click_link_or_button 'Log In / Register'
       when :sessions
         visit new_user_session_path
