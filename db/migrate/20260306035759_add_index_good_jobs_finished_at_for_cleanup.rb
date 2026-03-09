@@ -12,6 +12,6 @@ class AddIndexGoodJobsFinishedAtForCleanup < ActiveRecord::Migration[8.1]
       end
     end
 
-    add_index :good_jobs, [:finished_at], where: "finished_at IS NOT NULL", name: :index_good_jobs_jobs_on_finished_at_only, algorithm: :concurrently
+    add_index :good_jobs, [:finished_at], where: 'finished_at IS NOT NULL', name: :index_good_jobs_jobs_on_finished_at_only, algorithm: :concurrently
   end
 end

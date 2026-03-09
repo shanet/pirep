@@ -115,7 +115,7 @@ class VerificationModalTest < ApplicationSystemTestCase
     assert_selector '#verification-modal[data-verification-required="false"]', visible: false
   end
 
-  private
+private
 
   def submit_modal
     # Wait for modal to be shown
