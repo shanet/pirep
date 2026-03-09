@@ -40,7 +40,7 @@ RUN apt-get update && apt-get install --yes nodejs
 # -----------------------------------------------------------------------------
 FROM base AS build
 
-RUN apt-get install --yes build-essential
+RUN apt-get install --yes build-essential libyaml-dev
 
 # Install Yarn
 RUN curl https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor --output /usr/share/keyrings/yarn.gpg
