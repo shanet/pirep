@@ -11,7 +11,7 @@
   },
   "version": "0.1.0",
   "devDependencies": {
-    "eslint": "^10.0.2",
+    "eslint": "^10.0.3",
     "eslint-plugin-import": "^2.32.0",
     "stylelint": "^17.4.0",
     "stylelint-config-twbs-bootstrap": "^16.1.0",

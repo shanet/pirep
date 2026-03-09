@@ -239,7 +239,7 @@ GEM
       activerecord (>= 7.1, < 9)
       activesupport
     jmespath (1.6.2)
-    json (2.18.1)
+    json (2.19.1)
     json-schema (6.1.0)
       addressable (~> 2.8)
       bigdecimal (>= 3.1, < 5)
@@ -429,6 +429,8 @@ GEM
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger
+    skylight (7.0.0)
+      activesupport (>= 7.1.0)
     smart_properties (1.17.0)
     sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
@@ -520,6 +522,7 @@ DEPENDENCIES
   selenium-webdriver
   sentry-rails
   sentry-ruby
+  skylight
   sprockets-rails
   strong_migrations
   terminal-table
