@@ -3,7 +3,8 @@ variable "security_group" {}
 variable "subnet_group" {}
 
 locals {
-  instance_class = "db.t4g.micro"
+  instance_class   = "db.t4g.micro"
+  postgres_version = "18"
 }
 
 resource "random_string" "password" {
@@ -13,7 +14,7 @@ resource "random_string" "password" {
 }
 
 resource "aws_db_parameter_group" "db_parameters" {
-  family = "postgres14"
+  family = "postgres18"
   name   = var.name_prefix
 
   parameter {
@@ -30,7 +31,7 @@ resource "aws_db_instance" "database" {
   db_subnet_group_name      = var.subnet_group
   deletion_protection       = true
   engine                    = "postgres"
-  engine_version            = "14.12"
+  engine_version            = "18.3"
   final_snapshot_identifier = "${var.name_prefix}-final"
   identifier                = var.name_prefix
   instance_class            = local.instance_class
