@@ -57,6 +57,9 @@ private
     assert_selector '.toast-body', text: 'Welcome! You have signed up successfully.'
     assert_selector '.navigation', text: 'Account'
 
+    # Ensure registration drawer is fully closed
+    assert_no_selector '#login-tabs'
+
     find_by_id('hamburger-icon').click
     assert_selector '#hamburger-menu', text: 'Logout', visible: true
   end
