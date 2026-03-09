@@ -55,6 +55,6 @@ private
   def assert_registration_success
     assert_selector '.toast-body', text: 'Welcome! You have signed up successfully.'
     find_by_id('hamburger-icon').click
-    assert_selector '#hamburger-menu', text: 'Logout'
+    assert_selector '#hamburger-menu', text: 'Logout', visible: true
   end
 end
