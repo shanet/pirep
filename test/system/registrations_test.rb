@@ -60,6 +60,9 @@ private
     # Ensure registration drawer is fully closed
     assert_no_selector '#login-tabs'
 
+    # Wait for hamburger menu JavaScript to be initialized
+    assert_selector '#hamburger-icon[data-ready="true"]', visible: false
+
     find_by_id('hamburger-icon').click
     assert_selector '#hamburger-menu', text: 'Logout', visible: true
   end
