@@ -34,6 +34,9 @@ function initHamburgerMenu() {
 
     closeHamburgerMenu();
   });
+
+  // Mark the menu as ready for tests to wait on
+  hamburgerIcon.dataset.ready = 'true';
 }
 
 function toggleHamburgerMenu() {
