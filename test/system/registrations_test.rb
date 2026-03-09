@@ -35,6 +35,7 @@ private
   def register_user_map_controller(passwords_match: true)
     visit root_path
     find_by_id('hamburger-icon').click
+    assert_selector '#hamburger-menu', visible: true
     click_link_or_button 'Log In / Register'
     click_link_or_button 'Register'
 

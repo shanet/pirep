@@ -214,6 +214,7 @@ class MapTest < ApplicationSystemTestCase
     wait_for_map_ready
 
     find_by_id('hamburger-icon').click
+    assert_selector '#hamburger-menu', visible: true
     click_link_or_button('Getting Started')
 
     within('#origin') do
@@ -365,6 +366,7 @@ class MapTest < ApplicationSystemTestCase
 
     # The filters in the origin info drawer should be enabled as well
     find_by_id('hamburger-icon').click
+    assert_selector '#hamburger-menu', visible: true
     click_link_or_button('Getting Started')
 
     within('#origin') do
@@ -466,6 +468,7 @@ class MapTest < ApplicationSystemTestCase
     assert_no_selector 'body[data-bs-theme="dark]'
 
     find_by_id('hamburger-icon').click
+    assert_selector '#hamburger-menu', visible: true
     assert find_by_id('color-scheme-auto').checked?, 'Auto mode control not selected by default'
 
     # Switch to dark mode

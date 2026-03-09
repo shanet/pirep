@@ -15,6 +15,7 @@ class SessionsTest < ApplicationSystemTestCase
   test 'handle log in failure via map controller' do
     visit root_path
     find_by_id('hamburger-icon').click
+    assert_selector '#hamburger-menu', visible: true
     click_link_or_button 'Log In / Register'
 
     fill_in 'user_email', with: 'fake@example.com'
