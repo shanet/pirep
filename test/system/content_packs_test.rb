@@ -70,8 +70,11 @@ class ContentPacksTest < ApplicationSystemTestCase
           # Each airport should be in the KML
           assert_equal expectations[content_pack_id][:count], kml.xpath('//kml:Placemark', namespaces).count, "Unexpected airport in KML for content pack #{content_pack_id}"
 
-          kml.xpath('//kml:description', namespaces).each_with_index do |airport_description, index|
-            assert airport_description.text.include?(expectations[content_pack_id][:airports][index].code), "Airport not in KML for content pack #{content_pack_id}"
+          # Verify all expected airports are present in the KML (order shouldn't matter)
+          kml_descriptions = kml.xpath('//kml:description', namespaces).map(&:text)
+
+          expectations[content_pack_id][:airports].each do |airport|
+            assert kml_descriptions.any? {|description| description.include?(airport.code)}, "Airport #{airport.code} not in KML for content pack #{content_pack_id}"
           end
         end
 
