@@ -19,7 +19,7 @@ class ContentPacksTest < ApplicationSystemTestCase
         all_airports: {count: 5, airports: [airport_food, airport_lodging, airport_camping, airport_car, airport_golfing]},
         restaurants: {count: 1, airports: [airport_food]},
         lodging: {count: 2, airports: [airport_food, airport_lodging]},
-        camping: {count: 1, airports: [airport_camping, airport_golfing]},
+        camping: {count: 1, airports: [airport_camping]},
         cars: {count: 1, airports: [airport_car]},
         golfing: {count: 1, airports: [airport_golfing]},
       }
