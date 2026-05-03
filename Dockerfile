@@ -1,4 +1,4 @@
-FROM ruby:4.0.1-slim-trixie AS base
+FROM ruby:4.0.3-slim-trixie AS base
 
 ARG PORT=8080
 
