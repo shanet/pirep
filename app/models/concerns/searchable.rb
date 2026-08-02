@@ -46,11 +46,11 @@ module Searchable
   module ClassMethods
     def searchable(term)
       self.search_terms ||= []
-      self.search_terms << term
+      search_terms << term
     end
 
     def search_index
-      return self.search_terms.map do |term|
+      return search_terms.map do |term|
         <<~SQL.squish
           SELECT
             id::uuid,

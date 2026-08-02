@@ -65,7 +65,7 @@ class ActiveSupport::TestCase
 end
 
 # Include Devise helpers for signing in/out users
-class ActionDispatch::IntegrationTest # rubocop:disable Style/OneClassPerFile
+class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def sign_in(user)

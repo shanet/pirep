@@ -52,7 +52,7 @@ class CommentsController < ApplicationController
 private
 
   def set_comment
-    @comment = Comment.find(params[:id])
+    @comment = Comment.find(params.expect(:id))
     authorize @comment
   end
 

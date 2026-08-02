@@ -38,7 +38,7 @@ class Manage::CommentsController < ApplicationController
 private
 
   def set_comment
-    @comment = Comment.find(params[:id])
+    @comment = Comment.find(params.expect(:id))
     authorize @comment, policy_class: Manage::CommentPolicy
   end
 

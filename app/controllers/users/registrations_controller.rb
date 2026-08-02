@@ -24,7 +24,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
 
     # New users should always be known users, not admins
-    params[:user][:type] = 'Users::Known'
+    params[:user][:type] = 'Users::Known' # rubocop:disable Rails/StrongParametersExpect
 
     super do |user|
       flash[:notice] = 'Account created successfully. Check your email ' if user.persisted?

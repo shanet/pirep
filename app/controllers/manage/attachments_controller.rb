@@ -21,7 +21,7 @@ class Manage::AttachmentsController < ApplicationController
 private
 
   def set_attachment
-    @attachment = ActiveStorage::Attachment.find(params[:id])
+    @attachment = ActiveStorage::Attachment.find(params.expect(:id))
     authorize @attachment, policy_class: Manage::AttachmentPolicy
   end
 end

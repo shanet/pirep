@@ -12,7 +12,7 @@ class Manage::WebcamsController < ApplicationController
 private
 
   def set_webcam
-    @webcam = Webcam.find(params[:id])
+    @webcam = Webcam.find(params.expect(:id))
     authorize @webcam, policy_class: Manage::WebcamPolicy
   end
 end

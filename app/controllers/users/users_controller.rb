@@ -13,7 +13,7 @@ class Users::UsersController < ApplicationController
 private
 
   def set_user
-    @user = Users::User.find(params[:id])
+    @user = Users::User.find(params.expect(:id))
     authorize @user, policy_class: Users::UsersPolicy
   end
 end

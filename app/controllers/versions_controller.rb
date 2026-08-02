@@ -1,6 +1,6 @@
 class VersionsController < ApplicationController
   def revert
-    version = PaperTrail::Version.find(params[:id])
+    version = PaperTrail::Version.find(params.expect(:id))
 
     # Don't revert an already reverted version
     if version.reverted_at.present?

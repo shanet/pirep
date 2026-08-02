@@ -103,7 +103,7 @@ class AirportsController < ApplicationController
     coordinates = (params['latitude'] && params['longitude'] ? {latitude: params['latitude'].to_f, longitude: params['longitude'].to_f} : nil)
 
     # Don't use wildcard searches if searching by an airport code (3 or 4 letters) as this will yield odd results for FAA codes that start with an ICAO prefix
-    wildcard = !params['query'].length.in?([3, 4])
+    wildcard = !params.expect('query').length.in?([3, 4])
 
     results = Search.query(params['query'], Airport, coordinates, wildcard: wildcard).limit(10).uniq
     render json: results.map {|airport| {code: airport.code, label: airport.name&.titleize, bounding_box: airport.bounding_box, zoom_level: airport.zoom_level}}
@@ -133,7 +133,7 @@ class AirportsController < ApplicationController
   end
 
   def preview
-    @airport = PaperTrail::Version.find(params[:version_id]).reify
+    @airport = PaperTrail::Version.find(params.expect(:version_id)).reify
 
     unless @airport
       skip_authorization
@@ -167,12 +167,12 @@ class AirportsController < ApplicationController
 private
 
   def set_airport
-    @airport = Airport.find(params[:id])
+    @airport = Airport.find(params.expect(:id))
     authorize @airport
   end
 
   def set_airport_by_code
-    @airport = Airport.find_by(code: params[:id].upcase) || Airport.find_by(icao_code: params[:id].upcase) || Airport.find(params[:id])
+    @airport = Airport.find_by(code: params.expect(:id).upcase) || Airport.find_by(icao_code: params.expect(:id).upcase) || Airport.find(params.expect(:id))
     authorize @airport
   end
 

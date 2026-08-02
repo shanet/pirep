@@ -59,7 +59,7 @@ class EventsController < ApplicationController
 private
 
   def set_event
-    @event = Event.find(params[:id])
+    @event = Event.find(params.expect(:id))
     authorize @event
   end
 
@@ -67,7 +67,7 @@ private
     # If the event is not recurring then disregard all of the recurring fields
     unless params['new-event-recurring-toggle'] == 'on'
       [:recurring_cadence, :recurring_day_of_month, :recurring_interval, :recurring_week_of_month].each do |field|
-        params[:event][field] = nil
+        params[:event][field] = nil # rubocop:disable Rails/StrongParametersExpect
       end
     end
 
@@ -75,19 +75,19 @@ private
     week_of_month = params[:event][:recurring_week_of_month]&.split('_')
 
     if week_of_month&.first == 'day'
-      params[:event][:recurring_day_of_month] = week_of_month.last.to_i
-      params[:event][:recurring_week_of_month] = nil
+      params[:event][:recurring_day_of_month] = week_of_month.last.to_i # rubocop:disable Rails/StrongParametersExpect
+      params[:event][:recurring_week_of_month] = nil # rubocop:disable Rails/StrongParametersExpect
     elsif week_of_month&.first == 'week'
-      params[:event][:recurring_week_of_month] = week_of_month.last.to_i
-      params[:event][:recurring_day_of_month] = nil
+      params[:event][:recurring_week_of_month] = week_of_month.last.to_i # rubocop:disable Rails/StrongParametersExpect
+      params[:event][:recurring_day_of_month] = nil # rubocop:disable Rails/StrongParametersExpect
     end
 
     # Put the start/end dates in the timezone local to the event's airport
     if params[:event][:start_date].present? || params[:event][:end_date].present?
-      timezone = (params[:event][:airport_id] ? Airport.find(params[:event][:airport_id]).timezone : Rails.configuration.time_zone)
+      timezone = (params[:event][:airport_id] ? Airport.find(params[:event][:airport_id]).timezone : Rails.configuration.time_zone) # rubocop:disable Rails/StrongParametersExpect
 
-      params[:event][:start_date] = params[:event][:start_date]&.in_time_zone(timezone) if params[:event][:start_date].present?
-      params[:event][:end_date] = params[:event][:end_date]&.in_time_zone(timezone) if params[:event][:end_date].present?
+      params[:event][:start_date] = params[:event][:start_date]&.in_time_zone(timezone) if params[:event][:start_date].present? # rubocop:disable Rails/StrongParametersExpect
+      params[:event][:end_date] = params[:event][:end_date]&.in_time_zone(timezone) if params[:event][:end_date].present? # rubocop:disable Rails/StrongParametersExpect
     end
 
     return params.expect(

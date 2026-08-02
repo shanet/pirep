@@ -1,6 +1,6 @@
 class TagsController < ApplicationController
   def destroy
-    @tag = Tag.find(params[:id])
+    @tag = Tag.find(params.expect(:id))
     authorize @tag
 
     if @tag.destroy && Action.create(type: :tag_removed, actionable: @tag, user: active_user, version: @tag.versions.last).persisted?

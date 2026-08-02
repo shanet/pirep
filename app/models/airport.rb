@@ -221,7 +221,7 @@ class Airport < ApplicationRecord
     value = JSON.parse(value) if value.is_a?(String)
 
     # Always make no annotations be nil rather than empty arrays
-    value = nil if value&.empty?
+    value = nil if value && value.empty?
 
     super
   end

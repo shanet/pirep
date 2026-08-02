@@ -28,7 +28,7 @@ private
   end
 
   def set_webcam
-    @webcam = Webcam.find(params[:id])
+    @webcam = Webcam.find(params.expect(:id))
     authorize @webcam
   end
 end

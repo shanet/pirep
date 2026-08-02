@@ -19,7 +19,7 @@ class Manage::VersionsController < ApplicationController
 private
 
   def set_version
-    @version = PaperTrail::Version.find(params[:id])
+    @version = PaperTrail::Version.find(params.expect(:id))
     authorize @version, policy_class: Manage::VersionPolicy
   end
 

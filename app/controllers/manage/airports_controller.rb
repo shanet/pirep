@@ -8,7 +8,7 @@ class Manage::AirportsController < ApplicationController
 
   def search
     # Don't use wildcard searches if searching by an airport code (3 or 4 letters) as this will yield odd results for FAA codes that start with an ICAO prefix
-    wildcard = !params['query'].length.in?([3, 4])
+    wildcard = !params.expect('query').length.in?([3, 4])
 
     results = Search.query(params['query'], Airport, wildcard: wildcard)
 
@@ -50,7 +50,7 @@ class Manage::AirportsController < ApplicationController
   def destroy_attachment
     method = (params[:type] == 'contributed_photos' ? :contributed_photos : :external_photos)
 
-    attachment = @airport.send(method).find(params[:attachment_id])
+    attachment = @airport.send(method).find(params.expect(:attachment_id))
     redirect_to(manage_airport_path(@airport), alert: 'Attachment not found') unless attachment
 
     # This method seems to return nil for success when the S3 backend is used in production
@@ -66,7 +66,7 @@ class Manage::AirportsController < ApplicationController
   end
 
   def update_version
-    if PaperTrail::Version.find(params[:version_id]).update(version_params)
+    if PaperTrail::Version.find(params.expect(:version_id)).update(version_params)
       if request.xhr?
         @record_id = params[:version_id]
         render 'shared/manage/remove_review_record'
@@ -83,7 +83,7 @@ class Manage::AirportsController < ApplicationController
 private
 
   def set_airport
-    @airport = Airport.find(params[:id])
+    @airport = Airport.find(params.expect(:id))
     authorize @airport, policy_class: Manage::AirportPolicy
   end
 
