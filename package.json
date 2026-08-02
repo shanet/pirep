@@ -5,15 +5,15 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.2.0",
     "bootstrap": "^5.3.8",
-    "easymde": "^2.20.0",
-    "mapbox-gl": "^3.19.1",
-    "puppeteer-core": "^24.38.0"
+    "easymde": "^2.21.0",
+    "mapbox-gl": "^3.27.0",
+    "puppeteer-core": "^25.4.0"
   },
   "version": "0.1.0",
   "devDependencies": {
-    "eslint": "^10.0.3",
+    "eslint": "^10.8.0",
     "eslint-plugin-import": "^2.32.0",
-    "stylelint": "^17.4.0",
+    "stylelint": "^17.4.1",
     "stylelint-config-twbs-bootstrap": "^16.1.0",
     "stylelint-order": "^7.0.1"
   }
