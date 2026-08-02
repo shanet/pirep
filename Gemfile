@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 
-ruby '4.0.3'
+ruby '4.0.5'
 
 # Core Rails gems
 gem 'rails', '8.1.3.1'
@@ -36,6 +36,7 @@ gem 'ostruct'
 gem 'paper_trail'
 gem 'pundit'
 gem 'rack-attack'
+gem 'ruby-vips'
 gem 'rubyzip'
 gem 'sentry-rails'
 gem 'sentry-ruby'

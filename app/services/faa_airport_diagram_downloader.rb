@@ -45,12 +45,24 @@ private
   end
 
   def convert_diagrams_to_images(directory, diagrams)
+    # PDFs are marked as "untrusted" in libvips, but FAA diagrams are from a trusted source
+    Vips.block_untrusted(false)
+
     # Convert the PDFs to images so we can display them on the webpages
     diagrams.each_with_index do |file, index|
       path = File.join(directory, file)
+
+      unless File.exist?(path)
+        Rails.logger.warn("[#{index}/#{diagrams.count}] Skipping missing diagram: #{path}")
+        next
+      end
+
       Rails.logger.info("[#{index}/#{diagrams.count}] Converting airport diagram #{path}")
       ImageProcessing::Vips.source(path).resize_to_fit(1000, 1500).convert('png').call(destination: converted_diagram_filename(path))
     end
+  ensure
+    # Re-enable blocking for security
+    Vips.block_untrusted(true)
   end
 
   def copy_diagrams(directory, diagrams)
