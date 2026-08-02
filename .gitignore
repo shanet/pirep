@@ -19,6 +19,7 @@ access_logs.html
 
 /public/assets
 .byebug_history
+.claude
 
 # Ignore keys for decrypting credentials
 /config/*.key
