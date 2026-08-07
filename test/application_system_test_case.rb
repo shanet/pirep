@@ -68,7 +68,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
       assert_selector '.navbar', text: 'Logout'
     else
       # Wait for login to complete by checking for Account link
-      assert_selector '.navigation', text: 'Account'
+      assert_selector '.navigation', text: (user.name.presence || 'Account')
       find_by_id('hamburger-icon').click
       assert_selector '#hamburger-menu', text: 'Logout'
     end
