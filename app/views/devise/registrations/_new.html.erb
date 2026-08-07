@@ -15,7 +15,7 @@
 
   <div class="mb-3">
     <%= form.label :password, class: 'form-label mb-0' %>
-    <p class="form-text mb-2"><%= t(:password_description, minimum_password_length: @minimum_password_length) %></p>
+    <p class="form-text mb-2"><%= t(:password_description, minimum_password_length: Users::User.password_length.min) %></p>
     <%= form.password_field :password, autocomplete: 'new-password', id: 'registration-password', class: 'form-control' %>
   </div>
 

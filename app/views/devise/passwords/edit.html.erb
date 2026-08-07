@@ -10,11 +10,7 @@
 
   <div class="mb-3">
     <%= form.label :password, 'New password', class: 'form-label' %>
-
-    <% if @minimum_password_length %>
-      <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %>
-
+    <em>(<%= Users::User.password_length.min %> characters minimum)</em>
     <%= form.password_field :password, autofocus: true, autocomplete: 'new-password', class: 'form-control' %>
   </div>
 
