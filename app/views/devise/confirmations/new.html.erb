@@ -3,7 +3,7 @@
 <%= render 'devise/shared/header', text: 'Confirm Account' %>
 <%= render 'devise/shared/flashes' %>
 
-<%= form_with(model: resource, scope: :user, url: new_user_confirmation_path) do |form| %>
+<%= form_with(model: resource, scope: :user, url: user_confirmation_path) do |form| %>
   <%= render 'shared/record_errors', record: form.object %>
 
   <div class="mb-3">
