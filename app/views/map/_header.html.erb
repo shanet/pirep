@@ -20,7 +20,7 @@
       <% if user_signed_in? && current_user.admin? %>
         <%= link_to '<i class="fas fa-gear me-1"></i>Manage'.html_safe, manage_root_path %>
       <% elsif user_signed_in? %>
-        <%= link_to '<i class="fas fa-user me-1"></i>Account'.html_safe, user_path %>
+        <%= link_to '<i class="fas fa-user me-1"></i>'.html_safe + (current_user.name || 'Account').truncate(15), user_path %>
       <% else %>
         <a href="#" class="drawer-link text-decoration-none" data-target="about">
           <%= image_tag 'logo_small.png', class: 'logo' %>
