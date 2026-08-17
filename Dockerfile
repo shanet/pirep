@@ -30,7 +30,7 @@ RUN apt-get install --yes --no-install-recommends \
 # Install Postgres client
 RUN curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor --output /usr/share/keyrings/postgresql.gpg
 RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt trixie-pgdg main" > /etc/apt/sources.list.d/postgresql.list
-RUN apt-get update && apt-get install --yes postgresql-client-14
+RUN apt-get update && apt-get install --yes postgresql-client-18
 
 # Install NodeJS
 RUN curl https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor --output /usr/share/keyrings/nodejs.gpg
