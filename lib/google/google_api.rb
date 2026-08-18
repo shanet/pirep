@@ -72,7 +72,7 @@ module GoogleApi
 
         raise Exceptions::GooglePhotosQueryFailed unless response.status == 302
 
-        photos << {url: response.headers[:location], attribution: photo['html_attribution']&.first}
+        photos << {url: response.headers[:location], attribution: photo['html_attributions']&.join(', ')}
       end
     rescue => error
       # Don't be silent during tests

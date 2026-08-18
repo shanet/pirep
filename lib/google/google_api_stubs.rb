@@ -27,8 +27,8 @@ module GoogleApiStubs
         body: {
           result: {
             photos: [
-              {photo_reference: 1, html_attribution: ['Google Place Photos API key not set, using fallback image']},
-              {photo_reference: 2, html_attribution: ['Google Place Photos API key not set, using fallback image']},
+              {photo_reference: 1, html_attributions: ['Google Place Photos API key not set', 'using fallback image']},
+              {photo_reference: 2, html_attributions: ['Google Place Photos API key not set', 'using fallback image']},
             ],
           },
         }.to_json,

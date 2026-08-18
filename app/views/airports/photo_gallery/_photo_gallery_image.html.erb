@@ -9,9 +9,10 @@
 
     <img class="d-block <%= size == :large ? 'img-thumbnail large' : '' %>" src="<%= photo.is_a?(ActiveStorage::Attachment) ? cdn_url_for(photo) : photo[:url] %>">
 
-    <% if photo.is_a?(Hash) && photo[:attribution].present? %>
+    <% attribution = photo.is_a?(ActiveStorage::Attachment) ? photo.metadata['attribution'] : photo[:attribution] %>
+    <% if attribution.present? %>
       <div class="carousel-caption d-none d-md-block text-light">
-        <%= photo[:attribution] %>
+        <%= attribution %>
       </div>
     <% end %>
   </div>

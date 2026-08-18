@@ -16,7 +16,7 @@ class AirportPhotosCacherJob < ApplicationJob
           path = File.join(tmp_directory, "#{airport.code.downcase}_external_#{index}.jpg")
           File.binwrite(path, response)
 
-          attachments << {io: File.open(path), filename: File.basename(path), content_type: 'image/jpeg'}
+          attachments << {io: File.open(path), filename: File.basename(path), content_type: 'image/jpeg', metadata: {attribution: photo[:attribution]}}
         end
       end
 

@@ -201,7 +201,13 @@ class AirportsTest < ApplicationSystemTestCase
 
   test 'fetches uncached photos' do
     # Add an external photo to act as something that was already cached
-    @airport.external_photos.attach(Rack::Test::UploadedFile.new('test/fixtures/files/image.png', 'image/png'))
+    @airport.external_photos.attach(
+      io: Rails.root.join('test/fixtures/files/image.png').open,
+      filename: 'image.png',
+      content_type: 'image/png',
+      metadata: {attribution: 'Test Attribution 1, Test Attribution 2'}
+    )
+
     @airport.update!(external_photos_updated_at: Time.zone.now)
 
     visit airport_path(@airport.code)
@@ -213,6 +219,9 @@ class AirportsTest < ApplicationSystemTestCase
       assert_equal 2, images.count, 'Wrong photos displayed by default'
       assert_equal url_for(@airport.contributed_photos.first), images.first[:src]
       assert_equal url_for(@airport.external_photos.first), images.last[:src]
+
+      # Images with attributions should display it
+      assert_equal 'Test Attribution 1, Test Attribution 2', first('.carousel-caption', visible: false).text(:all), 'Attribution not present for cached image'
     end
 
     # Removing the cache timestamp should now return uncached photos to display
@@ -230,7 +239,7 @@ class AirportsTest < ApplicationSystemTestCase
       assert images[1][:src].end_with?('/images/placeholder_1.jpg')
       assert images[2][:src].end_with?('/images/placeholder_2.jpg')
 
-      # Images with attributions should display it (these will currently on display on uncached photos)
+      # Images with attributions should display it
       assert first('.carousel-caption', visible: false).text(:all).present?, 'Attribution not present for image'
     end
   end
