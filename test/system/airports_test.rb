@@ -247,14 +247,16 @@ class AirportsTest < ApplicationSystemTestCase
   test 'upload photo' do
     visit airport_path(@airport.code)
 
-    # Wait for the gallery to finish loading uncached photos before counting
+    # Wait for the gallery to finish loading uncached photos
     assert_selector('.carousel[data-uncached-photos-loaded="true"]')
+    initial_count = all('.carousel[data-uncached-photos-loaded="true"] img', visible: false).count
 
-    assert_difference -> {all('.carousel[data-uncached-photos-loaded="true"] img', visible: false).count} do
-      click_link_or_button 'Add Photo'
-      find('#upload-photo-form input[type="file"]').set(Rails.root.join('test/fixtures/files/image.png'))
-      click_link_or_button 'Upload Photo'
-    end
+    click_link_or_button 'Add Photo'
+    find('#upload-photo-form input[type="file"]').set(Rails.root.join('test/fixtures/files/image.png'))
+    click_link_or_button 'Upload Photo'
+
+    # Wait for the new photo to appear
+    assert_selector('.carousel[data-uncached-photos-loaded="true"] img', visible: false, count: initial_count + 1)
   end
 
   test 'set featured photo' do
