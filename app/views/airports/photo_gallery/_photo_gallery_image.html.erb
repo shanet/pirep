@@ -14,7 +14,7 @@
       <div class="carousel-caption d-none d-md-block text-light">
         <span class="attribution py-1 px-2 text-light">
           <% if attribution.include?('href=') %>Attribution: <% end %>
-          <%= sanitize(attribution, tags: ['a'], attributes: ['href']).html_safe %>
+          <%= sanitize(attribution, tags: ['a'], attributes: ['href']).gsub(/<a /, '<a target="_blank" rel="noopener" ').html_safe %>
         </span>
       </div>
     <% end %>
