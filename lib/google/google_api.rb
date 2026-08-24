@@ -1,10 +1,16 @@
+require 'action_view'
 require 'haversine'
 require 'exceptions'
 require_relative 'google_api_stubs'
 
 module GoogleApi
+  include ActionView::Helpers::SanitizeHelper
+
   def self.client
-    unless Rails.application.credentials.google_api_key
+    if Rails.application.credentials.google_api_key
+      # Allow real connections in development when credentials are set since other services may stub their endpoints
+      WebMock.allow_net_connect!(allow: /https:\/\/maps\.googleapis\.com/) if Rails.env.development?
+    else
       GoogleApiStubs.stub_requests(Service::API_PLACE_PHOTOS, Service::API_TIMEZONES)
     end
 
@@ -12,6 +18,8 @@ module GoogleApi
   end
 
   class Service
+    include ActionView::Helpers::SanitizeHelper
+
     API_PLACE_PHOTOS = 'https://maps.googleapis.com/maps/api/place'
     API_TIMEZONES = 'https://maps.googleapis.com/maps/api/timezone/json'
     PLACE_RADIUS = 2000 # meters
@@ -72,11 +80,14 @@ module GoogleApi
 
         raise Exceptions::GooglePhotosQueryFailed unless response.status == 302
 
-        photos << {url: response.headers[:location], attribution: photo['html_attributions']&.join(', ')}
+        attribution = photo['html_attributions']&.join(', ')
+        attribution = sanitize(attribution, tags: %w[a], attributes: %w[href]) if attribution.present?
+
+        photos << {url: response.headers[:location], attribution: attribution, google_photo_reference: photo['photo_reference']}
       end
     rescue => error
-      # Don't be silent during tests
-      raise error if Rails.env.test?
+      # Don't be silent during dev/tests
+      raise error if Rails.env.local?
 
       Sentry.capture_exception(error)
       return []

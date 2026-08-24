@@ -12,7 +12,10 @@
     <% attribution = photo.is_a?(ActiveStorage::Attachment) ? photo.metadata['attribution'] : photo[:attribution] %>
     <% if attribution.present? %>
       <div class="carousel-caption d-none d-md-block text-light">
-        <%= attribution %>
+        <span class="attribution py-1 px-2 text-light">
+          <% if attribution.include?('href=') %>Attribution: <% end %>
+          <%= sanitize(attribution, tags: %w[a], attributes: %w[href]).html_safe %>
+        </span>
       </div>
     <% end %>
   </div>

@@ -32,4 +32,14 @@
   .carousel-control-next-icon, {
     filter: none !important; // stylelint-disable-line declaration-no-important
   }
+
+  .carousel-caption .attribution {
+    background-color: rgba(0, 0, 0, .6);
+    border-radius: 5px;
+    font-size: 0.6rem;
+
+    a {
+      color: $white;
+    }
+  }
 }
