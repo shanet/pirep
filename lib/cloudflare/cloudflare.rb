@@ -10,6 +10,9 @@ module Cloudflare
   def self.client
     if (Rails.application.credentials.turnstile_secret_key.blank? && !Rails.env.production?) || Rails.env.test?
       CloudflareStubs.stub_requests
+    elsif Rails.application.credentials.turnstile_secret_key.present? && Rails.env.development?
+      # Allow real connections in development when credentials are set since other services may stub their endpoints
+      WebMock.allow_net_connect!(allow: /https:\/\/challenges\.cloudflare\.com/)
     end
 
     return Service.new

@@ -3,7 +3,10 @@ require_relative 'maxmind_db_stubs'
 
 module MaxmindDb
   def self.client
-    unless Rails.application.credentials.maxmind_license_key
+    if Rails.application.credentials.maxmind_license_key
+      # Allow real connections in development when credentials are set since other services may stub their endpoints
+      WebMock.allow_net_connect!(allow: /https:\/\/download\.maxmind\.com/) if Rails.env.development?
+    else
       MaxmindDbStubs.stub_requests
     end
 
