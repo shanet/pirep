@@ -81,7 +81,7 @@ module GoogleApi
         raise Exceptions::GooglePhotosQueryFailed unless response.status == 302
 
         attribution = photo['html_attributions']&.join(', ')
-        attribution = sanitize(attribution, tags: %w[a], attributes: %w[href]) if attribution.present?
+        attribution = sanitize(attribution, tags: ['a'], attributes: ['href']) if attribution.present?
 
         photos << {url: response.headers[:location], attribution: attribution, google_photo_reference: photo['photo_reference']}
       end
