@@ -119,12 +119,7 @@ module AirportsHelper
   end
 
   def fuel_label(airport)
-    if airport.fuel_types&.any?
-      fuel_url = link_to('(prices)', "http://www.100ll.com/searchresults.php?searchfor=#{airport.icao_code || airport.code}", target: :_blank, rel: 'noopener')
-      return "#{airport.fuel_types.join(', ')} #{fuel_url}".html_safe
-    end
-
-    return 'None'
+    airport.fuel_types&.any? ? airport.fuel_types.join(', ') : 'None'
   end
 
   def ios?(request)
