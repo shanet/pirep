@@ -408,7 +408,7 @@ class Airport < ApplicationRecord
 
     # Save the Google Place ID if we got one and don't have one already
     if place_photos[:place_id].present? && google_place_id.blank?
-      update_column(:google_place_id, place_photos[:place_id])
+      update!(google_place_id: place_photos[:place_id])
     end
 
     # Don't enqueue a new job if there's one already queded to prevent duplicate photos from being saved

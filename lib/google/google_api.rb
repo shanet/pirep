@@ -25,7 +25,7 @@ module GoogleApi
     PLACE_RADIUS = 2000 # meters
 
     def place_photos(query, latitude, longitude, place_id: nil)
-      place_id = place_id_lookup(query, latitude, longitude) unless place_id
+      place_id ||= place_id_lookup(query, latitude, longitude)
 
       # There's no photos to return if we still don't have a place ID
       return {place_id: nil, photos: []} unless place_id
