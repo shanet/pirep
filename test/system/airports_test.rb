@@ -204,7 +204,7 @@ class AirportsTest < ApplicationSystemTestCase
       io: Rails.root.join('test/fixtures/files/image.png').open,
       filename: 'image.png',
       content_type: 'image/png',
-      metadata: {attribution: 'Test Attribution 1, Test Attribution 2'}
+      metadata: {attribution: 'Test Attribution 1, Test Attribution 2', google_photo_reference: 'test_reference'}
     )
 
     @airport.update!(external_photos_updated_at: Time.zone.now)

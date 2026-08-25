@@ -402,7 +402,17 @@ class Airport < ApplicationRecord
   end
 
   def uncached_external_photos(force_update: false)
-    return nil if external_photos_updated_at && !force_update
+    # Check if we need to backfill Google Photo reference IDs for this airport
+    needs_backfill = false
+
+    if external_photos_updated_at.present? && !force_update
+      # Only check if we have photos that might need backfilling
+      first_photo = external_photos.includes(:blob).first&.blob
+      needs_backfill = first_photo.present? && !first_photo.metadata.key?('google_photo_reference')
+    end
+
+    # Skip if already cached and not forcing update and doesn't need backfill
+    return nil if external_photos_updated_at && !force_update && !needs_backfill
 
     place_photos = GoogleApi.client.place_photos("#{code} - #{name} Airport", latitude, longitude, place_id: google_place_id)
 
@@ -413,7 +423,7 @@ class Airport < ApplicationRecord
 
     # Don't enqueue a new job if there's one already queded to prevent duplicate photos from being saved
     with_lock do
-      if !external_photos_enqueued_at || external_photos_enqueued_at < 10.minutes.ago || force_update
+      if !external_photos_enqueued_at || external_photos_enqueued_at < 10.minutes.ago || force_update || needs_backfill
         Rails.logger.info("Updating external photos cache for #{code}")
         AirportPhotosCacherJob.perform_later(self, place_photos[:photos])
         update!(external_photos_enqueued_at: Time.zone.now)
