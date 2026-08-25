@@ -404,18 +404,23 @@ class Airport < ApplicationRecord
   def uncached_external_photos(force_update: false)
     return nil if external_photos_updated_at && !force_update
 
-    photos = GoogleApi.client.place_photos("#{code} - #{name} Airport", latitude, longitude)
+    place_photos = GoogleApi.client.place_photos("#{code} - #{name} Airport", latitude, longitude, place_id: google_place_id)
+
+    # Save the Google Place ID if we got one and don't have one already
+    if place_photos[:place_id].present? && google_place_id.blank?
+      update_column(:google_place_id, place_photos[:place_id])
+    end
 
     # Don't enqueue a new job if there's one already queded to prevent duplicate photos from being saved
     with_lock do
       if !external_photos_enqueued_at || external_photos_enqueued_at < 10.minutes.ago || force_update
         Rails.logger.info("Updating external photos cache for #{code}")
-        AirportPhotosCacherJob.perform_later(self, photos)
+        AirportPhotosCacherJob.perform_later(self, place_photos[:photos])
         update!(external_photos_enqueued_at: Time.zone.now)
       end
     end
 
-    return photos
+    return place_photos[:photos]
   end
 
   def unselected_tag_names

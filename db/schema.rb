@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_02_015216) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_24_170127) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "cube"
   enable_extension "earthdistance"
@@ -87,6 +87,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_02_015216) do
     t.text "flying_clubs"
     t.text "fuel_location"
     t.string "fuel_types", array: true
+    t.string "google_place_id"
     t.string "icao_code"
     t.text "landing_fees"
     t.string "landing_requirements"

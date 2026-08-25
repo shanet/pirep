@@ -24,8 +24,49 @@ module GoogleApi
     API_TIMEZONES = 'https://maps.googleapis.com/maps/api/timezone/json'
     PLACE_RADIUS = 2000 # meters
 
-    def place_photos(query, latitude, longitude)
-      # First first "places" near the given coordinates for the given query
+    def place_photos(query, latitude, longitude, place_id: nil)
+      place_id = place_id_lookup(query, latitude, longitude) unless place_id
+
+      # There's no photos to return if we still don't have a place ID
+      return {place_id: nil, photos: []} unless place_id
+
+      response = Faraday.get("#{API_PLACE_PHOTOS}/details/json", {
+        key: Rails.application.credentials.google_api_key,
+        place_id: place_id,
+        fields: :photo,
+      })
+
+      raise Exceptions::GooglePhotosQueryFailed unless response.success?
+
+      result = JSON.parse(response.body)['result']
+      return {place_id: place_id, photos: []} unless result['photos']
+
+      photos = result['photos'].reduce([]) do |photos, photo|
+        response = Faraday.get("#{API_PLACE_PHOTOS}/photo", {
+          key: Rails.application.credentials.google_api_key,
+          photoreference: photo['photo_reference'],
+          maxwidth: 1000, # px
+        })
+
+        raise Exceptions::GooglePhotosQueryFailed unless response.status == 302
+
+        attribution = photo['html_attributions']&.join(', ')
+        attribution = sanitize(attribution, tags: ['a'], attributes: ['href']) if attribution.present?
+
+        photos << {url: response.headers[:location], attribution: attribution, google_photo_reference: photo['photo_reference']}
+      end
+
+      return {place_id: place_id, photos: photos}
+    rescue => error
+      # Don't be silent during dev/tests
+      raise error if Rails.env.local?
+
+      Sentry.capture_exception(error)
+      return {place_id: nil, photos: []}
+    end
+
+    def place_id_lookup(query, latitude, longitude)
+      # First find "places" near the given coordinates for the given query
       response = Faraday.get("#{API_PLACE_PHOTOS}/findplacefromtext/json", {
         key: Rails.application.credentials.google_api_key,
         input: query,
@@ -40,7 +81,7 @@ module GoogleApi
 
       if candidates.empty?
         Rails.logger.info("No place candidates found for query #{query}, #{latitude}, #{longitude}")
-        return []
+        return nil
       end
 
       # Reject anything not located around the given coordinates. The location bias specified above is just that: a bias. It won't prevent
@@ -57,40 +98,10 @@ module GoogleApi
       # Don't return anything if no acceptable location was found as the probability of the photos being correct is extremely low
       unless result
         Rails.logger.info("All place candidates filtered for query #{query}, #{latitude}, #{longitude}")
-        return []
+        return nil
       end
 
-      response = Faraday.get("#{API_PLACE_PHOTOS}/details/json", {
-        key: Rails.application.credentials.google_api_key,
-        place_id: result['place_id'],
-        fields: :photo,
-      })
-
-      raise Exceptions::GooglePhotosQueryFailed unless response.success?
-
-      result = JSON.parse(response.body)['result']
-      return [] unless result['photos']
-
-      return result['photos'].reduce([]) do |photos, photo|
-        response = Faraday.get("#{API_PLACE_PHOTOS}/photo", {
-          key: Rails.application.credentials.google_api_key,
-          photoreference: photo['photo_reference'],
-          maxwidth: 1000, # px
-        })
-
-        raise Exceptions::GooglePhotosQueryFailed unless response.status == 302
-
-        attribution = photo['html_attributions']&.join(', ')
-        attribution = sanitize(attribution, tags: ['a'], attributes: ['href']) if attribution.present?
-
-        photos << {url: response.headers[:location], attribution: attribution, google_photo_reference: photo['photo_reference']}
-      end
-    rescue => error
-      # Don't be silent during dev/tests
-      raise error if Rails.env.local?
-
-      Sentry.capture_exception(error)
-      return []
+      return result['place_id']
     end
 
     def timezone(latitude, longitude)
