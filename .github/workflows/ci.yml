@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     name: ${{ matrix.name }}
 
     strategy:
@@ -44,7 +44,7 @@ jobs:
       - name: Install Ruby & Gems
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 4.0.5
+          ruby-version: 4.0.9
           bundler-cache: true
 
       - name: Install Golang
