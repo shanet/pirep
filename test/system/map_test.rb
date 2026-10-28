@@ -91,7 +91,7 @@ class MapTest < ApplicationSystemTestCase
     # Close any drawer that might be open
     if has_selector?('.drawer .btn-close')
       find('.drawer .btn-close').click
-      assert_no_selector '#drawer-content', visible: true
+      assert_no_selector '#drawer-content', visible: :visible
     end
 
     # Hidden airports not shown when zoomed out on the map so clicking on the position for the marker should do nothing
@@ -214,7 +214,7 @@ class MapTest < ApplicationSystemTestCase
     wait_for_map_ready
 
     find_by_id('hamburger-icon').click
-    assert_selector '#hamburger-menu', visible: true
+    assert_selector '#hamburger-menu', visible: :visible
     click_link_or_button('Getting Started')
 
     within('#origin') do
@@ -366,7 +366,7 @@ class MapTest < ApplicationSystemTestCase
 
     # The filters in the origin info drawer should be enabled as well
     find_by_id('hamburger-icon').click
-    assert_selector '#hamburger-menu', visible: true
+    assert_selector '#hamburger-menu', visible: :visible
     click_link_or_button('Getting Started')
 
     within('#origin') do
@@ -448,9 +448,9 @@ class MapTest < ApplicationSystemTestCase
     visit map_path
 
     # Sanity check on the meta tags being present
-    assert_equal Rails.configuration.meta_title, find('meta[name="title"]', visible: false)[:content], 'Unexpected meta name'
-    assert_equal Rails.configuration.meta_description, find('meta[name="description"]', visible: false)[:content], 'Unexpected meta description'
-    assert find('meta[property="og:title"]', visible: false)[:content].present?, 'Opengraph tags not present'
+    assert_equal Rails.configuration.meta_title, find('meta[name="title"]', visible: :hidden)[:content], 'Unexpected meta name'
+    assert_equal Rails.configuration.meta_description, find('meta[name="description"]', visible: :hidden)[:content], 'Unexpected meta description'
+    assert find('meta[property="og:title"]', visible: :hidden)[:content].present?, 'Opengraph tags not present'
   end
 
   test 'shows origin drawer on first visit' do
@@ -468,7 +468,7 @@ class MapTest < ApplicationSystemTestCase
     assert_no_selector 'body[data-bs-theme="dark]'
 
     find_by_id('hamburger-icon').click
-    assert_selector '#hamburger-menu', visible: true
+    assert_selector '#hamburger-menu', visible: :visible
     assert find_by_id('color-scheme-auto').checked?, 'Auto mode control not selected by default'
 
     # Switch to dark mode

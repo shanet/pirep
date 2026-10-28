@@ -156,7 +156,7 @@ class AirportsTest < ApplicationSystemTestCase
         _editor, card = update_editor('Description', 'Description edit2')
 
         within(card) do
-          assert_selector '.status-indicator.text-danger', visible: false
+          assert_selector '.status-indicator.text-danger', visible: :all
         end
       end
     end
@@ -169,7 +169,7 @@ class AirportsTest < ApplicationSystemTestCase
     assert_selector('.carousel[data-uncached-photos-loaded="true"]')
 
     within('.carousel[data-uncached-photos-loaded="true"]') do
-      images = all('.carousel-item', visible: false)
+      images = all('.carousel-item', visible: :all)
       previous_button = find('.carousel-control-prev')
       next_button = find('.carousel-control-next')
 
@@ -213,14 +213,14 @@ class AirportsTest < ApplicationSystemTestCase
 
     # Wait for the uncached images to be fetched
     within('.carousel[data-uncached-photos-loaded="true"]') do
-      images = all('img', visible: false)
+      images = all('img', visible: :all)
 
       assert_equal 2, images.count, 'Wrong photos displayed by default'
       assert_equal url_for(@airport.contributed_photos.first), images.first[:src]
       assert_equal url_for(@airport.external_photos.first), images.last[:src]
 
       # Images with attributions should display it
-      assert_equal 'Test Attribution 1, Test Attribution 2', first('.carousel-caption', visible: false).text(:all), 'Attribution not present for cached image'
+      assert_equal 'Test Attribution 1, Test Attribution 2', first('.carousel-caption', visible: :all).text(:all), 'Attribution not present for cached image'
     end
 
     # Removing the cache timestamp should now return uncached photos to display
@@ -230,7 +230,7 @@ class AirportsTest < ApplicationSystemTestCase
 
     # Wait for the uncached images to be fetched
     within('.carousel[data-uncached-photos-loaded="true"]') do
-      images = all('img', visible: false)
+      images = all('img', visible: :all)
 
       # The first photo should still be the contributed photo, the second and third should be direct links to the external photos
       assert_equal 3, images.count, 'Contributed photo not included with uncached external photos'
@@ -239,7 +239,7 @@ class AirportsTest < ApplicationSystemTestCase
       assert images[2][:src].end_with?('/images/placeholder_2.jpg')
 
       # Images with attributions should display it
-      assert first('.carousel-caption', visible: false).text(:all).present?, 'Attribution not present for image'
+      assert first('.carousel-caption', visible: :all).text(:all).present?, 'Attribution not present for image'
     end
   end
 
@@ -248,14 +248,14 @@ class AirportsTest < ApplicationSystemTestCase
 
     # Wait for the gallery to finish loading uncached photos
     assert_selector('.carousel[data-uncached-photos-loaded="true"]')
-    initial_count = all('.carousel[data-uncached-photos-loaded="true"] img', visible: false).count
+    initial_count = all('.carousel[data-uncached-photos-loaded="true"] img', visible: :hidden).count
 
     click_link_or_button 'Add Photo'
     find('#upload-photo-form input[type="file"]').set(Rails.root.join('test/fixtures/files/image.png'))
     click_link_or_button 'Upload Photo'
 
     # Wait for the new photo to appear
-    assert_selector('.carousel[data-uncached-photos-loaded="true"] img', visible: false, count: initial_count + 1)
+    assert_selector('.carousel[data-uncached-photos-loaded="true"] img', visible: :hidden, count: initial_count + 1)
   end
 
   test 'set featured photo' do
@@ -335,9 +335,9 @@ class AirportsTest < ApplicationSystemTestCase
     visit airport_path(@airport.code)
 
     # Sanity check on the meta tags being present
-    assert_equal "#{@airport.code} - #{@airport.name.titleize} Airport", find('meta[name="title"]', visible: false)[:content], 'Unexpected meta name'
-    assert_equal @airport.description, find('meta[name="description"]', visible: false)[:content], 'Unexpected meta description'
-    assert_equal @airport.description, find('meta[property="og:description"]', visible: false)[:content], 'Unexpected Opengraph description'
+    assert_equal "#{@airport.code} - #{@airport.name.titleize} Airport", find('meta[name="title"]', visible: :hidden)[:content], 'Unexpected meta name'
+    assert_equal @airport.description, find('meta[name="description"]', visible: :hidden)[:content], 'Unexpected meta description'
+    assert_equal @airport.description, find('meta[property="og:description"]', visible: :hidden)[:content], 'Unexpected Opengraph description'
   end
 
   test 'display origin info on first visit' do
@@ -463,7 +463,7 @@ private
         assert editor[:class].include?('editing'), 'Editor not in edit mode'
 
         # Select all the text currently in the editor, delete it, and then enter the given text
-        find('div[contenteditable="true"]', visible: false).send_keys([(/darwin/ =~ RUBY_PLATFORM ? :meta : :control), 'a'], :backspace, text)
+        find('div[contenteditable="true"]', visible: :all).send_keys([(/darwin/ =~ RUBY_PLATFORM ? :meta : :control), 'a'], :backspace, text)
       end
     end
 

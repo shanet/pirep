@@ -53,7 +53,7 @@ private
 
     identifier = (row['ident'] || row['local_code']).upcase
 
-    # rubocop:disable Layout/HashAlignment
+    # rubocop:disable-next Layout/HashAlignment
     @airports[identifier] = {
       our_airports_id: row['id'],
       airport_name:    row['name'],
@@ -73,7 +73,6 @@ private
       activation_date: nil,
       data_source:     :our_airports,
     }
-    # rubocop:enable Layout/HashAlignment
 
     # Keep a separate mapping of the OurAirports ID to the airport's identifer so we can do constant-time lookups in the runways method
     @airport_references[row['id']] = identifier

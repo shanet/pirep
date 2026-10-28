@@ -5,7 +5,7 @@ require 'airport_timezone_seeds'
 
 ALL_CHARTS = 'All charts'
 
-# rubocop:disable Rails/Output
+# rubocop:disable-next Rails/Output
 class Seeds
   def initialize
     CLI::UI::StdoutRouter.enable
@@ -129,7 +129,6 @@ private
     airport_codes.each {|code| puts "  #{code}"}
   end
 end
-# rubocop:enable Rails/Output
 
 # The tests will call this themselves
 Seeds.new.perform unless Rails.env.test?
