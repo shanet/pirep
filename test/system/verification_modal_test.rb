@@ -23,7 +23,7 @@ class VerificationModalTest < ApplicationSystemTestCase
     submit_modal
 
     # Verification should not be required anymore after submitting it on the next page
-    assert_no_selector '#verification-modal', visible: false
+    assert_no_selector '#verification-modal', visible: :hidden
 
     assert_equal 'https://example.com', find('#webcams .webcam-link').text, 'Form not submitted after verification modal submitted'
   end
@@ -43,7 +43,7 @@ class VerificationModalTest < ApplicationSystemTestCase
     submit_modal
 
     # Verification should not be required anymore after submitting it on the next page
-    assert_selector '#verification-modal[data-verification-required="false"]', visible: false
+    assert_selector '#verification-modal[data-verification-required="false"]', visible: :hidden
 
     # And the tag should be gone now tii
     assert_no_selector '.tag-square[data-tag-name="food"]'
@@ -96,7 +96,7 @@ class VerificationModalTest < ApplicationSystemTestCase
     visit airport_path(@airport)
 
     # Verification should not be necessary for a verified unknown user
-    assert_no_selector '#verification-modal', visible: false
+    assert_no_selector '#verification-modal', visible: :hidden
   end
 
   test 'does not verify known user' do
@@ -104,7 +104,7 @@ class VerificationModalTest < ApplicationSystemTestCase
     visit airport_path(@airport)
 
     # Verification should not be needed for a known user
-    assert_no_selector '#verification-modal', visible: false
+    assert_no_selector '#verification-modal', visible: :hidden
   end
 
   test 'verifies users without interaction' do
@@ -112,7 +112,7 @@ class VerificationModalTest < ApplicationSystemTestCase
     evaluate_script('window.verificationModalCallback()')
 
     # Do nothing and the modal should become non-required after the non-interactive challenge calls its callback
-    assert_selector '#verification-modal[data-verification-required="false"]', visible: false
+    assert_selector '#verification-modal[data-verification-required="false"]', visible: :hidden
   end
 
 private

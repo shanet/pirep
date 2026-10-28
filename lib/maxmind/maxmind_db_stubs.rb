@@ -13,12 +13,11 @@ module MaxmindDbStubs
 
   class StubDatabaseReader
     def city(_ip_address)
-      # rubocop:disable Style/OpenStructUse
+      # rubocop:disable-next Style/OpenStructUse
       return OpenStruct.new(
         location: OpenStruct.new(latitude: 47.62055376532627, longitude: -122.34936256185215),
         registered_country: OpenStruct.new(iso_code: 'US')
       )
-      # rubocop:enable Style/OpenStructUse
     end
   end
 end

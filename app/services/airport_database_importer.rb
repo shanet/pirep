@@ -51,7 +51,7 @@ private
       return nil, nil
     end
 
-    # rubocop:disable Layout/HashAlignment
+    # rubocop:disable-next Layout/HashAlignment
     airport.update!({
       code:            airport_code,
       name:            airport_data[:airport_name],
@@ -75,7 +75,6 @@ private
       # The landing rights are configurable by users so we don't want to overwrite this field unless the airport is first being created
       **(airport.persisted? ? {} : {landing_rights: (airport_data[:facility_use] == 'PR' ? :private_ : :public_)}), # rubocop:disable Style/NestedTernaryOperator
     })
-    # rubocop:enable Layout/HashAlignment
 
     # Update the data cycle without callbacks so the updated_at timestamp won't be updated if there are otherwise no changes to
     # an existing airport as doing so will invalidate the airport info PDFs cache and unnecessarily force an expensive re-render

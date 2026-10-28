@@ -213,7 +213,7 @@ private
   end
 
   def advanced_search_params
-    # rubocop:disable Layout/EmptyLinesAroundArguments
+    # rubocop:disable-next Layout/EmptyLinesAroundArguments
     return params.permit(
       :location_type,
       :distance_miles,
@@ -246,7 +246,6 @@ private
       :tags_match,
       *Tag::TAGS.keys.map {|tag| "tag_#{tag}"}
     )
-    # rubocop:enable Layout/EmptyLinesAroundArguments
   end
 
   def create_actions

@@ -50,7 +50,7 @@ private
 
     faa_code = row['ARPT_ID'].upcase
 
-    # rubocop:disable Layout/HashAlignment
+    # rubocop:disable-next Layout/HashAlignment
     @airports[faa_code] = {
       airport_name:    row['ARPT_NAME'],
       icao_code:       @faa_to_icao[faa_code],
@@ -69,7 +69,6 @@ private
       activation_date: (row['ACTIVATION_DATE'].present? ? DateTime.strptime(row['ACTIVATION_DATE'], '%Y/%m') : nil),
       data_source:     :faa,
     }
-    # rubocop:enable Layout/HashAlignment
   end
 
   def parse_runway(row)

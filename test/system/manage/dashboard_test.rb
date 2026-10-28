@@ -45,17 +45,17 @@ class Manage::DashboardTest < ApplicationSystemTestCase
 
     # Open the color scheme menu and assert that "auto" is selected by default
     find('.color-scheme-selector').click
-    assert_selector '#color-scheme-options .dropdown-item[data-color-scheme="auto"]', visible: false
+    assert_selector '#color-scheme-options .dropdown-item[data-color-scheme="auto"]', visible: :all
 
     # Switch to dark mode and verify that the active item was set to "dark" and that the top level data attribute is set
     find('#color-scheme-options .dropdown-item[data-color-scheme="dark"]').click
-    assert_selector '#color-scheme-options .dropdown-item.active[data-color-scheme="dark"]', visible: false
+    assert_selector '#color-scheme-options .dropdown-item.active[data-color-scheme="dark"]', visible: :all
     assert_selector 'body[data-bs-theme="dark"]'
 
     # Open the menu again and switch to light mode
     find('.color-scheme-selector').click
     find('#color-scheme-options .dropdown-item[data-color-scheme="light"]').click
-    assert_selector '#color-scheme-options .dropdown-item.active[data-color-scheme="light"]', visible: false
+    assert_selector '#color-scheme-options .dropdown-item.active[data-color-scheme="light"]', visible: :all
     assert_no_selector 'body[data-bs-theme="dark"]'
   end
 end

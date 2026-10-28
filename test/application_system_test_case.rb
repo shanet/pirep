@@ -50,7 +50,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
       when :map
         visit root_path
         find_by_id('hamburger-icon').click
-        assert_selector '#hamburger-menu', visible: true
+        assert_selector '#hamburger-menu', visible: :visible
         click_link_or_button 'Log In / Register'
       when :sessions
         visit new_user_session_path
