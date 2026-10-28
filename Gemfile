@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 
-ruby '4.0.5'
+ruby '4.0.9'
 
 # Core Rails gems
 gem 'rails', '8.1.3.1'
