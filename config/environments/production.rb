@@ -51,9 +51,9 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = false
 
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
-  config.log_level = :debug
+  # Debug logging includes every SQL query (including good_job polling) which makes CloudWatch ingestion costly.
+  # Set RAILS_LOG_LEVEL=debug temporarily if more diagnostic information is needed.
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
