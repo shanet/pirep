@@ -3,9 +3,7 @@ version: 0.2
 phases:
   install:
     commands:
-      - apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com
-      - apt-get update
-      - apt-get install --yes jq
+      - dnf install --assumeyes jq gettext
 
   pre_build:
     commands:

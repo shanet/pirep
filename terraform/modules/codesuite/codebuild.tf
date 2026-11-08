@@ -7,10 +7,11 @@ resource "aws_codebuild_project" "image" {
   }
 
   environment {
+    # Build on ARM so the image matches the ARM64 Fargate tasks
     compute_type    = "BUILD_GENERAL1_SMALL"
-    image           = "aws/codebuild/standard:6.0" # Ubuntu 22.04
+    image           = "aws/codebuild/amazonlinux-aarch64-standard:3.0" # Amazon Linux 2023
     privileged_mode = true
-    type            = "LINUX_CONTAINER"
+    type            = "ARM_CONTAINER"
 
     dynamic "environment_variable" {
       for_each = (contains(keys(var.services), "jobs") ? [1] : [])
@@ -85,10 +86,9 @@ resource "aws_codebuild_project" "migrations" {
   }
 
   environment {
-    compute_type    = "BUILD_GENERAL1_SMALL"
-    image           = "aws/codebuild/standard:6.0" # Ubuntu 22.04
-    privileged_mode = true
-    type            = "LINUX_CONTAINER"
+    compute_type = "BUILD_GENERAL1_SMALL"
+    image        = "aws/codebuild/amazonlinux-aarch64-standard:3.0" # Amazon Linux 2023
+    type         = "ARM_CONTAINER"
 
     environment_variable {
       name  = "ECS_CLUSTER_NAME"

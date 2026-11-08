@@ -22,6 +22,12 @@ resource "aws_ecs_task_definition" "this" {
   requires_compatibilities = ["FARGATE"]
   task_role_arn            = var.iam_role_task
 
+  # Use ARM since it's cheaper than x86
+  runtime_platform {
+    cpu_architecture        = "ARM64"
+    operating_system_family = "LINUX"
+  }
+
   container_definitions = jsonencode(yamldecode(templatefile("${path.module}/container_definition.yml", {
     aws_region                          = data.aws_region.current.region
     command                             = var.container_command

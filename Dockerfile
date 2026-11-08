@@ -29,12 +29,12 @@ RUN apt-get install --yes --no-install-recommends \
 
 # Install Postgres client
 RUN curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor --output /usr/share/keyrings/postgresql.gpg
-RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt trixie-pgdg main" > /etc/apt/sources.list.d/postgresql.list
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/postgresql.gpg] http://apt.postgresql.org/pub/repos/apt trixie-pgdg main" > /etc/apt/sources.list.d/postgresql.list
 RUN apt-get update && apt-get install --yes postgresql-client-18
 
 # Install NodeJS
 RUN curl https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor --output /usr/share/keyrings/nodejs.gpg
-RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_24.x nodistro main" > /etc/apt/sources.list.d/nodejs.list
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/nodejs.gpg] https://deb.nodesource.com/node_24.x nodistro main" > /etc/apt/sources.list.d/nodejs.list
 RUN apt-get update && apt-get install --yes nodejs
 
 # -----------------------------------------------------------------------------
@@ -44,7 +44,7 @@ RUN apt-get install --yes build-essential libyaml-dev
 
 # Install Yarn
 RUN curl https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor --output /usr/share/keyrings/yarn.gpg
-RUN echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/yarn.gpg] http://dl.yarnpkg.com/debian/ stable main' > /etc/apt/sources.list.d/yarn.list
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/yarn.gpg] http://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
 RUN apt-get update && apt-get install --yes yarn
 
 COPY Gemfile Gemfile
@@ -61,8 +61,9 @@ RUN SECRET_KEY_BASE=1 bundle exec rails assets:precompile
 # Do everything above in a separate stage so we can only copy out the compiled assets and discard all the other junk we don't need to run the application
 FROM base AS final
 
-# Use jemalloc
-ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+# Use jemalloc (symlinked to a fixed path since the library directory varies by architecture)
+RUN ln -s /usr/lib/$(uname -m)-linux-gnu/libjemalloc.so.2 /usr/local/lib/libjemalloc.so.2
+ENV LD_PRELOAD=/usr/local/lib/libjemalloc.so.2
 
 # The UID and GID should match the values in the EFS config (efs.tf)
 RUN addgroup --gid 1000 pirep
