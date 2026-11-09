@@ -25,7 +25,8 @@ resource "aws_db_parameter_group" "db_parameters" {
 }
 
 resource "aws_db_instance" "database" {
-  allocated_storage         = 100           # gb
+  allocated_storage         = 20            # gb
+  max_allocated_storage     = 20            # gb (storage autoscaling ceiling)
   backup_retention_period   = 30            # days
   backup_window             = "10:00-10:30" # UTC
   ca_cert_identifier        = "rds-ca-rsa2048-g1"
@@ -41,7 +42,7 @@ resource "aws_db_instance" "database" {
   parameter_group_name      = aws_db_parameter_group.db_parameters.name
   password                  = random_string.password.result
   publicly_accessible       = false
-  storage_type              = "gp2"
+  storage_type              = "gp3"
   username                  = "root"
   vpc_security_group_ids    = [var.security_group]
 }
