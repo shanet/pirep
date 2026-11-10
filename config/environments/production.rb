@@ -1,4 +1,5 @@
 require_relative Rails.root.join('lib/active_support/cache/store/postgres_cache_store')
+require_relative Rails.root.join('lib/middleware/cloudfront_viewer_address_middleware')
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -53,6 +54,9 @@ Rails.application.configure do
 
   # TLS is terminated before requests reach the app so treat all requests as HTTPS rather than relying on proxy headers
   config.assume_ssl = true
+
+  # Use the viewer's IP from Cloudfront as the client IP. This must be first so everything else sees the correct IP.
+  config.middleware.insert_before 0, CloudfrontViewerAddressMiddleware, ENV.fetch('CLOUDFRONT_ORIGIN_SECRET', nil)
 
   # Debug logging includes every SQL query (including good_job polling) which makes CloudWatch ingestion costly.
   # Set RAILS_LOG_LEVEL=debug temporarily if more diagnostic information is needed.
