@@ -51,6 +51,9 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = false
 
+  # TLS is terminated before requests reach the app so treat all requests as HTTPS rather than relying on proxy headers
+  config.assume_ssl = true
+
   # Debug logging includes every SQL query (including good_job polling) which makes CloudWatch ingestion costly.
   # Set RAILS_LOG_LEVEL=debug temporarily if more diagnostic information is needed.
   config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info')
