@@ -46,7 +46,6 @@ gem 'terminal-table'
 gem 'user_agent_parser'
 
 group :development, :test do
-  gem 'aws-sdk-codedeploy'
   gem 'aws-sdk-codepipeline'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'cli-ui'

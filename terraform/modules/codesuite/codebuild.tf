@@ -13,38 +13,6 @@ resource "aws_codebuild_project" "image" {
     privileged_mode = true
     type            = "ARM_CONTAINER"
 
-    dynamic "environment_variable" {
-      for_each = (contains(keys(var.services), "jobs") ? [1] : [])
-      content {
-        name  = "ECS_SERVICE_NAME_JOBS"
-        value = var.services.jobs.ecs_service_name
-      }
-    }
-
-    dynamic "environment_variable" {
-      for_each = (contains(keys(var.services), "web") ? [1] : [])
-      content {
-        name  = "ECS_SERVICE_NAME_WEB"
-        value = var.services.web.ecs_service_name
-      }
-    }
-
-    dynamic "environment_variable" {
-      for_each = (contains(keys(var.services), "jobs") ? [1] : [])
-      content {
-        name  = "TASK_DEFINITION_JOBS_ARN"
-        value = var.services.jobs.task_definition_arn
-      }
-    }
-
-    dynamic "environment_variable" {
-      for_each = (contains(keys(var.services), "web") ? [1] : [])
-      content {
-        name  = "TASK_DEFINITION_WEB_ARN"
-        value = var.services.web.task_definition_arn
-      }
-    }
-
     environment_variable {
       name  = "DOCKER_HUB_USERNAME"
       value = jsondecode(data.aws_ssm_parameter.docker_hub_credentials.value)["username"]

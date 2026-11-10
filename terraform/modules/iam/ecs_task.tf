@@ -34,10 +34,10 @@ data "aws_iam_policy_document" "ecs_task_role_policy" {
     ]
   }
 
-  # Allow the ECS service to start the importer task
+  # Allow the ECS service to start the importer task (it uses the web service's network configuration)
   statement {
     actions   = ["ecs:DescribeServices"]
-    resources = [var.ecs_service_jobs]
+    resources = [var.ecs_service_web]
   }
 
   statement {

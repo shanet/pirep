@@ -2,7 +2,6 @@ variable "cloudwatch_log_group" {}
 variable "container_command" {}
 variable "container_count" {}
 variable "cpu" {} # vcpu units (1024 = 1 core)
-variable "deployment_controller" { default = "CODE_DEPLOY" }
 variable "ecs_cluster" {}
 variable "efs_access_point" {}
 variable "efs_volume" {}
@@ -18,7 +17,6 @@ variable "port" {}
 variable "security_group" {}
 variable "service_registry_arn" { default = null }
 variable "subnets" { type = list(string) }
-variable "target_group_arn" { default = null }
 
 resource "aws_ecs_service" "service" {
   cluster                = var.ecs_cluster
@@ -29,27 +27,13 @@ resource "aws_ecs_service" "service" {
   task_definition        = module.task_definition.task_definition.arn
 
   deployment_controller {
-    type = var.deployment_controller
+    type = "ECS"
   }
 
   # Roll back automatically if new tasks fail to become healthy
-  dynamic "deployment_circuit_breaker" {
-    for_each = (var.deployment_controller == "ECS" ? [1] : [])
-
-    content {
-      enable   = true
-      rollback = true
-    }
-  }
-
-  dynamic "load_balancer" {
-    for_each = (var.target_group_arn != null ? [var.target_group_arn] : [])
-
-    content {
-      container_name   = var.name_prefix
-      container_port   = var.port
-      target_group_arn = load_balancer.value
-    }
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
   }
 
   dynamic "service_registries" {
@@ -68,9 +52,9 @@ resource "aws_ecs_service" "service" {
     subnets          = var.subnets
   }
 
-  # The blue/green deployments will swap load balancer target groups and task definitions so ignore changes in them
+  # The deployment pipeline registers new task definitions with the built image so ignore changes to it
   lifecycle {
-    ignore_changes = [load_balancer, task_definition]
+    ignore_changes = [task_definition]
   }
 }
 

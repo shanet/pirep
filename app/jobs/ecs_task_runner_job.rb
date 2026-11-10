@@ -2,10 +2,10 @@ require 'exceptions'
 
 class EcsTaskRunnerJob < ApplicationJob
   ECS_CLUSTER = 'pirep-production'
-  ECS_SERVICE_JOBS = 'pirep-production-jobs'
+  ECS_SERVICE = 'pirep-production-web-v2' # Tasks are run with the same network configuration as this service
 
   def perform(task_definition_name)
-    network_configuration = find_network_configuration(ECS_CLUSTER, ECS_SERVICE_JOBS)
+    network_configuration = find_network_configuration(ECS_CLUSTER, ECS_SERVICE)
     raise Exceptions::EcsTaskRunnerFailed, 'ECS service network configuration not found' unless network_configuration
 
     task_definition = find_task_definition(task_definition_name)

@@ -38,3 +38,21 @@ module "task_definition_importer" {
   port                                = var.service_port
   storage                             = 50 # gb
 }
+
+# Used by the deployment pipeline to run migrations before deploying the web service. The image is set when the task is run.
+module "task_definition_migrations" {
+  source = "./task_definition"
+
+  cloudwatch_log_group                = var.cloudwatch_log_groups.jobs
+  container_command                   = "[bundle, exec, rails, db:migrate]"
+  cpu                                 = 512 # 0.5 vCPU
+  efs_access_point                    = aws_efs_access_point.this.id
+  efs_volume                          = aws_efs_file_system.this.id
+  enviroment_variables_secret_dynamic = var.enviroment_variables_secret_dynamic
+  enviroment_variables_secret_static  = var.enviroment_variables_secret_static
+  iam_role_execution                  = var.iam_role_execution
+  iam_role_task                       = var.iam_role_task
+  memory                              = 1024 # mb
+  name_prefix                         = "${var.name_prefix}-migrations"
+  port                                = var.service_port
+}

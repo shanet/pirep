@@ -16,7 +16,6 @@ data "aws_iam_policy_document" "codepipeline_role_policy" {
     actions = [
       "codebuild:*",
       "codecommit:*",
-      "codedeploy:*",
       "codestar-connections:UseConnection",
       "ecs:DescribeServices",
       "ecs:DescribeTaskDefinition",

@@ -6,10 +6,6 @@ output "backups_bucket" {
   value = aws_s3_bucket.backups
 }
 
-output "logs_bucket" {
-  value = aws_s3_bucket.logs
-}
-
 output "root_object_key" {
   value = aws_s3_object.root_object.key
 }

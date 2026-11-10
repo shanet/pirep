@@ -82,24 +82,12 @@ module "codesuite" {
   ecs_service_name_web       = module.ecs.service_web_v2.name
   github_repository          = local.github_repository
   iam_role_codebuild_arn     = module.iam.codebuild_role.arn
-  iam_role_codedeploy_arn    = module.iam.codedeploy_role.arn
   iam_role_codepipeline_arn  = module.iam.codepipeline_role.arn
-  migrations_container_name  = "${local.name_prefix}-jobs"
-  migrations_ecs_service     = module.ecs.service_jobs.name
-  migrations_task_definition = module.ecs.task_definition_jobs.arn
+  migrations_container_name  = "${local.name_prefix}-migrations"
+  migrations_ecs_service     = module.ecs.service_web_v2.name # Only used for its network configuration
+  migrations_task_definition = module.ecs.task_definition_migrations.arn
   name_prefix                = local.name_prefix
   service_port               = local.service_port
-
-  services = {
-    # jobs = {
-    #   ecs_service_name           = module.ecs.service_jobs.name
-    #   load_balancer_listener_arn = module.load_balancer.listener_jobs[0].arn
-    #   name_prefix                = "${local.name_prefix}-jobs"
-    #   target_group_blue_name     = module.load_balancer.target_group_jobs_blue.name
-    #   target_group_green_name    = module.load_balancer.target_group_jobs_green.name
-    #   task_definition_arn        = module.ecs.task_definition_jobs.arn
-    # },
-  }
 }
 
 module "ecr" {
@@ -122,8 +110,6 @@ module "ecs" {
   service_port                        = local.service_port
   service_registry_arn_web            = module.service_discovery.service_web.arn
   subnets                             = [for subnet in module.vpc.public_subnets : subnet.id]
-  target_group_arn_jobs               = module.load_balancer.target_group_jobs_green.arn
-  target_group_arn_web                = module.load_balancer.target_group_web_green.arn
 
   cloudwatch_log_groups = {
     jobs = module.cloudwatch.log_group_jobs.name,
@@ -140,23 +126,9 @@ module "iam" {
   deployment_bucket            = module.codesuite.deployment_bucket.arn
   ecr_repository               = module.ecr.repository.arn
   ecs_cluster                  = module.ecs.cluster.arn
-  ecs_service_jobs             = module.ecs.service_jobs.id
+  ecs_service_web              = module.ecs.service_web_v2.id
   enviroment_variables_secrets = [module.secretsmanager.secret_dynamic.arn, module.secretsmanager.secret_static.arn]
   name_prefix                  = local.name_prefix
-}
-
-module "load_balancer" {
-  source = "../load_balancer"
-
-  certificate_arn        = module.acm_us_west_2.certificate_arn
-  health_check_path_jobs = "/status"
-  health_check_path_web  = "/health"
-  logs_bucket            = module.s3.logs_bucket.id
-  name_prefix            = local.name_prefix
-  security_group         = module.security_groups.load_balancer.id
-  service_port           = local.service_port
-  subnets                = [for subnet in module.vpc.public_subnets : subnet.id]
-  vpc_id                 = module.vpc.vpc.id
 }
 
 module "rds" {
