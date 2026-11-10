@@ -14,6 +14,7 @@ variable "name_prefix" {}
 variable "security_group_ecs" {}
 variable "security_group_efs" {}
 variable "service_port" {}
+variable "service_registry_arn_web" {}
 variable "subnets" { type = list(string) }
 variable "target_group_arn_jobs" {}
 variable "target_group_arn_web" {}
@@ -28,7 +29,7 @@ module "service_jobs" {
   cloudwatch_log_group = var.cloudwatch_log_groups.jobs
   container_command    = "[bundle, exec, good_job, start]"
   container_count      = 0
-  # container_count                     = 1
+  # container_count                    = 1
   cpu                                 = 512 # 0.5 vCPU
   ecs_cluster                         = aws_ecs_cluster.this.id
   efs_access_point                    = aws_efs_access_point.this.id
@@ -49,7 +50,7 @@ module "service_web" {
   source = "./service"
 
   cloudwatch_log_group = var.cloudwatch_log_groups.web
-  # container_command                   = "[puma, --config, config/puma.rb]"
+  # container_command                 = "[puma, --config, config/puma.rb]"
   container_command                   = "[bash, scripts/ecs_main.sh]"
   container_count                     = 1
   cpu                                 = 512 # 0.5 vCPU
@@ -66,6 +67,31 @@ module "service_web" {
   security_group                      = var.security_group_ecs
   subnets                             = var.subnets
   target_group_arn                    = var.target_group_arn_web
+}
+
+module "service_web_v2" {
+  source = "./service"
+
+  cloudwatch_log_group                = var.cloudwatch_log_groups.web
+  container_command                   = "[bash, scripts/ecs_main.sh]"
+  container_count                     = 1
+  cpu                                 = 512 # 0.5 vCPU
+  deployment_controller               = "ECS"
+  ecs_cluster                         = aws_ecs_cluster.this.id
+  efs_access_point                    = aws_efs_access_point.this.id
+  efs_volume                          = aws_efs_file_system.this.id
+  enviroment_variables_secret_dynamic = var.enviroment_variables_secret_dynamic
+  enviroment_variables_secret_static  = var.enviroment_variables_secret_static
+  health_check_path                   = "/health"
+  iam_role_execution                  = var.iam_role_execution
+  iam_role_task                       = var.iam_role_task
+  image                               = "${var.ecr_repository_url}:latest"
+  memory                              = 2048 # mb
+  name_prefix                         = "${var.name_prefix}-web-v2"
+  port                                = var.service_port
+  security_group                      = var.security_group_ecs
+  service_registry_arn                = var.service_registry_arn_web
+  subnets                             = var.subnets
 }
 
 output "cluster" {
@@ -86,4 +112,8 @@ output "service_jobs" {
 
 output "service_web" {
   value = module.service_web.service
+}
+
+output "service_web_v2" {
+  value = module.service_web_v2.service
 }

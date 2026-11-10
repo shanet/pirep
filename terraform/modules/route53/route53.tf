@@ -5,15 +5,16 @@ variable "cdn_tiles_dns_zone_id" {}
 variable "domain_apex" {}
 variable "domain_cdn_assets" {}
 variable "domain_cdn_tiles" {}
-variable "load_balancer_dns_name" {}
-variable "load_balancer_dns_zone_id" {}
 variable "name_prefix" {}
+variable "web_dns_name" {}
+variable "web_dns_zone_id" {}
 
 resource "aws_route53_zone" "this" {
   name = var.domain_apex
   tags = { Name = var.name_prefix }
 }
 
+# Web server (via Cloudfront and API Gateway). Route53 doesn't support evaluating target health for Cloudfront.
 resource "aws_route53_record" "apex" {
   for_each = toset(["A", "AAAA"])
 
@@ -22,9 +23,9 @@ resource "aws_route53_record" "apex" {
   zone_id = aws_route53_zone.this.zone_id
 
   alias {
-    evaluate_target_health = true
-    name                   = var.load_balancer_dns_name
-    zone_id                = var.load_balancer_dns_zone_id
+    evaluate_target_health = false
+    name                   = var.web_dns_name
+    zone_id                = var.web_dns_zone_id
   }
 }
 
@@ -36,7 +37,7 @@ resource "aws_route53_record" "www" {
   zone_id = aws_route53_zone.this.zone_id
 
   alias {
-    evaluate_target_health = true
+    evaluate_target_health = false
     name                   = var.domain_apex
     zone_id                = aws_route53_zone.this.zone_id
   }

@@ -17,6 +17,16 @@
   linuxParameters:
     initProcessEnabled: true
 
+%{ if health_check_path != null ~}
+  # Used by ECS to decide when a task is healthy and registered with service discovery
+  healthCheck:
+    command: ["CMD-SHELL", "curl --fail --silent --output /dev/null http://localhost:${port}${health_check_path} || exit 1"]
+    interval: 15 # seconds
+    retries: 3
+    startPeriod: 60 # seconds
+    timeout: 5 # seconds
+%{ endif ~}
+
   environment:
     - name: PORT
       value: "${port}"
@@ -28,6 +38,8 @@
   secrets:
     # Static environment variables are defined and managed through Terraform in the secretsmanager module.
     # Dynamic enviroment variables are added directly to the defined dynamic secretsmanager secret in the AWS console.
+    - name: CLOUDFRONT_ORIGIN_SECRET
+      valueFrom: "${enviroment_variables_secret_static}:cloudfront_origin_secret::"
     - name: DATABASE_ENDPOINT
       valueFrom: "${enviroment_variables_secret_static}:database_endpoint::"
     - name: DATABASE_PASSWORD

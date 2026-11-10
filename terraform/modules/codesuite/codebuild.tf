@@ -60,6 +60,12 @@ resource "aws_codebuild_project" "image" {
       value = var.ecr_repository_url
     }
 
+    # The container is named after the service
+    environment_variable {
+      name  = "WEB_CONTAINER_NAME"
+      value = var.ecs_service_name_web
+    }
+
     environment_variable {
       name  = "NAME_PREFIX"
       value = var.name_prefix

@@ -2,19 +2,23 @@ variable "cloudwatch_log_group" {}
 variable "container_command" {}
 variable "container_count" {}
 variable "cpu" {} # vcpu units (1024 = 1 core)
+variable "deployment_controller" { default = "CODE_DEPLOY" }
 variable "ecs_cluster" {}
 variable "efs_access_point" {}
 variable "efs_volume" {}
 variable "enviroment_variables_secret_dynamic" {}
 variable "enviroment_variables_secret_static" {}
+variable "health_check_path" { default = null }
 variable "iam_role_execution" {}
 variable "iam_role_task" {}
+variable "image" { default = "IMAGE_PLACEHOLDER" }
 variable "memory" {} # mb
 variable "name_prefix" {}
 variable "port" {}
 variable "security_group" {}
+variable "service_registry_arn" { default = null }
 variable "subnets" { type = list(string) }
-variable "target_group_arn" {}
+variable "target_group_arn" { default = null }
 
 resource "aws_ecs_service" "service" {
   cluster                = var.ecs_cluster
@@ -25,13 +29,37 @@ resource "aws_ecs_service" "service" {
   task_definition        = module.task_definition.task_definition.arn
 
   deployment_controller {
-    type = "CODE_DEPLOY"
+    type = var.deployment_controller
   }
 
-  load_balancer {
-    container_name   = var.name_prefix
-    container_port   = var.port
-    target_group_arn = var.target_group_arn
+  # Roll back automatically if new tasks fail to become healthy
+  dynamic "deployment_circuit_breaker" {
+    for_each = (var.deployment_controller == "ECS" ? [1] : [])
+
+    content {
+      enable   = true
+      rollback = true
+    }
+  }
+
+  dynamic "load_balancer" {
+    for_each = (var.target_group_arn != null ? [var.target_group_arn] : [])
+
+    content {
+      container_name   = var.name_prefix
+      container_port   = var.port
+      target_group_arn = load_balancer.value
+    }
+  }
+
+  dynamic "service_registries" {
+    for_each = (var.service_registry_arn != null ? [var.service_registry_arn] : [])
+
+    content {
+      container_name = var.name_prefix
+      container_port = var.port
+      registry_arn   = service_registries.value
+    }
   }
 
   network_configuration {
@@ -56,17 +84,19 @@ module "task_definition" {
   efs_volume                          = var.efs_volume
   enviroment_variables_secret_dynamic = var.enviroment_variables_secret_dynamic
   enviroment_variables_secret_static  = var.enviroment_variables_secret_static
+  health_check_path                   = var.health_check_path
   iam_role_execution                  = var.iam_role_execution
   iam_role_task                       = var.iam_role_task
+  image                               = var.image
   memory                              = var.memory
   name_prefix                         = var.name_prefix
   port                                = var.port
 }
 
-output "task_definition" {
-  value = module.task_definition.task_definition
-}
-
 output "service" {
   value = aws_ecs_service.service
+}
+
+output "task_definition" {
+  value = module.task_definition.task_definition
 }

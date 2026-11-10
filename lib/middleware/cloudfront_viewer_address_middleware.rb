@@ -16,13 +16,12 @@ class CloudfrontViewerAddressMiddleware
     origin_secret = env.delete(ORIGIN_SECRET_HEADER)
     viewer_ip = parse_viewer_ip(env[VIEWER_ADDRESS_HEADER])
 
-    if viewer_ip && trusted_origin_secret?(origin_secret)
-      env['REMOTE_ADDR'] = viewer_ip
+    env['REMOTE_ADDR'] = viewer_ip if viewer_ip && trusted_origin_secret?(origin_secret)
 
-      # Remove the proxy headers so neither Rack nor Rails try to derive the client IP from them
-      env.delete('HTTP_FORWARDED')
-      env.delete('HTTP_X_FORWARDED_FOR')
-    end
+    # Always remove the proxy headers so neither Rack nor Rails try to derive the client IP from them. Requests without a valid secret
+    # didn't come through Cloudfront so these headers can't be trusted either.
+    env.delete('HTTP_FORWARDED')
+    env.delete('HTTP_X_FORWARDED_FOR')
 
     @app.call(env)
   end

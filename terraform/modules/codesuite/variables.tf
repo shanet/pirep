@@ -1,5 +1,6 @@
 variable "ecr_repository_url" {}
 variable "ecs_cluster_name" {}
+variable "ecs_service_name_web" {}
 variable "github_repository" {}
 variable "iam_role_codebuild_arn" {}
 variable "iam_role_codedeploy_arn" {}

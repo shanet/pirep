@@ -68,6 +68,23 @@ resource "aws_codepipeline" "this" {
   stage {
     name = "Deploy"
 
+    # Rolling deployment of the web service. The ECS deploy action clones the service's current task definition with the image
+    # replaced by the one in `imagedefinitions.json` from the build stage.
+    action {
+      category        = "Deploy"
+      input_artifacts = ["build"]
+      name            = var.ecs_service_name_web
+      owner           = "AWS"
+      provider        = "ECS"
+      version         = "1"
+
+      configuration = {
+        ClusterName = var.ecs_cluster_name
+        FileName    = "imagedefinitions.json"
+        ServiceName = var.ecs_service_name_web
+      }
+    }
+
     dynamic "action" {
       for_each = (contains(keys(var.services), "jobs") ? [1] : [])
 

@@ -5,6 +5,7 @@ variable "efs_access_point" {}
 variable "efs_volume" {}
 variable "enviroment_variables_secret_dynamic" {}
 variable "enviroment_variables_secret_static" {}
+variable "health_check_path" { default = null }
 variable "iam_role_execution" {}
 variable "iam_role_task" {}
 variable "image" { default = "IMAGE_PLACEHOLDER" }
@@ -22,7 +23,7 @@ resource "aws_ecs_task_definition" "this" {
   requires_compatibilities = ["FARGATE"]
   task_role_arn            = var.iam_role_task
 
-  # Use ARM since it's cheaper than x86
+  # ARM is ~20% cheaper than x86
   runtime_platform {
     cpu_architecture        = "ARM64"
     operating_system_family = "LINUX"
@@ -33,6 +34,7 @@ resource "aws_ecs_task_definition" "this" {
     command                             = var.container_command
     enviroment_variables_secret_dynamic = var.enviroment_variables_secret_dynamic
     enviroment_variables_secret_static  = var.enviroment_variables_secret_static
+    health_check_path                   = var.health_check_path
     image                               = var.image
     log_group_name                      = var.cloudwatch_log_group
     name_prefix                         = var.name_prefix

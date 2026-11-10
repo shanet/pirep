@@ -4,6 +4,7 @@ require Rails.root.join('lib/middleware/cloudfront_viewer_address_middleware')
 class CloudfrontViewerAddressMiddlewareTest < ActiveSupport::TestCase
   ORIGIN_SECRET = 'secret'
   CLOUDFRONT_IP = '10.10.10.1'
+  REMOTE_IP = '8.8.4.4'
   VIEWER_IP = '8.8.8.8'
 
   test 'uses viewer IPv4 address with valid origin secret' do
@@ -20,24 +21,28 @@ class CloudfrontViewerAddressMiddlewareTest < ActiveSupport::TestCase
     assert_equal '2001:db8::1', remote_ip(env)
   end
 
-  test 'ignores viewer address without origin secret' do
+  test 'uses remote address without origin secret' do
     env = call_middleware(origin_secret: nil, viewer_address: "#{VIEWER_IP}:46532")
-    assert_equal CLOUDFRONT_IP, remote_ip(env)
+
+    assert_equal REMOTE_IP, remote_ip(env)
+    assert_equal REMOTE_IP, Rack::Request.new(env).ip
+    assert_nil env['HTTP_FORWARDED']
+    assert_nil env['HTTP_X_FORWARDED_FOR']
   end
 
-  test 'ignores viewer address with incorrect origin secret' do
+  test 'uses remote address with incorrect origin secret' do
     env = call_middleware(origin_secret: 'wrong', viewer_address: "#{VIEWER_IP}:46532")
-    assert_equal CLOUDFRONT_IP, remote_ip(env)
+    assert_equal REMOTE_IP, remote_ip(env)
   end
 
-  test 'ignores viewer address when origin secret is not configured' do
+  test 'uses remote address when origin secret is not configured' do
     env = call_middleware(origin_secret: '', viewer_address: "#{VIEWER_IP}:46532", configured_secret: nil)
-    assert_equal CLOUDFRONT_IP, remote_ip(env)
+    assert_equal REMOTE_IP, remote_ip(env)
   end
 
-  test 'ignores invalid viewer address' do
+  test 'uses remote address with invalid viewer address' do
     env = call_middleware(origin_secret: ORIGIN_SECRET, viewer_address: 'garbage')
-    assert_equal CLOUDFRONT_IP, remote_ip(env)
+    assert_equal REMOTE_IP, remote_ip(env)
   end
 
   test 'removes origin secret header' do
@@ -50,7 +55,7 @@ private
   # Simulate a request from Cloudfront through API Gateway which connects from a private VPC address and reports Cloudfront as the client
   def call_middleware(origin_secret:, viewer_address:, configured_secret: ORIGIN_SECRET)
     headers = {
-      'REMOTE_ADDR' => '8.8.4.4',
+      'REMOTE_ADDR' => REMOTE_IP,
       'HTTP_FORWARDED' => "for=#{CLOUDFRONT_IP};proto=https",
       'HTTP_X_FORWARDED_FOR' => CLOUDFRONT_IP,
       CloudfrontViewerAddressMiddleware::VIEWER_ADDRESS_HEADER => viewer_address,

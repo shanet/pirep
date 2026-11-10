@@ -13,6 +13,8 @@ variable "enviroment" {}
 locals {
   domain_assets_cdn = "cdn.${var.domain}"
   domain_tiles_cdn  = "tiles.${var.domain}"
+  domain_web        = var.domain
+  domain_web_others = ["www.${var.domain}"] # Redirected to the web domain
   github_repository = "shanet/pirep"
   name_prefix       = "pirep-${var.enviroment}"
   service_port      = 8080
@@ -39,6 +41,17 @@ module "acm_us_west_2" {
   route53_zone = module.route53.zone
 }
 
+module "api_gateway" {
+  source = "../api_gateway"
+
+  certificate_arn               = module.acm_us_west_2.certificate_arn
+  domain                        = local.domain_web
+  name_prefix                   = local.name_prefix
+  security_group                = module.security_groups.vpc_link.id
+  service_discovery_service_arn = module.service_discovery.service_web.arn
+  subnets                       = [for subnet in module.vpc.public_subnets : subnet.id]
+}
+
 module "cloudfront" {
   source = "../cloudfront"
 
@@ -50,6 +63,9 @@ module "cloudfront" {
   s3_bucket_domain         = module.s3.assets_bucket.bucket_regional_domain_name
   s3_empty_map_tile_object = module.s3.empty_map_tile_object_key
   s3_root_object           = module.s3.root_object_key
+  web_domain               = local.domain_web
+  web_origin               = module.api_gateway.origin_domain
+  web_redirect_domains     = local.domain_web_others
 }
 
 module "cloudwatch" {
@@ -63,6 +79,7 @@ module "codesuite" {
 
   ecr_repository_url         = module.ecr.repository.repository_url
   ecs_cluster_name           = module.ecs.cluster.name
+  ecs_service_name_web       = module.ecs.service_web_v2.name
   github_repository          = local.github_repository
   iam_role_codebuild_arn     = module.iam.codebuild_role.arn
   iam_role_codedeploy_arn    = module.iam.codedeploy_role.arn
@@ -82,14 +99,6 @@ module "codesuite" {
     #   target_group_green_name    = module.load_balancer.target_group_jobs_green.name
     #   task_definition_arn        = module.ecs.task_definition_jobs.arn
     # },
-    web = {
-      ecs_service_name           = module.ecs.service_web.name
-      load_balancer_listener_arn = module.load_balancer.listener_web[0].arn
-      name_prefix                = "${local.name_prefix}-web"
-      target_group_blue_name     = module.load_balancer.target_group_web_blue.name
-      target_group_green_name    = module.load_balancer.target_group_web_green.name
-      task_definition_arn        = module.ecs.task_definition_web.arn
-    }
   }
 }
 
@@ -111,6 +120,7 @@ module "ecs" {
   security_group_ecs                  = module.security_groups.ecs.id
   security_group_efs                  = module.security_groups.efs.id
   service_port                        = local.service_port
+  service_registry_arn_web            = module.service_discovery.service_web.arn
   subnets                             = [for subnet in module.vpc.public_subnets : subnet.id]
   target_group_arn_jobs               = module.load_balancer.target_group_jobs_green.arn
   target_group_arn_web                = module.load_balancer.target_group_web_green.arn
@@ -160,16 +170,16 @@ module "rds" {
 module "route53" {
   source = "../route53"
 
-  cdn_assets_dns_name       = module.cloudfront.cdn_assets.domain_name
-  cdn_assets_dns_zone_id    = module.cloudfront.cdn_assets.hosted_zone_id
-  cdn_tiles_dns_name        = module.cloudfront.cdn_tiles.domain_name
-  cdn_tiles_dns_zone_id     = module.cloudfront.cdn_tiles.hosted_zone_id
-  domain_apex               = var.domain
-  domain_cdn_assets         = local.domain_assets_cdn
-  domain_cdn_tiles          = local.domain_tiles_cdn
-  load_balancer_dns_name    = module.load_balancer.load_balancer.dns_name
-  load_balancer_dns_zone_id = module.load_balancer.load_balancer.zone_id
-  name_prefix               = local.name_prefix
+  cdn_assets_dns_name    = module.cloudfront.cdn_assets.domain_name
+  cdn_assets_dns_zone_id = module.cloudfront.cdn_assets.hosted_zone_id
+  cdn_tiles_dns_name     = module.cloudfront.cdn_tiles.domain_name
+  cdn_tiles_dns_zone_id  = module.cloudfront.cdn_tiles.hosted_zone_id
+  domain_apex            = var.domain
+  domain_cdn_assets      = local.domain_assets_cdn
+  domain_cdn_tiles       = local.domain_tiles_cdn
+  name_prefix            = local.name_prefix
+  web_dns_name           = module.cloudfront.cdn_web.domain_name
+  web_dns_zone_id        = module.cloudfront.cdn_web.hosted_zone_id
 }
 
 module "s3" {
@@ -182,16 +192,17 @@ module "s3" {
 module "secretsmanager" {
   source = "../secretsmanager"
 
-  asset_bucket      = module.s3.assets_bucket.bucket
-  asset_host        = module.route53.cdn_assets_record.fqdn
-  backups_bucket    = module.s3.backups_bucket.bucket
-  database_endpoint = module.rds.database_endpoint
-  database_password = module.rds.database_password
-  database_username = module.rds.database_username
-  name_prefix       = local.name_prefix
-  smtp_password     = module.iam.smtp_password
-  smtp_username     = module.iam.smtp_username
-  tiles_host        = module.route53.cdn_tiles_record.fqdn
+  asset_bucket             = module.s3.assets_bucket.bucket
+  asset_host               = module.route53.cdn_assets_record.fqdn
+  backups_bucket           = module.s3.backups_bucket.bucket
+  cloudfront_origin_secret = module.cloudfront.origin_secret
+  database_endpoint        = module.rds.database_endpoint
+  database_password        = module.rds.database_password
+  database_username        = module.rds.database_username
+  name_prefix              = local.name_prefix
+  smtp_password            = module.iam.smtp_password
+  smtp_username            = module.iam.smtp_username
+  tiles_host               = module.route53.cdn_tiles_record.fqdn
 }
 
 module "security_groups" {
@@ -200,6 +211,13 @@ module "security_groups" {
   name_prefix  = local.name_prefix
   service_port = local.service_port
   vpc_id       = module.vpc.vpc.id
+}
+
+module "service_discovery" {
+  source = "../service_discovery"
+
+  name_prefix = local.name_prefix
+  vpc_id      = module.vpc.vpc.id
 }
 
 module "ses" {
