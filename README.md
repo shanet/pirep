@@ -33,7 +33,7 @@ For the frontend, Pirep makes use of only vanilla JavaScript. Through the use of
 * [GDAL](https://gdal.org) version >= 3.6.2 for generating sectional chart map tiles (older versions will generate bad looking map tiles)
   * Some distributions may require an additional `python-gdal` package too depending on where the `gdal2tiles.py` script is included
 * [libvips](https://www.libvips.org) for converting airport diagram PDFs to PNGs and processing user photo uploads
-* Yarn version 1.x
+* Node.js (the expected version is defined in `.tool-versions`) and npm
 
 Pirep's development has been done on Linux. Other operating systems may work but have not been tested.
 
@@ -50,7 +50,7 @@ sudo systemctl start postgresql
 git clone git@github.com:shanet/pirep.git
 
 bundle install
-yarn install
+npm install
 
 # Potentially not needed if this default user & database already exists (note that the user must be a superuser to install db extensions when loading the db schema below)
 sudo -u postgres createuser --createdb --superuser `whoami`

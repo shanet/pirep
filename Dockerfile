@@ -42,17 +42,13 @@ FROM base AS build
 
 RUN apt-get install --yes build-essential libyaml-dev
 
-# Install Yarn
-RUN curl https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor --output /usr/share/keyrings/yarn.gpg
-RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/yarn.gpg] http://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install --yes yarn
-
 COPY Gemfile Gemfile
 COPY Gemfile.lock Gemfile.lock
 COPY package.json package.json
+COPY package-lock.json package-lock.json
 
 RUN bundle install
-RUN yarn install
+RUN npm ci
 
 COPY . .
 RUN SECRET_KEY_BASE=1 bundle exec rails assets:precompile

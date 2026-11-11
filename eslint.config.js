@@ -1,5 +1,3 @@
-import importPlugin from 'eslint-plugin-import';
-
 export default [{
   files: ['**/*.js'],
 
@@ -8,13 +6,9 @@ export default [{
     sourceType: 'module',
   },
 
-  plugins: {'import': importPlugin},
-
   rules: {
     'block-spacing': ['error', 'never'],
     'consistent-return': 'off',
-    'import/no-unresolved': 'off',
-    'import/prefer-default-export': 'off',
 
     'keyword-spacing': [
       'error',

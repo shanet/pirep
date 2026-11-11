@@ -23,12 +23,12 @@ namespace :lint do
 
   desc 'Run CSS linter'
   task :css do
-    sh "yarn run stylelint #{'--fix' if autocorrect?} \"app/assets/stylesheets/**/*.{css,scss}\"", verbose: false
+    sh "npx stylelint #{'--fix' if autocorrect?} \"app/assets/stylesheets/**/*.{css,scss}\"", verbose: false
   end
 
   desc 'Run JavaScript linter'
   task :js do
-    sh "yarn run eslint #{'--fix' if autocorrect?} \"app/assets/javascripts/**/*.js\"", verbose: false
+    sh "npx eslint #{'--fix' if autocorrect?} \"app/assets/javascripts/**/*.js\"", verbose: false
   end
 
   desc 'Run Terraform formatter'
@@ -50,7 +50,7 @@ namespace :lint do
   task :security do
     sh 'bundle exec bundle-audit update', verbose: false
     sh 'bundle exec bundle-audit', verbose: false
-    sh 'yarn audit --groups dependencies', verbose: false
+    sh 'npm audit --omit=dev', verbose: false
 
     # CI=true prevents paging of the output as it would block the build process
     # https://github.com/presidentbeef/brakeman/blob/master/lib/brakeman/report/pager.rb#L71

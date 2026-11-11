@@ -30,9 +30,6 @@ access_logs.html
 /public/packs
 /public/packs-test
 /node_modules
-/yarn-error.log
-yarn-debug.log*
-.yarn-integrity
 
 # Maxmind databases
 **/*.mmdb

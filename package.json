@@ -11,10 +11,14 @@
   },
   "version": "0.1.0",
   "devDependencies": {
-    "eslint": "^10.13.0",
-    "eslint-plugin-import": "^2.32.0",
+    "eslint": "^10.14.0",
     "stylelint": "^17.16.0",
     "stylelint-config-twbs-bootstrap": "^16.1.0",
     "stylelint-order": "^8.1.2"
+  },
+  "overrides": {
+    "stylelint-config-twbs-bootstrap": {
+      "stylelint": "$stylelint"
+    }
   }
 }
