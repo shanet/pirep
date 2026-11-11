@@ -115,6 +115,9 @@ end
 
 def pipeline_execution_status(pipeline_name, execution_id)
   return codepipeline_client.get_pipeline_execution(pipeline_name: pipeline_name, pipeline_execution_id: execution_id).pipeline_execution.status
+rescue Aws::CodePipeline::Errors::PipelineExecutionNotFoundException
+  # A newly started execution may not be visible yet so treat it as in progress until it is
+  return 'InProgress'
 end
 
 def puts_stage_status(stage_status)
