@@ -250,12 +250,48 @@ class AirportsTest < ApplicationSystemTestCase
     assert_selector('.carousel[data-uncached-photos-loaded="true"]')
     initial_count = all('.carousel[data-uncached-photos-loaded="true"] img', visible: :hidden).count
 
-    click_link_or_button 'Add Photo'
-    find('#upload-photo-form input[type="file"]').set(Rails.root.join('test/fixtures/files/image.png'))
-    click_link_or_button 'Upload Photo'
+    uploaded_photos = capture_uploaded_photos do
+      Dir.mktmpdir do |directory|
+        click_link_or_button 'Add Photo'
+        large_photo = generate_test_photo(File.join(directory, 'photo.png'), 3000, 2000)
+        find('#upload-photo-form input[type="file"]').set([Rails.root.join('test/fixtures/files/image.png'), large_photo])
+        click_link_or_button 'Upload Photo'
 
-    # Wait for the new photo to appear
-    assert_selector('.carousel[data-uncached-photos-loaded="true"] img', visible: :hidden, count: initial_count + 1)
+        # Photos are resized before the form is submitted so wait for the page to reload (closing the upload form) and then for the new photos to appear
+        assert_no_selector '#upload-photo-form.show', wait: 30
+        assert_selector('.carousel[data-uncached-photos-loaded="true"] img', visible: :hidden, count: initial_count + 2)
+      end
+    end
+
+    # Photos should be resized and converted to JPEGs before being uploaded
+    expected_photos = [
+      {content_type: 'image/jpeg', filename: 'image.jpg', width: 640, height: 400},
+      {content_type: 'image/jpeg', filename: 'photo.jpg', width: 1500, height: 1000},
+    ]
+
+    assert_equal expected_photos, uploaded_photos
+  end
+
+  test 'upload photos over size limit' do
+    visit airport_path(@airport.code)
+    assert_selector('.carousel[data-uncached-photos-loaded="true"]')
+
+    uploaded_photos = capture_uploaded_photos do
+      Dir.mktmpdir do |directory|
+        # Noise doesn't compress well so even after resizing these are too large to upload together
+        photos = 6.times.map {|index| generate_test_photo(File.join(directory, "photo#{index}.png"), 1500, 1500)}
+
+        click_link_or_button 'Add Photo'
+        find('#upload-photo-form input[type="file"]').set(photos)
+        click_link_or_button 'Upload Photo'
+
+        # Resizing the photos can take a little while
+        assert_selector '.photo-upload-error', text: 'These photos are too large to upload together', wait: 30
+        assert_selector '#upload-photo-form input[type="submit"][value="Upload Photo"]:not([disabled])'
+      end
+    end
+
+    assert_empty uploaded_photos, 'Photos were uploaded'
   end
 
   test 'set featured photo' do
@@ -475,5 +511,31 @@ private
 
   def assert_image_shown(image)
     assert image[:class].include?('active')
+  end
+
+  # Returns the photos as they were received by the server before it processes them
+  def capture_uploaded_photos(&block)
+    uploaded_photos = []
+
+    callback = lambda do |_name, _start, _finish, _id, payload|
+      photos = payload[:params].dig('airport', 'photos')&.compact_blank || []
+
+      photos.each do |photo|
+        image = Vips::Image.new_from_file(photo.tempfile.path)
+        uploaded_photos << {content_type: photo.content_type, filename: photo.original_filename, width: image.width, height: image.height}
+      end
+    end
+
+    ActiveSupport::Notifications.subscribed(callback, 'start_processing.action_controller', &block)
+    return uploaded_photos
+  end
+
+  def generate_test_photo(path, width, height)
+    bands = Array.new(3) do
+      Vips::Image.gaussnoise(width, height, mean: 128, sigma: 60).cast(:uchar)
+    end
+
+    bands.first.bandjoin(bands[1..]).pngsave(path)
+    return path
   end
 end
