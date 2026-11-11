@@ -68,8 +68,8 @@ resource "aws_codepipeline" "this" {
   stage {
     name = "Deploy"
 
-    # Rolling deployment of the web service. The ECS deploy action clones the service's current task definition with the image
-    # replaced by the one in `imagedefinitions.json` from the build stage.
+    # Rolling deployment of the web service. The ECS deploy action clones the service's current task
+    # definition with the image replaced by the one in `imagedefinitions.json` from the build stage.
     action {
       category        = "Deploy"
       input_artifacts = ["build"]

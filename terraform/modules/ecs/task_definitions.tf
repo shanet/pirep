@@ -1,6 +1,4 @@
-# Create a task definition for running the airport imports jobs. We need a container with higher memory limits than the ones above have.
-# It's not cost effective to run a container with such high CPU/memory limits for a job we only need to run once per month. Thus, this is
-# a standalone task definition used to create one-off tasks with.
+# Create a task definition for running the airport imports jobs. We need a container with higher memory limits than the ones below have.
 module "task_definition_content_packs" {
   source = "./task_definition"
 

@@ -9,7 +9,8 @@ variable "subnets" {
 }
 
 resource "aws_apigatewayv2_api" "this" {
-  disable_execute_api_endpoint = true # Only allow access through the custom domain
+  # Only allow access through the custom domain
+  disable_execute_api_endpoint = true
   name                         = var.name_prefix
   protocol_type                = "HTTP"
 }

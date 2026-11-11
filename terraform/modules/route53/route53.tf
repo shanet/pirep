@@ -14,7 +14,7 @@ resource "aws_route53_zone" "this" {
   tags = { Name = var.name_prefix }
 }
 
-# Web server (via Cloudfront and API Gateway). Route53 doesn't support evaluating target health for Cloudfront.
+# Web server (via Cloudfront & API Gateway)
 resource "aws_route53_record" "apex" {
   for_each = toset(["A", "AAAA"])
 

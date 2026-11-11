@@ -14,7 +14,7 @@ task :deploy do # rubocop:disable Rails/RakeEnvironment
 
   pipeline_stages(PIPELINE_NAME).each do |stage_name|
     # Don't continue checking stages if a stage failed
-    unless monitor_stage(PIPELINE_NAME, stage_name)
+    unless monitor_stage(PIPELINE_NAME, stage_name, execution_id)
       log '{{red:Deployment failed}}'
       exit(1)
     end
@@ -27,12 +27,26 @@ task :deploy do # rubocop:disable Rails/RakeEnvironment
   log 'Deployment complete'
 end
 
-def monitor_stage(pipeline_name, stage_name) # rubocop:disable Naming/PredicateMethod
+def monitor_stage(pipeline_name, stage_name, execution_id) # rubocop:disable Naming/PredicateMethod
   stage_status = nil
-  continue_statuses = ['InProgress', 'Stopped', 'Failed']
+  in_progress_statuses = ['InProgress', 'Stopping']
 
   loop do
     stage_status = pipeline_stage_status(pipeline_name, stage_name)
+
+    # Wait until the stage's execution ID matches the current execution (it will report the previous pipeline run until it starts again)
+    unless stage_status[:execution_id] == execution_id
+      execution_status = pipeline_execution_status(pipeline_name, execution_id)
+
+      # Stop waiting if the execution ended before reaching this stage (for example, it was superseded by another execution)
+      unless in_progress_statuses.include?(execution_status)
+        log "{{red:Pipeline execution #{execution_status.downcase} before reaching #{stage_name} stage}}"
+        return false
+      end
+
+      log "Stage: #{stage_name}, Status: Waiting to start"
+      next
+    end
 
     # Show the rollout progress of each ECS service being deployed. Deploy actions are named after the service they deploy.
     # Failed rollouts are rolled back automatically by the ECS deployment circuit breaker.
@@ -44,13 +58,7 @@ def monitor_stage(pipeline_name, stage_name) # rubocop:disable Naming/PredicateM
     end
 
     puts_stage_status(stage_status)
-
-    # We may be picking up the status from the previous deploy so only break on non-in-progress statuses after we've seen an in-progress status at least once
-    if stage_status[:status] == 'InProgress'
-      continue_statuses = ['InProgress']
-    end
-
-    break unless continue_statuses.include?(stage_status[:status])
+    break unless in_progress_statuses.include?(stage_status[:status])
   ensure
     sleep 5
   end
@@ -94,10 +102,19 @@ def pipeline_stage_status(pipeline_name, stage_name)
       }
     end
 
-    return {name: stage.stage_name, status: stage.latest_execution.status, action_states: action_states}
+    return {
+      action_states: action_states,
+      execution_id: stage.latest_execution&.pipeline_execution_id,
+      name: stage.stage_name,
+      status: stage.latest_execution&.status,
+    }
   end
 
   return nil
+end
+
+def pipeline_execution_status(pipeline_name, execution_id)
+  return codepipeline_client.get_pipeline_execution(pipeline_name: pipeline_name, pipeline_execution_id: execution_id).pipeline_execution.status
 end
 
 def puts_stage_status(stage_status)

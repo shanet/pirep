@@ -79,12 +79,12 @@ module "codesuite" {
 
   ecr_repository_url         = module.ecr.repository.repository_url
   ecs_cluster_name           = module.ecs.cluster.name
-  ecs_service_name_web       = module.ecs.service_web_v2.name
+  ecs_service_name_web       = module.ecs.service_web.name
   github_repository          = local.github_repository
   iam_role_codebuild_arn     = module.iam.codebuild_role.arn
   iam_role_codepipeline_arn  = module.iam.codepipeline_role.arn
   migrations_container_name  = "${local.name_prefix}-migrations"
-  migrations_ecs_service     = module.ecs.service_web_v2.name # Only used for its network configuration
+  migrations_ecs_service     = module.ecs.service_web.name # Only used for its network configuration
   migrations_task_definition = module.ecs.task_definition_migrations.arn
   name_prefix                = local.name_prefix
   service_port               = local.service_port
@@ -126,7 +126,7 @@ module "iam" {
   deployment_bucket            = module.codesuite.deployment_bucket.arn
   ecr_repository               = module.ecr.repository.arn
   ecs_cluster                  = module.ecs.cluster.arn
-  ecs_service_web              = module.ecs.service_web_v2.id
+  ecs_service_web              = module.ecs.service_web.id
   enviroment_variables_secrets = [module.secretsmanager.secret_dynamic.arn, module.secretsmanager.secret_static.arn]
   name_prefix                  = local.name_prefix
 }

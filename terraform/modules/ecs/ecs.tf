@@ -22,7 +22,7 @@ resource "aws_ecs_cluster" "this" {
 }
 
 # Web service fronted by Cloudfront and API Gateway (via Cloud Map) using ECS rolling deployments
-module "service_web_v2" {
+module "service_web" {
   source = "./service"
 
   cloudwatch_log_group                = var.cloudwatch_log_groups.web
@@ -39,7 +39,7 @@ module "service_web_v2" {
   iam_role_task                       = var.iam_role_task
   image                               = "${var.ecr_repository_url}:latest"
   memory                              = 2048 # mb
-  name_prefix                         = "${var.name_prefix}-web-v2"
+  name_prefix                         = "${var.name_prefix}-web"
   port                                = var.service_port
   security_group                      = var.security_group_ecs
   service_registry_arn                = var.service_registry_arn_web
@@ -54,6 +54,6 @@ output "task_definition_migrations" {
   value = module.task_definition_migrations.task_definition
 }
 
-output "service_web_v2" {
-  value = module.service_web_v2.service
+output "service_web" {
+  value = module.service_web.service
 }
