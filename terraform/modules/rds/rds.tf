@@ -26,7 +26,6 @@ resource "aws_db_parameter_group" "db_parameters" {
 
 resource "aws_db_instance" "database" {
   allocated_storage         = 20            # gb
-  max_allocated_storage     = 20            # gb (storage autoscaling ceiling)
   backup_retention_period   = 30            # days
   backup_window             = "10:00-10:30" # UTC
   ca_cert_identifier        = "rds-ca-rsa2048-g1"
@@ -38,6 +37,7 @@ resource "aws_db_instance" "database" {
   identifier                = var.name_prefix
   instance_class            = local.instance_class
   maintenance_window        = "mon:10:30-mon:11:00"
+  max_allocated_storage     = 20            # gb (storage autoscaling ceiling)
   multi_az                  = false
   parameter_group_name      = aws_db_parameter_group.db_parameters.name
   password                  = random_string.password.result

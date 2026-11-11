@@ -26,14 +26,14 @@ resource "aws_ecs_service" "service" {
   name                   = var.name_prefix
   task_definition        = module.task_definition.task_definition.arn
 
-  deployment_controller {
-    type = "ECS"
-  }
-
   # Roll back automatically if new tasks fail to become healthy
   deployment_circuit_breaker {
     enable   = true
     rollback = true
+  }
+
+  deployment_controller {
+    type = "ECS"
   }
 
   dynamic "service_registries" {
