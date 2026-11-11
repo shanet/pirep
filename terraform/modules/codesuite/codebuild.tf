@@ -1,3 +1,7 @@
+locals {
+  logs_retention_period = 7 # days
+}
+
 resource "aws_codebuild_project" "image" {
   name         = "${var.name_prefix}-image"
   service_role = var.iam_role_codebuild_arn
@@ -42,6 +46,12 @@ resource "aws_codebuild_project" "image" {
     environment_variable {
       name  = "PORT"
       value = var.service_port
+    }
+  }
+
+  logs_config {
+    cloudwatch_logs {
+      group_name = aws_cloudwatch_log_group.image.name
     }
   }
 
@@ -95,10 +105,26 @@ resource "aws_codebuild_project" "migrations" {
     }
   }
 
+  logs_config {
+    cloudwatch_logs {
+      group_name = aws_cloudwatch_log_group.migrations.name
+    }
+  }
+
   source {
     buildspec = "buildspec_migrations.yml"
     type      = "CODEPIPELINE"
   }
+}
+
+resource "aws_cloudwatch_log_group" "image" {
+  name              = "/aws/codebuild/${var.name_prefix}-image"
+  retention_in_days = local.logs_retention_period
+}
+
+resource "aws_cloudwatch_log_group" "migrations" {
+  name              = "/aws/codebuild/${var.name_prefix}-migrations"
+  retention_in_days = local.logs_retention_period
 }
 
 # This resource needs to be created manually. The expected value is of the form:
