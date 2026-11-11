@@ -37,7 +37,7 @@ resource "aws_db_instance" "database" {
   identifier                = var.name_prefix
   instance_class            = local.instance_class
   maintenance_window        = "mon:10:30-mon:11:00"
-  max_allocated_storage     = 20            # gb (storage autoscaling ceiling)
+  max_allocated_storage     = 20 # gb (storage autoscaling ceiling)
   multi_az                  = false
   parameter_group_name      = aws_db_parameter_group.db_parameters.name
   password                  = random_string.password.result
